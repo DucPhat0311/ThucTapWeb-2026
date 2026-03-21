@@ -1,0 +1,321 @@
+.card {
+    padding: 40px 40px;
+}
+
+.card .container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 32px;
+}
+
+/* ===== TITLE ===== */
+.cart-title {
+    text-align: center;
+    margin: 40px 0 10px 0;
+}
+
+.cart-title h2 {
+    font-size: 28px;
+    color: #6F4E37; /* Màu nâu */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.cart-title h2 i {
+    margin-right: 10px;
+}
+
+/* ===== LEFT (BẢNG GIỎ HÀNG) ===== */
+.card-content-left {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.cart-table-wrapper {
+    width: 100%;
+    max-width: 820px;
+}
+
+/* ===== EMPTY CART ===== */
+.empty-cart-msg {
+    text-align: center;
+    padding: 60px 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.empty-cart-msg i {
+    font-size: 60px;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.empty-cart-msg p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.btn-shopping-now {
+    display: inline-block;
+    padding: 12px 35px;
+    background-color: #A67B5B;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.btn-shopping-now:hover {
+    background-color: #6F4E37;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(111, 78, 55, 0.2);
+}
+
+/* ===== TABLE ===== */
+.cart-table,
+.card-content-left table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.cart-table thead th,
+.card-content-left table thead th {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #444;
+    border-bottom: 2px solid #f0f0f0;
+    padding: 18px 10px;
+    text-align: center;
+    background: #fafafa;
+}
+
+.cart-table td,
+.card-content-left table td {
+    font-size: 14px;
+    padding: 16px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center;
+    vertical-align: middle;
+    color: #555;
+}
+
+.card-content-left table td:nth-child(2),
+.card-content-left table td:nth-child(3) {
+    text-align: center;
+}
+
+.card-content-left table td:nth-child(5) {
+    text-align: center;
+    color: #ee4d2d;
+    font-weight: 600;
+}
+
+/* ảnh sản phẩm */
+.card-content-left table td img {
+    width: 80px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* ===== CHECKBOX ===== */
+.item-check {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* ===== SỐ LƯỢNG ===== */
+.qty-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+}
+
+.qty-form button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.qty-form button:first-child {
+    border-radius: 6px 0 0 6px;
+}
+
+.qty-form button:last-child {
+    border-radius: 0 6px 6px 0;
+}
+
+.qty-form button:hover {
+    background: #f5f5f5;
+    color: #A67B5B;
+}
+
+.qty-display {
+    width: 45px;
+    height: 32px;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    background: #fafafa;
+}
+
+.card-content-left table button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #666;
+    font-size: 16px;
+}
+
+.card-content-left table button:hover {
+    color: #6F4E37;
+}
+
+/* ===== CHECK ALL ===== */
+#checkAll {
+    transform: scale(1.1);
+}
+
+/* ===== RIGHT (TỔNG TIỀN) ===== */
+.card-content-right {
+    flex: 1;
+    max-width: 380px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.card-content-right table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.card-content-right table th {
+    font-size: 16px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    text-align: center;
+    color: #444;
+    text-transform: uppercase;
+}
+
+.card-content-right table td {
+    font-size: 14px;
+    padding: 15px 0;
+    color: #555;
+}
+
+.card-content-right tr td:last-child {
+    text-align: right;
+    font-weight: 600;
+}
+
+.card-content-right table tr:nth-child(4) td {
+    border-top: 2px solid #f0f0f0;
+    font-weight: 800;
+    font-size: 16px;
+    color: #ee4d2d;
+    padding-top: 20px;
+}
+
+/* ===== BUTTONS ===== */
+.card-content-right-button {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+#ttms {
+    width: 100%;
+    height: 48px;
+    border-radius: 25px;
+    border: 2px solid #A67B5B;
+    color: #A67B5B;
+    background: #fff;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+#ttms:hover {
+    background: #A67B5B;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(166, 123, 91, 0.2);
+}
+
+#tt {
+    width: 100%;
+    height: 48px;
+    border-radius: 25px;
+    border: none;
+    background: linear-gradient(135deg, #FF4500, #FF6347);
+    color: #fff;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+}
+
+#tt:hover {
+    background: linear-gradient(135deg, #e63e00, #ff4c2e);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 69, 0, 0.3);
+}
+
+#tt:hover {
+    background: #d8432a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(238, 77, 45, 0.3);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .card .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-content-right {
+        border-left: none;
+        padding-left: 0;
+        max-width: 420px;
+        width: 100%;
+        margin-top: 30px;
+    }
+}
+
+
+
+
