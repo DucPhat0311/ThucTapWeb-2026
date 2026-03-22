@@ -10,7 +10,7 @@ import service.ProductService;
 import java.io.IOException;
 
 
-@WebServlet("/trang-chu")
+@WebServlet("/home")
 public class HomeController extends HttpServlet {
 
     private ProductService productService;
@@ -25,6 +25,11 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        // 8 sản phẩm mới nhất
+        req.setAttribute("latestProducts",
+                productService.getLatestProducts(8));
+
         req.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(req, resp);
     }
 }
