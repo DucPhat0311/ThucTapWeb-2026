@@ -16,12 +16,9 @@
       </a>
       <h2 class="dangNhap" >Đăng nhập</h2>
       <form id="loginForm" action="login" method="post">
-        <% if(error != null && !error.isEmpty()){ %>
-          <div class="error-message"><%=error%></div>
-        <% } %>
         <div class="input-group">
           <label for="username">Email/Tên đăng nhập</label>
-          <input type="text" id="username" name="username" placeholder="Nhập email/Tên tài khoản" required value="<%=username%>">
+          <input type="text" id="username" name="username" placeholder="Nhập email/Tên tài khoản" required value="">
         </div>
 
         <div class="input-group">
@@ -31,10 +28,9 @@
 
 
         <div class="remember-forgot">
-            <a href="fpcl">Quên mật khẩu?</a>
+            <a href="forget-password">Quên mật khẩu?</a>
         </div>
           <button type="submit" class="btn-primary">Đăng nhập</button>
-
 
 
         <div class="form-links">
@@ -46,5 +42,5 @@
   </section>
 </div>
 
-  <%@ include file="../include/footer.jsp" %>
-  <script src="${pageContext.request.contextPath}/javaScript/views/login.js"></script>
+<%@ include file="../include/footer.jsp" %>
+
