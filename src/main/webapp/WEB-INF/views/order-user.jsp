@@ -58,7 +58,7 @@
             <a href="#" class="tab-item">Đã hủy</a>
         </div>
 
-        <!-- ===== ORDER ITEM 1 ===== -->
+        <!-- ===== ORDER ITEM 1 - PENDING ===== -->
         <div class="order-item">
             <div class="order-center">
                 <div class="order-left">
@@ -77,9 +77,14 @@
                     <p class="price">350.000₫</p>
                 </div>
             </div>
+
+            <div class="order-actions">
+                <a href="order-detail.jsp" class="btn-order-action btn-detail">Xem chi tiết</a>
+                <a href="cancelled-order.jsp" class="btn-order-action btn-cancel">Hủy đơn</a>
+            </div>
         </div>
 
-        <!-- ===== ORDER ITEM 2 ===== -->
+        <!-- ===== ORDER ITEM 2 - SHIPPING ===== -->
         <div class="order-item">
             <div class="order-center">
                 <div class="order-left multiple">
@@ -107,9 +112,14 @@
                     <p class="price">720.000₫</p>
                 </div>
             </div>
+
+            <div class="order-actions">
+                <a href="order-detail.jsp" class="btn-order-action btn-detail">Xem chi tiết</a>
+                <a href="#" class="btn-order-action btn-confirm">Đã nhận hàng</a>
+            </div>
         </div>
 
-        <!-- ===== ORDER ITEM 3 ===== -->
+        <!-- ===== ORDER ITEM 3 - DELIVERED ===== -->
         <div class="order-item">
             <div class="order-center">
                 <div class="order-left">
@@ -127,6 +137,38 @@
                     <span class="status">Đã giao</span>
                     <p class="price">450.000₫</p>
                 </div>
+            </div>
+
+            <div class="order-actions">
+                <a href="order-detail.jsp" class="btn-order-action btn-detail">Xem chi tiết</a>
+                <a href="reviews.jsp.jsp" class="btn-order-action btn-review">Đánh giá</a>
+                <a href="#" class="btn-order-action btn-reorder">Mua lại</a>
+            </div>
+        </div>
+
+        <!-- ===== ORDER ITEM 4 - CANCELLED ===== -->
+        <div class="order-item">
+            <div class="order-center">
+                <div class="order-left">
+                    <div class="single-product">
+                        <img src="img/aox.webp" alt="Áo khoác nữ">
+                        <div class="order-info">
+                            <h3>Áo khoác nữ</h3>
+                            <p>Phân loại: Be, M</p>
+                            <p>x1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-right">
+                    <span class="status">Đã hủy</span>
+                    <p class="price">520.000₫</p>
+                </div>
+            </div>
+
+            <div class="order-actions">
+                <a href="order-detail.jsp.jsp" class="btn-order-action btn-detail">Xem chi tiết</a>
+                <a href="#" class="btn-order-action btn-reorder">Mua lại</a>
             </div>
         </div>
 
