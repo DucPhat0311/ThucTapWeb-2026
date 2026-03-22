@@ -1,0 +1,185 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap');
+
+.login-page, .register-page, .forget-page {
+    font-family: 'Inter', sans-serif;
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    background-color: #efebe9; 
+    background-image: url('../../img/GiaoDien.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    padding: 40px 50px 40px 20px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.login-image, .register-image, .forget-image {
+    display: none !important;
+}
+
+.login-container, .register-container, .forget-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: auto;
+    background: transparent !important;
+}
+
+.login-box, .register-box, .forget-box {
+    width: 100%;
+    min-width: 400px;
+    max-width: 450px;
+    background: rgba(255, 252, 248, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 3rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 15px 15px 35px rgba(62, 39, 35, 0.25);
+    border: 1px solid rgba(139, 90, 43, 0.15);
+}
+
+.close-btn, .back-btn {
+    display: none;
+}
+
+.dangNhap, .dangKy, .quenMatKhau, .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.3rem;
+    font-weight: 700;
+    color: #4a332a;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    color: #5c4033;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid #d7ccc8;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #3e2723;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+}
+
+.input-group input::placeholder {
+    color: #a1887f;
+    font-weight: 400;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #8d6e63;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.15);
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+}
+
+.remember-forgot a {
+    text-decoration: none;
+    color: #795548;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.remember-forgot a:hover {
+    color: #3e2723;
+    text-decoration: underline;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background: #5c4033;
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(92, 64, 51, 0.2);
+}
+
+.btn-primary:hover {
+    background: #3e2723;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(92, 64, 51, 0.3);
+}
+
+.form-links, .notAccount, .links {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #5c4033;
+}
+
+.form-links a, .notAccount a, .links a {
+    color: #3e2723;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.form-links a:hover, .notAccount a:hover, .links a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #b71c1c;
+    background: #fbe9e7;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #b71c1c;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.forget-box p {
+    color: #5c4033;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .login-page, .register-page, .forget-page {
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .login-box, .register-box, .forget-box {
+        min-width: unset;
+        width: 100%;
+    }
+}
