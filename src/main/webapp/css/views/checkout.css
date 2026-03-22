@@ -1,3 +1,4 @@
+﻿@charset "UTF-8";
 .checkout {
     background: #f6f6f6;
     padding: 40px 0;
@@ -8,7 +9,7 @@
     margin: auto;
 }
 
-/* FORM CHÍNH LÀ GRID */
+/* FORM CHÃNH LÃ€ GRID */
 .checkout-container > form {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -121,6 +122,7 @@
 .btn-checkout:hover {
     opacity: 0.9;
 }
+
 
 
 

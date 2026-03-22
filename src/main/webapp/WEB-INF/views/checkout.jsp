@@ -1,29 +1,32 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán - AURA Studio</title>
+    <link rel="stylesheet" href="css/views/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
 
-<%
-    request.setAttribute("pageCss", "views/checkout.css");
-    request.setAttribute("pageTitle", "Thanh toán");
-%>
+<!-- ========== HEADER ========== -->
+<%@ include file="../include/header.jsp" %>
 
-<%@include file="../include/header.jsp"%>
-
+<!-- ========== CHECKOUT ========== -->
 <section class="checkout">
     <div class="checkout-container">
-        <form action="place-order" method="post">
+        <form>
             <!-- ===== LEFT ===== -->
             <div class="checkout-left">
                 <h2>Thông tin giao hàng</h2>
 
                 <div class="form-group">
                     <label>Họ và tên</label>
-                    <input type="text" name="receiverName" placeholder="Tên người nhận" required>
+                    <input type="text" name="name" placeholder="Tên người nhận" required>
                 </div>
 
                 <div class="form-group">
                     <label>Số điện thoại</label>
-                    <input type="text" name="phone" placeholder="Nhập số điện thoại" pattern="[0-9]{9,11}" required>
+                    <input type="text" name="phone" placeholder="Nhập số điện thoại" required>
                 </div>
 
                 <div class="form-group">
@@ -59,39 +62,33 @@
             <!-- ===== RIGHT ===== -->
             <div class="checkout-right">
                 <h3>Đơn hàng của bạn</h3>
-                <input type="hidden" name="cartId" value="${sessionScope.cartId}">
-                <c:forEach var="item" items="${checkoutItems}">
-                <input type="hidden" name="variantIds" value="${item.variantId}">
-                <input type="hidden" name="quantities" value="${item.quantity}">
-                </c:forEach>
-
 
                 <div class="order-items">
-                    <c:set var="total" value="0"/>
-                    <c:forEach var="item" items="${checkoutItems}">
                     <div class="order-item">
-                        <img src="${item.product.thumbnail}">
+                        <img src="img/aox.webp" alt="Áo sơ mi nam">
                         <div class="info">
-                            <p class="name">${item.product.name}</p>
-                            <p class="variant">Size ${item.size} · ${item.color}
-                            </p>
-                            <p class="qty">SL: ${item.quantity}</p>
+                            <p class="name">Áo sơ mi nam</p>
+                            <p class="variant">Size L · Trắng</p>
+                            <p class="qty">SL: 1</p>
                         </div>
-                        <div class="price">
-                            <fmt:formatNumber value="${item.price * item.quantity}" type="number"/>₫
-                        </div>
+                        <div class="price">350.000₫</div>
                     </div>
 
-                        <c:set var="total" value="${total + item.price * item.quantity}"/>
-                    </c:forEach>
+                    <div class="order-item">
+                        <img src="img/aox.webp" alt="Quần jean nam">
+                        <div class="info">
+                            <p class="name">Quần jean nam</p>
+                            <p class="variant">Size 32 · Xanh</p>
+                            <p class="qty">SL: 1</p>
+                        </div>
+                        <div class="price">420.000₫</div>
+                    </div>
                 </div>
 
                 <div class="order-summary">
                     <div>
                         <span>Tạm tính</span>
-                        <span>
-                        <fmt:formatNumber value="${total}" type="number"/>₫
-                    </span>
+                        <span>770.000₫</span>
                     </div>
 
                     <div>
@@ -101,19 +98,20 @@
 
                     <div class="total">
                         <span>Tổng cộng</span>
-                        <span>
-                        <fmt:formatNumber value="${total}" type="number"/>₫
-                    </span>
+                        <span>770.000₫</span>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-checkout">
+                <button type="button" class="btn-checkout">
                     XÁC NHẬN THANH TOÁN
                 </button>
-
             </div>
         </form>
     </div>
 </section>
 
-<%@include file="../include/footer.jsp"%>
+<!-- ========== FOOTER ========== -->
+<%@ include file="../include/footer.jsp" %>
+
+</body>
+</html>
