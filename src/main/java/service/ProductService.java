@@ -12,5 +12,9 @@ public class ProductService {
         return productDao.findAll();
     }
 
+    // lấy các sản phẩm MỚI NHẤT cho trang home
+    public List<Product> getLatestProducts(int limit) {
+        return productDao.findLatest(limit);
+    }
 
 }
