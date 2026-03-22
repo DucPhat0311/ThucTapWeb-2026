@@ -34,4 +34,23 @@ public class ProductDao extends BaseDao {
                         .list()
         );
     }
+
+    //  các sản phẩm tương ứng với category đó
+    public List<Product> findLatestByCategories(List<Integer> categoryIds, int limit) {
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return List.of();
+        }
+
+        String sql = "SELECT * FROM products " +
+                "WHERE category_id IN (<ids>) AND status = 'Đang bán' " +
+                "ORDER BY created_at DESC LIMIT :limit";
+
+        return getJdbi().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bindList("ids", categoryIds)
+                        .bind("limit", limit)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
 }
