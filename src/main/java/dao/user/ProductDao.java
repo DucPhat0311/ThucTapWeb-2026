@@ -2,6 +2,7 @@ package dao.user;
 
 import dao.core.BaseDao;
 import model.Product;
+import org.jdbi.v3.core.Jdbi;
 
 import java.util.List;
 
@@ -17,6 +18,18 @@ public class ProductDao extends BaseDao {
 
         return getJdbi().withHandle(h ->
                 h.createQuery(sql)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+
+    public List<Product> findLatest(int limit) {
+        Jdbi jdbi = getJdbi();
+        return jdbi.withHandle(handle ->
+                handle.createQuery(
+                                "SELECT * FROM products WHERE status = 'Đang bán' ORDER BY created_at DESC LIMIT :limit"
+                        )
+                        .bind("limit", limit)
                         .mapToBean(Product.class)
                         .list()
         );
