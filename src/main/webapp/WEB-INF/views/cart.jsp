@@ -1,3 +1,8 @@
+<%@ page contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -10,56 +15,111 @@
 
 <%@include file="../include/header.jsp"%>
 
-
 <div class="cart-title">
     <h2>GIỎ HÀNG CỦA BẠN</h2>
 </div>
-
 <section class="card">
+
     <div class="container">
         <div class="card-content-left">
+            <c:choose>
+                <c:when test="${empty cartItems}">
+                    <div class="empty-cart-msg">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <p>Giỏ hàng của bạn đang trống</p>
+                        <a href="product" class="btn-shopping-now">Mua sắm ngay</a>
+                    </div>
+                </c:when>
 
-            <!-- Nếu giỏ hàng trống -->
-            <div class="empty-cart-msg">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <p>Giỏ hàng của bạn đang trống</p>
-                <a href="" class="btn-shopping-now">Mua sắm ngay</a>
-            </div>
+                <c:otherwise>
+                    <table class="cart-table" cellpadding="10" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Phân loại</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th>Xóa</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <c:set var="count" value="1"/>
+                        <c:forEach var="item" items="${cartItems}">
+                            <tr data-price="${item.price}">
+                                <!-- SẢN PHẨM -->
+                                <td>
+                                    <img src="${item.product.thumbnail}" width="60">
+                                    <br>
+                                        ${item.product.name}
+                                </td>
+
+                                <!-- SIZE + MÀU -->
+                                <td>
+                                    Size: <b>${item.size}</b><br>
+                                    Màu: <b>${item.color}</b>
+                                </td>
+
+                                <!-- THÀNH TIỀN -->
+                                <td>
+                                    <fmt:formatNumber value="${item.price * item.quantity}" type="number"/> ₫
+                                </td>
+
+                                </td>
+
+
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </c:otherwise>
+            </c:choose>
 
         </div>
-
         <div class="card-content-right">
             <table>
                 <tr>
                     <th colspan="2">TỔNG TIỀN GIỎ HÀNG</th>
                 </tr>
+
                 <tr>
                     <td>TỔNG SẢN PHẨM</td>
-                    <td><span>0</span></td>
+                    <td><span id="totalQuantity">0</span></td>
                 </tr>
+
                 <tr>
                     <td>TỔNG TIỀN HÀNG</td>
-                    <td><span>0</span>₫</td>
+                    <td>
+                        <span id="totalPrice">0</span>₫
+                    </td>
                 </tr>
+
                 <tr>
                     <td>TẠM TÍNH</td>
-                    <td style="font-weight:bold"><span >0</span>₫</td>
+                    <td style="font-weight:bold">
+                        <span id="totalFinal">0</span>₫
+                    </td>
                 </tr>
             </table>
 
+
             <div class="card-content-right-button">
-                <a href="">
-                    <button >TIẾP TỤC MUA SẮM</button>
+                <a href="product">
+                    <button id="ttms">TIẾP TỤC MUA SẮM</button>
                 </a>
 
-                <button >THANH TOÁN</button>
+                <c:if test="${not empty cartItems}">
+                    <form action="${pageContext.request.contextPath}/checkout" method="post" id="checkoutForm" class="checkout-form">
+
+                        <button type="submit" id="tt">
+                            THANH TOÁN
+                        </button>
+                    </form>
+                </c:if>
             </div>
+
         </div>
     </div>
 </section>
 
 <%@include file="../include/footer.jsp"%>
-
-
-</body>
-</html>
