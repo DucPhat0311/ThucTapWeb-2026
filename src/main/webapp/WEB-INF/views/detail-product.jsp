@@ -5,7 +5,7 @@
     <title>Chi tiết sản phẩm - AURA Studio</title>
     <link rel="stylesheet" href="css/include/header.css">
     <link rel="stylesheet" href="css/include/footer.css">
-    <link rel="stylesheet" href="css/views/pageatxl.css">
+    <link rel="stylesheet" href="css/views/detail-product.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -16,13 +16,26 @@
 <main class="product-detail">
     <div class="product-container">
 
-        <!-- HÌNH ẢNH -->
+        <!-- ========== HÌNH ẢNH ========== -->
         <div class="product-image">
-            <img id="main-image" src="img/.jpg" alt="Áo Thun Nam">
+            <c:set var="hasMain" value="false" />
+            <c:forEach var="img" items="${images}">
+                <c:if test="${img.main}">
+                    <img id="main-image" src="${img.imageUrl}" alt="${product.name}">
+                    <c:set var="hasMain" value="true" />
+                </c:if>
+            </c:forEach>
+
+            <c:if test="${not hasMain}">
+                <img id="main-image" src="${product.thumbnail}" alt="${product.name}">
+            </c:if>
+
             <div class="image-thumbs">
-                <img class="thumb active" src="img/.jpg" alt="Áo Thun Nam">
-                <img class="thumb" src="img/.jpg" alt="Áo Thun Nam">
-                <img class="thumb" src="img/.jpg" alt="Áo Thun Nam">
+                <c:forEach var="img" items="${images}">
+                    <img class="thumb ${img.main ? 'active' : ''}"
+                         src="${img.imageUrl}"
+                         alt="${product.name}">
+                </c:forEach>
             </div>
         </div>
 
@@ -46,9 +59,11 @@
             <div class="product-colors">
                 <p><strong>Màu sắc:</strong></p>
                 <div class="color-options">
-                    <div class="color-thumb" style="background-color:#000000;"></div>
-                    <div class="color-thumb" style="background-color:#FFFFFF;"></div>
-                    <div class="color-thumb" style="background-color:#FF0000;"></div>
+                    <c:forEach var="color" items="${colors}">
+                        <button class="color-btn" data-color-id="${color.id}">
+                                ${color.name}
+                        </button>
+                    </c:forEach>
                 </div>
             </div>
 
@@ -56,10 +71,12 @@
             <div class="product-sizes">
                 <p><strong>Chọn size:</strong></p>
                 <div class="size-options">
-                    <button class="size-btn">S</button>
-                    <button class="size-btn">M</button>
-                    <button class="size-btn">L</button>
-                    <button class="size-btn">XL</button>
+                    <c:forEach var="s" items="${sizes}">
+                        <button class="size-btn"
+                                data-size-id="${s.id}">
+                                ${s.code}
+                        </button>
+                    </c:forEach>
                 </div>
             </div>
 
@@ -84,7 +101,7 @@
     <section class="product-info-tabs">
         <h2>Mô tả chi tiết</h2>
         <div class="product-description-content">
-            Áo Thun Nam chất liệu cotton cao cấp, form vừa vặn, thoải mái, phù hợp mặc hàng ngày.
+            ${product.description}
         </div>
     </section>
 
@@ -127,29 +144,28 @@
         </section>
     </section>
 
-    <!-- GỢI Ý SẢN PHẨM -->
+    <!-- ========== GỢI Ý SẢN PHẨM ========== -->
     <section class="suggested-products">
         <h2>Sản phẩm phù hợp khác</h2>
         <div class="suggested-list">
-            <div class="suggested-item">
-                <a href="" class="link-cover">
-                    <img src="img/.jpg" alt="Váy Nữ">
-                </a>
-                <h3 class="name"><a href="">Váy Nữ</a></h3>
-                <p class="price">Giá: <span class="new-price">450.000đ</span></p>
-                <a href="" class="btn-add">Thêm vào giỏ</a>
-            </div>
+            <c:forEach var="item" items="${ralatedProducts}">
+                <div class="product-mini">
+                    <a href="${pageContext.request.contextPath}/detail-product?id=${item.id}" class="link-cover"></a>
+                    <img src="${item.thumbnail}" alt="${item.name}">
+                    <h3>${item.name}</h3>
+                    <p class="price">
+                        <span class="new-price"><fmt:formatNumber value="${item.sale_price}" type="number"/>đ</span>
+                        <span class="old-price"><fmt:formatNumber value="${item.price}" type="number"/>đ</span>
+                    </p>
+                    <a href="${pageContext.request.contextPath}/detail-product?id=${item.id}" class="btn-add">Thêm vào giỏ hàng</a>
+                </div>
+            </c:forEach>
 
-            <div class="suggested-item">
-                <a href="" class="link-cover">
-                    <img src="img/.jpg" alt="Quần Nam">
-                </a>
-                <h3 class="name"><a href="">Quần Nam</a></h3>
-                <p class="price">Giá: <span class="new-price">320.000đ</span></p>
-                <a href="" class="btn-add">Thêm vào giỏ</a>
-            </div>
+            <c:if test="${empty ralatedProducts}">
+                <p>Không tìm thấy sản phẩm phù hợp khác.</p>
+            </c:if>
         </div>
-        <a href="" class="btn-view-more">Xem thêm</a>
+        <a href="san-pham" class="btn-view-more">Xem thêm</a>
     </section>
 </main>
 
