@@ -1,0 +1,551 @@
+@charset "UTF-8";
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body{
+    min-height: 100vh;
+}
+
+/* áº¨n header khi cuá»™n xuá»‘ng */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #F5F5DC;
+    z-index: 999;
+    transition: top 0.4s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Khi thÃªm class hide â†’ header trÆ°á»£t lÃªn */
+.header.hide {
+    top: -120px; /* áº©n háº³n khá»i mÃ n hÃ¬nh */
+}
+
+/* Äá»ƒ pháº§n ná»™i dung khÃ´ng bá»‹ header che */
+body {
+    padding-top: 130px;
+}
+
+
+/* Pháº§n notification */
+.notification-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#thongBao {
+    margin: 0;
+    cursor: pointer;
+    transition: color 0.3s;
+    color: #6F4E37;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+#thongBao:hover {
+    color: #A67B5B;
+}
+
+#thongBao i {
+    font-size: 20px;
+    transition: color 0.2s, transform 0.2s;
+}
+
+#thongBao:hover i {
+    color: #A67B5B;
+    transform: scale(1.2);
+}
+
+#notification-box {
+    display: none;
+    position: absolute;
+    top: calc(100% + 15px);
+    right: -10px;
+    background: #FFFFFF;
+    border: 1px solid #EADDCC;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 320px;
+    z-index: 1000;
+    padding: 8px 0;
+    animation: fadein 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
+    transform-origin: top right;
+}
+
+#notification-box::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 22px;
+    width: 12px;
+    height: 12px;
+    background: #FFFFFF;
+    border-top: 1px solid #EADDCC;
+    border-left: 1px solid #EADDCC;
+    transform: rotate(45deg);
+}
+
+#notification-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#notification-box ul li {
+    padding: 14px 20px;
+    border-bottom: 1px solid #F7F0E6;
+    color: #4A3C31;
+    font-size: 14.5px;
+    line-height: 1.5;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: default;
+}
+
+#notification-box ul li::before {
+    content: '';
+    display: block;
+    min-width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #A67B5B;
+    margin-top: 7px;
+}
+
+#notification-box ul li:hover {
+    background-color: #FFFDF9;
+}
+
+#notification-box ul li:last-child {
+    border-bottom: none;
+}
+
+#notification-box.active {
+    display: block;
+}
+
+.header .header-top {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 50px;
+    height: 80px;
+}
+
+.logo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+}
+
+.header-top .search-bar {
+    width: 500px;
+    margin: 0;
+}
+
+.actions{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 40px;
+    padding-right: 0;
+}
+
+.header-top .search-bar form {
+    display: flex;
+    align-items: center;
+    background-color: #FFFDF9;
+    border: 1px solid #A67B5B;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 5px 15px;
+}
+
+.header-top .search-bar input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #6F4E37;
+}
+
+.header-top .search-bar button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #6F4E37;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.header-top .search-bar button:hover {
+    color: #A67B5B;
+}
+
+.header .header-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    background-color: #FFFDF9;
+    border-top: 1px solid #F5F5DC;
+    border-bottom: 2px solid #F5F5DC;
+}
+
+/* Class rá»—ng vÃ¬ Ä‘Ã£ gá»™p vÃ o tháº» trÃªn */
+
+.header img{
+    filter: drop-shadow(0px 0px 4px rgba(166, 124, 82, 0.8));
+    max-height: 65px;
+    width: auto;
+    padding: 0 10px;
+    cursor: pointer;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+.header h1{
+    padding: 25px 5px;
+
+}
+
+
+
+/*Thanh ds */
+.header-bottom ul{
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+}
+.header-bottom ul li{
+    position: relative;
+}
+.header-bottom a{
+    text-decoration: none;
+    color: #6F4E37;
+    font-weight: bold;
+    transition: color 0.2s;     /*MÃ u chá»¯ thay Ä‘á»•i tá»« tá»« chá»© khÃ´ng pháº£i thay Ä‘á»•i Ä‘á»™t ngá»™t*/
+    display: block;
+    padding: 10px 15px;
+}
+.header-bottom a:hover{
+    color: #A67B5B;
+}
+
+header .sub{
+    display: none;
+    position: absolute;
+    background-color: #FFFDF9;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    z-index: 1000;
+    width: 175px;
+    opacity: 0;
+    animation: fadeInSub 0.3s ease forwards;
+}
+
+/* Cáº§u ná»‘i vÃ´ hÃ¬nh giÃºp khÃ´ng bá»‹ máº¥t hover */
+header .sub::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: transparent;
+}
+
+@keyframes fadeInSub {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+header .sub a{
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #6F4E37;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+header li:hover .sub{
+    display: block;
+}
+
+/**/
+.sub li {
+    padding: 0 5px;
+}
+
+.sub li a:hover{
+    background-color: #F5F5DC;
+    color: #A67B5B;
+    border-radius: 5px;
+    transform: translateX(3px);
+}
+
+
+/* Bá» trá»‘ng vÃ¬ Ä‘Ã£ gá»™p lÃªn CSS bÃªn trÃªn */
+
+.actions > a {
+    color: #6F4E37;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, transform 0.2s;
+    font-size: 20px;
+}
+
+.actions > a:hover {
+    color: #A67B5B;
+}
+
+.actions > a i {
+    font-size: 20px;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.actions > a:hover i {
+    color: #A67B5B;
+    transform: scale(1.2);
+}
+
+/* ========== USER MENU & DROPDOWN ========== */
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+/* Biá»ƒu tÆ°á»£ng user vÃ  tÃªn ngÆ°á»i dÃ¹ng */
+.iconUser {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Khoáº£ng cÃ¡ch giá»¯a icon vÃ  chá»¯ */
+    cursor: pointer;
+    text-decoration: none;
+    color: #6F4E37;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.iconUser i {
+    font-size: 20px;
+    color: #6F4E37;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.iconUser:hover {
+    color: #A67B5B;
+}
+
+.iconUser:hover i {
+    color: #A67B5B;
+    transform: scale(1.1);
+}
+
+/* Dropdown */
+.user-dropdown {
+    display: none;
+    position: absolute;
+    left: 70%;
+    transform: translateX(-70%);
+    top: 100%;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    z-index: 1000;
+    width: max-content;
+    min-width: 140px;
+    white-space: nowrap;
+    background-color: #ffffff;
+    border: none;
+    opacity: 0;
+    animation: fadeInDropdown 0.3s ease forwards;
+}
+
+/* Cáº§u ná»‘i vÃ´ hÃ¬nh chá»‘ng Ä‘á»©t gÃ£y hover */
+.user-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: transparent;
+}
+
+@keyframes fadeInDropdown {
+    from {
+        opacity: 0;
+        transform: translate(-70%, -10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-70%, 0);
+    }
+}
+
+/* Hiá»ƒn thá»‹ dropdown khi hover */
+.user-menu:hover .user-dropdown {
+    display: block;
+}
+
+.user-dropdown li {
+    padding: 0 5px;
+}
+
+.user-dropdown li a {
+    display: block;
+    padding: 10px 20px;
+    color: #6F4E37;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    text-align: center;
+}
+
+
+.user-dropdown li a:hover {
+    background-color: #F5F5DC;
+    color: #A67B5B;
+    transform: translateX(3px);
+}
+
+/* Hiá»‡u á»©ng icon */
+.icon i {
+    font-size: 20px;
+    color: #6F4E37;
+}
+
+.icon:hover i {
+    color: #A67B5B;
+}
+
+
+/* Menu con áº©n */
+.header-bottom .actions .user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%; /* náº±m ngay dÆ°á»›i icon user */
+
+    background-color: #FFFDF9;
+    border: 1px solid #A67B5B;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+    min-width: 150px;
+
+}
+
+/* CÃ¡c item trong menu con */
+.user-dropdown li a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #6F4E37;
+    font-weight: normal;
+    transition: background-color 0.2s;
+}
+
+.user-dropdown li a:hover {
+    background-color: #F5F5DC;
+    color: #A67B5B;
+    border-radius: 5px;
+}
+
+/* Khi hover vÃ o user thÃ¬ hiá»‡n menu con */
+.user-menu:hover .user-dropdown {
+    display: block;
+}
+
+/* Hiá»‡u á»©ng icon */
+.icon i {
+    font-size: 20px;
+    color: #6F4E37;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.icon:hover i {
+    color: #A67B5B;
+    transform: scale(1.2);
+
+}
+
+.iconCart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #ff3b3b;
+    color: white;
+    font-size: 11px;
+    min-width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    padding: 0 4px;
+    box-shadow: 0 2px 4px rgba(255, 59, 59, 0.4);
+}
+
+@keyframes cartBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+}
+
+
+

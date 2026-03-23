@@ -1,4 +1,17 @@
-<header class="header" id="header">
+<%@ page contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+
+<body><header class="header" id="header">
 
     <div class="header-top">
         <div class="logo">
@@ -29,10 +42,21 @@
                 </ul>
             </div>
 
-            <!-- CART -->
-            <a href="login.jsp" class="iconCart">
-                <i class="fa-solid fa-cart-shopping"></i>
-            </a>
+            <c:choose>
+                <c:when test="${not empty sessionScope.userlogin}">
+                    <a href="my-cart" class="iconCart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <c:if test="${sessionScope.cartSize != null && sessionScope.cartSize > 0}">
+                            <span class="cart-count">${sessionScope.cartSize}</span>
+                        </c:if>
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <a href="login" class="iconCart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                </c:otherwise>
+            </c:choose>
 
             <!-- NOTIFICATION -->
             <div class="notification-wrapper">
@@ -73,4 +97,4 @@
         </div>
     </nav>
 
-</header>
+</header></body>

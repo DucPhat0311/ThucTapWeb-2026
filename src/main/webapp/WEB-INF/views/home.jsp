@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Trang chủ</title>
-    <link rel="stylesheet" href="views/style.css">
+    <link rel="stylesheet" href="css/views/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 <body>
@@ -111,7 +111,7 @@
 </section>
 
 
-<%@include file="../include/header.jsp"%>
+<%@include file="../include/footer.jsp"%>
 
 
 </body>
