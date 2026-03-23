@@ -14,7 +14,7 @@
 <main class="forget-container">
     <div class="forget-box">
 
-        <a href="enterOTP">
+        <a href="sendOTP">
             <button class="close-btn"><i class="fa-solid fa-arrow-left"></i></button>
         </a>
 

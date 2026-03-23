@@ -16,6 +16,9 @@
         </a>
         <h2 class="quenMatKhau" style="font-size: 2rem;">Nhập mã OTP</h2>
         <form id="forgetForm" action="sendOTP" method="post">
+            <% if(request.getAttribute("error") != null) { %>
+                <div class="error-message">${error}</div>
+            <% } %>
             <div class="input-group">
                 <input type="hidden" name="email" value="${param.email}">
                 <input type="text" name="otp" placeholder="Nhập OTP 6 số" maxlength="6" pattern="[0-9]{6}" required>
@@ -30,4 +33,5 @@
 </div>
 
 <%@ include file="../include/footer.jsp" %>
+
 

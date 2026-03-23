@@ -73,4 +73,26 @@ public class UserDao extends BaseDao {
                 .execute());
     }
 
+    public boolean verifyOtp(String email, String otp) {
+        return getJdbi().withHandle(h ->
+                h.createUpdate(
+                                "UPDATE users SET is_active=1, status = 'ACTIVE',otp_code=NULL, otp_expired_at=NULL " +
+                                        "WHERE email=:e AND otp_code=:otp AND otp_expired_at > NOW()"
+                        )
+                        .bind("e", email)
+                        .bind("otp", otp)
+                        .execute()
+        ) > 0;
+    }
+
+       public boolean lastCheckOtp(String email, String otp) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("SELECT COUNT(*) FROM users " +
+                                        "WHERE email=:e AND otp_code=:otp AND otp_expired_at > NOW()")
+                                        .bind("e", email)
+                                        .bind("otp", otp)
+                                        .mapTo(int.class)
+                                        .one()) > 0;
+    }
+
 }

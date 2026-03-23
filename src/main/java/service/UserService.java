@@ -91,4 +91,12 @@ public class UserService {
         );
     }
 
+    public boolean verifyOtp(String email, String otp) {
+        return userDao.verifyOtp(email, otp);
+    }
+
+    public boolean lastCheckOtp(String email, String otp) {
+        return userDao.lastCheckOtp(email, otp);
+    }
+
 }
