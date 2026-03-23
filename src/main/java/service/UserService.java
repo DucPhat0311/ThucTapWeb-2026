@@ -99,4 +99,22 @@ public class UserService {
         return userDao.lastCheckOtp(email, otp);
     }
 
+    public boolean verifyOtpForReset(String email, String otp) {
+        return userDao.verifyOtpForReset(email, otp);
+    }
+
+    public void resetPass(String email, String otp, String newPassword) {
+
+        String error = checkPasswordStrength(newPassword);
+        if (error != null) {
+            throw new RuntimeException(error);
+        }
+
+        boolean Done = userDao.verifyOtpForReset(email, otp);
+        if (!Done) {
+            throw new RuntimeException("OTP sai hoặc đã hết hạn");
+        }
+        String hashed = PassUtil.hash(newPassword);
+        userDao.updatePassword(email, hashed);
+    }
 }

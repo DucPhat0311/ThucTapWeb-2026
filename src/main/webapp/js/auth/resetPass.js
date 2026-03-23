@@ -35,7 +35,6 @@ function validateAll() {
         }
     }
 
-// Kiểm tra xác nhận mật khẩu
     let match = value && confirmValue && value === confirmValue;
     if (!match && confirmValue.length > 0) {
         matchError.style.display = "block";
@@ -49,7 +48,6 @@ function validateAll() {
 passwordInput.addEventListener("input", validateAll);
 confirmInput.addEventListener("input", validateAll);
 
-// Hiện/ẩn mật khẩu
 document.querySelectorAll('.toggle-password').forEach(function(btn) {
     btn.addEventListener('click', function() {
         const targetId = btn.getAttribute('data-target');

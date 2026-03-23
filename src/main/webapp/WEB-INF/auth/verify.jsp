@@ -48,5 +48,5 @@
     </main>
 </div>
 <%@ include file="../include/footer.jsp" %>
-<script src="${pageContext.request.contextPath}/javaScript/auth/enterOtp.js"></script>
+<script src="${pageContext.request.contextPath}/js/auth/enterOtp.js"></script>
 </html>

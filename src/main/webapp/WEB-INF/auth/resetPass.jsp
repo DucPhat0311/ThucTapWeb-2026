@@ -18,12 +18,13 @@
             <button class="close-btn"><i class="fa-solid fa-arrow-left"></i></button>
         </a>
 
+
         <h2 class="quenMatKhau">Thiết Lập Mật Khẩu</h2>
-        <div class="reset-email">Tạo mật khẩu mới cho <span style="color:#4be25a; font-size:1.15rem; font-weight:700;">meomeo@gmail.com</span></div>
+        <div class="reset-email">Tạo mật khẩu mới cho <span style="color:#4a332a; font-size:1.15rem; font-weight:700;">${param.email}</span></div>
 
         <form action="resetPass" method="post">
-            <input type="hidden" name="email" value="">
-            <input type="hidden" name="otp" value="">
+            <input type="hidden" name="email" value="${param.email}">
+            <input type="hidden" name="otp" value="${param.otp}">
 
 
             <label class="reset-label" for="password">Mật khẩu mới</label>
@@ -41,7 +42,6 @@
                     <i class="fa-solid fa-eye"></i>
                 </span>
             </div>
-
             <div id="match-error">Mật khẩu xác nhận không khớp!</div>
 
             <ul class="rules">

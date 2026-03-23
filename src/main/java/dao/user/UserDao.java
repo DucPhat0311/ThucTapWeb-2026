@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import dao.core.BaseDao;
 import model.User;
+import util.PassUtil;
 
 public class UserDao extends BaseDao {
         public User finduser(String username) {
@@ -95,4 +96,25 @@ public class UserDao extends BaseDao {
                                         .one()) > 0;
     }
 
+    public boolean verifyOtpForReset(String email, String otp) {
+        int count = getJdbi().withHandle(h ->
+                h.createQuery(
+                                "SELECT COUNT(*) FROM users " +
+                                        "WHERE email=:e AND otp_code=:otp AND otp_expired_at > NOW()")
+                                        .bind("e", email)
+                                        .bind("otp", otp)
+                                        .mapTo(int.class)
+                                        .one());
+        return count > 0;
+    }
+
+    public void updatePassword(String email, String password) {
+        getJdbi().withHandle(h ->
+                h.createUpdate("UPDATE users SET password=:p, otp_code=NULL, otp_expired_at=NULL " +
+                                        "WHERE email=:e")
+                                        .bind("p", password)
+                                        .bind("e", email)
+                                        .execute()
+        );
+    }
 }
