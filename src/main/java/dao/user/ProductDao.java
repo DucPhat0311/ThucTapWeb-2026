@@ -53,4 +53,39 @@ public class ProductDao extends BaseDao {
                         .list()
         );
     }
+
+    // lấy chi tiết sản phẩm theo id
+    public Product findById(int id) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                SELECT p.*, c.name AS categoryName
+                FROM products p
+                JOIN categories c ON p.category_id = c.id
+                WHERE p.id = :id
+            """)
+                        .bind("id", id)
+                        .mapToBean(Product.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    // lấy các sp liên quan dựa theo category id
+    public List<Product> getRelatedProductByCategory(int categoryId, int currentProductId, int limit){
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                                SELECT *
+                                FROM products
+                                WHERE category_id = :categoryId
+                                AND id <> :currentProductId
+                                AND status = 'Đang bán'
+                                ORDER BY created_at DESC
+                                LIMIT :limit
+                                """
+                        ).bind("categoryId", categoryId)
+                        .bind("currentProductId",currentProductId)
+                        .bind("limit", limit).
+                        mapToBean(Product.class)
+                        .list());
+    }
 }
