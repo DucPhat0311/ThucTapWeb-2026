@@ -56,7 +56,7 @@
                         </span>
                     </p>
 
-                    <a href="" class="btn-add">
+                    <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
                         Thêm vào giỏ hàng
                     </a>
                 </div>
