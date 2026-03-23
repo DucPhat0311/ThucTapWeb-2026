@@ -37,8 +37,8 @@
                     <i class="fa-regular fa-user"></i>
                 </a>
                 <ul class="user-dropdown">
-                    <li><a href="login.jsp">Đăng nhập</a></li>
-                    <li><a href="register.jsp">Đăng ký</a></li>
+                    <li><a href="login">Đăng nhập</a></li>
+                    <li><a href="register">Đăng ký</a></li>
                 </ul>
             </div>
 
