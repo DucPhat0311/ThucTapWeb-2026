@@ -63,5 +63,54 @@ public class UserDao extends BaseDao {
                         .execute()
         );
     }
+    public User findUserById(int id) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                SELECT id,
+                       username,
+                       email,
+                       role,
+                       is_active,
+                       created_at,
+                       full_name,
+                       birthday,
+                       gender,
+                       phone,
+                       address,
+                       status
+                FROM users
+                WHERE id = :id
+            """)
+                        .bind("id", id)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public void update(User user) {
+        getJdbi().withHandle(handle -> handle.createUpdate("""
+                        UPDATE users
+                                    SET full_name = :fullName,
+                                        phone = :phone,
+                                        email = :email,
+                                        birthday = :birthday,
+                                        gender = :gender,
+                                        address = :address
+                                    WHERE id = :id
+                        """)
+                .bind("fullName", user.getFullName())
+                .bind("phone", user.getPhone())
+                .bind("email", user.getEmail())
+                .bind("birthday", user.getBirthday())
+                .bind("gender", user.getGender())
+                .bind("address", user.getAddress())
+                .bind("id", user.getId())
+                .execute()
+        );
+
+    }
+
+
 
 }

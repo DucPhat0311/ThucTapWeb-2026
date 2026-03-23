@@ -74,5 +74,12 @@ public class UserService {
 
         return user;
     }
+    public User findById(int id) {
+        return userDao.findUserById(id);
+    }
+
+    public void update(User user) {
+        userDao.update(user);
+    }
 
 }
