@@ -31,16 +31,35 @@
         <!-- ACTIONS -->
         <div class="actions">
 
-            <!-- CHƯA Login -->
-            <div class="user-menu">
-                <a href="#" class="iconUser">
-                    <i class="fa-regular fa-user"></i>
-                </a>
-                <ul class="user-dropdown">
-                    <li><a href="login">Đăng nhập</a></li>
-                    <li><a href="register">Đăng ký</a></li>
-                </ul>
-            </div>
+            <c:choose>
+                <c:when test="${not empty sessionScope.userlogin}">
+                    <!-- ĐÃ LOGIN -->
+                    <div class="user-menu">
+                        <a href="#" class="iconUser">
+                            <i class="fa-regular fa-user"></i>
+                                ${sessionScope.userlogin.username}
+                        </a>
+                        <ul class="user-dropdown">
+                            <li><a href="profile">Thông tin cá nhân</a></li>
+                            <li><a href="order">Đơn hàng của tôi</a></li>
+                            <li><a href="logout">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                </c:when>
+
+                <c:otherwise>
+                    <!-- CHƯA LOGIN -->
+                    <div class="user-menu">
+                        <a href="#" class="iconUser">
+                            <i class="fa-regular fa-user"></i>
+                        </a>
+                        <ul class="user-dropdown">
+                            <li><a href="login">Đăng nhập</a></li>
+                            <li><a href="register">Đăng ký</a></li>
+                        </ul>
+                    </div>
+                </c:otherwise>
+            </c:choose>
 
             <c:choose>
                 <c:when test="${not empty sessionScope.userlogin}">
