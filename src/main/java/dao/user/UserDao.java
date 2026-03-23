@@ -109,6 +109,27 @@ public class UserDao extends BaseDao {
                 .execute()
         );
 
+
+    }
+    public String getPasswordById(int id) {
+        return getJdbi().withHandle(handle -> handle.createQuery("""
+                SELECT password
+                FROM users
+                WHERE id = :id""")
+                .bind("id", id)
+                .mapTo(String.class)
+                .findOne()
+                .orElse(null));
+    }
+
+    public boolean updatePasss(int id, String hash) {
+        return  getJdbi().withHandle(handle -> handle.createUpdate("""
+                UPDATE users
+                SET password = :hash
+                WHERE id = :id""")
+                .bind("hash",hash)
+                .bind("id", id)
+                .execute()) > 0;        //Nếu update thành công thì trả về 1 không thì trả về 0
     }
 
 
