@@ -49,7 +49,6 @@ public class UserService {
         String otp = String.format("%06d", new Random().nextInt(1_000_000));
         LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
 
-
         User existing = userDao.finduser(email);
         if (existing == null) {
             userDao.insertPendingUser(username, email, hashedPassword, fullName, birthdayStr, gender, otp, expiredAt);
@@ -65,4 +64,15 @@ public class UserService {
                 "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
         );
     }
+
+    public User login(String username, String password) {
+        User user = userDao.finduser(username);
+
+        if (user == null) return null;
+
+        if (!PassUtil.verify(password, user.getPassword())) return null;
+
+        return user;
+    }
+
 }

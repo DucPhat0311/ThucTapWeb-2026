@@ -10,15 +10,32 @@
 <div class="login-page">
     <div class="login-image"></div>
    <section class="login-container">
+       <%
+           String error = (String) request.getAttribute("error");
+           String errorParam = request.getParameter("error");
+           if(error == null && errorParam != null) {
+               if("require_login".equals(errorParam)) {
+                   error = "Vui lòng đăng nhập bằng tài khoản Admin để truy cập trang quản trị!";
+               } else if("access_denied".equals(errorParam)) {
+                   error = "Truy cập bị từ chối!";
+               }
+           }
+           if(error == null) error = "";
+           String username = request.getParameter("username");
+           if(username == null) username = "";
+       %>
     <div class="login-box">
       <a href="${pageContext.request.contextPath}/home">
         <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
       </a>
       <h2 class="dangNhap" >Đăng nhập</h2>
       <form id="loginForm" action="login" method="post">
+        <% if(error != null && !error.isEmpty()){ %>
+          <div class="error-message"><%=error%></div>
+        <% } %>
         <div class="input-group">
           <label for="username">Email/Tên đăng nhập</label>
-          <input type="text" id="username" name="username" placeholder="Nhập email/Tên tài khoản" required value="">
+          <input type="text" id="username" name="username" placeholder="Nhập email/Tên tài khoản" required value="<%=username%>">
         </div>
 
         <div class="input-group">
@@ -28,10 +45,9 @@
 
 
         <div class="remember-forgot">
-            <a href="forget-password">Quên mật khẩu?</a>
+            <a href="forgetPass">Quên mật khẩu?</a>
         </div>
           <button type="submit" class="btn-primary">Đăng nhập</button>
-
 
         <div class="form-links">
 
@@ -42,5 +58,6 @@
   </section>
 </div>
 
-<%@ include file="../include/footer.jsp" %>
+  <%@ include file="../include/footer.jsp" %>
 
+  <script src="${pageContext.request.contextPath}/javaScript/views/login.js"></script>
