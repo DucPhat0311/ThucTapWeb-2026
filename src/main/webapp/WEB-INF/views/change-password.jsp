@@ -1,44 +1,47 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Đổi mật khẩu - AURA Studio</title>
-    <link rel="stylesheet" href="css/views/change-password.css">
-    <link rel="stylesheet" href="css/views/shared-profile.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+<%@ page contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
 
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
+<%
+    request.setAttribute("pageCss", "views/change-password.css");
+    request.setAttribute("pageTitle" , "Đổi mật khẩu");
+%>
 <!-- ========== HEADER ========== -->
-<%@ include file="../include/header.jsp" %>
+<%@include file="../include/header.jsp"%>
 
 <!-- ========== ĐỔI MẬT KHẨU ========== -->
 <section class="profile-container">
     <div class="profile-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="img/avt.jpg" alt="Avatar">
-                <button type="button" class="change-avatar-btn">Đổi ảnh</button>
+                <img src="${pageContext.request.contextPath}/img/avt.jpg" alt="Avatar">
+                <button class="change-avatar-btn">Đổi ảnh</button>
             </div>
-            <h3>Nguyễn Văn A</h3>
-            <p>Thành viên từ: 01/01/2024</p>
+            <h3>${sessionScope.userlogin.fullName}</h3>
+            <p>
+                Thành viên từ:
+                <fmt:formatDate value="${sessionScope.userlogin.createdAtDate}"
+                                pattern="dd/MM/yyyy"/>
+            </p>
         </div>
 
         <nav class="profile-menu">
             <ul>
-                <li><a href="#"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                <li><a href="#"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
-                <li><a href="#"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
-                <li class="active"><a href="#"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
-                <li><a href="#"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
+                <li><a href="profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                <li><a href="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
+                <li><a href="order-user.jsp"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
+                <li class="active"><a href="change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+                <li><a href="logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
             </ul>
         </nav>
     </div>
 
-    <div class="profile-content">
+    <div class="profile-content" >
         <h2>Đổi mật khẩu</h2>
 
-        <form class="profile-form">
+        <form class="profile-form" method="post" action="change-password">
             <div class="form-row">
                 <div class="form-group">
                     <label for="oldpass">Mật khẩu hiện tại</label>
@@ -61,16 +64,16 @@
             </div>
 
             <div class="form-actions">
-                <button type="button" class="btn-save">Lưu mật khẩu</button>
+                <button type="submit" class="btn-save">Lưu mật khẩu</button>
             </div>
         </form>
 
-        <p style="color: red; display: none;">Mật khẩu hiện tại không đúng</p>
+        <c:if test="${not empty error}">
+            <p style="color:red">${error}</p>
+        </c:if>
+
     </div>
 </section>
 
 <!-- ========== FOOTER ========== -->
 <%@ include file="../include/footer.jsp" %>
-
-</body>
-</html>
