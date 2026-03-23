@@ -205,6 +205,7 @@
     </div>
 </div>
 
+<script src="${pageContext.request.contextPath}/js/views/address.js"></script>
 <!-- ========== FOOTER ========== -->
 <%@ include file="../include/footer.jsp" %>
 
