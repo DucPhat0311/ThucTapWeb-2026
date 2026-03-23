@@ -1,5 +1,17 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<footer class="footer">
+<%@ page contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+
+<body><footer class="footer">
     <div class="footer-container">
         <!-- Thông tin thương hiệu -->
         <div class="footer-info">
@@ -46,9 +58,9 @@
     <div class="copyright">
         <p> &copy; 2026 AURA Studio. Bản quyền đc bảo vệ</p>
     </div>
-</footer>
+</footer></body>
 
-</body>
-</html>
+
+
 
 
