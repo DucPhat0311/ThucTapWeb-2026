@@ -17,4 +17,18 @@ public class ProductService {
         return productDao.findLatest(limit);
     }
 
+    // lấy sản phẩm liên quan
+    public List<Product> ralatedProduct(int currentProductId, int limit) {
+        Product currentProduct = productDao.findById(currentProductId);
+
+        int categoryId = currentProduct.getCategory_id();
+
+        return productDao.getRelatedProductByCategory(categoryId, currentProductId, limit);
+    }
+
+    // lấy chi tiết sản phẩm theo id
+    public Product getProductById(int id) {
+        return productDao.findById(id);
+    }
+
 }
