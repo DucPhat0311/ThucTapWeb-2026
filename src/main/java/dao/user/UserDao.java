@@ -64,4 +64,13 @@ public class UserDao extends BaseDao {
         );
     }
 
+    public void updateOtpForReset(String email, String otp, LocalDateTime expiredAt) {
+        getJdbi().withHandle(h ->
+                h.createUpdate("UPDATE users SET otp_code=:otp, otp_expired_at=:exp WHERE email=:e")
+                .bind("otp", otp)
+                .bind("exp", expiredAt)
+                .bind("e", email)
+                .execute());
+    }
+
 }

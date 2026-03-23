@@ -75,4 +75,20 @@ public class UserService {
         return user;
     }
 
+    public void sendOtpResetPassword(String email) {
+
+        User user = userDao.finduser(email);
+        if (user == null) {throw new RuntimeException("Email không tồn tại");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1_000_000));
+        LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+        userDao.updateOtpForReset(email, otp, expiredAt);
+
+        EmailService.sendEmail(
+                email, "OTP đặt lại mật khẩu", "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
+        );
+    }
+
 }
