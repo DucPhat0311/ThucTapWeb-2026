@@ -3,6 +3,8 @@ package dao.user;
 import dao.core.BaseDao;
 import model.Order;
 
+import java.util.List;
+
 public class OrderDao extends BaseDao {
     public int createOrder(int userId,
                            String name,
@@ -86,6 +88,33 @@ public class OrderDao extends BaseDao {
                         })
                         .findOne()
                         .orElse(null)
+        );
+    }
+    public List<Order> getByUserId(int userId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT *
+            FROM orders
+            WHERE user_id = :uid
+            ORDER BY created_at DESC
+        """)
+                        .bind("uid", userId)
+                        .mapToBean(Order.class)
+                        .list()
+        );
+    }
+    public List<Order> getByUserIdAndStatus(int userId, String status) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT *
+            FROM orders
+            WHERE user_id = :uid AND order_status = :status
+            ORDER BY created_at DESC
+        """)
+                        .bind("uid", userId)
+                        .bind("status", status)
+                        .mapToBean(Order.class)
+                        .list()
         );
     }
 }
