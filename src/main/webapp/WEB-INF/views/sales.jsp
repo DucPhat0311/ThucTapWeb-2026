@@ -23,42 +23,7 @@
 <section class="hero-banner">
   <img src="img/.png" alt="Khuyến mãi" class="hero-bg">
   <div class="hero-content">
-    <a href="product.jsp" class="btn-hero">Mua ngay</a>
-  </div>
-</section>
-
-<!-- FLASH SALE -->
-<section class="flash-sale">
-  <div class="flash-header">
-    <h2 style="text-align: center;"><i class="fas fa-fire"></i> ƯU ĐÃI NỔI BẬT</h2>
-  </div>
-
-  <div class="flash-products">
-    <div class="product-card">
-      <span class="badge flash">SALE -33%</span>
-      <img src="img/.jpg" alt="Áo thun basic">
-      <div class="product-info-wrapper">
-        <h3>Áo thun basic</h3>
-        <p class="price">
-          <span class="new-price">199000₫</span>
-          <span class="old-price">299000₫</span>
-        </p>
-      </div>
-      <a href="" class="btn-add">Thêm vào giỏ hàng</a>
-    </div>
-
-    <div class="product-card">
-      <span class="badge flash">SALE -20%</span>
-      <img src="img/.jpg" alt="Váy nữ">
-      <div class="product-info-wrapper">
-        <h3>Váy nữ</h3>
-        <p class="price">
-          <span class="new-price">249000₫</span>
-          <span class="old-price">310000₫</span>
-        </p>
-      </div>
-      <a href="" class="btn-add">Thêm vào giỏ hàng</a>
-    </div>
+    <a href="product" class="btn-hero">Mua ngay</a>
   </div>
 </section>
 
