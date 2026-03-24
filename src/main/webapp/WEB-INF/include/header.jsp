@@ -108,7 +108,7 @@
                     </ul>
                 </li>
 
-                <li><a href="news">Bài viết</a></li>
+                <li><a href="blog">Bài viết</a></li>
                 <li><a href="sales">Khuyến mãi</a></li>
                 <li><a href="contact">Liên hệ</a></li>
             </ul>
