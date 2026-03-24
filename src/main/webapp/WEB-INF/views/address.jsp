@@ -8,6 +8,7 @@
 %>
 
 <%@ include file="../include/header.jsp" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/address.css">
 
 <!-- ========== NỘI DUNG CHÍNH ========== -->
 <div class="address-container">
