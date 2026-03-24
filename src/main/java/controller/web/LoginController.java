@@ -13,7 +13,7 @@ import dao.user.CartItemDao;
 import service.UserService;
 import model.User;
 
-@WebServlet(name = "loginController", value = "/login")
+@WebServlet(name = "LoginController", value = "/login")
 public class LoginController extends HttpServlet {
 
     private UserService userService;
