@@ -58,5 +58,12 @@ public class CartItemDao extends BaseDao {
                         .list()
         );
     }
+    public void clearCart(int cartId) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("DELETE FROM cart_items WHERE cart_id = :cid")
+                        .bind("cid", cartId)
+                        .execute()
+        );
+    }
     
 }
