@@ -1,6 +1,5 @@
 package controller.web;
 
-import dao.*;
 import dao.user.CartItemDao;
 import dao.user.OrderDao;
 import dao.user.OrderItemDao;
