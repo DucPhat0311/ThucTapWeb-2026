@@ -10,6 +10,7 @@
 %>
 <!-- ========== HEADER ========== -->
 <%@include file="../include/header.jsp"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/change-password.css">
 
 <!-- ========== ĐỔI MẬT KHẨU ========== -->
 <section class="profile-container">

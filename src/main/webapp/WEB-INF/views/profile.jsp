@@ -9,6 +9,7 @@
 %>
 
 <%@include file="../include/header.jsp"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/profile.css">
 
 <!-- ========== PROFILE ========== -->
 <section class="profile-container">
