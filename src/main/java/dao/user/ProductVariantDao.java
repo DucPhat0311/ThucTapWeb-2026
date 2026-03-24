@@ -16,4 +16,25 @@ public class ProductVariantDao extends BaseDao {
                 .mapToBean(ProductVariant.class)
                 .list());
     }
+    public int getStockByVariantId(int variantId) {
+        String sql = "SELECT stock FROM product_variants WHERE id = ?";
+        return getJdbi().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, variantId)
+                        .mapTo(int.class)
+                        .one()
+        );
+    }
+    public void decreaseStock(int variantId, int qty) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE product_variants
+            SET stock = stock - :q
+            WHERE id = :vid
+        """)
+                        .bind("q", qty)
+                        .bind("vid", variantId)
+                        .execute()
+        );
+    }
 }
