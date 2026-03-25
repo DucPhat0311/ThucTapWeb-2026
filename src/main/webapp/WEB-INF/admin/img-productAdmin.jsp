@@ -118,6 +118,25 @@ HTML
 </section>
 </div>
 
+<div id="delete-modal" class="modal-overlay">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h3>Xác Nhận Xóa</h3>
+            <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="delete-message">Bạn có chắc chắn muốn xóa ảnh này?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+            <button class="btn-delete" onclick="confirmDelete()">Xóa</button>
+        </div>
+    </div>
+</div>
+
+<script src="${pageContext.request.contextPath}/javaScript/admin/adminProductImg.js"></script>
+<input type="hidden" id="globalProductId" value="#">
+
 </body>
 </html>
 
