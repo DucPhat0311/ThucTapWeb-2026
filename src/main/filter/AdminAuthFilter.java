@@ -47,7 +47,7 @@ public class AdminAuthFilter implements Filter {
         User user = (User) session.getAttribute("userlogin");
 
         if (!"admin".equalsIgnoreCase(user.getRole())) {
-            // Nếu muốn xử lý khác, thêm logic ở đây
+            req.getRequestDispatcher("/WEB-INF/auth/error403.jsp").forward(req, resp);
             return;
         }
         chain.doFilter(request, response);
