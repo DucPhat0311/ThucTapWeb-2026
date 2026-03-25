@@ -255,6 +255,55 @@
     </div>
 </div>
 
+
+<div class="modal-overlay" id="view-product-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Xem chi tiết sản phẩm</h2>
+            <button class="modal-close" onclick="closeViewProductModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-section">
+                <h3>● Thông tin sản phẩm</h3>
+                <div class="info-row">
+                    <label>ID:</label>
+                    <span id="view-product-id"></span>
+                </div>
+                <div class="info-row">
+                    <label>Tên sản phẩm:</label>
+                    <span id="view-product-name"></span>
+                </div>
+                <div class="info-row">
+                    <label>Giá gốc:</label>
+                    <span id="view-product-price"></span>
+                </div>
+                <div class="info-row">
+                    <label>Giá sale (nếu có):</label>
+                    <span id="view-product-sale-price"></span>
+                </div>
+                <div class="info-row">
+                    <label>Danh mục:</label>
+                    <span id="view-product-category"></span>
+                </div>
+                <div class="info-row">
+                    <label>Trạng thái:</label>
+                    <span id="view-product-status"></span>
+                </div>
+                <div class="info-row">
+                    <label>Ảnh:</label>
+                    <img id="view-product-image" style="max-width: 200px; border-radius: 8px; margin-top: 10px;">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-cancel" onclick="closeViewProductModal()">Đóng</button>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
 <script src="${pageContext.request.contextPath}/javaScript/admin/adminProduct.js"></script>
 
 </body>
