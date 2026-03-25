@@ -277,3 +277,64 @@ textarea[name='content'] {
 textarea[name='shortDescription'] {
     min-height: 100px;
 }
+
+.image-preview {
+            margin: 15px 0;
+            max-width: 400px;
+}
+
+.image-preview img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+}
+
+.file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+}
+        
+.file-input-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+}
+        
+.file-input-label:hover {
+            background: #45a049;
+        }
+        
+.file-name {
+            margin-left: 10px;
+            color: #666;
+}
+
+.checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+}
+        
+.checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+}
+        
+.form-text {
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+}
