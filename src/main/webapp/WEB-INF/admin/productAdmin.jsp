@@ -200,5 +200,62 @@
         </main>
     </section>
 </div>
+
+<div class="modal-overlay" id="product-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="product-modal-title">Thêm sản phẩm</h2>
+            <button class="modal-close" onclick="closeProductModal()">&times;</button>
+        </div>
+        <form method="post" action="${pageContext.request.contextPath}/productAdmin" id="product-form">
+            <input type="hidden" name="action" id="product-action" value="add">
+            <input type="hidden" name="id" id="product-id">
+
+            <div class="form-section">
+                <h3>● Thông tin sản phẩm</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tên sản phẩm</label>
+                        <input type="text" name="name" id="product-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Giá</label>
+                        <input type="number" name="price" id="product-price" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Danh mục</label>
+                        <select name="category_id" id="product-category">
+                            <option value="1">Áo thun nam</option>
+                            <option value="2">Quần jean nam</option>
+                            <option value="3">Áo khoác nam</option>
+                            <option value="4">Phụ kiện nam</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái</label>
+                        <select name="status" id="product-status">
+                            <option value="Đang bán">Đang bán</option>
+                            <option value="Hết hàng">Hết hàng</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>URL Ảnh</label>
+                    <input type="text" name="thumbnail" id="product-thumbnail">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn-save">Lưu</button>
+                <button type="button" class="btn-cancel" onclick="closeProductModal()">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${pageContext.request.contextPath}/javaScript/admin/adminProduct.js"></script>
+
 </body>
 </html>
