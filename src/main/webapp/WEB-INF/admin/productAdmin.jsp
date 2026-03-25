@@ -301,7 +301,23 @@
     </div>
 </div>
 
-
+<div class="modal-overlay" id="toggle-product-modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2>Xác nhận</h2>
+        </div>
+        <div class="modal-body">
+            <p id="toggle-product-message"></p>
+        </div>
+        <form method="post" action="${pageContext.request.contextPath}/productAdmin" id="toggle-product-form">
+            <input type="hidden" name="action" value="toggle-status">
+            <input type="hidden" name="id" id="toggle-product-id">
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeToggleProductModal()">Hủy</button>
+                <button type="submit" class="btn-delete">Xác nhận</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="${pageContext.request.contextPath}/javaScript/admin/adminProduct.js"></script>
