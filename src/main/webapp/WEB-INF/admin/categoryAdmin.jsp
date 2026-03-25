@@ -199,14 +199,29 @@
         </tbody>
     </table>
 </div>
+
             </section>
 
         </main>
     </section>
 </div>
 
+<div class="modal-overlay" id="toggle-status-modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2 id="toggle-status-title">Xác nhận</h2>
+        </div>
+        <div class="modal-body">
+            <p id="toggle-status-message"></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-cancel" onclick="closeToggleStatusModal()">Hủy</button>
+            <button type="button" class="btn-delete" onclick="confirmToggleStatus()">Xác nhận</button>
+        </div>
+    </div>
+</div>
 
-<script src="${pageContext.request.contextPath}/javaScript/admin/adminCategory.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin/adminCategory.js"></script>
 
 </body>
 </html>
