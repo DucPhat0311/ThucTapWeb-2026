@@ -60,11 +60,39 @@
                                     Màu: <b>${item.color}</b>
                                 </td>
 
+                                <!-- UPDATE SỐ LƯỢNG -->
+                                <td>
+                                    <form action="update-cart"
+                                          method="post"
+                                          class="qty-form"
+                                          style="display:flex; justify-content:center; align-items:center; gap:6px;">
+
+                                        <input type="hidden" name="variantId" value="${item.variantId}">
+
+                                        <button type="button" class="btn-minus">−</button>
+
+                                        <input type="text"
+                                               name="quantity"
+                                               class="qty-display"
+                                               value="${item.quantity}"
+                                               readonly
+                                               style="width:40px; text-align:center;">
+
+                                        <button type="button" class="btn-plus">+</button>
+                                    </form>
+                                </td>
+
                                 <!-- THÀNH TIỀN -->
                                 <td>
                                     <fmt:formatNumber value="${item.price * item.quantity}" type="number"/> ₫
                                 </td>
 
+                                <!-- XÓA -->
+                                <td>
+                                    <form action="del-item" method="post">
+                                        <input type="hidden" name="variantId" value="${item.variantId}">
+                                        <button type="submit"> <i class="fa fa-trash"></i></button>
+                                    </form>
                                 </td>
 
 
@@ -117,9 +145,12 @@
                     </form>
                 </c:if>
             </div>
-
         </div>
     </div>
 </section>
 
 <%@include file="../include/footer.jsp"%>
+</body>
+<script src="${pageContext.request.contextPath}/js/views/cart.js"></script>
+
+</html>

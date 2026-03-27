@@ -93,7 +93,7 @@
                                     </span>
                                 </p>
 
-                                <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
+                                <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}&quantity=1" class="btn-add">
                                     Thêm vào giỏ hàng
                                 </a>
                             </div>

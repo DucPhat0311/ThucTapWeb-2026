@@ -8,12 +8,42 @@ import java.util.List;
 
 public class CartItemDao extends BaseDao {
 
+    public int getQuantityByVariant(int cartId, int variantId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT COALESCE(quantity, 0)
+            FROM cart_items
+            WHERE cart_id = :cid AND variant_id = :vid
+        """)
+                        .bind("cid", cartId)
+                        .bind("vid", variantId)
+                        .mapTo(int.class)
+                        .findOne()
+                        .orElse(0)
+        );
+    }
+
     public int countTotalQuantity(int cartId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("SELECT COALESCE(SUM(quantity),0) FROM cart_items WHERE cart_id = :cid")
                         .bind("cid", cartId)
                         .mapTo(int.class)
                         .one()
+        );
+    }
+
+    public int getQuantity(int cartId, int variantId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT COALESCE(quantity, 0)
+            FROM cart_items
+            WHERE cart_id = :cid AND variant_id = :vid
+        """)
+                        .bind("cid", cartId)
+                        .bind("vid", variantId)
+                        .mapTo(int.class)
+                        .findOne()
+                        .orElse(0)
         );
     }
 
@@ -57,6 +87,49 @@ public class CartItemDao extends BaseDao {
                         })
                         .list()
         );
+    }
+    public void clearCart(int cartId) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("DELETE FROM cart_items WHERE cart_id = :cid")
+                        .bind("cid", cartId)
+                        .execute()
+        );
+    }
+
+    public void addOrUpdate(int cartId, int variantId, int productId, int quantity, double price) {
+        getJdbi().useHandle(h -> {
+            Integer exists = h.createQuery("""
+            SELECT id FROM cart_items
+            WHERE cart_id = :cid AND variant_id = :vid
+        """)
+                    .bind("cid", cartId)
+                    .bind("vid", variantId)
+                    .mapTo(Integer.class)
+                    .findOne()
+                    .orElse(null);
+
+            if (exists != null) {
+                h.createUpdate("""
+                UPDATE cart_items
+                SET quantity = quantity + :q
+                WHERE id = :id
+            """)
+                        .bind("q", quantity)
+                        .bind("id", exists)
+                        .execute();
+            } else {
+                h.createUpdate("""
+                INSERT INTO cart_items(cart_id, product_id, variant_id, quantity, price)
+                VALUES (:cid, :pid, :vid, :q, :price)
+            """)
+                        .bind("cid", cartId)
+                        .bind("pid", productId)
+                        .bind("vid", variantId)
+                        .bind("q", quantity)
+                        .bind("price", price)
+                        .execute();
+            }
+        });
     }
     
 }
