@@ -174,9 +174,28 @@
     </section>
 </main>
 
+<div id="toast"></div>
+
+<script>
+    const variants = [
+        <c:forEach var="v" items="${variants}" varStatus="st">
+        {
+            id: ${v.id},
+            colorId: ${v.colorId},
+            sizeId: ${v.sizeId},
+            stock: ${v.stock}
+        }<c:if test="${!st.last}">,</c:if>
+        </c:forEach>
+    ];
+</script>
 
 <%@include file="../include/footer.jsp"%>
 
 
 </body>
+
+
+<script src="${pageContext.request.contextPath}/js/views/detail-product.js"></script>
+
+
 </html>

@@ -66,7 +66,9 @@
                     <a href="my-cart" class="iconCart">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <c:if test="${sessionScope.cartSize != null && sessionScope.cartSize > 0}">
-                            <span class="cart-count">${sessionScope.cartSize}</span>
+                            <span class="cart-count">
+                                ${sessionScope.cartSize != null ? sessionScope.cartSize : 0}
+                            </span>
                         </c:if>
                     </a>
                 </c:when>
