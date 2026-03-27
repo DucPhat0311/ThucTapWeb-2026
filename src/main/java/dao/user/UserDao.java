@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import dao.core.BaseDao;
 import model.User;
+import util.PassUtil;
 
 public class UserDao extends BaseDao {
         public User finduser(String username) {
@@ -134,4 +135,56 @@ public class UserDao extends BaseDao {
 
 
 
+    public void updateOtpForReset(String email, String otp, LocalDateTime expiredAt) {
+        getJdbi().withHandle(h ->
+                h.createUpdate("UPDATE users SET otp_code=:otp, otp_expired_at=:exp WHERE email=:e")
+                .bind("otp", otp)
+                .bind("exp", expiredAt)
+                .bind("e", email)
+                .execute());
+    }
+
+    public boolean verifyOtp(String email, String otp) {
+        return getJdbi().withHandle(h ->
+                h.createUpdate(
+                                "UPDATE users SET is_active=1, status = 'ACTIVE',otp_code=NULL, otp_expired_at=NULL " +
+                                        "WHERE email=:e AND otp_code=:otp AND otp_expired_at > NOW()"
+                        )
+                        .bind("e", email)
+                        .bind("otp", otp)
+                        .execute()
+        ) > 0;
+    }
+
+       public boolean lastCheckOtp(String email, String otp) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("SELECT COUNT(*) FROM users " +
+                                        "WHERE email=:e AND otp_code=:otp AND otp_expired_at > NOW()")
+                                        .bind("e", email)
+                                        .bind("otp", otp)
+                                        .mapTo(int.class)
+                                        .one()) > 0;
+    }
+
+    public boolean verifyOtpForReset(String email, String otp) {
+        int count = getJdbi().withHandle(h ->
+                h.createQuery(
+                                "SELECT COUNT(*) FROM users " +
+                                        "WHERE email=:e AND otp_code=:otp AND otp_expired_at > NOW()")
+                                        .bind("e", email)
+                                        .bind("otp", otp)
+                                        .mapTo(int.class)
+                                        .one());
+        return count > 0;
+    }
+
+    public void updatePassword(String email, String password) {
+        getJdbi().withHandle(h ->
+                h.createUpdate("UPDATE users SET password=:p, otp_code=NULL, otp_expired_at=NULL " +
+                                        "WHERE email=:e")
+                                        .bind("p", password)
+                                        .bind("e", email)
+                                        .execute()
+        );
+    }
 }
