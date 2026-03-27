@@ -6,23 +6,25 @@
 %>
 
 <%@ include file="../include/header.jsp" %>
-
 <div class="forget-page">
     <div class="forget-image"></div>
     <main class="forget-container">
         <div class="forget-box">
-            <a href="fpcl">
+            <a href="forgetPass">
                 <button class="close-btn"><i class="fa-solid fa-arrow-left"></i></button>
             </a>
             <h2 class="quenMatKhau">Nhập mã xác nhận</h2>
+            <c:if test="${not empty error}">
+                <div class="error-message">${error}</div>
+            </c:if>
             <p style="color:#5c4033; margin-bottom:1.5rem; text-align:center;">
                 Mã xác minh đã được gửi đến Email<br>
-                <strong>meomeo@gmail.com</strong>
+                <strong>${param.email}</strong>
             </p>
-            <form action="enterOTP" method="post" onsubmit="return joinOtp()">
-                <input type="hidden" name="email" value="">
+            <form action="sendOTP" method="post" onsubmit="return joinOtp()">
+                <input type="hidden" name="email" value="${param.email}">
                 <input type="hidden" name="otp" id="otp">
-                <input type="hidden" name="type" value="">
+                <input type="hidden" name="type" value="${type}">
                 <div class="otp-line">
                     <input type="text" maxlength="1" class="o" inputmode="numeric">
                     <input type="text" maxlength="1" class="o" inputmode="numeric">
@@ -46,4 +48,5 @@
     </main>
 </div>
 <%@ include file="../include/footer.jsp" %>
+<script src="${pageContext.request.contextPath}/js/auth/enterOtp.js"></script>
 </html>

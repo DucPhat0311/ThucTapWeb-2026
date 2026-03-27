@@ -1,3 +1,8 @@
+<%@ page contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -19,20 +24,20 @@
 
 <!-- MAIN -->
 <main class="container">
-    <div class="newsContainer">
+    <div class="blogContainer">
 
         <!-- BÀI VIẾT RANDOM nào đó -->
-        <div class="newsItem">
+        <div class="blogItem">
             <a href="">
                 <img src="img/.jpg" alt="Tiêu đề bài viết 1">
             </a>
-            <div class="news-content">
+            <div class="blog-content">
                 <h3>
                     <a href="">Tiêu đề bài viết 1</a>
                 </h3>
                 <p>Mô tả ngắn gọn về nội dung bài viết 1, tóm tắt ý chính và hấp dẫn người đọc.</p>
-                <div class="news-meta">
-                    <span class="news-date">
+                <div class="blog-meta">
+                    <span class="blog-date">
                         <i class="fa-regular fa-calendar"></i>
                         15/03/2026
                     </span>
@@ -40,17 +45,17 @@
             </div>
         </div>
 
-        <div class="newsItem">
+        <div class="blogItem">
             <a href="">
                 <img src="img/.jpg" alt="Tiêu đề bài viết 2">
             </a>
-            <div class="news-content">
+            <div class="blog-content">
                 <h3>
                     <a href="">Tiêu đề bài viết 2</a>
                 </h3>
                 <p>Mô tả ngắn gọn về nội dung bài viết 2, tóm tắt ý chính và hấp dẫn người đọc.</p>
-                <div class="news-meta">
-                    <span class="news-date">
+                <div class="blog-meta">
+                    <span class="blog-date">
                         <i class="fa-regular fa-calendar"></i>
                         10/03/2026
                     </span>

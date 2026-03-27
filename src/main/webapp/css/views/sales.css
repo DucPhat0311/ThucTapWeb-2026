@@ -1,3 +1,5 @@
+@charset "UTF-8";
+/* ========== M?U S?C & FONT CO B?N ========== */
 :root {
     --primary-color: #6F4E37;
     --primary-light: #A67B5B;
@@ -94,7 +96,7 @@ body {
     gap: 25px;
 }
 
-/* ========== SẢN PHẨM KHUYẾN MÃI GRID ========== */
+/* ========== S?N PH?M KHUY?N M?I GRID ========== */
 .products {
     max-width: 1200px;
     margin: 60px auto;
@@ -208,11 +210,11 @@ body {
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
-    margin-top: auto;
+    margin-top: auto; /* ??y gi? xu?ng du?i c?ng c?a flex-grow */
 }
 
 .price::before {
-    content: "Giá:";
+    content: "Gi\00E1: ";
     color: var(--text-muted);
     font-size: 14px;
     font-weight: 500;
@@ -278,7 +280,7 @@ body {
     color: #fff;
 }
 
-/* ===== ẨN SẢN PHẨM ===== */
+/* ===== ?N S?N PH?M ===== */
 .product-card.hidden,
 .discount-grid .product-card.hidden {
     display: none !important;
@@ -331,6 +333,7 @@ body {
 
 /* TUI OVERRIDE STYLE */
 .product-card, .suggested-item {
+    position: relative !important;
     background-color: #ffffff !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
@@ -350,7 +353,7 @@ body {
     border-radius: 12px 12px 0 0 !important;
     height: 240px !important;
     width: 100% !important;
-    object-fit: contain !important;
+    object-fit: contain !important; /* Thay vi cover de khong bi cat hinh */
     background-color: #fafafa !important;
     margin-bottom: 12px !important;
 }
@@ -378,7 +381,7 @@ body {
     padding: 10px 20px !important;
     font-weight: 600 !important;
     width: 90% !important;
-    margin: auto auto 15px !important;
+    margin: auto auto 15px !important; /* day xuong day */
     text-transform: uppercase !important;
     font-size: 13px !important;
     letter-spacing: 0.5px !important;
@@ -393,6 +396,7 @@ body {
 
 /* TUI OVERRIDE STYLE */
 .product-card, .suggested-item {
+    position: relative !important;
     background-color: #ffffff !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
@@ -414,7 +418,7 @@ body {
     border-radius: 12px 12px 0 0 !important;
     height: 240px !important;
     width: 100% !important;
-    object-fit: cover !important;
+    object-fit: cover !important; /* Cover looks better than contain if the aspect ratios mach */
     background-color: #f8f8f8 !important;
     margin-bottom: 15px !important;
 }
@@ -461,6 +465,7 @@ body {
 
 /* TUI OVERRIDE STYLE */
 .product-card, .suggested-item {
+    position: relative !important;
     background-color: #ffffff !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
@@ -482,7 +487,7 @@ body {
     border-radius: 12px 12px 0 0 !important;
     height: 240px !important;
     width: 100% !important;
-    object-fit: cover !important;
+    object-fit: cover !important; /* Cover looks better than contain if the aspect ratios mach */
     background-color: #f8f8f8 !important;
     margin-bottom: 15px !important;
 }
@@ -529,6 +534,7 @@ body {
 
 /* TUI OVERRIDE STYLE */
 .product-card, .suggested-item {
+    position: relative !important;
     background-color: #ffffff !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
@@ -550,7 +556,7 @@ body {
     border-radius: 12px 12px 0 0 !important;
     height: 240px !important;
     width: 100% !important;
-    object-fit: cover !important;
+    object-fit: cover !important; /* Cover looks better than contain if the aspect ratios mach */
     background-color: #f8f8f8 !important;
     margin-bottom: 15px !important;
 }
@@ -593,4 +599,8 @@ body {
     background-color: #8C5E3C !important;
     transform: scale(1.02) !important;
 }
+
+
+
+
 

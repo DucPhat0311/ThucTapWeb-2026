@@ -8,6 +8,7 @@
 %>
 
 <%@ include file="../include/header.jsp" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/address.css">
 
 <!-- ========== NỘI DUNG CHÍNH ========== -->
 <div class="address-container">
@@ -34,12 +35,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="don-mua">
+                    <a href="order-user">
                         <i class="fas fa-clipboard-list"></i> Đơn hàng của tôi
                     </a>
                 </li>
                 <li>
-                    <a href="doi-mat-khau">
+                    <a href="change-password">
                         <i class="fas fa-lock"></i> Đổi mật khẩu
                     </a>
                 </li>

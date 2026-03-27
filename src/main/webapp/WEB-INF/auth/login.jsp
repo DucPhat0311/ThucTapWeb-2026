@@ -14,11 +14,11 @@
            String error = (String) request.getAttribute("error");
            String errorParam = request.getParameter("error");
            if(error == null && errorParam != null) {
-               if("require_login".equals(errorParam)) {
-                   error = "Vui lòng đăng nhập bằng tài khoản Admin để truy cập trang quản trị!";
-               } else if("access_denied".equals(errorParam)) {
+                 if("loginError".equals(errorParam)) {
+                   error = "Vui lòng đăng nhập bằng tài khoản Admin để truy cập trang này!";
+                 } else if("error403".equals(errorParam)) {
                    error = "Truy cập bị từ chối!";
-               }
+                 }
            }
            if(error == null) error = "";
            String username = request.getParameter("username");
@@ -60,4 +60,3 @@
 
   <%@ include file="../include/footer.jsp" %>
 
-  <script src="${pageContext.request.contextPath}/javaScript/views/login.js"></script>

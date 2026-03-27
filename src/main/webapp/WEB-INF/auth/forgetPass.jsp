@@ -6,7 +6,6 @@
 %>
 
 <%@ include file="../include/header.jsp" %>
-
 <div class="forget-page">
     <div class="forget-image"></div>
     <main class="forget-container">
@@ -16,6 +15,9 @@
             </a>
 
             <h2 class="quenMatKhau">Quên mật khẩu</h2>
+            <% if(request.getAttribute("error") != null) { %>
+                <div class="error-message">${error}</div>
+            <% } %>
             <form id="forgetForm" action="forgetPass" method="post">
                 <div class="input-group">
                     <label for="email">Email đã đăng ký</label>

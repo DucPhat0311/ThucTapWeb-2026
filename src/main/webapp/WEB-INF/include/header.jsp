@@ -41,7 +41,7 @@
                         </a>
                         <ul class="user-dropdown">
                             <li><a href="profile">Thông tin cá nhân</a></li>
-                            <li><a href="order">Đơn hàng của tôi</a></li>
+                            <li><a href="order-user">Đơn hàng của tôi</a></li>
                             <li><a href="logout">Đăng xuất</a></li>
                         </ul>
                     </div>
@@ -99,11 +99,10 @@
     <!-- MENU -->
     <nav class="header-bottom">
         <div class="menu">
-            <ul>
-                <li><a href="home.jsp">Trang chủ</a></li>
+            <ul><li><a href="home">Trang chủ</a></li>
 
                 <li>
-                    <a href="product.jsp">Danh Mục ▾</a>
+                    <a href="product">Danh Mục ▾</a>
                     <ul class="sub">
                         <li class="subItem"><a>Thời trang Nam</a></li>
                         <li class="subItem"><a>Thời trang Nữ</a></li>
@@ -111,9 +110,9 @@
                     </ul>
                 </li>
 
-                <li><a href="news.jsp">Bài viết</a></li>
-                <li><a href="sales.jsp">Khuyến mãi</a></li>
-                <li><a href="contact.jsp">Liên hệ</a></li>
+                <li><a href="blog">Bài viết</a></li>
+                <li><a href="sales">Khuyến mãi</a></li>
+                <li><a href="contact">Liên hệ</a></li>
             </ul>
         </div>
     </nav>
