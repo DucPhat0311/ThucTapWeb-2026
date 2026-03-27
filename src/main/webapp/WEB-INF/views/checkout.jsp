@@ -8,6 +8,7 @@
 %>
 
 <%@include file="../include/header.jsp"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/checkout.css">
 
 <section class="checkout">
     <div class="checkout-container">

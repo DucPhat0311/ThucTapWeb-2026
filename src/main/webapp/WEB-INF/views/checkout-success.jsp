@@ -8,6 +8,7 @@
 %>
 
 <%@include file="../include/header.jsp"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/checkout-success.css">
 
 <div class="order-success-wrapper">
     <div class="success-top-banner">
