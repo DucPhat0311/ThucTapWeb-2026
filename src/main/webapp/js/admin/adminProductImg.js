@@ -38,6 +38,30 @@ let currentImageId = null;
             document.body.appendChild(form);
             form.submit();
         }
+
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const fileName = document.getElementById('fileName');
+        const newImagePreview = document.getElementById('newImagePreview');
+        const previewImg = document.getElementById('previewImg');
+
+        if (file) {
+            fileName.textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                newImagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            const mode = document.getElementById('formMode')?.value;
+            fileName.textContent = mode === 'add' ? 'Chưa chọn file' : 'Chọn để thay đổi';
+            newImagePreview.style.display = 'none';
+        }
     }
+
+}
+
 
 

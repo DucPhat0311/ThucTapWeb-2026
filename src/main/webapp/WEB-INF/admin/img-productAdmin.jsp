@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -31,92 +32,106 @@
             </div>
         </div>
 
-Bản tĩnh sạch cho danh sách Ảnh sản phẩm, giữ nguyên cấu trúc, class và các icon Font Awesome của bạn:
+ <main id="page">
+            <section class="page active">
 
-HTML
-<main id="page">
-    <section class="page active">
+            <c:if test="${param.error == 'true'}">
+                <div class="alert alert-danger">
+                    Có lỗi xảy ra khi xử lý yêu cầu!
+                </div>
+            </c:if>
+            <c:if test="${param.error == 'no_image'}">
+                <div class="alert alert-danger">
+                    Vui lòng chọn ảnh để tải lên!
+                </div>
+            </c:if>
 
-        <div class="cards">
-            <div class="card">Tổng Ảnh<span>3</span></div>
-        </div>
 
-        <div class="user-toolbar" style="justify-content: flex-end; margin-bottom: 20px;">
-            <a href="#" class="btn-add">
-                <i class="fa fa-plus"></i> Thêm Ảnh
-            </a>
-        </div>
+            <div class="cards">
+                <div class="card">Tổng Ảnh<span>${totalImages}</span></div>
+            </div>
 
-        <div class="user-table-wrapper">
-            <table class="user-table">
-                <thead>
-                <tr>
-                    <th width="5%">STT</th>
-                    <th width="8%">ID</th>
-                    <th width="40%">Hình Ảnh</th>
-                    <th width="12%">Ảnh Chính</th>
-                    <th width="20%">Hành Động</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>IMG01</td>
-                    <td>
-                        <img src="https://via.placeholder.com/100x100" alt="Product Image" class="product-thumbnail">
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa fa-check-circle"></i> Có
-                        </span>
-                    </td>
-                    <td>
-                        <div class="actions">
-                            <a href="#" class="icon-btn view" title="Xem">
-                                <i class="fa fa-eye"></i>
-                            </a>
-                            <a href="#" class="icon-btn edit" title="Sửa">
-                                <i class="fa fa-pen"></i>
-                            </a>
-                            <button class="icon-btn delete" title="Xóa">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
 
-                <tr>
-                    <td>2</td>
-                    <td>IMG02</td>
-                    <td>
-                        <img src="https://via.placeholder.com/100x100" alt="Product Image" class="product-thumbnail">
-                    </td>
-                    <td>
-                        <span class="status inactive">
-                            <i class="fa fa-times-circle"></i> Không
-                        </span>
-                    </td>
-                    <td>
-                        <div class="actions">
-                            <a href="#" class="icon-btn view" title="Xem">
-                                <i class="fa fa-eye"></i>
-                            </a>
-                            <a href="#" class="icon-btn edit" title="Sửa">
-                                <i class="fa fa-pen"></i>
-                            </a>
-                            <button class="icon-btn delete" title="Xóa">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="user-toolbar" style="justify-content: flex-end; margin-bottom: 20px;">
+                <a href="productImgAdmin?productId=${productId}&mode=add" class="btn-add">
+                    <i class="fa fa-plus"></i> Thêm Ảnh
+                </a>
+            </div>
+
+       
+            <div class="user-table-wrapper">
+                <table class="user-table">
+                    <thead>
+                    <tr>
+                        <th width="5%">STT</th>
+                        <th width="8%">ID</th>
+                        <th width="40%">Hình Ảnh</th>
+                        <th width="12%">Ảnh Chính</th>
+                        <th width="20%">Hành Động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${empty images}">
+                            <tr>
+                                <td colspan="5" class="text-center">Chưa có ảnh nào</td>
+                            </tr>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="img" items="${images}" varStatus="status">
+                                <tr>
+                                    <td>${status.index + 1}</td>
+                                    <td>${img.id}</td>
+                                    <td>
+                                        <img src="${img.imageUrl}"
+                                             alt="Product Image"
+                                             class="product-thumbnail">
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${img.main}">
+                                                <span class="status active">
+                                                    <i class="fa fa-check-circle"></i> Có
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="status inactive">
+                                                    <i class="fa fa-times-circle"></i> Không
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <div class="actions">
+                                            <a href="productImgAdmin?productId=${productId}&mode=view&id=${img.id}"
+                                               class="icon-btn view"
+                                               title="Xem">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <a href="productImgAdmin?productId=${productId}&mode=edit&id=${img.id}"
+                                               class="icon-btn edit"
+                                               title="Sửa">
+                                                <i class="fa fa-pen"></i>
+                                            </a>
+                                            <button onclick="deleteImage(${img.id})"
+                                                    class="icon-btn delete"
+                                                    title="Xóa">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
+            </div>
+            </section>
+        </main>
     </section>
-</main>
-</section>
 </div>
+
 
 <div id="delete-modal" class="modal-overlay">
     <div class="modal-content modal-small">
@@ -134,9 +149,9 @@ HTML
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/javaScript/admin/adminProductImg.js"></script>
-<input type="hidden" id="globalProductId" value="#">
 
+<script src="${pageContext.request.contextPath}/js/admin/adminProductImg.js"></script>
+<input type="hidden" id="globalProductId" value="${productId}">
 </body>
 </html>
 
