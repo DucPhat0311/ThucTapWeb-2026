@@ -88,4 +88,22 @@ public class ProductDao extends BaseDao {
                         mapToBean(Product.class)
                         .list());
     }
+
+    // tìm kiếm tên sp
+    public List<Product> searchByName(String keyword) {
+        String sql = """
+        SELECT p.*, c.name AS categoryName
+        FROM products p
+        JOIN categories c ON p.category_id = c.id
+        WHERE p.status <> 'Đã xoá'
+        AND p.name LIKE :kw
+    """;
+
+        return getJdbi().withHandle(h ->
+                h.createQuery(sql)
+                        .bind("kw", "%" + keyword + "%")
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
 }
