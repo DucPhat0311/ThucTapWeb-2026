@@ -31,4 +31,9 @@ public class ProductService {
         return productDao.findById(id);
     }
 
+    // tìm kiếm theo tên
+    public List<Product> searchProducts(String keyword) {
+        return productDao.searchByName(keyword);
+    }
+
 }
