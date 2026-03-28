@@ -6,6 +6,9 @@
 <head>
     <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
 
+<c:if test="${not empty pageCss}">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/${pageCss}">
+</c:if>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
