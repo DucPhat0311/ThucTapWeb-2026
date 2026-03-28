@@ -1,10 +1,8 @@
 package dao.user;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import dao.core.BaseDao;
 import model.User;
-import util.PassUtil;
 
 public class UserDao extends BaseDao {
         public User finduser(String username) {

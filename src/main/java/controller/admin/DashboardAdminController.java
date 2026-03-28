@@ -8,7 +8,7 @@ import service.OrderService;
 
 import java.io.IOException;
 
-@WebServlet(name = "DashboardAdminController", value = "/dashboard")
+@WebServlet(name = "DashboardAdminController", value = "/dashboardAdmin")
 public class DashboardAdminController extends HttpServlet {
     private DashboardService service;
     private OrderService orderService;
@@ -27,7 +27,7 @@ public class DashboardAdminController extends HttpServlet {
         request.setAttribute("latestOrders", service.latestOrders(10));
 
         request.setAttribute("page", "dashboard");
-        request.getRequestDispatcher("/WEB-INF/admin/Dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/admin/dashboardAdmin.jsp").forward(request, response);
     }
 
     @Override

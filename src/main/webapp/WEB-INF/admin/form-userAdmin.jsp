@@ -1,26 +1,31 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Form Người dùng</title>
+    <title>Admin User Form</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formUser.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
-
 <body>
 
 <div class="container">
 
     <div class="form-header">
         <a href="userAdmin" class="btn-back">← Quay lại</a>
-        <h2>Chỉnh sửa người dùng</h2>
+        <h2>
+            <c:choose>
+                <c:when test="${mode == 'add'}">Thêm người dùng</c:when>
+                <c:when test="${mode == 'edit'}">Chỉnh sửa người dùng</c:when>
+                <c:otherwise>Xem chi tiết người dùng</c:otherwise>
+            </c:choose>
+        </h2>
     </div>
 
+    
     <form method="post" action="userAdmin">
 
         <div class="card">
@@ -29,26 +34,30 @@
             <div class="row">
                 <div class="col">
                     <label>ID</label>
-                    <input type="text" value="1024" readonly>
+                    <input type="text" value="${user.id}" readonly>
                 </div>
 
                 <div class="col">
                     <label>Username</label>
-                    <input type="text" name="username" value="nguyenvana" readonly>
+                    <input type="text" name="username"
+                           value="${user.username}"
+                           <c:if test="${mode != 'add'}">readonly</c:if>>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col">
                     <label>Email</label>
-                    <input type="email" name="email" value="vana@gmail.com" readonly>
+                    <input type="email" name="email"
+                           value="${user.email}"
+                           <c:if test="${mode != 'add'}">readonly</c:if>>
                 </div>
 
                 <div class="col">
                     <label>Vai trò</label>
                     <select name="role">
-                        <option value="admin">Quản trị</option>
-                        <option value="customer" selected>Khách hàng</option>
+                        <option value="admin" <c:if test="${user.role == 'admin'}">selected</c:if>>Quản trị</option>
+                        <option value="customer" <c:if test="${user.role == 'customer'}">selected</c:if>>Khách hàng</option>
                     </select>
                 </div>
             </div>
@@ -57,8 +66,8 @@
                 <div class="col">
                     <label>Trạng thái</label>
                     <select name="status">
-                        <option value="ACTIVE" selected>Hoạt động</option>
-                        <option value="BLOCKED">Bị khóa</option>
+                        <option value="ACTIVE" <c:if test="${user.status == 'ACTIVE'}">selected</c:if>>Hoạt động</option>
+                        <option value="BLOCKED" <c:if test="${user.status == 'BLOCKED'}">selected</c:if>>Bị khóa</option>
                     </select>
                 </div>
             </div>
@@ -71,12 +80,12 @@
             <div class="row">
                 <div class="col">
                     <label>Họ tên</label>
-                    <input type="text" name="full_name" value="Nguyễn Văn An">
+                    <input type="text" name="full_name" value="${user.fullName}">
                 </div>
 
                 <div class="col">
                     <label>Số điện thoại</label>
-                    <input type="text" name="phone" value="0901234567">
+                    <input type="text" name="phone" value="${user.phone}">
                 </div>
             </div>
 
@@ -85,47 +94,58 @@
                     <label>Giới tính</label>
                     <select name="gender">
                         <option value="">-- Chọn --</option>
-                        <option value="male" selected>Nam</option>
-                        <option value="female">Nữ</option>
-                        <option value="other">Khác</option>
+                        <option value="male" <c:if test="${user.gender == 'male'}">selected</c:if>>Nam</option>
+                        <option value="female" <c:if test="${user.gender == 'female'}">selected</c:if>>Nữ</option>
+                        <option value="other" <c:if test="${user.gender == 'other'}">selected</c:if>>Khác</option>
                     </select>
                 </div>
 
                 <div class="col">
                     <label>Ngày sinh</label>
-                    <input type="date" name="birthday" value="2000-01-01">
+                    <input type="date" name="birthday" value="${user.birthday}">
                 </div>
             </div>
 
             <div class="row">
                 <div class="col">
                     <label>Địa chỉ</label>
-                    <textarea name="address" rows="3">Số 123, đường Kha Vạn Cân, Linh Trung, Thủ Đức, TP. HCM</textarea>
+                    <textarea name="address" rows="3">${user.address}</textarea>
                 </div>
             </div>
         </div>
 
 
+
         <div class="form-footer">
-            <button type="submit" name="action" value="update" class="btn-primary">
-                Lưu
-            </button>
+            <c:if test="${mode != 'view'}">
+                <button type="submit" name="action"
+                        value="${mode == 'add' ? 'create' : 'update'}"
+                        class="btn-primary">
+                    Lưu
+                </button>
+            </c:if>
             <a href="userAdmin" class="btn-secondary">Hủy</a>
         </div>
 
-        <input type="hidden" name="id" value="1024">
-        <input type="hidden" name="mode" value="edit">
+
+        <input type="hidden" name="id" value="${user.id}">
+        <input type="hidden" name="mode" value="${mode}">
 
     </form>
 
 </div>
 
-<style>
-    input[readonly], textarea[readonly] {
-        background: #f2f2f2;
-        cursor: not-allowed;
-    }
-</style>
+<c:if test="${mode == 'view'}">
+    <style>
+        input, select, textarea, button {
+            pointer-events: none;
+            background: #f2f2f2;
+        }
+        .btn-secondary {
+            pointer-events: auto;
+        }
+    </style>
+</c:if>
 
 </body>
 </html>
