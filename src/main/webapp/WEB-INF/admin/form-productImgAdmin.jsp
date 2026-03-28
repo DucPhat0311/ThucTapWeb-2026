@@ -10,7 +10,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
     
-    <title>Thêm Ảnh</title>
+    <title>
+        <c:choose>
+            <c:when test="${mode == 'add'}">Thêm Ảnh</c:when>
+            <c:when test="${mode == 'edit'}">Sửa Ảnh</c:when>
+            <c:otherwise>Xem Ảnh</c:otherwise>
+        </c:choose>
+    </title>
+    
 </head>
 <body>
 <div class="container">
@@ -18,60 +25,104 @@
         <a href="img-productAdmin" class="btn-back">
             <i class="fa fa-arrow-left"></i> Quay lại
         </a>
-        <h2>Thêm Ảnh Mới</h2>
+
+        <h2>
+            <c:choose>
+                <c:when test="${mode == 'add'}">Thêm Ảnh Mới</c:when>
+                <c:when test="${mode == 'edit'}">Sửa Ảnh</c:when>
+                <c:otherwise>Chi Tiết Ảnh</c:otherwise>
+            </c:choose>
+        </h2>
     </div>
 
+
     <div class="card">
-        <form action="#" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="productId" value="101">
-            <input type="hidden" name="action" value="create">
+        <form action="productImgAdmin" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="productId" value="${productId}">
+            <c:if test="${mode == 'edit'}">
+                <input type="hidden" name="id" value="${image.id}">
+            </c:if>
+            <input type="hidden" name="action" value="${mode == 'add' ? 'create' : 'update'}">
+
 
             <div class="col">
                 <label>
-                    Hình Ảnh <span style="color: red;">*</span>
+                    Hình Ảnh
+                    <c:if test="${mode == 'add'}"><span style="color: red;">*</span></c:if>
                 </label>
 
-                <div class="file-input-wrapper">
-                    <input type="file"
-                           id="imageFile"
-                           name="imageFile"
-                           accept="image/*"
-                           required>
-                    <label for="imageFile" class="file-input-label" style="cursor: pointer; display: inline-block; padding: 8px 15px; background: #eee; border-radius: 4px; border: 1px solid #ccc;">
-                        <i class="fa fa-upload"></i> Chọn Ảnh
-                    </label>
-                    <span class="file-name" id="fileName" style="margin-left: 10px; color: #666;">
-                        Chưa chọn file
-                    </span>
-                </div>
 
-                <div class="image-preview" id="newImagePreview" style="display: none; margin-top: 15px;">
-                    <img src="" alt="Preview" id="previewImg" style="max-width: 300px; border-radius: 8px; border: 1px solid #ddd;">
-                </div>
+                <c:if test="${mode != 'add' && image.imageUrl != null}">
+                    <div class="image-preview">
+                        <img src="${image.imageUrl}" alt="Current Image" id="currentImage">
+                    </div>
+                </c:if>
+
+
+                <c:if test="${mode != 'view'}">
+                    <div class="file-input-wrapper">
+                        <input type="file"
+                               id="imageFile"
+                               name="imageFile"
+                               accept="image/*"
+                               onchange="previewImage(event)"
+                                ${mode == 'add' ? 'required' : ''}>
+                        <label for="imageFile" class="file-input-label">
+                            <i class="fa fa-upload"></i> Chọn Ảnh
+                        </label>
+                        <span class="file-name" id="fileName">
+                            ${mode == 'add' ? 'Chưa chọn file' : 'Chọn để thay đổi'}
+                        </span>
+                    </div>
+
+
+                    <div class="image-preview" id="newImagePreview" style="display: none; margin-top: 15px;">
+                        <img src="" alt="Preview" id="previewImg">
+                    </div>
+                </c:if>
             </div>
+
 
             <div class="col" style="margin-top: 15px;">
-                <label for="isMain">Đặt làm ảnh chính</label>
-                <div class="checkbox-wrapper" style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                    <input type="checkbox" id="isMain" name="isMain" value="true">
-                    <small class="form-text" style="color: #888;">Ảnh chính sẽ được hiển thị đầu tiên</small>
+                <label>Đặt làm ảnh chính</label>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox"
+                           id="isMain"
+                           name="isMain"
+                           value="true"
+                           ${mode == 'edit' && image.main ? 'checked' : ''}
+                           ${mode == 'view' ? 'disabled' : ''}>
+                    <small class="form-text">Ảnh chính sẽ được hiển thị đầu tiên</small>
                 </div>
             </div>
 
-            <div class="form-footer" style="margin-top: 25px; display: flex; gap: 10px;">
-                <a href="img-productAdmin" class="btn-secondary" style="padding: 10px 20px; text-decoration: none; background: #f4f4f4; color: #333; border-radius: 4px;">
-                    <i class="fa fa-times"></i> Hủy
-                </a>
-                <button type="submit" class="btn-primary" style="padding: 10px 20px; cursor: pointer; background: #8d5e33; color: white; border: none; border-radius: 4px;">
-                    <i class="fa fa-save"></i> Thêm Ảnh
-                </button>
-            </div>
+
+            <c:if test="${mode != 'view'}">
+                <div class="form-footer" style="margin-top: 25px;">
+                    <a href="productImgAdmin?productId=${productId}" class="btn-secondary">
+                        <i class="fa fa-times"></i> Hủy
+                    </a>
+                    <button type="submit" class="btn-primary">
+                        <i class="fa fa-save"></i>
+                        ${mode == 'add' ? 'Thêm Ảnh' : 'Cập Nhật'}
+                    </button>
+                </div>
+            </c:if>
+            <c:if test="${mode == 'view'}">
+                <div class="form-footer" style="margin-top: 25px;">
+                    <a href="productImgAdmin?productId=${productId}" class="btn-secondary">
+                        <i class="fa fa-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+            </c:if>
         </form>
     </div>
 </div>
 
-<input type="hidden" id="formMode" value="add">
 
+
+<script src="${pageContext.request.contextPath}/js/admin/adminProductImg.js"></script>
+<input type="hidden" id="formMode" value="${mode}">
 </body>
 </html>
 
