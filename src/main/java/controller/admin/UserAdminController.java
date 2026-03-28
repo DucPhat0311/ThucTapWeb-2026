@@ -11,7 +11,11 @@ import model.User;
 
 import java.time.LocalDate;
 
+<<<<<<< HEAD
 @WebServlet(name = "UserAdminController", value = "/userAdmin")
+=======
+@WebServlet(name = "UserAdminController", value = "/user-admin")
+>>>>>>> 5f8211e765d53f77d7fd33869167b09b6163b6f1
 public class UserAdminController extends HttpServlet {
     private UserService userService;
 
@@ -52,14 +56,22 @@ public class UserAdminController extends HttpServlet {
             request.setAttribute("mode", mode);
 
             request.setAttribute("page", "user");
+<<<<<<< HEAD
            request.getRequestDispatcher("/WEB-INF/admin/form-userAdmin.jsp").forward(request,response);
+=======
+           request.getRequestDispatcher("/WEB-INF/admin/user-form.jsp").forward(request,response);
+>>>>>>> 5f8211e765d53f77d7fd33869167b09b6163b6f1
             return;
         }
 
         if("add".equals(mode)){
             request.setAttribute("mode", "add");
             request.setAttribute("page", "user");
+<<<<<<< HEAD
             request.getRequestDispatcher("/WEB-INF/admin/form-userAdmin.jsp").forward(request, response);
+=======
+            request.getRequestDispatcher("/WEB-INF/admin/user-form.jsp").forward(request, response);
+>>>>>>> 5f8211e765d53f77d7fd33869167b09b6163b6f1
         }
     }
 
@@ -90,7 +102,11 @@ public class UserAdminController extends HttpServlet {
 
             userService.createUser(user);
 
+<<<<<<< HEAD
             response.sendRedirect("userAdmin");
+=======
+            response.sendRedirect("user-admin");
+>>>>>>> 5f8211e765d53f77d7fd33869167b09b6163b6f1
             return;
         }
 
@@ -119,7 +135,11 @@ public class UserAdminController extends HttpServlet {
 
             userService.updateUser(user);
 
+<<<<<<< HEAD
             response.sendRedirect("userAdmin?mode=view&id=" + id);
+=======
+            response.sendRedirect("user-admin?mode=view&id=" + id);
+>>>>>>> 5f8211e765d53f77d7fd33869167b09b6163b6f1
         }
 
         if ("block".equals(action)){
@@ -128,7 +148,11 @@ public class UserAdminController extends HttpServlet {
 
             userService.blockUser(id);
 
+<<<<<<< HEAD
             response.sendRedirect("userAdmin");
+=======
+            response.sendRedirect("user-admin");
+>>>>>>> 5f8211e765d53f77d7fd33869167b09b6163b6f1
             return;
         }
 
@@ -137,7 +161,11 @@ public class UserAdminController extends HttpServlet {
 
             userService.unblockUser(id);
 
+<<<<<<< HEAD
             response.sendRedirect("userAdmin");
+=======
+            response.sendRedirect("user-admin");
+>>>>>>> 5f8211e765d53f77d7fd33869167b09b6163b6f1
             return;
         }
 
