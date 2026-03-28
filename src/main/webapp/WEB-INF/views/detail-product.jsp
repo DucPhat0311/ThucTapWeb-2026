@@ -54,12 +54,11 @@
 
             <!-- LƯỢT RATING -->
             <div class="product-rating">
-                <i class="fa-solid fa-star" style="color:#FFD43B;"></i>
-                <i class="fa-solid fa-star" style="color:#FFD43B;"></i>
-                <i class="fa-solid fa-star" style="color:#FFD43B;"></i>
-                <i class="fa-regular fa-star" style="color:#FFD43B;"></i>
-                <i class="fa-regular fa-star" style="color:#FFD43B;"></i>
-                (12 đánh giá)
+                <c:forEach begin="1" end="${displayStar}"><i class="fa-solid fa-star" style="color: #FFD43B;"></i></c:forEach>
+
+                <c:forEach begin="1" end="${5 - displayStar}"><i class="fa-regular fa-star" style="color: #FFD43B;"></i></c:forEach>
+
+                (${totalReviews} đánh giá)
             </div>
 
             <!-- CHỌN MÀU -->
@@ -112,9 +111,12 @@
         </div>
     </section>
 
-    <!-- ĐÁNH GIÁ -->
+    <!-- ========== ĐÁNH GIÁ ========== -->
     <section class="product-review">
-        <form class="review-form">
+        <form action="review" method="post" class="review-form">
+            <input type="hidden" name="product_id" value="${product.id}">
+            <input type="hidden" name="rating" id="rating-value">
+
             <div class="star-select">
                 <i class="fa-solid fa-star star" data-value="1"></i>
                 <i class="fa-solid fa-star star" data-value="2"></i>
@@ -122,32 +124,29 @@
                 <i class="fa-solid fa-star star" data-value="4"></i>
                 <i class="fa-solid fa-star star" data-value="5"></i>
             </div>
-            <textarea id="review-text" placeholder="Nhập nhận xét của bạn..."></textarea>
-            <button type="button" id="submit-review">Gửi đánh giá</button>
+
+            <textarea id="review-text" name="comment" required placeholder="Nhập nhận xét của bạn..."></textarea>
+
+            <button type="submit" id="submit-review">Gửi đánh giá</button>
         </form>
 
         <section class="review-list">
             <h3>Đánh giá của khách hàng</h3>
-            <div class="review-item">
-                <strong>User 1</strong>
-                <div>
-                    <i class="fa-solid fa-star" style="color:#FFD43B;"></i>
-                    <i class="fa-solid fa-star" style="color:#FFD43B;"></i>
-                    <i class="fa-solid fa-star" style="color:#FFD43B;"></i>
+
+            <c:if test="${empty reviews}">
+                <p>Chưa có đánh giá nào.</p>
+            </c:if>
+
+            <c:forEach var="r" items="${reviews}">
+                <div class="review-item">
+                    <strong>User ${r.userId}</strong>
+                    <div>
+                        <c:forEach begin="1" end="${r.rating}"><i class="fa-solid fa-star" style="color: #FFD43B;"></i></c:forEach>
+                    </div>
+                    <p>${r.comment}</p>
+                    <small>${r.createdAt}</small>
                 </div>
-                <p>Áo đẹp, mặc vừa vặn!</p>
-                <small>20/03/2026</small>
-            </div>
-            <div class="review-item">
-                <strong>User 2</strong>
-                <div>
-                    <i class="fa-solid fa-star" style="color:#FFD43B;"></i>
-                    <i class="fa-solid fa-star" style="color:#FFD43B;"></i>
-                    <i class="fa-regular fa-star" style="color:#FFD43B;"></i>
-                </div>
-                <p>Chất lượng ổn, giao hàng nhanh.</p>
-                <small>18/03/2026</small>
-            </div>
+            </c:forEach>
         </section>
     </section>
 

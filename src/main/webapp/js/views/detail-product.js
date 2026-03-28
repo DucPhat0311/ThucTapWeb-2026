@@ -8,8 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const increaseBtn = document.querySelector(".btn-increase");
     const quantityInput = document.getElementById("quantity");
 
+    const stars = document.querySelectorAll(".star-select .star");
+    const submitBtn = document.getElementById("submit-review");
+    const ratingInput = document.getElementById("rating-value");
+
     let selectedColorId = null;
     let selectedSizeId = null;
+    let selectedRating = 0;
     let currentStock = 0;
 
 
@@ -134,6 +139,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // ===== Chọn sao =====
+    stars.forEach(star => {
+        star.addEventListener("click", () => {
+            selectedRating = parseInt(star.dataset.value);
+            ratingInput.value = selectedRating;
+
+            stars.forEach(s => s.classList.remove("active"));
+            for (let i = 0; i < selectedRating; i++) {
+                stars[i].classList.add("active");
+            }
+        });
+    });
+
+    // ===== Chặn gửi review nếu chưa chọn số sao =====
+    if (submitBtn) {
+        submitBtn.addEventListener("click", (e) => {
+            if (selectedRating === 0) {
+                e.preventDefault();
+                alert("Vui lòng chọn số sao trước khi gửi đánh giá!");
+            }
+        });
+    }
+
     // ===== thêm giỏ hàng =====
     btnAddCart.addEventListener("click", () => {
 
@@ -170,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (data.success) {
                     showToast("Đã thêm vào giỏ!");
-                    updateCartBadge(data.totalQuantity); // 🔥 QUAN TRỌNG
+                    updateCartBadge(data.totalQuantity);
                 } else {
                     showToast(data.message || "Thất bại");
 
