@@ -2,6 +2,7 @@ package service;
 
 import dao.admin.ColorDaoAdmin;
 import dao.user.ColorDao;
+import dao.admin.ColorDaoAdmin;
 import model.Color;
 
 import java.util.List;
@@ -13,7 +14,8 @@ public class ColorService {
     public List<Color> getColorByProductId(int id) {
         return colorDao.getColorByProductId(id);
     }
-      public int findOrCreateColor(String colorName) {
+  
+    public int findOrCreateColor(String colorName) {
         return colorDaoAdmin.findOrCreateColor(colorName);
     }
 }

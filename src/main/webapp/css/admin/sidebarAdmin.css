@@ -42,7 +42,6 @@
 }
 
 .sidebar .menu-link, .sidebar .nav-item, .nav button, .nav a {
-    display: flex;
     align-items: center;
     width: 100%;
     padding: 16px 20px;
@@ -51,7 +50,6 @@
     border-radius: 12px;
     color: var(--sidebar-text);
     text-align: left;
-    font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;

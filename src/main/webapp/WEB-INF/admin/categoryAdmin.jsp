@@ -20,7 +20,7 @@
 
     <section class="content">
         <header class="topbar">
-            <h1 id="pageTitle">Quản lý danh mục</h1>
+            <h1 id="pageTitle">Quản Lý Danh Mục</h1>
             <div class="actions">
                 <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>
@@ -201,7 +201,7 @@
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/javaScript/admin/adminCategory.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin/adminCategory.js"></script>
 
 </body>
 </html>
