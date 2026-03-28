@@ -15,6 +15,7 @@ import java.util.List;
 @WebServlet("/detail-product")
 public class ProductDetailController extends HttpServlet {
     private ProductService productService;
+    private ReviewService reviewService;
     private ColorService colorService;
     private SizeService sizeService;
     private ProductImageService productImageService;
@@ -23,6 +24,7 @@ public class ProductDetailController extends HttpServlet {
     @Override
     public void init()  {
         productService = new ProductService();
+        reviewService = new ReviewService();
         productImageService = new ProductImageService();
         colorService = new ColorService();
         sizeService = new SizeService();
@@ -36,7 +38,15 @@ public class ProductDetailController extends HttpServlet {
         int id = Integer.parseInt(idRaw);
         Product product = productService.getProductById(id);
 
+        List<Review> reviews = reviewService.getReviewByProductID(id);
+
+
         List<Product> ralatedProducts = productService.ralatedProduct(id, 4);
+
+        double avgRating = reviewService.getAvgRating(id);
+        int totalReviews = reviewService.getTotalReviews(id);
+
+        int displayStar = (int) Math.round(avgRating);
 
 
         List<ProductImage> listImage = productImageService.getImageByProduct(id);
@@ -53,6 +63,9 @@ public class ProductDetailController extends HttpServlet {
         request.setAttribute("colors", listColor);
         request.setAttribute("images", listImage);
         request.setAttribute("product", product);
+        request.setAttribute("displayStar", displayStar);
+        request.setAttribute("totalReviews", totalReviews);
+        request.setAttribute("reviews",reviews);
         request.setAttribute("ralatedProducts",ralatedProducts);
         request.getRequestDispatcher("/WEB-INF/views/detail-product.jsp").forward(request, response);
     }
