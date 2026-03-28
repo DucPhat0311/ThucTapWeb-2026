@@ -46,9 +46,11 @@
 
         <!-- THÔNG TIN CHUNG -->
         <div class="product-info">
-            <h1 class="product-name">Áo Thun Nam</h1>
+            <h1 class="product-name">${product.name}</h1>
 
-            <p class="product-price">Giá: <span>350.000₫</span></p>
+            <p class="product-price">Giá:
+                <span><fmt:formatNumber value="${product.sale_price}" type="number"/>₫</span>
+            </p>
 
             <!-- LƯỢT RATING -->
             <div class="product-rating">
