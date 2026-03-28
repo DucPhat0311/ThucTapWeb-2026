@@ -31,9 +31,6 @@
             </div>
         </div>
 
-Bản tĩnh sạch cho danh sách Ảnh sản phẩm, giữ nguyên cấu trúc, class và các icon Font Awesome của bạn:
-
-HTML
 <main id="page">
     <section class="page active">
 
