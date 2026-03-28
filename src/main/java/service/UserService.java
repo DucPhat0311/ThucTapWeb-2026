@@ -1,6 +1,7 @@
 package service;
 
 import dao.user.UserDao;
+import dao.admin.UserDaoAdmin;
 import model.User;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +11,7 @@ import util.PassUtil;
 public class UserService {
 
     private final UserDao userDao = new UserDao();
+    private final UserDaoAdmin userDaoAdmin = new UserDaoAdmin();
 
     private String checkPasswordStrength(String password) {
         if (password == null || password.length() < 8)
@@ -134,5 +136,41 @@ public class UserService {
         }
         String hashed = PassUtil.hash(newPassword);
         userDao.updatePassword(email, hashed);
+    }
+
+    public List<User> getAllUser() {
+        return userDaoAdmin.getListUser();
+    }
+
+    public int getCountActive() {
+        return userDaoAdmin.getCountActive();
+    }
+
+    public int getCountBlock() {
+        return userDaoAdmin.getCountBlock();
+    }
+
+    public List<User> searchByUsernameOrEmail(String keyword) {
+        return userDaoAdmin.searchByUsernameOrEmail(keyword);
+    }
+
+    public void createUser(User user) {
+        String pass = "Newpass123*";
+        String hashed = PassUtil.hash(pass);
+        user.setPassword(hashed);
+
+        userDaoAdmin.createUser(user);
+    }
+
+    public void updateUser(User user) {
+        userDaoAdmin.updateUser(user);
+    }
+
+    public void blockUser(int id) {
+        userDaoAdmin.blockUser(id , "BLOCKED");
+    }
+
+    public void unblockUser(int id) {
+        userDaoAdmin.blockUser(id, "ACTIVE");
     }
 }
