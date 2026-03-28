@@ -44,7 +44,7 @@
                         <ul class="user-dropdown">
                             <li><a href="profile">Thông tin cá nhân</a></li>
                             <li><a href="order-user">Đơn hàng của tôi</a></li>
-                            <li><a href="logout">Đăng xuất</a></li>
+                            <li><a href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
                         </ul>
                     </div>
                 </c:when>
