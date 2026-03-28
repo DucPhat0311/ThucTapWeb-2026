@@ -41,6 +41,9 @@
         <div class="input-group">
           <label for="password">Mật khẩu</label>
           <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+              <span class="toggle-password" onclick="togglePassword('password','eye')" style="position:absolute; right:18px; top:44px; cursor:pointer;">
+                      <i class="fa-solid fa-eye" id="eye" style="color:#6F4E37;"></i>
+              </span>
         </div>
 
 
@@ -59,4 +62,5 @@
 </div>
 
   <%@ include file="../include/footer.jsp" %>
+  <script src="${pageContext.request.contextPath}/js/auth/register.js"></script>
 
