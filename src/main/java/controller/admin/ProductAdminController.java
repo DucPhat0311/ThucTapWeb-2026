@@ -207,7 +207,9 @@ public class ProductAdminController extends HttpServlet {
             }
 
             case "delete" -> {
-                productDaoAdmin.delete(
+
+               productDaoAdmin.softDelete(
+
                     Integer.parseInt(req.getParameter("id")));
             }
         }

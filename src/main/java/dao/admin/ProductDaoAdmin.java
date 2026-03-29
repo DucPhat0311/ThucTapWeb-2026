@@ -100,9 +100,10 @@ public class ProductDaoAdmin extends BaseDao {
         );
     }
 
-    public void delete(int id) {
+
+    public void softDelete(int id) {
         String sql = """
-        DELETE FROM products WHERE id = :id
+        UPDATE products SET status = 'Đã xoá' WHERE id = :id
         """;
         getJdbi().withHandle(h ->
                 h.createUpdate(sql)

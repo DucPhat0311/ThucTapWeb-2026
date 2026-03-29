@@ -155,7 +155,7 @@
 
                
                                     <button class="icon-btn delete"
-                                            title="${p.status == 'Đang bán' ? 'Đặt hết hàng' : 'Mở bán lại'}"
+                                            title="Xoá sản phẩm"
                                             onclick="openToggleProductModal(${p.id}, '${p.name}', '${p.status}')">
                                         <i class="fa fa-trash"></i>
                                     </button>

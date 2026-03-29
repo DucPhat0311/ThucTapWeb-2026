@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Form Product Admin</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/FormUser.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formUser.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
 <body>

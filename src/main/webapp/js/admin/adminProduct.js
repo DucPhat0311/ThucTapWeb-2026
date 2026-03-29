@@ -57,12 +57,14 @@ function closeProductModal() {
 let toggleProductData = { id: null, name: '', status: '' };
 
 function openToggleProductModal(id, name, status) {
-    toggleProductData = { id, name, status };
-    
-    const message = status === 'Đang bán' 
-        ? `Bạn có chắc muốn đặt sản phẩm "<strong>${name}</strong>" thành <strong>Hết hàng</strong> không?`
-        : `Bạn có chắc muốn mở bán lại sản phẩm "<strong>${name}</strong>" không?`;
-    
+    let message = "";
+    if (status === "Đã xoá") {
+        message = `Bạn có chắc muốn <strong>xóa</strong> sản phẩm "<strong>${name}</strong>" không?`;
+    } else if (status === "Đang bán") {
+        message = `Bạn có chắc muốn đặt sản phẩm "<strong>${name}</strong>" thành <strong>Hết hàng</strong> không?`;
+    } else {
+        message = `Bạn có chắc muốn mở bán lại sản phẩm "<strong>${name}</strong>" không?`;
+    }
     document.getElementById("toggle-product-message").innerHTML = message;
     document.getElementById("toggle-product-id").value = id;
     document.getElementById("toggle-product-modal").classList.add("show");
