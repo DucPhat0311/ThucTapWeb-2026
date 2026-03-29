@@ -7,80 +7,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Banner</title>
+    <title>Form Banner Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formBanner.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
 <body>
 <div class="container">
 
+
     <div class="form-header">
-    <a href="bannerAdmin" class="btn-back">← Quay lại</a>
-    <h2>Chỉnh sửa banner</h2>
-</div>
+        <a href="bannerAdmin" class="btn-back">← Quay lại</a>
+        <h2>
+            <c:choose>
+                <c:when test="${mode == 'add'}">Thêm banner</c:when>
+                <c:when test="${mode == 'edit'}">Chỉnh sửa banner</c:when>
+                <c:when test="${mode == 'view'}">Chi tiết banner</c:when>
+            </c:choose>
+        </h2>
+    </div>
 
-<form method="post" action="bannerAdmin" enctype="multipart/form-data">
 
-    <div class="card">
-        <h3>Thông tin banner</h3>
+    <form method="post" action="bannerAdmin" enctype="multipart/form-data">
 
-        <div class="row">
-            <div class="col">
-                <label>Tiêu đề</label>
-                <input type="text"
-                       name="title"
-                       value="Bộ sưu tập Xuân Hè 2026">
+        <div class="card">
+            <h3>Thông tin banner</h3>
+
+ 
+            <div class="row">
+                <div class="col">
+                    <label>Tiêu đề</label>
+                    <input type="text"
+                           name="title"
+                           value="${banner.title}"
+                           <c:if test="${mode == 'view'}">readonly</c:if>>
+                </div>
+
+                <div class="col">
+                    <label>Liên kết đến</label>
+                    <input type="text"
+                           name="navigateTo"
+                           value="${banner.navigateTo}"
+                           placeholder="san-pham"
+                           <c:if test="${mode == 'view'}">readonly</c:if>>
+                </div>
             </div>
 
-            <div class="col">
-                <label>Liên kết đến</label>
-                <input type="text"
-                       name="navigateTo"
-                       value="collections/summer-2026"
-                       placeholder="san-pham">
+    
+            <div class="row">
+                <div class="col">
+                    <label>Trạng thái</label>
+                    <select name="status" <c:if test="${mode == 'view'}">disabled</c:if>>
+                        <option value="1" ${banner.status ? "selected" : ""}>Hoạt động</option>
+                        <option value="0" ${!banner.status ? "selected" : ""}>Không hoạt động</option>
+                    </select>
+                </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
-                <label>Trạng thái</label>
-                <select name="status">
-                    <option value="1" selected>Hoạt động</option>
-                    <option value="0">Không hoạt động</option>
-                </select>
-            </div>
-        </div>
+    
+            <div class="row">
+                <div class="col">
+                    <label>Ảnh banner</label>
+                    <c:if test="${mode != 'view'}">
+                        <input type="file"
+                               name="imageFile"
+                               accept="image/*"
+                               <c:if test="${mode == 'add'}">required</c:if>>
+                    </c:if>
 
-        <div class="row">
-            <div class="col">
-                <label>Ảnh banner</label>
-                <input type="file"
-                       name="imageFile"
-                       accept="image/*">
+                    <div class="preview">
+                        <img id="previewImg"
+                             src="${banner.imageUrl}"
+                             alt="Preview"
+                             style="${mode == 'add' ? 'display:none' : 'display:block'}; max-width:300px;">
 
-                <div class="preview">
-                    <img id="previewImg"
-                         src="https://via.placeholder.com/600x200"
-                         alt="Preview"
-                         style="display:block; max-width:300px;">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="form-footer">
-        <button type="submit"
-                name="action"
-                value="update"
-                class="btn-primary">
-            Lưu
-        </button>
-        <a href="bannerAdmin" class="btn-secondary">Hủy</a>
-    </div>
 
-    <input type="hidden" name="id" value="1">
-    <input type="hidden" name="mode" value="edit">
-</form>
+        <div class="form-footer">
+            <c:if test="${mode != 'view'}">
+                <button type="submit"
+                        name="action"
+                        value="${mode == 'add' ? 'create' : 'update'}"
+                        class="btn-primary">
+                    Lưu
+                </button>
+            </c:if>
+            <a href="bannerAdmin" class="btn-secondary">Hủy</a>
+        </div>
+
+
+        <input type="hidden" name="id" value="${banner.id}">
+        <input type="hidden" name="mode" value="${mode}">
+    </form>
 
 
 </div>
