@@ -14,6 +14,12 @@ public class SalesController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ProductDao productDao = new ProductDao();
+
+        request.setAttribute(
+                "discountProducts",
+                productDao.findDiscountProducts()
+        );
 
         request.getRequestDispatcher("/WEB-INF/views/sales.jsp")
                 .forward(request, response);

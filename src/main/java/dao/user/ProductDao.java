@@ -166,4 +166,20 @@ public class ProductDao extends BaseDao {
                         .list()
         );
     }
+
+    public List<Product> findDiscountProducts() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                                SELECT *
+                                FROM products
+                                WHERE sale_price IS NOT NULL
+                                    AND sale_price < price
+                                    AND sale_price > 0
+                                    AND status = 'Đang bán'
+                                ORDER BY created_at DESC
+                        """)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
 }
