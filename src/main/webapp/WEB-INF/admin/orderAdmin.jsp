@@ -7,29 +7,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Đơn Hàng</title>
+    <title>Admin Order</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
 <body>
 <div class="admin">
+
     <jsp:include page="include/sidebarAdmin.jsp" />
 
     <section class="content">
         <header class="topbar">
-            <h1 id="pageTitle">Quản lý Đơn Hàng</h1>
+            <h1 id="pageTitle">Đơn hàng</h1>
             <div class="actions">
                 <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>
         </header>
 
+
         <main id="page">
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card">Tổng đơn<br><span>35</span></div>
-                    <div class="card">Đang xử lý<br><span>15</span></div>
-                    <div class="card">Hoàn thành<br><span>20</span></div>
+                    <div class="card">Tổng đơn<br><span>${total}</span></div>
+                    <div class="card">Đang xử lý<br><span>${countPending}</span></div>
+                    <div class="card">Hoàn thành<br><span>${countCompleted}</span></div>
                 </div>
 
                 <div class="user-table-wrapper">
@@ -45,66 +47,42 @@
                         </tr>
                         </thead>
                         <tbody>
-    <tr>
-        <td>#1001</td>
-        <td>Nguyễn Văn A</td>
-        <td>450,000 đ</td>
-        <td>
-            <span class="order-status PENDING">Chờ xử lý</span>
-        </td>
-        <td>25/03/2026 10:30</td>
-        <td>
-            <a href="#" class="icon-btn view">
-                <i class="fa fa-eye"></i>
-            </a>
-        </td>
-    </tr>
+                        <c:if test="${empty orders}">
+                            <tr>
+                                <td colspan="6" style="text-align:center">
+                                    Chưa có đơn hàng.
+                                </td>
+                            </tr>
+                        </c:if>
 
-    <tr>
-        <td>#1002</td>
-        <td>Trần Thị B</td>
-        <td>1,200,000 đ</td>
-        <td>
-            <span class="order-status SHIPPING">Đang giao</span>
-        </td>
-        <td>24/03/2026 15:20</td>
-        <td>
-            <a href="#" class="icon-btn view">
-                <i class="fa fa-eye"></i>
-            </a>
-        </td>
-    </tr>
+                        <c:forEach items="${orders}" var="o">
+                            <tr>
+                                <td>#${o.id}</td>
+                                <td>${o.name}</td>
+                                <td>${o.finalAmount} đ</td>
+                                <td>
+                                    <span class="order-status ${o.orderStatus}">
+                                        <c:choose>
+                                            <c:when test="${o.orderStatus == 'PENDING'}">Chờ xử lý</c:when>
+                                            <c:when test="${o.orderStatus == 'SHIPPING'}">Đang giao</c:when>
+                                            <c:when test="${o.orderStatus == 'COMPLETED'}">Hoàn thành</c:when>
+                                            <c:when test="${o.orderStatus == 'CANCELLED'}">Đã hủy</c:when>
+                                            <c:otherwise>${o.orderStatus}</c:otherwise>
+                                        </c:choose>
+                                    </span>
+                                </td>
 
-    <tr>
-        <td>#1003</td>
-        <td>Lê Văn C</td>
-        <td>890,000 đ</td>
-        <td>
-            <span class="order-status COMPLETED">Hoàn thành</span>
-        </td>
-        <td>23/03/2026 09:15</td>
-        <td>
-            <a href="#" class="icon-btn view">
-                <i class="fa fa-eye"></i>
-            </a>
-        </td>
-    </tr>
-
-    <tr>
-        <td>#1004</td>
-        <td>Phạm Minh D</td>
-        <td>250,000 đ</td>
-        <td>
-            <span class="order-status CANCELLED">Đã hủy</span>
-        </td>
-        <td>22/03/2026 18:00</td>
-        <td>
-            <a href="#" class="icon-btn view">
-                <i class="fa fa-eye"></i>
-            </a>
-        </td>
-    </tr>
-</tbody>
+                                <td>
+                                        ${o.createdAtFormatted}
+                                </td>
+                                <td>
+                                    <a href="orderAdmin?mode=view&id=${o.id}" class="icon-btn view">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
                     </table>
 
                 </div>
