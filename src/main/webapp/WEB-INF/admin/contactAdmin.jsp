@@ -1,16 +1,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Contact</title>
+    <title>Liên hệ - Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css"><link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
 <body>
@@ -18,7 +22,7 @@
     <jsp:include page="include/sidebarAdmin.jsp" />
 
     <section class="content">
-  
+        <!-- PHẦN HEADER -->
         <header class="topbar">
             <h1 id="pageTitle">Liên hệ</h1>
             <div class="actions">
@@ -26,22 +30,27 @@
             </div>
         </header>
 
+
+
         <main id="page">
+            <!-- DASHBROAD -->
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card">Tổng liên hệ<br><span id="dashboard-total-contact">5</span></div>
-                    <div class="card">Liên hệ mới<br><span id="dashboard-total-contact-new">2</span></div>
-                    <div class="card">Liên hệ đang xử lý<br><span id="dashboard-total-contact-processing">1</span></div>
-                    <div class="card">Liên hệ đã xử lý<br><span id="dashboard-total-contact-closed">2</span></div>
+                    <div class="card">Tổng liên hệ<br><span id="dashboard-total-contact">${total}</span></div>
+                    <div class="card">Liên hệ mới<br><span id="dashboard-total-contact-new">${totalNew}</span></div>
+                    <div class="card">Liên hệ đang xử lý<br><span id="dashboard-total-contact-processing">${totalProcessing}</span></div>
+                    <div class="card">Liên hệ đã xử lý<br><span id="dashboard-total-contact-closed">${totalClosed}</span></div>
                 </div>
 
                 <div class="contact-toolbar">
-                    <a href="#" class="btn-add">
+                    <a href="contact-admin?mode=add" class="btn-add">
                         <i class="fa fa-plus"></i> Thêm liên hệ
                     </a>
                 </div>
 
+
                 <div class="contact-table-wrapper">
+                    <!-- TABLE USER -->
                     <table class="contact-table">
                         <thead>
                         <tr>
@@ -55,91 +64,69 @@
                         </tr>
                         </thead>
                         <tbody id="contactTableBody">
-    <tr>
-        <td>1</td>
-        <td>Nguyễn Thúy Vy</td>
-        <td>thuyvy@gmail.com</td>
-        <td>0901234567</td>
-        <td class="message-preview">
-            Shop ơi, mình muốn hỏi về chính sách đổi trả hàng...
-        </td>
-        <td>
-            <span class="status active">Liên hệ mới</span>
-        </td>
-        <td class="actions">
-            <a href="#" class="icon-btn view" title="Xem chi tiết">
-                <i class="fa fa-eye"></i>
-            </a>
-            <a href="#" class="icon-btn edit" title="Chỉnh sửa">
-                <i class="fa fa-pen"></i>
-            </a>
-            <button type="button" class="icon-btn delete" title="Xóa liên hệ" onclick="openDeleteModal(1, 'Nguyễn Thúy Vy')">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    </tr>
+                        <!-- demo data -->
+                        <c:forEach items="${contacts}" var="c">
+                            <tr>
+                                <td>${c.id}</td>
+                                <td>${c.name}</td>
+                                <td>${c.email}</td>
+                                <td>${c.phone}</td>
+                                <td class="message-preview">
+                                        ${fn:length(c.message) > 50
+                                                ? fn:substring(c.message, 0, 50).concat("...")
+                                                : c.message}
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${c.status == 'New'}">
+                                            <span class="status active">Liên hệ mới</span>
+                                        </c:when>
+                                        <c:when test="${c.status == 'Processing'}">
+                                            <span class="status processing">Đang xử lý</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="status blocked">Đã xử lý</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td class="actions">
+                                    <!-- XEM -->
+                                    <a href="contact-admin?mode=view&id=${c.id}"
+                                       class="icon-btn view" title="Xem chi tiết">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
 
-    <tr>
-        <td>2</td>
-        <td>Trần Hoàng Quân</td>
-        <td>hoangquan99@gmail.com</td>
-        <td>0987654321</td>
-        <td class="message-preview">
-            Mình đặt áo size L nhưng muốn đổi sang size XL...
-        </td>
-        <td>
-            <span class="status processing">Đang xử lý</span>
-        </td>
-        <td class="actions">
-            <a href="#" class="icon-btn view" title="Xem chi tiết">
-                <i class="fa fa-eye"></i>
-            </a>
-            <a href="#" class="icon-btn edit" title="Chỉnh sửa">
-                <i class="fa fa-pen"></i>
-            </a>
-            <button type="button" class="icon-btn delete" title="Xóa liên hệ" onclick="openDeleteModal(2, 'Trần Hoàng Quân')">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    </tr>
+                                    <!-- SỬA -->
+                                    <a href="contact-admin?mode=edit&id=${c.id}"
+                                       class="icon-btn edit" title="Chỉnh sửa">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
 
-    <tr>
-        <td>3</td>
-        <td>Lê Thị Hoa</td>
-        <td>hoale_fashion@yahoo.com</td>
-        <td>0912333444</td>
-        <td class="message-preview">
-            Sản phẩm Aura Studio mặc rất thoải mái, mình rất...
-        </td>
-        <td>
-            <span class="status blocked">Đã xử lý</span>
-        </td>
-        <td class="actions">
-            <a href="#" class="icon-btn view" title="Xem chi tiết">
-                <i class="fa fa-eye"></i>
-            </a>
-            <a href="#" class="icon-btn edit" title="Chỉnh sửa">
-                <i class="fa fa-pen"></i>
-            </a>
-            <button type="button" class="icon-btn delete" title="Xóa liên hệ" onclick="openDeleteModal(3, 'Lê Thị Hoa')">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    </tr>
-                    </tbody>
+                                    <!-- XÓA MỀM -->
+                                    <button type="button"
+                                            class="icon-btn delete"
+                                            title="Xóa liên hệ"
+                                            onclick="openDeleteModal(${c.id}, '${c.name}')">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+
+                            </tr>
+                        </c:forEach>
+
+                        </tbody>
                     </table>
                 </div>
             </section>
         </main>
     </section>
-
-
+    <!-- MODAL XÓA -->
     <div id="deleteModal" class="modal-overlay">
         <div class="modal">
             <h3>Xác nhận xóa</h3>
             <p id="deleteMessage">Bạn có chắc muốn xóa liên hệ này không?</p>
 
-            <form id="deleteForm" method="post" action="contactAdmin">
+            <form id="deleteForm" method="post" action="contact-admin">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" id="deleteContactId">
 
@@ -151,9 +138,19 @@
         </div>
     </div>
 </div>
-
-<script src="${pageContext.request.contextPath}/javaScript/admin/adminContact.js"></script>
-
 </body>
+<script>
+    function openDeleteModal(id, name) {
+        document.getElementById("deleteContactId").value = id;
+        document.getElementById("deleteMessage").innerHTML =
+            'Bạn có chắc muốn xóa liên hệ từ "<b>' + name + '</b>" không?';
+        document.getElementById("deleteModal").style.display = "flex";
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("deleteModal").style.display = "none";
+    }
+</script>
+
 </html>
 
