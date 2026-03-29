@@ -177,7 +177,9 @@ public class ProductImgAdminController extends HttpServlet {
         String uniqueFileName = "product_img_" + System.currentTimeMillis() + extension;
         uniqueFileName = uniqueFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
 
-        String uploadPath = req.getServletContext().getRealPath("") + File.separator + "img";
+
+        String projectRoot = System.getProperty("user.dir");
+        String uploadPath = projectRoot + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "img";
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();

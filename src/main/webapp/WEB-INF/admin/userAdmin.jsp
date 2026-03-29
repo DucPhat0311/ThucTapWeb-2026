@@ -158,7 +158,7 @@
 </div>
 
 </body>
-<script src="${pageContext.request.contextPath}/javaScript/admin/adminUser.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin/adminUser.js"></script>
 
 </html>
 

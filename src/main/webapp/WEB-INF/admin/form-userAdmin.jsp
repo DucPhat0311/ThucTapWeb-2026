@@ -25,7 +25,7 @@
         </h2>
     </div>
 
-    
+
     <form method="post" action="userAdmin">
 
         <div class="card">
