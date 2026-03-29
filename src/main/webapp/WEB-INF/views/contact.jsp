@@ -24,7 +24,7 @@
             <p style="color: green; font-weight: bold;">${successMessage}</p>
         </c:if>
 
-        <form method="post" action="${pageContext.request.contextPath}/lien-he">
+        <form method="post" action="${pageContext.request.contextPath}/contact">
             <label>Địa chỉ email:</label>
             <input type="email" name="email" placeholder="Nhập địa chỉ email">
 
