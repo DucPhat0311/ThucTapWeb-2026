@@ -166,12 +166,25 @@
                 <div class="product-mini">
                     <a href="${pageContext.request.contextPath}/detail-product?id=${item.id}" class="link-cover"></a>
                     <img src="${item.thumbnail}" alt="${item.name}">
-                    <h3>${item.name}</h3>
+                <h3>${item.name}</h3>
                     <p class="price">
-                        <span class="new-price"><fmt:formatNumber value="${item.sale_price}" type="number"/>đ</span>
-                        <span class="old-price"><fmt:formatNumber value="${item.price}" type="number"/>đ</span>
+                        <c:choose>
+                            <c:when test="${item.sale_price > 0 && item.sale_price < item.price}">
+                                <span class="new-price" style="color:red;font-weight:bold">
+                                    <fmt:formatNumber value="${item.sale_price}" type="number"/>đ
+                                </span>
+                                <span class="old-price" style="text-decoration: line-through; color: #888; margin-left: 8px;">
+                                    <fmt:formatNumber value="${item.price}" type="number"/>đ
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="new-price" style="font-weight:bold">
+                                    <fmt:formatNumber value="${item.price}" type="number"/>đ
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
-                    <a href="${pageContext.request.contextPath}/detail-product?id=${item.id}" class="btn-add">Thêm vào giỏ hàng</a>
+                    <a href="${pageContext.request.contextPath}/detail-product?id=${item.id}&quantity=1" class="btn-add">Thêm vào giỏ hàng</a>
                 </div>
             </c:forEach>
 

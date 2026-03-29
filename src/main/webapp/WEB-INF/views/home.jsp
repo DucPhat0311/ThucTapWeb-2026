@@ -62,13 +62,22 @@
                     <img src="${p.thumbnail}" alt="${p.name}">
                     <h3>${p.name}</h3>
 
-                    <p class="price">
-                            <span class="new-price">
-                            <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
-                        </span>
-                        <span class="old-price">
-                            <fmt:formatNumber value="${p.price}" type="number"/>đ
-                        </span>
+ <p class="price">
+                        <c:choose>
+                            <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
+                                </span>
+                                <span class="old-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
 
                     <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
@@ -97,16 +106,25 @@
                             <div class="product-mini">
                                 <a href="" class="link-cover"></a>
                                 <img src="${p.thumbnail}" alt="${p.name}">
-                                <h3>${p.name}</h3>
 
-                                <p class="price">
-                                    <span class="new-price">
-                                        <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
-                                    </span>
-                                    <span class="old-price">
-                                        <fmt:formatNumber value="${p.price}" type="number"/>đ
-                                    </span>
-                                </p>
+                 <h3>${p.name}</h3>
+                    <p class="price">
+                        <c:choose>
+                            <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
+                                </span>
+                                <span class="old-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
 
                                 <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}&quantity=1" class="btn-add">
                                     Thêm vào giỏ hàng

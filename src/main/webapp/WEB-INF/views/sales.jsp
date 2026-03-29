@@ -34,24 +34,24 @@
       <div class="product-card" data-product-id="${p.id}" data-sale-price="${p.sale_price}">
         <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a><span class="badge flash">SALE -${p.discountPercent}%</span><img src="${p.thumbnail}" alt="${p.name}">
         <div class="product-info-wrapper">
-          <h3>${p.name}</h3>
-          <p class="price">
-            <c:choose>
-              <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">
+  <h3>${p.name}</h3>
+                    <p class="price">
+                        <c:choose>
+                            <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">
                                 <span class="new-price">
                                     <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
                                 </span>
-                <span class="old-price">
+                                <span class="old-price">
                                     <fmt:formatNumber value="${p.price}" type="number"/>đ
                                 </span>
-              </c:when>
-              <c:otherwise>
+                            </c:when>
+                            <c:otherwise>
                                 <span class="new-price">
                                     <fmt:formatNumber value="${p.price}" type="number"/>đ
                                 </span>
-              </c:otherwise>
-            </c:choose>
-          </p>
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
         </div>
         <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">Thêm vào giỏ hàng</a>
       </div>

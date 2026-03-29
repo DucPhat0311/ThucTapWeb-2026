@@ -112,24 +112,24 @@
                         <img src="${p.thumbnail}" alt="${p.name}">
                         <h3>${p.name}</h3>
 
-                        <fmt:setLocale value="vi_VN"/>
-                        <p class="price">
-                            <c:choose>
-                                <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
+           <fmt:setLocale value="vi_VN"/>
+                <p class="price">
+                    <c:choose>
+                        <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
                             <span class="new-price" style="color:red;font-weight:bold">
                                 <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ
                             </span>
-                                    <span class="old-price" style="text-decoration: line-through; color: #888; margin-left: 8px;">
+                            <span class="old-price" style="text-decoration: line-through; color: #888; margin-left: 8px;">
                                 <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
                             </span>
-                                </c:when>
-                                <c:otherwise>
+                        </c:when>
+                        <c:otherwise>
                             <span class="new-price" style="font-weight:bold">
                                 <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
                             </span>
-                                </c:otherwise>
-                            </c:choose>
-                        </p>
+                        </c:otherwise>
+                    </c:choose>
+                </p>
 
                         <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
                             Thêm vào giỏ hàng
