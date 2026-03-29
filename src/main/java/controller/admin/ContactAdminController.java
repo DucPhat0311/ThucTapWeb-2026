@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ContactAdminController", value = "/contact-admin")
+@WebServlet(name = "ContactAdminController", value = "/contactAdmin")
 public class ContactAdminController extends HttpServlet {
     private ContactService contactService;
 
@@ -40,7 +40,7 @@ public class ContactAdminController extends HttpServlet {
             request.setAttribute("totalClosed", totalClosed);
 
             request.setAttribute("page", "contact");
-        request.getRequestDispatcher("/WEB-INF/admin/contact-admin.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/admin/contactAdmin.jsp").forward(request, response);
             return;
 
         }
@@ -54,14 +54,14 @@ public class ContactAdminController extends HttpServlet {
             request.setAttribute("mode", mode);
 
             request.setAttribute("page", "contact");
-        request.getRequestDispatcher("/WEB-INF/admin/contact-form.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/admin/form-contactAdmin.jsp").forward(request, response);
             return;
         }
 
         if ("add".equals(mode)) {
             request.setAttribute("mode", mode);
             request.setAttribute("page", "contact");
-        request.getRequestDispatcher("/WEB-INF/admin/contact-form.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/admin/form-contactAdmin.jsp").forward(request, response);
             return;
         }
     }

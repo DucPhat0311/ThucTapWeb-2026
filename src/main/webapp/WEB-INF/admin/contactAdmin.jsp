@@ -12,9 +12,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liên hệ - Admin</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css"><link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/contact.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
 <body>
@@ -40,12 +40,6 @@
                     <div class="card">Liên hệ mới<br><span id="dashboard-total-contact-new">${totalNew}</span></div>
                     <div class="card">Liên hệ đang xử lý<br><span id="dashboard-total-contact-processing">${totalProcessing}</span></div>
                     <div class="card">Liên hệ đã xử lý<br><span id="dashboard-total-contact-closed">${totalClosed}</span></div>
-                </div>
-
-                <div class="contact-toolbar">
-                    <a href="contact-admin?mode=add" class="btn-add">
-                        <i class="fa fa-plus"></i> Thêm liên hệ
-                    </a>
                 </div>
 
 
@@ -91,13 +85,13 @@
                                 </td>
                                 <td class="actions">
                                     <!-- XEM -->
-                                    <a href="contact-admin?mode=view&id=${c.id}"
+                                    <a href="contactAdmin?mode=view&id=${c.id}"
                                        class="icon-btn view" title="Xem chi tiết">
                                         <i class="fa fa-eye"></i>
                                     </a>
 
                                     <!-- SỬA -->
-                                    <a href="contact-admin?mode=edit&id=${c.id}"
+                                    <a href="contactAdmin?mode=edit&id=${c.id}"
                                        class="icon-btn edit" title="Chỉnh sửa">
                                         <i class="fa fa-pen"></i>
                                     </a>
@@ -126,7 +120,7 @@
             <h3>Xác nhận xóa</h3>
             <p id="deleteMessage">Bạn có chắc muốn xóa liên hệ này không?</p>
 
-            <form id="deleteForm" method="post" action="contact-admin">
+            <form id="deleteForm" method="post" action="contactAdmin">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" id="deleteContactId">
 
