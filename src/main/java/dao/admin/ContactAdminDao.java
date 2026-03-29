@@ -53,5 +53,24 @@ public class ContactAdminDao extends BaseDao {
                 .bind("id", id)
                 .execute());
     }
-
+    public void updateContact(Contact contact) {
+        getJdbi().withHandle(handle -> handle.createUpdate("""
+                UPDATE contacts
+                SET 
+                    name = :name,
+                    email = :email,
+                    phone = :phone,
+                    message = :message,
+                    address = :address,
+                    status = :status
+                WHERE id = :id""")
+                .bind("name", contact.getName())
+                .bind("email", contact.getEmail())
+                .bind("phone", contact.getPhone())
+                .bind("message", contact.getMessage())
+                .bind("address", contact.getAddress())
+                .bind("status", contact.getStatus())
+                .bind("id", contact.getId())
+                .execute());
+    }
 }
