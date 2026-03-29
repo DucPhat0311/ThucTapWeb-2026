@@ -7,7 +7,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý sản phẩm</title>
+    <title>Admin Product</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
@@ -32,35 +32,37 @@
                 <div class="cards">
                     <div class="card">
                         Tổng sản phẩm
-                        <span>450</span>
+                        <span>${totalProducts}</span>
                     </div>
                     <div class="card">
                         Đang bán
-                        <span>300</span>
+                        <span>${activeProducts}</span>
                     </div>
                     <div class="card">
                         Ngừng bán
-                        <span>150</span>
+                        <span>${inactiveProducts}</span>
                     </div>
                 </div>
+
 
                 <div class="user-toolbar">
                     <form method="post"
                           action="${pageContext.request.contextPath}/productAdmin"
                           class="user-toolbar">
-                        <input type="hidden" name="action" value="#">
-                        <input type="text" name="keyword" value="#"
+                        <input type="hidden" name="action" value="search">
+                        <input type="text" name="keyword" value="${param.keyword}"
                                placeholder="Tìm theo tên sản phẩm...">
                         <button type="submit" class="btn-search">
                             <i class="fa fa-search"></i> Tìm
                         </button>
                     </form>
 
-                    <a href="#" class="btn-add">
+                    <a href="productAdmin?mode=add" class="btn-add">
                         <i class="fa fa-plus"></i> Thêm sản phẩm
                     </a>
                 </div>
 
+    
                 <div class="user-table-wrapper">
                     <table class="user-table">
                         <thead>
@@ -75,94 +77,98 @@
                             <th>Hành động</th>
                         </tr>
                         </thead>
+
                         <tbody>
-    <tr>
-        <td>SP001</td>
+                        <c:forEach var="p" items="${products}">
+                            <tr>
+                                <td>${p.id}</td>
 
-        <td>
-            <img src="#" alt="Áo thun Oversize" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-        </td>
+                                <td>
+                                    <img src="${p.thumbnail}" alt="${p.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                </td>
 
-        <td>Áo thun Oversize Cotton 100% Aura Premium</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${fn:length(p.name) > 50}">
+                                            ${fn:substring(p.name, 0, 50)}...
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${p.name}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
 
-        <td>250,000 đ</td>
 
-        <td>199,000 đ</td>
+                                <td>
+                                    <fmt:formatNumber value="${p.price}" type="number"/> đ
+                                </td>
 
-        <td>Áo thun nam</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
+                                            <fmt:formatNumber value="${p.sale_price}" type="number"/> đ
+                                        </c:when>
+                                        <c:otherwise>
+                                            Không có
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
 
-        <td>
-            <span class="status active">Đang bán</span>
-        </td>
+                                <td>${p.categoryName}</td>
 
-        <td class="action-buttons">
-            <a href="#" class="icon-btn view" title="Xem chi tiết">
-                <i class="fa fa-eye"></i>
-            </a>
+                                <td>
+                                    <span class="status active">
+                                        ${p.status}
+                                    </span>
+                                </td>
 
-            <a href="#" class="icon-btn edit" title="Chỉnh sửa">
-                <i class="fa fa-pen"></i>
-            </a>
+                                <td class="action-buttons">
 
-            <a href="#" class="icon-btn variant" title="Quản lý biến thể">
-                <i class="fa fa-layer-group"></i>
-            </a>
+                          
+                                    <a href="productAdmin?mode=view&id=${p.id}" 
+                                       class="icon-btn view"
+                                       title="Xem chi tiết">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
 
-            <a href="#" class="icon-btn image" title="Quản lý ảnh">
-                <i class="fa fa-images"></i>
-            </a>
 
-            <button class="icon-btn delete" title="Đặt hết hàng" onclick="openToggleProductModal(1, 'Áo thun Oversize', 'Đang bán')">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    </tr>
+                         
+                                    <a href="productAdmin?mode=edit&id=${p.id}"
+                                       class="icon-btn edit"
+                                       title="Chỉnh sửa">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
 
-    <tr>
-        <td>SP002</td>
 
-        <td>
-            <img src="#" alt="Quần Jean" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-        </td>
+                                    <a href="productVariantAdmin?productId=${p.id}"
+                                       class="icon-btn variant"
+                                       title="Quản lý biến thể">
+                                        <i class="fa fa-layer-group"></i>
+                                    </a>
 
-        <td>Quần Jean Slimfit Wash Xanh Aura Studio Edition 2026...</td>
+        
+                                    <a href="productImgAdmin?productId=${p.id}"
+                                       class="icon-btn image"
+                                       title="Quản lý ảnh">
+                                        <i class="fa fa-images"></i>
+                                    </a>
 
-        <td>550,000 đ</td>
+               
+                                    <button class="icon-btn delete"
+                                            title="${p.status == 'Đang bán' ? 'Đặt hết hàng' : 'Mở bán lại'}"
+                                            onclick="openToggleProductModal(${p.id}, '${p.name}', '${p.status}')">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
 
-        <td>Không có</td>
+                                </td>
 
-        <td>Quần nam</td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
 
-        <td>
-            <span class="status active">Hết hàng</span>
-        </td>
-
-        <td class="action-buttons">
-            <a href="#" class="icon-btn view" title="Xem chi tiết">
-                <i class="fa fa-eye"></i>
-            </a>
-
-            <a href="#" class="icon-btn edit" title="Chỉnh sửa">
-                <i class="fa fa-pen"></i>
-            </a>
-
-            <a href="#" class="icon-btn variant" title="Quản lý biến thể">
-                <i class="fa fa-layer-group"></i>
-            </a>
-
-            <a href="#" class="icon-btn image" title="Quản lý ảnh">
-                <i class="fa fa-images"></i>
-            </a>
-
-            <button class="icon-btn delete" title="Mở bán lại" onclick="openToggleProductModal(2, 'Quần Jean Slimfit', 'Hết hàng')">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    </tr>
-</tbody>
-</table>
-</div>
-<!-- Phân trang -->
+      
                 <c:if test="${totalPages > 1}">
                     <div class="pagination">
                         <div class="pagination-info">
@@ -170,8 +176,8 @@
                         </div>
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
-                                <a href="product-admin?page=1" class="page-btn">« Đầu</a>
-                                <a href="product-admin?page=${currentPage - 1}" class="page-btn">‹ Trước</a>
+                                <a href="productAdmin?page=1" class="page-btn">« Đầu</a>
+                                <a href="productAdmin?page=${currentPage - 1}" class="page-btn">‹ Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -180,7 +186,7 @@
                                         <span class="page-btn active">${i}</span>
                                     </c:when>
                                     <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="product-admin?page=${i}" class="page-btn">${i}</a>
+                                        <a href="productAdmin?page=${i}" class="page-btn">${i}</a>
                                     </c:when>
                                     <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
                                         <span class="page-btn dots">...</span>
@@ -189,17 +195,20 @@
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="product-admin?page=${currentPage + 1}" class="page-btn">Sau ›</a>
-                                <a href="product-admin?page=${totalPages}" class="page-btn">Cuối »</a>
+                                <a href="productAdmin?page=${currentPage + 1}" class="page-btn">Sau ›</a>
+                                <a href="productAdmin?page=${totalPages}" class="page-btn">Cuối »</a>
                             </c:if>
                         </div>
                     </div>
                 </c:if>
+    
+
             </section>
 
         </main>
     </section>
 </div>
+
 
 <div class="modal-overlay" id="product-modal">
     <div class="modal-content">
@@ -227,10 +236,9 @@
                     <div class="form-group">
                         <label>Danh mục</label>
                         <select name="category_id" id="product-category">
-                            <option value="1">Áo thun nam</option>
-                            <option value="2">Quần jean nam</option>
-                            <option value="3">Áo khoác nam</option>
-                            <option value="4">Phụ kiện nam</option>
+                            <c:forEach var="c" items="${categories}">
+                                <option value="${c.id}">${c.name}</option>
+                            </c:forEach>
                         </select>
                     </div>
                     <div class="form-group">
@@ -301,6 +309,7 @@
     </div>
 </div>
 
+
 <div class="modal-overlay" id="toggle-product-modal">
     <div class="modal-content modal-small">
         <div class="modal-header">
@@ -320,7 +329,7 @@
     </div>
 </div>
 
-<script src="${pageContext.request.contextPath}/javaScript/admin/adminProduct.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin/adminProduct.js"></script>
 
 </body>
 </html>
