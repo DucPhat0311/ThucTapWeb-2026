@@ -14,10 +14,6 @@ public class ProductVariant {
     @ColumnName("color_id")
     private int colorId;
     private int stock;
-    private double price;
-
-    @ColumnName("sale_price")
-    private double salePrice;
 
     private String sizeName;
     private String colorName;
@@ -38,14 +34,12 @@ public class ProductVariant {
         this.colorName = colorName;
     }
 
-    public ProductVariant(int id, int productId, int sizeId, int colorId, int stock, double price, double salePrice) {
+    public ProductVariant(int id, int productId, int sizeId, int colorId, int stock) {
         this.id = id;
         this.productId = productId;
         this.sizeId = sizeId;
         this.colorId = colorId;
         this.stock = stock;
-        this.price = price;
-        this.salePrice = salePrice;
     }
 
     public ProductVariant() {
@@ -91,19 +85,4 @@ public class ProductVariant {
         this.stock = stock;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
-    }
 }
