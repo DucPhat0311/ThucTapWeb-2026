@@ -100,20 +100,21 @@
         </div>
     </div>
 
-    <!-- MENU -->
     <nav class="header-bottom">
         <div class="menu">
-            <ul><li><a href="home">Trang chủ</a></li>
-
-                <li>
-                    <a href="product">Danh Mục ▾</a>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
+                <li><a href="product">Danh Mục ▾</a>
                     <ul class="sub">
-                        <li class="subItem"><a>Thời trang Nam</a></li>
-                        <li class="subItem"><a>Thời trang Nữ</a></li>
-                        <li class="subItem"><a>Phụ kiện</a></li>
+                        <jsp:useBean id="categoryDao" class="dao.user.CategoryDao" />
+                        <c:set var="categoryTree" value="${categoryDao.categoryTree}" />
+                        <c:forEach var="parentCat" items="${categoryTree}">
+                            <li class="subItem">
+                                <a href="product?category=${parentCat.id}">${parentCat.name}</a>
+                            </li>
+                        </c:forEach>
                     </ul>
                 </li>
-
                 <li><a href="blog">Bài viết</a></li>
                 <li><a href="sales">Khuyến mãi</a></li>
                 <li><a href="contact">Liên hệ</a></li>
