@@ -145,6 +145,21 @@ public class CartItemDao extends BaseDao {
         );
     }
 
+    public void updateQuantity(int cartId, int variantId, int quantity) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE cart_items
+            SET quantity = :q
+            WHERE cart_id = :cid AND variant_id = :vid
+        """)
+                        .bind("q", quantity)
+                        .bind("cid", cartId)
+                        .bind("vid", variantId)
+                        .execute()
+        );
+    }
+
+
 
 
 }
