@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Form Product Variant</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/product-variant-form.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formProductVariant.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
