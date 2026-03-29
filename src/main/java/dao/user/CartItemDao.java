@@ -131,5 +131,20 @@ public class CartItemDao extends BaseDao {
             }
         });
     }
-    
+
+
+    public void delete(int cartId, int variantId) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            DELETE FROM cart_items
+            WHERE cart_id = :cid AND variant_id = :vid
+        """)
+                        .bind("cid", cartId)
+                        .bind("vid", variantId)
+                        .execute()
+        );
+    }
+
+
+
 }
