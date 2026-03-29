@@ -49,7 +49,15 @@
             <h1 class="product-name">${product.name}</h1>
 
             <p class="product-price">Giá:
-                <span><fmt:formatNumber value="${product.sale_price}" type="number"/>₫</span>
+                <c:choose>
+                    <c:when test="${product.sale_price > 0 && product.sale_price < product.price}">
+                        <span style="color:red;font-weight:bold"><fmt:formatNumber value="${product.sale_price}" type="number"/>₫</span>
+                        <span style="text-decoration: line-through; color: #888; margin-left: 8px;"><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span style="font-weight:bold"><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
+                    </c:otherwise>
+                </c:choose>
             </p>
 
             <!-- LƯỢT RATING -->
