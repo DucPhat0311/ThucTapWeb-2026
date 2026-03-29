@@ -3,14 +3,11 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Liên hệ - AURA Studio</title>
-    <link rel="stylesheet" href="css/views/contact.css">
-</head>
-<body>
+
+<%
+    request.setAttribute("pageCss", "views/contact.css");
+    request.setAttribute("pageTitle" , "Liên hệ");
+%>
 
 <%@include file="../include/header.jsp"%>
 
@@ -18,16 +15,16 @@
 <div class="title">
     <span>THÔNG TIN LIÊN HỆ</span>
 </div>
-
 <main class="container">
 
     <div class="contactFrom">
         <h2>Gửi thông tin liên hệ với chúng tôi</h2>
 
-        <!-- Thông báo gửi thành công -->
-        <!-- <p style="color: green; font-weight: bold;">Tin nhắn đã được gửi thành công!</p> -->
+        <c:if test="${not empty successMessage}">
+            <p style="color: green; font-weight: bold;">${successMessage}</p>
+        </c:if>
 
-        <form method="post" action="#">
+        <form method="post" action="${pageContext.request.contextPath}/lien-he">
             <label>Địa chỉ email:</label>
             <input type="email" name="email" placeholder="Nhập địa chỉ email">
 
@@ -50,18 +47,13 @@
     <div class="contactInfo">
         <h3>Shop AURA Studio</h3>
 
-        <p><strong>Địa chỉ:</strong> FIT NLU, Đại học Nông Lâm TP.HCM</p>
+        <p><strong>Địa chỉ:</strong>FIT NLU, Đại học Nông Lâm TP.HCM</p>
         <p><strong>Điện thoại:</strong> 0888 888 888</p>
-        <p><strong>Thời gian làm việc:</strong><br>
-            Thứ 2 - Thứ 6: 8h00 - 19h30<br>
+        <p><b>Thời gian làm việc:</b><br>
+            Thứ 2 - Thứ 6: 8h00 - 19h30 <br>
             Thứ 7 - Chủ nhật: 8h00 - 21h00
         </p>
     </div>
-
 </main>
 
 <%@include file="../include/footer.jsp"%>
-
-
-</body>
-</html>
