@@ -18,7 +18,9 @@
 
     <div class="header-top">
         <div class="logo">
+            <a href="home" class="iconUser">
             <img src="img/logo.png" alt="AURA Studio Logo">
+            </a>
         </div>
 
         <div class="search-bar">
