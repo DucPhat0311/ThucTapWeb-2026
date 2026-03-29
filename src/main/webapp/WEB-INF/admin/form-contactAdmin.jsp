@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Form</title>
+    <title>Form Contact Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formContact.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
@@ -89,7 +89,7 @@
                     <label>Nội dung</label>
                     <textarea name="message"
                               rows="5"
-                              <c:if test="${mode != 'add'}">readonly</c:if>
+                              <c:if test="${mode == 'view'}">readonly</c:if>
                     >${contact.message}</textarea>
                 </div>
             </div>

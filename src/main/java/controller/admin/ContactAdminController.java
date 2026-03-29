@@ -72,7 +72,7 @@ public class ContactAdminController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-        if ("upadate".equals(action)) {
+        if ("update".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             Contact contact = new Contact();
 
@@ -85,7 +85,7 @@ public class ContactAdminController extends HttpServlet {
             contact.setMessage(request.getParameter("message"));
 
             contactService.updateContact(contact);
-            response.sendRedirect("contact-admin?mode=view&id=" + id);
+            response.sendRedirect("contactAdmin?mode=view&id=" + id);
             return;
         }
 
@@ -94,7 +94,14 @@ public class ContactAdminController extends HttpServlet {
 
             contactService.acceptContact(id);
 
-            response.sendRedirect("contact-admin");
+            response.sendRedirect("contactAdmin");
+            return;
+        }
+
+        if ("delete".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            contactService.deleteContact(id);
+            response.sendRedirect("contactAdmin");
             return;
         }
     }

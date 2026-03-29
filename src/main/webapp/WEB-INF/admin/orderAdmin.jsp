@@ -19,7 +19,7 @@
 
     <section class="content">
         <header class="topbar">
-            <h1 id="pageTitle">Đơn hàng</h1>
+            <h1 id="pageTitle">Quản Lý Đơn Hàng</h1>
             <div class="actions">
                 <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>

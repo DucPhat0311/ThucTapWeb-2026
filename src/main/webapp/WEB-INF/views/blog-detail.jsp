@@ -43,7 +43,9 @@
                     <c:if test="${status.index < 3}">
                         <div class="related-item">
                             <a href="${pageContext.request.contextPath}/blogs?id=${related.id}">
-                                <img src="${pageContext.request.contextPath}/${related.img}" alt="${related.title}">
+                                <div class="related-img-wrapper">
+                                    <img src="${pageContext.request.contextPath}/${related.img}" alt="${related.title}">
+                                </div>
                                 <div class="related-info">
                                     <h4>${related.title}</h4>
                                     <p class="related-date">

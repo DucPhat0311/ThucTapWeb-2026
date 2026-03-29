@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liên hệ - Admin</title>
+    <title>Admin Contact</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
@@ -24,7 +24,7 @@
     <section class="content">
         <!-- PHẦN HEADER -->
         <header class="topbar">
-            <h1 id="pageTitle">Liên hệ</h1>
+            <h1 id="pageTitle">Quản Lý Liên Hệ</h1>
             <div class="actions">
                 <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>
