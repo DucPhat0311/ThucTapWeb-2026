@@ -12,7 +12,6 @@ public class ProductDaoAdmin extends BaseDao {
         SELECT p.*, c.name AS categoryName
         FROM products p
         JOIN categories c ON p.category_id = c.id
-        WHERE p.status <> 'Đã xoá'
         ORDER BY p.id DESC
     """;
 
@@ -43,8 +42,7 @@ public class ProductDaoAdmin extends BaseDao {
         SELECT p.*, c.name AS categoryName
         FROM products p
         JOIN categories c ON p.category_id = c.id
-        WHERE p.status <> 'Đã xoá'
-        AND p.name LIKE :kw
+        WHERE p.name LIKE :kw
     """;        
         return getJdbi().withHandle(h ->
                 h.createQuery(sql)
@@ -102,18 +100,16 @@ public class ProductDaoAdmin extends BaseDao {
         );
     }
 
-    public void softDelete(int id) {
+    public void delete(int id) {
         String sql = """
-        UPDATE products
-        SET status = 'Đã xoá'
-        WHERE id = :id
-    """;
-
+        DELETE FROM products WHERE id = :id
+        """;
         getJdbi().withHandle(h ->
                 h.createUpdate(sql)
                         .bind("id", id)
                         .execute()
         );
     }
+
 
 }
