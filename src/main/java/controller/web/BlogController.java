@@ -69,14 +69,14 @@ public class BlogController extends HttpServlet {
         try {
             id = Integer.parseInt(idParam);
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/blogs");
+            response.sendRedirect(request.getContextPath() + "/blog");
             return;
         }
 
         Optional<Blog> opt = blogDao.getBlogById(id);
 
         if (opt.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/blogs");
+            response.sendRedirect(request.getContextPath() + "/blog");
             return;
         }
 
@@ -85,7 +85,7 @@ public class BlogController extends HttpServlet {
 
         request.setAttribute("blog", blog);
         request.setAttribute("relatedBlogs", relatedBlogs);
-        request.getRequestDispatcher("/WEB-INF/views/chitiet_blog.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/blog-detail.jsp").forward(request, response);
     }
 
     private void searchBlog(HttpServletRequest request, HttpServletResponse response, String keyword) throws ServletException, IOException {
