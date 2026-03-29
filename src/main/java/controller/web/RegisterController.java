@@ -57,7 +57,7 @@ public class RegisterController extends HttpServlet {
             userService.registerSendOtp(username, email, password, fullName, birthdayStr, gender);
 
             response.sendRedirect(
-                    request.getContextPath() + "/otp?email=" + email
+                    request.getContextPath() + "/sendOTP?email=" + email
             );
 
         } catch (RuntimeException e) {

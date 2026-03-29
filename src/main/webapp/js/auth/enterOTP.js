@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+
     const resendLink = document.getElementById("resendLink");
     const resendText = document.getElementById("resendText");
     const countdownBox = document.getElementById("countdown");
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const email = document.querySelector("input[name='email']").value;
 
-        fetch("enterOTP", {
+        fetch("sendOTP", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -49,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
     });
+
 
     function startCountdown() {
         resendText.style.display = "none";
@@ -69,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+
 function joinOtp() {
     let otp = '';
     document.querySelectorAll('.o').forEach(i => otp += i.value);
@@ -78,6 +81,6 @@ function joinOtp() {
         return false;
     }
 
-    document.getElementById('enterOTP').value = otp;
+    document.getElementById('otp').value = otp;
     return true;
 }

@@ -53,8 +53,7 @@ public class UserAdminController extends HttpServlet {
             request.setAttribute("mode", mode);
 
             request.setAttribute("page", "user");
-
-           request.getRequestDispatcher("/WEB-INF/admin/form-userAdmin.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/admin/form-userAdmin.jsp").forward(request,response);
 
             return;
         }
@@ -94,7 +93,7 @@ public class UserAdminController extends HttpServlet {
             userService.createUser(user);
 
             response.sendRedirect("userAdmin");
-
+          
             return;
         }
 
@@ -150,4 +149,3 @@ public class UserAdminController extends HttpServlet {
 
     }
 }
-

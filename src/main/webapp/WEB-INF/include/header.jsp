@@ -6,6 +6,9 @@
 <head>
     <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
 
+<c:if test="${not empty pageCss}">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/${pageCss}">
+</c:if>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
@@ -18,10 +21,9 @@
             <img src="img/logo.png" alt="AURA Studio Logo">
         </div>
 
-        <!-- SEARCH -->
         <div class="search-bar">
-            <form action="#" method="get">
-                <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..." required />
+            <form action="search" method="get">
+                <input type="text" name="keyword" value="${param.keyword}" placeholder="Tìm kiếm sản phẩm..." required />
                 <button type="submit">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
@@ -42,7 +44,7 @@
                         <ul class="user-dropdown">
                             <li><a href="profile">Thông tin cá nhân</a></li>
                             <li><a href="order-user">Đơn hàng của tôi</a></li>
-                            <li><a href="logout">Đăng xuất</a></li>
+                            <li><a href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
                         </ul>
                     </div>
                 </c:when>
