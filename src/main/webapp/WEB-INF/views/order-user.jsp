@@ -10,7 +10,7 @@
             case "PENDING": return "Chờ xác nhận";
             case "CONFIRMED": return "Đã xác nhận";
             case "SHIPPING": return "Đang giao hàng";
-            case "DELIVERED": return "Đã giao";
+            case "COMPLETED": return "Đã hoàn thành";
             case "CANCELLED": return "Đã hủy";
             default: return status;
         }
@@ -40,7 +40,7 @@
             <ul>
                 <li><a href="profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
                 <li><a href="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
-                <li class="active"><a href="don-mua"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
+                <li class="active"><a href="order-user"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
                 <li><a href="change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
                 <li><a href="logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
             </ul>
@@ -60,11 +60,11 @@
             <a href="order-user?status=SHIPPING" class="tab-item ${currentStatus == 'SHIPPING' ? 'active' : ''}">
                 Đang giao hàng
             </a>
-            <a href="order-user?status=DELIVERED" class="tab-item ${currentStatus == 'DELIVERED' ? 'active' : ''}">
-                Đã giao
+            <a href="order-user?status=COMPLETED" class="tab-item ${currentStatus == 'COMPLETED' ? 'active' : ''}">
+                Đã hoàn thành
             </a>
-            <a href=order-user?status=CANCELLED" class="tab-item ${currentStatus == 'CANCELLED' ? 'active' : ''}">
-                Đã hủy
+            <a href="order-user?status=CANCELLED" class="tab-item ${currentStatus == 'CANCELLED' ? 'active' : ''}">
+            Đã hủy
             </a>
         </div>
 
