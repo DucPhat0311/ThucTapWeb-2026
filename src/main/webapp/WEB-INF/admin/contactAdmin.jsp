@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liên hệ - Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/contact.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
