@@ -1,0 +1,103 @@
+package controller.admin;
+
+import dao.admin.BlogAdminDao;
+import model.Blog;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.List;
+
+@WebServlet(name = "BlogAdminServlet", value = "/blog-admin")
+@MultipartConfig
+public class BlogAdminController extends HttpServlet {
+    private final BlogAdminDao blogDAO = new BlogAdminDao();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if ("delete".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            blogDAO.deleteBlog(id);
+            response.sendRedirect("blog-admin");
+            return;
+        }
+
+        String mode = request.getParameter("mode");
+
+        if ("add".equals(mode)) {
+            request.setAttribute("mode", "add");
+            request.setAttribute("page", "blog");
+        request.getRequestDispatcher("/WEB-INF/admin/blog-form.jsp").forward(request, response);
+            return;
+        }
+
+        if ("edit".equals(mode) || "view".equals(mode)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            blogDAO.getBlogById(id).ifPresent(n ->
+                    request.setAttribute("blog", n)
+            );
+            request.setAttribute("mode", mode);
+            request.setAttribute("page", "blog");
+        request.getRequestDispatcher("/WEB-INF/admin/blog-form.jsp").forward(request, response);
+            return;
+        }
+
+        List<Blog> allBlog = blogDAO.getAllBlog();
+        request.setAttribute("blogList", allBlog);
+        request.setAttribute("total", allBlog.size());
+        request.setAttribute("totalActive", allBlog.stream().filter(n -> n.getStatus() == 1).count());
+
+        request.setAttribute("page", "blog");
+        request.getRequestDispatcher("/WEB-INF/admin/blogAdmin.jsp").forward(request, response);
+    }
+
+
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        String title = request.getParameter("title");
+        String description = request.getParameter("description");
+        String content = request.getParameter("content");
+
+        String statusRaw = request.getParameter("status");
+        int status = (statusRaw != null) ? Integer.parseInt(statusRaw) : 0;
+
+        if ("create".equals(action)) {
+            Blog blog = new Blog();
+            blog.setTitle(title);
+            blog.setDescription(description);
+            blog.setContent(content);
+            blog.setStatus(status);
+            blog.setAuthorId(1);
+            
+            blogDAO.createBlog(blog);
+        }
+
+        if ("update".equals(action)) {
+            String idRaw = request.getParameter("id");
+            if (idRaw != null) {
+                int id = Integer.parseInt(idRaw);
+
+                Blog blog = new Blog();
+                blog.setId(id);
+                blog.setTitle(title);
+                blog.setDescription(description);
+                blog.setContent(content);
+                blog.setStatus(status);
+                
+                blogDAO.updateBlog(blog);
+            }
+        }
+
+        response.sendRedirect("blog-admin");
+    }
+}
+
+
