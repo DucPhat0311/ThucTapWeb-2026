@@ -4,15 +4,10 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Sản phẩm - AURA Studio</title>
-    <link rel="stylesheet" href="css/views/product.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+<%
+    request.setAttribute("pageCss", "views/product.css");
+    request.setAttribute("pageTitle" , "Trang chủ");
+%>
 
 <%@include file="../include/header.jsp"%>
 
@@ -45,7 +40,7 @@
                             </button>
                         </a>
 
-                        <!-- GIÁ -->
+                        <!-- Dropdown: GIÁ -->
                         <div class="dropdown">
                             <button class="dropbtn
                         ${param.sort eq 'price_asc' || param.sort eq 'price_desc' ? 'active' : ''}">
@@ -72,14 +67,12 @@
                     <h3>Danh mục</h3>
                     <div class="filter-buttons">
 
-                        <!-- ===== TẤT CẢ ===== -->
                         <a href="product?sort=${param.sort}">
                             <button class="${empty param.category ? 'active' : ''}">
                                 Tất cả
                             </button>
                         </a>
 
-                        <!-- Hiển thị động các Danh mục Cha và Con -->
                         <c:forEach var="parent" items="${categories}">
                             <div class="dropdown">
                                 <button class="dropbtn ${param.category == parent.id ? 'active' : ''}">
@@ -109,8 +102,10 @@
             </div>
         </aside>
 
+        <!-- Danh sách sản phẩm -->
         <div class="main-products">
             <div class="product-list">
+
                 <c:forEach var="p" items="${list}" >
                     <div class="product-card">
                         <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
@@ -119,8 +114,21 @@
 
                         <fmt:setLocale value="vi_VN"/>
                         <p class="price">
-                            <span class="new-price"><fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ</span>
-                            <span class="old-price"><fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ</span>
+                            <c:choose>
+                                <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
+                            <span class="new-price" style="color:red;font-weight:bold">
+                                <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ
+                            </span>
+                                    <span class="old-price" style="text-decoration: line-through; color: #888; margin-left: 8px;">
+                                <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
+                            </span>
+                                </c:when>
+                                <c:otherwise>
+                            <span class="new-price" style="font-weight:bold">
+                                <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
+                            </span>
+                                </c:otherwise>
+                            </c:choose>
                         </p>
 
                         <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
@@ -138,8 +146,7 @@
     </div>
 </section>
 
-<%@include file="../include/footer.jsp"%>
+
+<%@ include file="../include/footer.jsp" %>
 
 
-</body>
-</html>
