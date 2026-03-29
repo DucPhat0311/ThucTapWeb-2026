@@ -60,9 +60,7 @@ public class BlogAdminController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-
-        String title = request.getParameter("title");
+        String action = request.getParameter("action");        String title = request.getParameter("title");
         String description = request.getParameter("description");
         String content = request.getParameter("content");
 
@@ -94,6 +92,16 @@ public class BlogAdminController extends HttpServlet {
                 
                 blogDAO.updateBlog(blog);
             }
+        }
+
+        if ("delete".equals(action)) {
+            String idRaw = request.getParameter("id");
+            if (idRaw != null) {
+                int id = Integer.parseInt(idRaw);
+                blogDAO.deleteBlog(id);
+            }
+            response.sendRedirect("blogAdmin");
+            return;
         }
 
         response.sendRedirect("blogAdmin");

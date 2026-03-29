@@ -127,7 +127,7 @@ body, .admin { height: 100vh; }
     gap: 15px;
     margin-bottom: 25px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     flex-wrap: wrap;
 }
 
