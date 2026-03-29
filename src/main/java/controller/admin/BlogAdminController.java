@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "BlogAdminServlet", value = "/blog-admin")
+@WebServlet(name = "BlogAdminServlet", value = "/blogAdmin")
 @MultipartConfig
 public class BlogAdminController extends HttpServlet {
     private final BlogAdminDao blogDAO = new BlogAdminDao();
@@ -23,7 +23,7 @@ public class BlogAdminController extends HttpServlet {
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             blogDAO.deleteBlog(id);
-            response.sendRedirect("blog-admin");
+            response.sendRedirect("blogAdmin");
             return;
         }
 
@@ -32,7 +32,7 @@ public class BlogAdminController extends HttpServlet {
         if ("add".equals(mode)) {
             request.setAttribute("mode", "add");
             request.setAttribute("page", "blog");
-        request.getRequestDispatcher("/WEB-INF/admin/blog-form.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/admin/form-blogAdmin.jsp").forward(request, response);
             return;
         }
 
@@ -43,7 +43,7 @@ public class BlogAdminController extends HttpServlet {
             );
             request.setAttribute("mode", mode);
             request.setAttribute("page", "blog");
-        request.getRequestDispatcher("/WEB-INF/admin/blog-form.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/admin/form-blogAdmin.jsp").forward(request, response);
             return;
         }
 
@@ -96,7 +96,7 @@ public class BlogAdminController extends HttpServlet {
             }
         }
 
-        response.sendRedirect("blog-admin");
+        response.sendRedirect("blogAdmin");
     }
 }
 
