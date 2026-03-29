@@ -1,10 +1,12 @@
-package Controller.admin;
+package controller.admin;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
-import Service.ContactService;
-import Model.Contact;
+import model.Contact;
+import service.ContactService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,23 +72,6 @@ public class ContactAdminController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-
-        if ("create".equals(action)) {
-            Contact contact = new Contact();
-
-            contact.setName(request.getParameter("name"));
-            contact.setEmail(request.getParameter("email"));
-            contact.setPhone(request.getParameter("phone"));
-            contact.setStatus(request.getParameter("status"));
-            contact.setAddress(request.getParameter("address"));
-            contact.setMessage(request.getParameter("message"));
-
-            contactService.createContact(contact);
-
-            response.sendRedirect("contact-admin");
-            return;
-        }
-
         if ("upadate".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             Contact contact = new Contact();

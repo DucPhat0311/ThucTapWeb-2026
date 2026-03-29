@@ -35,4 +35,7 @@ public class ContactService {
     public void deleteContact(int id) {
         contactAdminDao.deleteContact(id);
     }
+    public void updateContact(Contact contact) {
+        contactAdminDao.updateContact(contact);
+    }
 }
