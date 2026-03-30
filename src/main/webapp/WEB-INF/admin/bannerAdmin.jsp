@@ -57,7 +57,7 @@
                         <c:forEach items="${banners}" var="b">
                             <tr>
                                 <td>${b.id}</td>
-                                <td><img src="${b.imageUrl}" alt="" class="banner-thumb"></td>
+                                <td><img src="${pageContext.request.contextPath}/${b.imageUrl}" alt="" class="banner-thumb"></td>
                                 <td>${b.navigateTo}</td>
                                 <td>${b.title}</td>
                                 <td>

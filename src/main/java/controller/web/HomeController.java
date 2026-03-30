@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Category;
 import service.ProductService;
+import service.BannerService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class HomeController extends HttpServlet {
 
     private ProductService productService;
+    private BannerService bannerService;
     private ProductDao productDao;
     private CategoryDao categoryDao;
 
@@ -25,6 +27,7 @@ public class HomeController extends HttpServlet {
     @Override
     public void init() {
         productService = new ProductService();
+        bannerService = new BannerService();
         productDao = new ProductDao();
         categoryDao = new CategoryDao();
     }
@@ -32,6 +35,13 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        req.setAttribute("banners",
+            bannerService.getActiveBanners());
+
+        req.setAttribute("latestProducts",
+                productService.getLatestProducts(8));
+
 
         List<Category> allCategories = categoryDao.getAllCategories();
         for (Category parent : allCategories) {
@@ -46,9 +56,6 @@ public class HomeController extends HttpServlet {
         }
         req.setAttribute("allCategories", allCategories);
 
-        // 8 sản phẩm mới nhất
-        req.setAttribute("latestProducts",
-                productService.getLatestProducts(8));
 
         req.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(req, resp);
     }

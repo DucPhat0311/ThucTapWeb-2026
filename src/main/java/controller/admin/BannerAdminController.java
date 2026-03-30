@@ -88,7 +88,7 @@ public class BannerAdminController extends HttpServlet {
 
 
 
-        String uploadDir = getServletContext().getRealPath("/img");
+        String uploadDir = getServletContext().getRealPath("/img/");
         File dir = new File(uploadDir);
         if (!dir.exists()){
             dir.mkdirs();

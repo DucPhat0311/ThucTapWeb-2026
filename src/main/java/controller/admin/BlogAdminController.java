@@ -60,12 +60,36 @@ public class BlogAdminController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");        String title = request.getParameter("title");
+
+        String action = request.getParameter("action");
+        String title = request.getParameter("title");
         String description = request.getParameter("description");
         String content = request.getParameter("content");
-
         String statusRaw = request.getParameter("status");
         int status = (statusRaw != null) ? Integer.parseInt(statusRaw) : 0;
+
+        String imgPath = null;
+        try {
+            jakarta.servlet.http.Part filePart = request.getPart("imageFile");
+            if (filePart != null && filePart.getSize() > 0) {
+                String fileName = filePart.getSubmittedFileName();
+                String extension = "";
+                int lastDotIndex = fileName.lastIndexOf(".");
+                if (lastDotIndex > 0) {
+                    extension = fileName.substring(lastDotIndex);
+                }
+                String uniqueFileName = "blog_img_" + System.currentTimeMillis() + extension;
+                uniqueFileName = uniqueFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
+                String uploadPath = getServletContext().getRealPath("/img");
+                java.io.File uploadDir = new java.io.File(uploadPath);
+                if (!uploadDir.exists()) uploadDir.mkdirs();
+                String filePath = uploadPath + java.io.File.separator + uniqueFileName;
+                filePart.write(filePath);
+                imgPath = "img/" + uniqueFileName;
+            }
+        } catch (Exception e) {
+
+        }
 
         if ("create".equals(action)) {
             Blog blog = new Blog();
@@ -74,7 +98,7 @@ public class BlogAdminController extends HttpServlet {
             blog.setContent(content);
             blog.setStatus(status);
             blog.setAuthorId(1);
-            
+            if (imgPath != null) blog.setImg(imgPath);
             blogDAO.createBlog(blog);
         }
 
@@ -82,14 +106,18 @@ public class BlogAdminController extends HttpServlet {
             String idRaw = request.getParameter("id");
             if (idRaw != null) {
                 int id = Integer.parseInt(idRaw);
-
+                Blog oldBlog = blogDAO.getBlogById(id).orElse(null);
                 Blog blog = new Blog();
                 blog.setId(id);
                 blog.setTitle(title);
                 blog.setDescription(description);
                 blog.setContent(content);
                 blog.setStatus(status);
-                
+                if (imgPath != null) {
+                    blog.setImg(imgPath);
+                } else if (oldBlog != null) {
+                    blog.setImg(oldBlog.getImg());
+                }
                 blogDAO.updateBlog(blog);
             }
         }
