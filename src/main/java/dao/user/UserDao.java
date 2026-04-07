@@ -15,6 +15,26 @@ public class UserDao extends BaseDao {
         );
     }
 
+    public User findByEmail(String email) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE email = :email")
+                        .bind("email", email)
+                        .mapToBean(User.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
+    public User findByGoogleSub(String googleSub) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE google_sub = :googleSub")
+                        .bind("googleSub", googleSub)
+                        .mapToBean(User.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
         public boolean existsByUsername(String username) {
         return getJdbi().withHandle(h ->
                 h.createQuery("SELECT COUNT(*) FROM users WHERE username = :u")
@@ -22,6 +42,45 @@ public class UserDao extends BaseDao {
                         .mapTo(int.class)
                         .one()
         ) > 0;
+    }
+
+    public void linkGoogleAccount(int userId, String googleSub, String avatarUrl, String fullName) {
+        getJdbi().withHandle(h ->
+                h.createUpdate("""
+                                UPDATE users
+                                SET google_sub = :googleSub,
+                                    auth_provider = 'GOOGLE',
+                                    avatar_url = COALESCE(:avatarUrl, avatar_url),
+                                    full_name = CASE
+                                        WHEN full_name IS NULL OR full_name = '' THEN :fullName
+                                        ELSE full_name
+                                    END
+                                WHERE id = :id
+                                """)
+                        .bind("googleSub", googleSub)
+                        .bind("avatarUrl", avatarUrl)
+                        .bind("fullName", fullName)
+                        .bind("id", userId)
+                        .execute()
+        );
+    }
+
+    public void insertGoogleUser(String username, String email, String passwordHash, String fullName, String googleSub, String avatarUrl) {
+        getJdbi().withHandle(h ->
+                h.createUpdate("""
+                                INSERT INTO users
+                                (username, email, password, role, full_name, avatar_url, google_sub, auth_provider, is_active, status, created_at)
+                                VALUES
+                                (:username, :email, :password, 'USER', :fullName, :avatarUrl, :googleSub, 'GOOGLE', 1, 'ACTIVE', NOW())
+                                """)
+                        .bind("username", username)
+                        .bind("email", email)
+                        .bind("password", passwordHash)
+                        .bind("fullName", fullName)
+                        .bind("avatarUrl", avatarUrl)
+                        .bind("googleSub", googleSub)
+                        .execute()
+        );
     }
 
     
@@ -68,10 +127,13 @@ public class UserDao extends BaseDao {
                 SELECT id,
                        username,
                        email,
+                       google_sub,
                        role,
+                       auth_provider,
                        is_active,
                        created_at,
                        full_name,
+                       avatar_url,
                        birthday,
                        gender,
                        phone,

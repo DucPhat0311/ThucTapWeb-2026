@@ -71,7 +71,7 @@ public class LoginController extends HttpServlet {
         }
 
         if ("BLOCKED".equalsIgnoreCase(user.getStatus())) {
-            request.setAttribute("error", "Tài khoản đã bị khóa. Vui long liên hệ với bộ phận hỗ trợ để biết thêm chi tiết.");
+            request.setAttribute("error", "Tài khoản đã bị khóa. Vui lòng liên hệ với bộ phận hỗ trợ để biết thêm chi tiết.");
             request.getRequestDispatcher("/WEB-INF/auth/login.jsp").forward(request, response);
             return;
         }

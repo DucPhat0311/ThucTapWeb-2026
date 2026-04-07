@@ -384,8 +384,11 @@ CREATE TABLE `users`  (
                           `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                           `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
                           `email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                          `google_sub` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
                           `role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'USER',
+                          `auth_provider` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'LOCAL',
                           `full_name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+                          `avatar_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
                           `birthday` date NULL DEFAULT NULL,
                           `gender` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
                           `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
@@ -397,13 +400,14 @@ CREATE TABLE `users`  (
                           `otp_expired_at` datetime NULL DEFAULT NULL,
                           PRIMARY KEY (`id`) USING BTREE,
                           UNIQUE INDEX `username`(`username` ASC) USING BTREE,
-                          UNIQUE INDEX `email`(`email` ASC) USING BTREE
+                          UNIQUE INDEX `email`(`email` ASC) USING BTREE,
+                          UNIQUE INDEX `uq_users_google_sub`(`google_sub` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (3, 'thutran2002', '$2a$12$CC3jSe2l0hdq9FnKu2KvhO66sfVvqRqPpO24CXIAgWP33pANVrPjq', '23130318@st.hcmuaf.edu.vn', 'USER', NULL, NULL, NULL, NULL, NULL, NULL, 1, 'ACTIVE', '2026-03-19 20:31:38', NULL);
-INSERT INTO `users` VALUES (6, 'ducphat', '$2a$12$NHCT38prp9zIxJK88qlhA.I/.9hzdJKZx6VvKacQ/hGobCfJDjHM6', 'ducphat0311@gmail.com', 'USER', NULL, NULL, NULL, NULL, NULL, NULL, 1, 'ACTIVE', '2026-03-19 22:48:16', NULL);
+INSERT INTO `users` VALUES (3, 'thutran2002', '$2a$12$CC3jSe2l0hdq9FnKu2KvhO66sfVvqRqPpO24CXIAgWP33pANVrPjq', '23130318@st.hcmuaf.edu.vn', NULL, 'USER', 'LOCAL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'ACTIVE', '2026-03-19 20:31:38', NULL);
+INSERT INTO `users` VALUES (6, 'ducphat', '$2a$12$NHCT38prp9zIxJK88qlhA.I/.9hzdJKZx6VvKacQ/hGobCfJDjHM6', 'ducphat0311@gmail.com', NULL, 'USER', 'LOCAL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'ACTIVE', '2026-03-19 22:48:16', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
