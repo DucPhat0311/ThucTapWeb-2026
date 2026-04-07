@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+    <meta charset="UTF-8">
     <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
 
 <c:if test="${not empty pageCss}">
@@ -41,7 +42,7 @@
                     <div class="user-menu">
                         <a href="#" class="iconUser">
                             <i class="fa-regular fa-user"></i>
-                                ${sessionScope.userlogin.username}
+                                ${not empty sessionScope.userlogin.fullName ? sessionScope.userlogin.fullName : sessionScope.userlogin.username}
                         </a>
                         <ul class="user-dropdown">
                             <li><a href="profile">Thông tin cá nhân</a></li>

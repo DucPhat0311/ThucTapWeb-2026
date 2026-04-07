@@ -8,12 +8,15 @@ public class User {
     private int id;
     private String username;
     private String email;
+    private String googleSub;
     private String password;
+    private String authProvider;
     private String role;
     private int isActive;
     private LocalDateTime createdAt;
     private String otpCode;
     private String fullName;
+    private String avatarUrl;
     private LocalDate birthday;
     private String gender;
     private String phone;
@@ -105,6 +108,14 @@ public class User {
         this.email = email;
     }
 
+    public String getGoogleSub() {
+        return googleSub;
+    }
+
+    public void setGoogleSub(String googleSub) {
+        this.googleSub = googleSub;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -120,6 +131,14 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
     }
 
     public int getIsActive() {return isActive;}
@@ -156,6 +175,14 @@ public class User {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public String getOtpCode() {

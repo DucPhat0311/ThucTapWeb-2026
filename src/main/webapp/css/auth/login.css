@@ -138,6 +138,52 @@
     box-shadow: 0 6px 15px rgba(92, 64, 51, 0.3);
 }
 
+.oauth-divider {
+    margin: 1rem 0 0.9rem;
+    text-align: center;
+    position: relative;
+}
+
+.oauth-divider span {
+    background: rgba(255, 252, 248, 0.95);
+    padding: 0 10px;
+    color: #8a6f5d;
+    font-size: 0.85rem;
+    position: relative;
+    z-index: 1;
+}
+
+.oauth-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #e2d5cf;
+}
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #d7ccc8;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #4e342e;
+    background: #ffffff;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.btn-google:hover {
+    border-color: #bcaaa4;
+    background: #fdf8f6;
+}
+
 .form-links, .notAccount, .links {
     margin-top: 1.5rem;
     text-align: center;
@@ -164,6 +210,27 @@
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
     text-align: left;
+}
+
+.field-error {
+    margin-top: 0.45rem;
+    color: #b71c1c;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.field-error.is-hidden {
+    display: none;
+}
+
+.input-group input.input-invalid {
+    border-color: #d32f2f;
+    background: #fff7f7;
+}
+
+.input-group input.input-invalid:focus {
+    border-color: #d32f2f;
+    box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15);
 }
 
 .forget-box p {
