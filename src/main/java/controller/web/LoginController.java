@@ -35,14 +35,22 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String username = request.getParameter("username");
+        String usernameRaw = request.getParameter("username");
         String password = request.getParameter("password");
+        String username = usernameRaw == null ? "" : usernameRaw.trim();
 
-        if (username == null || password == null
-                || username.trim().isEmpty()
-                || password.trim().isEmpty()) {
+        boolean hasValidationError = false;
+        if (username.isEmpty()) {
+            request.setAttribute("errorUsername", "Vui lòng nhập email hoặc tên đăng nhập.");
+            hasValidationError = true;
+        }
+        if (password == null || password.trim().isEmpty()) {
+            request.setAttribute("errorPassword", "Vui lòng nhập mật khẩu.");
+            hasValidationError = true;
+        }
 
-            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin");
+        if (hasValidationError) {
+            request.setAttribute("username", username);
             request.getRequestDispatcher("/WEB-INF/auth/login.jsp").forward(request, response);
             return;
         }
@@ -50,7 +58,7 @@ public class LoginController extends HttpServlet {
         User user = userService.login(username, password);
 
         if (user == null) {
-            request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng");
+            request.setAttribute("error", "Email/ tên đăng nhập hoặc mật khẩu không đúng");
             request.setAttribute("username", username);
             request.getRequestDispatcher("/WEB-INF/auth/login.jsp").forward(request, response);
             return;
@@ -63,7 +71,7 @@ public class LoginController extends HttpServlet {
         }
 
         if ("BLOCKED".equalsIgnoreCase(user.getStatus())) {
-            request.setAttribute("error", "Tài khoản đã bị khóa");
+            request.setAttribute("error", "Tài khoản đã bị khóa. Vui long liên hệ với bộ phận hỗ trợ để biết thêm chi tiết.");
             request.getRequestDispatcher("/WEB-INF/auth/login.jsp").forward(request, response);
             return;
         }
@@ -99,4 +107,3 @@ public class LoginController extends HttpServlet {
         }
     }
 }
-
