@@ -52,7 +52,7 @@ function toggleCategoryStatus(id, name, status) {
 function confirmToggleStatus() {
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'category-admin';
+    form.action = 'categoryAdmin';
     
     const actionInput = document.createElement('input');
     actionInput.type = 'hidden';

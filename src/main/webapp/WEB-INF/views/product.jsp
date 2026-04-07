@@ -109,7 +109,7 @@
                 <c:forEach var="p" items="${list}" >
                     <div class="product-card">
                         <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
-                        <img src="${p.thumbnail}" alt="${p.name}">
+                        <img src="${pageContext.request.contextPath}/${p.thumbnail}" alt="${p.name}">
                         <h3>${p.name}</h3>
 
            <fmt:setLocale value="vi_VN"/>
