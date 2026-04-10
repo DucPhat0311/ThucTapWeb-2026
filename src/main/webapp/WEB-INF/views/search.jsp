@@ -3,6 +3,8 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -23,6 +25,12 @@
     Kết quả tìm kiếm cho:
     <span class="keyword">"${param.keyword}"</span>
   </h2>
+
+  <c:if test="${not empty list}">
+        <span class="search-count" style="font-size: 1rem; color: #666; font-weight: normal;">
+            (Tìm thấy ${fn:length(list)} sản phẩm)
+        </span>
+  </c:if>
 
   <c:if test="${empty list}">
     <p class="search-empty">
