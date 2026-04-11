@@ -35,6 +35,7 @@
                     <table class="cart-table" cellpadding="10" cellspacing="0" width="100%">
                         <thead>
                         <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
                             <th>Sản phẩm</th>
                             <th>Phân loại</th>
                             <th>Số lượng</th>
@@ -44,9 +45,12 @@
                         </thead>
 
                         <tbody>
-                        <c:set var="count" value="1"/>
                         <c:forEach var="item" items="${cartItems}">
-                            <tr data-price="${item.price}">
+                            <tr class="cart-item-row" data-price="${item.price}" data-quantity="${item.quantity}">
+                                <td>
+                                    <input type="checkbox" name="selectedItems" value="${item.variantId}" class="item-checkbox">
+                                </td>
+
                                 <!-- SẢN PHẨM -->
                                 <td>
                                     <img src="${item.product.thumbnail}" width="60">
@@ -94,9 +98,8 @@
                                         <button type="submit"> <i class="fa fa-trash"></i></button>
                                     </form>
                                 </td>
-
-
                             </tr>
+
                         </c:forEach>
                         </tbody>
                     </table>
