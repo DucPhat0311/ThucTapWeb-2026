@@ -54,6 +54,8 @@ public class ProductVariantDao extends BaseDao {
                         .one()
         );
     }
+
+    // giam stock khi thanh toan xong
     public void decreaseStock(int variantId, int qty) {
         getJdbi().useHandle(h ->
                 h.createUpdate("""
@@ -66,16 +68,22 @@ public class ProductVariantDao extends BaseDao {
                         .execute()
         );
     }
-    public ProductVariant getFirstVariantByProductId(int productId) {
+
+   // variant siêu chitieset
+    public ProductVariant getVariantDetails(int variantId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
-            SELECT *
-            FROM product_variants
-            WHERE product_id = :pid
-            ORDER BY id ASC
-            LIMIT 1
+            SELECT pv.*, 
+                   p.name as productName, 
+                   s.code as sizeName, 
+                   c.name as colorName
+            FROM product_variants pv
+            JOIN products p ON pv.product_id = p.id
+            JOIN sizes s ON pv.size_id = s.id
+            JOIN colors c ON pv.color_id = c.id
+            WHERE pv.id = :vid
         """)
-                        .bind("pid", productId)
+                        .bind("vid", variantId)
                         .mapToBean(ProductVariant.class)
                         .findOne()
                         .orElse(null)
