@@ -78,7 +78,7 @@ public class ProductAdminController extends HttpServlet {
 
 // Phân trang
         int page = 1;
-        int pageSize = 10;
+        int pageSize = 5;
         
         String pageParam = req.getParameter("page");
         if (pageParam != null && !pageParam.isEmpty()) {
