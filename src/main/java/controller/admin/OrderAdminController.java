@@ -27,20 +27,46 @@ public class OrderAdminController extends HttpServlet {
         String mode = req.getParameter("mode");
 
         if (mode == null) {
-            var orders = orderService.getAllOrders();
+   
+            int page = 1;
+            int pageSize = 5;
+            
+            String pageParam = req.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+            
+            var allOrders = orderService.getAllOrders();
+            int totalOrders = allOrders.size();
+            int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
+            
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+            
+            int start = (page - 1) * pageSize;
+            int end = Math.min(start + pageSize, totalOrders);
+            var orders = allOrders.subList(start, end);
 
-            long pending = orders.stream()
+            long pending = allOrders.stream()
                     .filter(o -> "PENDING".equals(o.getOrderStatus()))
                     .count();
 
-            long completed = orders.stream()
+            long completed = allOrders.stream()
                     .filter(o -> "COMPLETED".equals(o.getOrderStatus()))
                     .count();
 
             req.setAttribute("orders", orders);
-            req.setAttribute("total", orders.size());
+            req.setAttribute("total", totalOrders);
+            req.setAttribute("totalOrders", totalOrders);
             req.setAttribute("countPending", pending);
             req.setAttribute("countCompleted", completed);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
+            req.setAttribute("pageSize", pageSize);
 
             req.setAttribute("page", "order");
         req.getRequestDispatcher("/WEB-INF/admin/orderAdmin.jsp").forward(req, resp);
