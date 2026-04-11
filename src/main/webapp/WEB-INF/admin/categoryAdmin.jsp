@@ -12,92 +12,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/categoryAdmin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
-    <style>
-#category .user-table-wrapper {
-    border: 1px solid #e0d5c5;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    background: #fff;
-}
-
-#category .category-parent-row {
-    background: #ffffff;
-    transition: background 0.2s;
-}
-
-#category .category-parent-row td {
-    border-top: 1px solid #f0e6da;
-    font-weight: 600;
-    color: #2c1e11;
-    padding: 12px 15px;
-}
-
-#category .category-child-row td {
-    background: #fafafa; 
-    border-top: 1px dashed #eee;
-}
-
-#category .category-child-row {
-    display: none;
-}
-
-#category .category-name-child {
-    position: relative;
-    padding-left: 50px !important; 
-    color: #666;
-    font-size: 0.95em;
-}
-
-#category .collapse-btn {
-    width: 26px;
-    height: 26px;
-    border: 1px solid #d6c0a2;
-    border-radius: 6px;
-    background: #fff;
-    color: #8a6646;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 8px;
-    transition: all 0.3s ease;
-}
-
-#category .collapse-btn:hover {
-    background: #8a6646;
-    color: #fff;
-}
-
-#category .collapse-btn i {
-    font-size: 10px;
-    transition: transform 0.3s ease;
-}
-
-#category .collapse-btn.collapsed i {
-    transform: rotate(-90deg); 
-}
-
-#category .type-chip {
-    padding: 3px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-#category .type-chip.parent {
-    background: #fdf2e9;
-    color: #a0522d;
-    border: 1px solid #f5deb3;
-}
-
-#category .type-chip.child {
-    background: #f0f0f0;
-    color: #777;
-    border: 1px solid #ddd;
-}
-</style>
-
 </head>
+
 <body>
 
 <div class="admin">
@@ -132,17 +48,6 @@
                 </div>
 
                 <div class="user-toolbar">
-                    <form method="post"
-                          action="${pageContext.request.contextPath}/categoryAdmin"
-                          class="user-toolbar">
-                        <input type="hidden" name="action" value="search">
-                        <input type="text" name="keyword" value="${param.keyword}"
-                               placeholder="Tìm theo tên danh mục...">
-                        <button type="submit" class="btn-search">
-                            <i class="fa fa-search"></i> Tìm
-                        </button>
-                    </form>
-
                     <a href="${pageContext.request.contextPath}/categoryAdmin?mode=add" class="btn-add">
                         <i class="fa fa-plus"></i> Thêm danh mục
                     </a>
@@ -272,34 +177,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    function toggleCategoryStatusFromButton(button) {
-        const id = parseInt(button.getAttribute('data-id'), 10);
-        const name = button.getAttribute('data-name') || '';
-        const status = parseInt(button.getAttribute('data-status'), 10);
-        toggleCategoryStatus(id, name, status);
-    }
-
-    function toggleCategoryChildrenFromButton(button) {
-        const parentId = parseInt(button.getAttribute('data-parent-id'), 10);
-        toggleCategoryChildren(parentId, button);
-    }
-
-    function toggleCategoryChildren(parentId, button) {
-        const childRows = document.querySelectorAll('tr.category-child-row[data-parent-id="' + parentId + '"]');
-        if (!childRows.length) {
-            return;
-        }
-
-        const shouldCollapse = !button.classList.contains('collapsed');
-        childRows.forEach((row) => {
-            row.style.display = shouldCollapse ? 'none' : 'table-row';
-        });
-
-        button.classList.toggle('collapsed', shouldCollapse);
-    }
-</script>
 
 <script src="${pageContext.request.contextPath}/js/admin/adminCategory.js"></script>
 

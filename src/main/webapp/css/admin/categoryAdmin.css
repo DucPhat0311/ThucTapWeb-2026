@@ -5,6 +5,13 @@
     background: #fff;
 }
 
+#category .user-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 0;
+}
+
 #category .category-parent-row {
     background: #ffffff;
     transition: background 0.2s;
