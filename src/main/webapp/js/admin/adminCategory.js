@@ -104,10 +104,10 @@ function closeToggleStatusModal() {
             return;
         }
 
-        const shouldCollapse = !button.classList.contains('collapsed');
+        const isCurrentlyHidden = window.getComputedStyle(childRows[0]).display === 'none';
         childRows.forEach((row) => {
-            row.style.display = shouldCollapse ? 'none' : 'table-row';
+            row.style.display = isCurrentlyHidden ? 'table-row' : 'none';
         });
 
-        button.classList.toggle('collapsed', shouldCollapse);
+        button.classList.toggle('collapsed', !isCurrentlyHidden);
     }
