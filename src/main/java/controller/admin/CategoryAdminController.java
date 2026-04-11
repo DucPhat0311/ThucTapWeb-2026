@@ -61,14 +61,7 @@ public class CategoryAdminController extends HttpServlet {
             return;
         }
 
-        String search = req.getParameter("search");
-        List<Category> categories;
-        
-        if (search != null && !search.trim().isEmpty()) {
-            categories = categoryAdminDao.searchByName(search);
-        } else {
-            categories = categoryAdminDao.findAll();
-        }
+        List<Category> categories = categoryAdminDao.findAll();
 
         List<Category> parentCategoriesList = new java.util.ArrayList<>();
         List<Category> childCategoriesList = new java.util.ArrayList<>();
@@ -118,9 +111,6 @@ public class CategoryAdminController extends HttpServlet {
                     break;
                 case "toggle-status":
                     toggleStatus(req, resp);
-                    break;
-                case "search":
-                    searchCategory(req, resp);
                     break;
                 default:
                     resp.sendRedirect(req.getContextPath() + "/categoryAdmin");
@@ -195,50 +185,6 @@ public class CategoryAdminController extends HttpServlet {
 
         categoryAdminDao.update(category);
         resp.sendRedirect(req.getContextPath() + "/categoryAdmin");
-    }
-
-    private void searchCategory(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        String keyword = req.getParameter("keyword");
-        List<Category> categories = categoryAdminDao.searchByName(keyword);
-
-        List<Category> parentCategoriesList = new java.util.ArrayList<>();
-        List<Category> childCategoriesList = new java.util.ArrayList<>();
-        java.util.Map<Integer, String> parentNameMap = new java.util.HashMap<>();
-
-
-        for (Category c : categories) {
-            if (c.getParentId() == 0) {
-                parentCategoriesList.add(c);
-                parentNameMap.put(c.getId(), c.getName());
-            }
-        }
-        for (Category c : categories) {
-            if (c.getParentId() != 0) {
-                childCategoriesList.add(c);
-                if (!parentNameMap.containsKey(c.getParentId())) {
-                    Category parent = categoryAdminDao.findById(c.getParentId());
-                    if (parent != null) {
-                        parentNameMap.put(parent.getId(), parent.getName());
-                    }
-                }
-            }
-        }
-
-        req.setAttribute("categories", categories);
-        req.setAttribute("parentCategoriesList", parentCategoriesList);
-        req.setAttribute("childCategoriesList", childCategoriesList);
-        req.setAttribute("parentNameMap", parentNameMap);
-
-        req.setAttribute("totalCategories", categories.size());
-        req.setAttribute("activeCategories",
-                categories.stream().filter(c -> c.getStatus() == 1).count());
-        req.setAttribute("lockedCategories",
-                categories.stream().filter(c -> c.getStatus() == 0).count());
-
-        req.setAttribute("page", "category");
-        req.getRequestDispatcher("/WEB-INF/admin/categoryAdmin.jsp").forward(req, resp);
     }
 
         private String escape(String s) {

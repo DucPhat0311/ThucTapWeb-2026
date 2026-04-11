@@ -24,7 +24,7 @@ public class DashboardAdminController extends HttpServlet {
         request.setAttribute("totalRevenue", service.totalRevenue());
         request.setAttribute("totalProducts", service.countProducts());
         request.setAttribute("totalUsers", service.countUsers());
-        request.setAttribute("latestOrders", service.latestOrders(7));
+        request.setAttribute("latestOrders", service.latestOrders(5));
 
         request.setAttribute("page", "dashboard");
         request.getRequestDispatcher("/WEB-INF/admin/dashboardAdmin.jsp").forward(request, response);
