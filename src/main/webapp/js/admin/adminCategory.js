@@ -84,3 +84,30 @@ function closeToggleStatusModal() {
     currentCategoryId = null;
     currentCategoryStatus = null;
 }
+
+//Đóng mở danh mục con
+    function toggleCategoryStatusFromButton(button) {
+        const id = parseInt(button.getAttribute('data-id'), 10);
+        const name = button.getAttribute('data-name') || '';
+        const status = parseInt(button.getAttribute('data-status'), 10);
+        toggleCategoryStatus(id, name, status);
+    }
+
+    function toggleCategoryChildrenFromButton(button) {
+        const parentId = parseInt(button.getAttribute('data-parent-id'), 10);
+        toggleCategoryChildren(parentId, button);
+    }
+
+    function toggleCategoryChildren(parentId, button) {
+        const childRows = document.querySelectorAll('tr.category-child-row[data-parent-id="' + parentId + '"]');
+        if (!childRows.length) {
+            return;
+        }
+
+        const shouldCollapse = !button.classList.contains('collapsed');
+        childRows.forEach((row) => {
+            row.style.display = shouldCollapse ? 'none' : 'table-row';
+        });
+
+        button.classList.toggle('collapsed', shouldCollapse);
+    }

@@ -221,6 +221,16 @@ public class CategoryAdminController extends HttpServlet {
                     Category parent = categoryAdminDao.findById(c.getParentId());
                     if (parent != null) {
                         parentNameMap.put(parent.getId(), parent.getName());
+                        boolean parentExists = false;
+                        for (Category parentCategory : parentCategoriesList) {
+                            if (parentCategory.getId() == parent.getId()) {
+                                parentExists = true;
+                                break;
+                            }
+                        }
+                        if (!parentExists) {
+                            parentCategoriesList.add(parent);
+                        }
                     }
                 }
             }
