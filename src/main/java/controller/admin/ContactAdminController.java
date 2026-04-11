@@ -25,19 +25,46 @@ public class ContactAdminController extends HttpServlet {
         String mode = request.getParameter("mode");
 
         if (mode == null) {
-            List<Contact> contacts = contactService.getAllContact();
+            List<Contact> allContacts = contactService.getAllContact();
 
-            int total = contacts.size();
+            int total = allContacts.size();
 
             int totalNew = contactService.getAllContactByStatus("New").size();
             int totalProcessing = contactService.getAllContactByStatus("Processing").size();
             int totalClosed = contactService.getAllContactByStatus("Closed").size();
 
+
+            int page = 1;
+            int pageSize = 6;
+            
+            String pageParam = request.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+            
+            int totalContacts = allContacts.size();
+            int totalPages = (int) Math.ceil((double) totalContacts / pageSize);
+            
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+            
+            int start = (page - 1) * pageSize;
+            int end = Math.min(start + pageSize, totalContacts);
+            List<Contact> contacts = allContacts.subList(start, end);
+
             request.setAttribute("contacts", contacts);
             request.setAttribute("total", total);
+            request.setAttribute("totalContacts", totalContacts);
             request.setAttribute("totalNew", totalNew);
             request.setAttribute("totalProcessing", totalProcessing);
             request.setAttribute("totalClosed", totalClosed);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", pageSize);
 
             request.setAttribute("page", "contact");
         request.getRequestDispatcher("/WEB-INF/admin/contactAdmin.jsp").forward(request, response);
