@@ -27,14 +27,16 @@
                     </c:otherwise>
                 </c:choose>
 
-                <form id="avatar-form" method="post" action="profile" enctype="multipart/form-data">
+                <form id="avatar-form" class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="updateAvatar">
+                    <input type="hidden" name="redirectTo" value="profile">
                     <input type="file"
                            id="avatarFileInput"
+                           class="js-avatar-input"
                            name="avatarFile"
                            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                            hidden>
-                    <button type="button" class="change-avatar-btn" id="btn-change-avatar">Đổi ảnh</button>
+                    <button type="button" class="change-avatar-btn js-avatar-trigger" id="btn-change-avatar">Đổi ảnh</button>
                 </form>
             </div>
             <c:if test="${param.avatarUpdated == '1'}">

@@ -40,7 +40,16 @@
                         <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
                     </c:otherwise>
                 </c:choose>
-                <button class="change-avatar-btn">Đổi ảnh</button>
+                <form class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="updateAvatar">
+                    <input type="hidden" name="redirectTo" value="order-user">
+                    <input type="file"
+                           class="js-avatar-input"
+                           name="avatarFile"
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           hidden>
+                    <button type="button" class="change-avatar-btn js-avatar-trigger">Đổi ảnh</button>
+                </form>
             </div>
         </div>
 
@@ -125,5 +134,6 @@
 </section>
 
 <!-- ===== FOOTER ===== -->
+<script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 <%@ include file="../include/footer.jsp" %>
 

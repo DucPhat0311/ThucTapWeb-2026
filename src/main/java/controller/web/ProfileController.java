@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Set;
 
 @WebServlet("/profile")
 @MultipartConfig(
@@ -33,6 +34,12 @@ public class ProfileController extends HttpServlet {
     private static final String DEFAULT_REDIRECT = "profile";
     private static final long MAX_AVATAR_SIZE = 5 * 1024 * 1024;
     private static final String AVATAR_MEDIA_PREFIX = AvatarStorageUtil.AVATAR_MEDIA_PREFIX;
+    private static final Set<String> AVATAR_REDIRECT_TARGETS = Set.of(
+            "profile",
+            "address",
+            "order-user",
+            "change-password"
+    );
 
     private UserService userService;
 
@@ -147,20 +154,21 @@ public class ProfileController extends HttpServlet {
                                     HttpServletResponse response,
                                     HttpSession session,
                                     User userSession) throws ServletException, IOException {
+        String redirectTarget = resolveAvatarRedirectTarget(request);
         Part avatarPart = request.getPart("avatarFile");
         if (avatarPart == null || avatarPart.getSize() == 0) {
-            response.sendRedirect(DEFAULT_REDIRECT + "?avatarError=empty");
+            response.sendRedirect(redirectTarget + "?avatarError=empty");
             return;
         }
 
         if (avatarPart.getSize() > MAX_AVATAR_SIZE) {
-            response.sendRedirect(DEFAULT_REDIRECT + "?avatarError=size");
+            response.sendRedirect(redirectTarget + "?avatarError=size");
             return;
         }
 
         String extension = extractExtension(avatarPart.getSubmittedFileName());
         if (!isAllowedExtension(extension) || !isImageContentType(avatarPart.getContentType())) {
-            response.sendRedirect(DEFAULT_REDIRECT + "?avatarError=type");
+            response.sendRedirect(redirectTarget + "?avatarError=type");
             return;
         }
 
@@ -174,7 +182,7 @@ public class ProfileController extends HttpServlet {
         User refreshedUser = userService.findById(userSession.getId());
         session.setAttribute("userlogin", refreshedUser);
 
-        response.sendRedirect(DEFAULT_REDIRECT + "?avatarUpdated=1");
+        response.sendRedirect(redirectTarget + "?avatarUpdated=1");
     }
 
     private String saveAvatarFile(int userId, Part avatarPart, String extension) throws IOException {
@@ -242,5 +250,23 @@ public class ProfileController extends HttpServlet {
 
     private boolean isManagedAvatarPath(String avatarUrl) {
         return avatarUrl != null && avatarUrl.startsWith(AVATAR_MEDIA_PREFIX);
+    }
+
+    private String resolveAvatarRedirectTarget(HttpServletRequest request) {
+        String redirectTo = request.getParameter("redirectTo");
+        if (redirectTo == null || redirectTo.isBlank()) {
+            return DEFAULT_REDIRECT;
+        }
+
+        String normalized = redirectTo.trim();
+        if (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+
+        if (AVATAR_REDIRECT_TARGETS.contains(normalized)) {
+            return normalized;
+        }
+
+        return DEFAULT_REDIRECT;
     }
 }
