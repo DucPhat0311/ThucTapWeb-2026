@@ -225,7 +225,19 @@ function resetForm() {
     resetSelect(wardSelect, PLACEHOLDER.ward, true);
 }
 
-async function openEditModal(id, name, phone, city, district, ward, detail, isDefault) {
+async function openEditModal(
+    id,
+    name,
+    phone,
+    city,
+    provinceCode,
+    district,
+    districtCode,
+    ward,
+    wardCode,
+    detail,
+    isDefault
+) {
     const modal = document.getElementById("addressModal");
     const form = document.querySelector(".address-form");
     if (!modal || !form) return;
@@ -246,15 +258,15 @@ async function openEditModal(id, name, phone, city, district, ward, detail, isDe
 
     modal.classList.add("active");
 
-    await loadProvinces(city);
-    const provinceCode = getSelectedCode(getCitySelect());
-    if (provinceCode) {
-        await loadDistricts(provinceCode, district);
+    await loadProvinces(city, provinceCode);
+    const selectedProvinceCode = getSelectedCode(getCitySelect()) || provinceCode;
+    if (selectedProvinceCode) {
+        await loadDistricts(selectedProvinceCode, district, districtCode);
     }
 
-    const districtCode = getSelectedCode(getDistrictSelect());
-    if (districtCode) {
-        await loadWards(districtCode, ward);
+    const selectedDistrictCode = getSelectedCode(getDistrictSelect()) || districtCode;
+    if (selectedDistrictCode) {
+        await loadWards(selectedDistrictCode, ward, wardCode);
     }
 }
 

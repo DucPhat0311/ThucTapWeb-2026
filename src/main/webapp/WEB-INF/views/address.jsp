@@ -124,8 +124,11 @@
                                         '${a.name}',
                                         '${a.phone}',
                                         '${a.city}',
+                                        '${a.provinceCode}',
                                         '${a.district}',
+                                        '${a.districtCode}',
                                         '${a.ward}',
+                                        '${a.wardCode}',
                                         '${a.detailAddress}',
                                     ${a.isDefault}
                                         )">
