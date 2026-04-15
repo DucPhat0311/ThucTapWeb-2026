@@ -172,6 +172,19 @@ public class UserDao extends BaseDao {
 
 
     }
+
+    public void updateAvatar(int userId, String avatarUrl) {
+        getJdbi().withHandle(handle -> handle.createUpdate("""
+                        UPDATE users
+                        SET avatar_url = :avatarUrl
+                        WHERE id = :id
+                        """)
+                .bind("avatarUrl", avatarUrl)
+                .bind("id", userId)
+                .execute()
+        );
+    }
+
     public String getPasswordById(int id) {
         return getJdbi().withHandle(handle -> handle.createQuery("""
                 SELECT password
