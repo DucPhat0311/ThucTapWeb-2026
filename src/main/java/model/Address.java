@@ -6,8 +6,11 @@ public class Address {
     private String name;
     private String phone;
     private String city;
+    private Integer provinceCode;
     private String district;
+    private Integer districtCode;
     private String ward;
+    private Integer wardCode;
     private String detailAddress;
     private boolean isDefault;
 
@@ -28,11 +31,20 @@ public class Address {
     public String getCity() { return city; }
     public void setCity(String city) { this.city = city; }
 
+    public Integer getProvinceCode() { return provinceCode; }
+    public void setProvinceCode(Integer provinceCode) { this.provinceCode = provinceCode; }
+
     public String getDistrict() { return district; }
     public void setDistrict(String district) { this.district = district; }
 
+    public Integer getDistrictCode() { return districtCode; }
+    public void setDistrictCode(Integer districtCode) { this.districtCode = districtCode; }
+
     public String getWard() { return ward; }
     public void setWard(String ward) { this.ward = ward; }
+
+    public Integer getWardCode() { return wardCode; }
+    public void setWardCode(Integer wardCode) { this.wardCode = wardCode; }
 
     public String getDetailAddress() { return detailAddress; }
     public void setDetailAddress(String detailAddress) { this.detailAddress = detailAddress; }

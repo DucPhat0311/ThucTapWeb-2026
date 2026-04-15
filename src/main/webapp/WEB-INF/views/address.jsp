@@ -81,6 +81,12 @@
             </button>
         </div>
 
+        <c:if test="${not empty addressError}">
+            <div class="address-alert address-alert-error">
+                    ${addressError}
+            </div>
+        </c:if>
+
         <!-- Danh sách địa chỉ -->
         <div class="address-list">
 
@@ -124,8 +130,11 @@
                                         '${a.name}',
                                         '${a.phone}',
                                         '${a.city}',
+                                        '${a.provinceCode}',
                                         '${a.district}',
+                                        '${a.districtCode}',
                                         '${a.ward}',
+                                        '${a.wardCode}',
                                         '${a.detailAddress}',
                                     ${a.isDefault}
                                         )">
@@ -160,6 +169,9 @@
 
         <form class="address-form" method="post" action="address">
             <input type="hidden" name="action" value="add">
+            <input type="hidden" name="provinceCode" id="provinceCodeInput">
+            <input type="hidden" name="districtCode" id="districtCodeInput">
+            <input type="hidden" name="wardCode" id="wardCodeInput">
 
             <div class="form-row">
                 <div class="form-group">
@@ -179,9 +191,6 @@
                     <label>Tỉnh / Thành phố <span class="required">*</span></label>
                     <select name="city" id="citySelect" required>
                         <option value="">-- Chọn --</option>
-                        <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                        <option value="Hà Nội">Hà Nội</option>
-                        <option value="Bình Dương">Bình Dương</option>
                     </select>
                 </div>
 
@@ -224,6 +233,9 @@
     </div>
 </div>
 
+<script>
+    window.APP_CONTEXT_PATH = "${pageContext.request.contextPath}";
+</script>
 <script src="${pageContext.request.contextPath}/js/views/address.js"></script>
 <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 <!-- ========== FOOTER ========== -->
