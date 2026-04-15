@@ -145,6 +145,11 @@ public class UserService {
     public void update(User user) {
         userDao.update(user);
     }
+
+    public void updateAvatar(int userId, String avatarUrl) {
+        userDao.updateAvatar(userId, avatarUrl);
+    }
+
     public boolean checkOldPass(int id, String oldPass) {
         String hashPass = userDao.getPasswordById(id);
 

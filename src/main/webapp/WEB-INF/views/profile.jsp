@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
@@ -16,9 +17,41 @@
     <div class="profile-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="${pageContext.request.contextPath}/img/avt.jpg" alt="Avatar">
-                <button class="change-avatar-btn">Đổi ảnh</button>
+                <c:set var="avatarPath" value="${empty user.avatarUrl ? 'img/avt.jpg' : user.avatarUrl}" />
+                <c:choose>
+                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
+                        <img src="${avatarPath}" alt="Avatar">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
+                    </c:otherwise>
+                </c:choose>
+
+                <form id="avatar-form" method="post" action="profile" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="updateAvatar">
+                    <input type="file"
+                           id="avatarFileInput"
+                           name="avatarFile"
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           hidden>
+                    <button type="button" class="change-avatar-btn" id="btn-change-avatar">Đổi ảnh</button>
+                </form>
             </div>
+            <c:if test="${param.avatarUpdated == '1'}">
+                <p class="avatar-message success">Đổi ảnh đại diện thành công.</p>
+            </c:if>
+            <c:if test="${param.avatarError == 'empty'}">
+                <p class="avatar-message error">Vui lòng chọn ảnh trước khi tải lên.</p>
+            </c:if>
+            <c:if test="${param.avatarError == 'size'}">
+                <p class="avatar-message error">Ảnh quá dung lượng (tối đa 5MB).</p>
+            </c:if>
+            <c:if test="${param.avatarError == 'type'}">
+                <p class="avatar-message error">Chỉ hỗ trợ ảnh JPG, PNG hoặc WEBP.</p>
+            </c:if>
+            <c:if test="${param.avatarError == 'upload'}">
+                <p class="avatar-message error">Không thể tải ảnh lên, vui lòng thử lại.</p>
+            </c:if>
         </div>
 
         <nav class="profile-menu">
@@ -36,6 +69,7 @@
         <h2>Thông tin cá nhân</h2>
 
         <form class="profile-form" method="post" action="profile" onsubmit="syncBirthday()">
+            <input type="hidden" name="action" value="updateProfile">
             <div class="form-row">
                 <div class="form-group">
                     <label for="fullname">Họ và tên</label>

@@ -73,6 +73,24 @@
     background: #a67c52;
 }
 
+#avatar-form {
+    margin: 0;
+}
+
+.avatar-message {
+    margin: 10px 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.avatar-message.success {
+    color: #2f7a42;
+}
+
+.avatar-message.error {
+    color: #b63a3a;
+}
+
 .user-info h3 {
     margin: 0 0 5px;
     font-size: 1.1rem;
