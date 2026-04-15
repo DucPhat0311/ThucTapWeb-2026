@@ -55,8 +55,11 @@ public class AddressController extends HttpServlet {
             a.setName(req.getParameter("name"));
             a.setPhone(req.getParameter("phone"));
             a.setCity(req.getParameter("city"));
+            a.setProvinceCode(parseNullableInt(req.getParameter("provinceCode")));
             a.setDistrict(req.getParameter("district"));
+            a.setDistrictCode(parseNullableInt(req.getParameter("districtCode")));
             a.setWard(req.getParameter("ward"));
+            a.setWardCode(parseNullableInt(req.getParameter("wardCode")));
             a.setDetailAddress(req.getParameter("detailAddress"));
             a.setIsDefault(req.getParameter("isDefault") != null);
 
@@ -70,8 +73,11 @@ public class AddressController extends HttpServlet {
             a.setName(req.getParameter("name"));
             a.setPhone(req.getParameter("phone"));
             a.setCity(req.getParameter("city"));
+            a.setProvinceCode(parseNullableInt(req.getParameter("provinceCode")));
             a.setDistrict(req.getParameter("district"));
+            a.setDistrictCode(parseNullableInt(req.getParameter("districtCode")));
             a.setWard(req.getParameter("ward"));
+            a.setWardCode(parseNullableInt(req.getParameter("wardCode")));
             a.setDetailAddress(req.getParameter("detailAddress"));
             a.setIsDefault(req.getParameter("isDefault") != null);
 
@@ -89,6 +95,18 @@ public class AddressController extends HttpServlet {
         }
 
         res.sendRedirect("address");
+    }
+
+    private Integer parseNullableInt(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }
 
