@@ -1,10 +1,8 @@
 package controller.web;
 
-import dao.user.AddressDao;
 import model.Address;
 import model.User;
-import service.location.LocationApiException;
-import service.location.VietnamLocationService;
+import service.AddressService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,8 +16,7 @@ import java.util.List;
 @WebServlet("/address")
 public class AddressController extends HttpServlet {
 
-    private final AddressDao addressDao = new AddressDao();
-    private final VietnamLocationService locationService = VietnamLocationService.getInstance();
+    private final AddressService addressService = new AddressService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -33,7 +30,7 @@ public class AddressController extends HttpServlet {
 
         User user = (User) session.getAttribute("userlogin");
 
-        List<Address> addressList = addressDao.getByUser(user.getId());
+        List<Address> addressList = addressService.getByUser(user.getId());
         moveFlashMessageToRequest(session, req);
 
         req.setAttribute("addressList", addressList);
@@ -54,34 +51,39 @@ public class AddressController extends HttpServlet {
 
         User user = (User) session.getAttribute("userlogin");
         String action = req.getParameter("action");
+        if (action == null) {
+            res.sendRedirect("address");
+            return;
+        }
 
-        if ("add".equals(action)) {
-            Address a = buildAddressFromRequest(req, user);
-            if (!ensureValidLocation(a, session, res)) {
-                return;
+        switch (action) {
+            case "add" -> {
+                Address address = buildAddressFromRequest(req, user);
+                AddressService.SaveResult result = addressService.add(address);
+                if (!result.successful()) {
+                    redirectWithError(session, res, result.errorMessage());
+                    return;
+                }
             }
-
-            addressDao.insert(a);
-        }
-
-        else if ("update".equals(action)) {
-            Address a = buildAddressFromRequest(req, user);
-            a.setId(Integer.parseInt(req.getParameter("id")));
-            if (!ensureValidLocation(a, session, res)) {
-                return;
+            case "update" -> {
+                Address address = buildAddressFromRequest(req, user);
+                address.setId(Integer.parseInt(req.getParameter("id")));
+                AddressService.SaveResult result = addressService.update(address);
+                if (!result.successful()) {
+                    redirectWithError(session, res, result.errorMessage());
+                    return;
+                }
             }
-
-            addressDao.update(a);
-        }
-
-        else if ("setDefault".equals(action)) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            addressDao.setDefault(id, user.getId());
-        }
-
-        else if ("delete".equals(action)) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            addressDao.delete(id, user.getId());
+            case "setDefault" -> {
+                int id = Integer.parseInt(req.getParameter("id"));
+                addressService.setDefault(id, user.getId());
+            }
+            case "delete" -> {
+                int id = Integer.parseInt(req.getParameter("id"));
+                addressService.delete(id, user.getId());
+            }
+            default -> {
+            }
         }
 
         res.sendRedirect("address");
@@ -103,23 +105,10 @@ public class AddressController extends HttpServlet {
         return address;
     }
 
-    private boolean ensureValidLocation(Address address, HttpSession session, HttpServletResponse res)
+    private void redirectWithError(HttpSession session, HttpServletResponse res, String message)
             throws IOException {
-        try {
-            if (locationService.isValidLocation(
-                    address.getProvinceCode(),
-                    address.getDistrictCode(),
-                    address.getWardCode())) {
-                return true;
-            }
-
-            session.setAttribute("addressError", "Địa chỉ không hợp lệ, vui lòng chọn lại tỉnh, huyện, xã.");
-        } catch (LocationApiException e) {
-            session.setAttribute("addressError", "Không thể kiểm tra địa chỉ lúc này, vui lòng thử lại sau.");
-        }
-
+        session.setAttribute("addressError", message);
         res.sendRedirect("address");
-        return false;
     }
 
     private void moveFlashMessageToRequest(HttpSession session, HttpServletRequest req) {
