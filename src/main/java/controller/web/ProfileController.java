@@ -10,13 +10,19 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import model.User;
 import service.UserService;
+import util.AvatarStorageUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Set;
 
 @WebServlet("/profile")
 @MultipartConfig(
@@ -27,6 +33,13 @@ public class ProfileController extends HttpServlet {
 
     private static final String DEFAULT_REDIRECT = "profile";
     private static final long MAX_AVATAR_SIZE = 5 * 1024 * 1024;
+    private static final String AVATAR_MEDIA_PREFIX = AvatarStorageUtil.AVATAR_MEDIA_PREFIX;
+    private static final Set<String> AVATAR_REDIRECT_TARGETS = Set.of(
+            "profile",
+            "address",
+            "order-user",
+            "change-password"
+    );
 
     private UserService userService;
 
@@ -141,50 +154,53 @@ public class ProfileController extends HttpServlet {
                                     HttpServletResponse response,
                                     HttpSession session,
                                     User userSession) throws ServletException, IOException {
+        String redirectTarget = resolveAvatarRedirectTarget(request);
         Part avatarPart = request.getPart("avatarFile");
         if (avatarPart == null || avatarPart.getSize() == 0) {
-            response.sendRedirect(DEFAULT_REDIRECT + "?avatarError=empty");
+            response.sendRedirect(redirectTarget + "?avatarError=empty");
             return;
         }
 
         if (avatarPart.getSize() > MAX_AVATAR_SIZE) {
-            response.sendRedirect(DEFAULT_REDIRECT + "?avatarError=size");
+            response.sendRedirect(redirectTarget + "?avatarError=size");
             return;
         }
 
         String extension = extractExtension(avatarPart.getSubmittedFileName());
         if (!isAllowedExtension(extension) || !isImageContentType(avatarPart.getContentType())) {
-            response.sendRedirect(DEFAULT_REDIRECT + "?avatarError=type");
+            response.sendRedirect(redirectTarget + "?avatarError=type");
             return;
         }
 
+        User currentUser = userService.findById(userSession.getId());
+        String oldAvatarUrl = currentUser != null ? currentUser.getAvatarUrl() : null;
+
         String avatarUrl = saveAvatarFile(userSession.getId(), avatarPart, extension);
         userService.updateAvatar(userSession.getId(), avatarUrl);
+        deleteManagedAvatar(oldAvatarUrl, avatarUrl);
 
         User refreshedUser = userService.findById(userSession.getId());
         session.setAttribute("userlogin", refreshedUser);
 
-        response.sendRedirect(DEFAULT_REDIRECT + "?avatarUpdated=1");
+        response.sendRedirect(redirectTarget + "?avatarUpdated=1");
     }
 
     private String saveAvatarFile(int userId, Part avatarPart, String extension) throws IOException {
-        String uploadPath = getServletContext().getRealPath("/img/avatar");
-        if (uploadPath == null) {
-            throw new IOException("Cannot resolve upload path for avatar.");
-        }
-
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists() && !uploadDir.mkdirs()) {
-            throw new IOException("Cannot create avatar upload directory.");
-        }
+        Path avatarDir = AvatarStorageUtil.getAvatarDirectory();
 
         String uniqueFileName = "avatar_user_" + userId + "_" + System.currentTimeMillis() + "." + extension;
         uniqueFileName = uniqueFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
 
-        File destinationFile = new File(uploadDir, uniqueFileName);
-        avatarPart.write(destinationFile.getAbsolutePath());
+        Path destinationPath = avatarDir.resolve(uniqueFileName).normalize();
+        if (!destinationPath.startsWith(avatarDir)) {
+            throw new IOException("Invalid avatar destination path.");
+        }
 
-        return "img/avatar/" + uniqueFileName;
+        try (InputStream inputStream = avatarPart.getInputStream()) {
+            Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        return AvatarStorageUtil.buildAvatarMediaPath(uniqueFileName);
     }
 
     private String extractExtension(String fileName) {
@@ -210,5 +226,47 @@ public class ProfileController extends HttpServlet {
 
     private boolean isImageContentType(String contentType) {
         return contentType != null && contentType.toLowerCase(Locale.ROOT).startsWith("image/");
+    }
+
+    private void deleteManagedAvatar(String oldAvatarUrl, String newAvatarUrl) {
+        if (!isManagedAvatarPath(oldAvatarUrl) || oldAvatarUrl.equals(newAvatarUrl)) {
+            return;
+        }
+
+        String oldFileName = oldAvatarUrl.substring(AVATAR_MEDIA_PREFIX.length());
+        if (oldFileName.isBlank()) {
+            return;
+        }
+
+        try {
+            Path avatarDir = AvatarStorageUtil.getAvatarDirectory();
+            Path oldFilePath = avatarDir.resolve(oldFileName).normalize();
+            if (oldFilePath.startsWith(avatarDir)) {
+                Files.deleteIfExists(oldFilePath);
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    private boolean isManagedAvatarPath(String avatarUrl) {
+        return avatarUrl != null && avatarUrl.startsWith(AVATAR_MEDIA_PREFIX);
+    }
+
+    private String resolveAvatarRedirectTarget(HttpServletRequest request) {
+        String redirectTo = request.getParameter("redirectTo");
+        if (redirectTo == null || redirectTo.isBlank()) {
+            return DEFAULT_REDIRECT;
+        }
+
+        String normalized = redirectTo.trim();
+        if (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+
+        if (AVATAR_REDIRECT_TARGETS.contains(normalized)) {
+            return normalized;
+        }
+
+        return DEFAULT_REDIRECT;
     }
 }

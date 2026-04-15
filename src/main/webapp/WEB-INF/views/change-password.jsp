@@ -3,6 +3,7 @@
 
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <%
     request.setAttribute("pageCss", "views/change-password.css");
@@ -17,8 +18,25 @@
     <div class="profile-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="${pageContext.request.contextPath}/img/avt.jpg" alt="Avatar">
-                <button class="change-avatar-btn">Đổi ảnh</button>
+                <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
+                <c:choose>
+                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
+                        <img src="${avatarPath}" alt="Avatar">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
+                    </c:otherwise>
+                </c:choose>
+                <form class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="updateAvatar">
+                    <input type="hidden" name="redirectTo" value="change-password">
+                    <input type="file"
+                           class="js-avatar-input"
+                           name="avatarFile"
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           hidden>
+                    <button type="button" class="change-avatar-btn js-avatar-trigger">Đổi ảnh</button>
+                </form>
             </div>
             <h3>${sessionScope.userlogin.fullName}</h3>
             <p>
@@ -32,7 +50,7 @@
             <ul>
                 <li><a href="profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
                 <li><a href="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
-                <li><a href="order-user.jsp"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
+                <li><a href="order-user"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
                 <li class="active"><a href="change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
                 <li><a href="logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
             </ul>
@@ -77,4 +95,5 @@
 </section>
 
 <!-- ========== FOOTER ========== -->
+<script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 <%@ include file="../include/footer.jsp" %>

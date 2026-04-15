@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%
     request.setAttribute("pageCss", "views/address.css");
@@ -17,8 +18,25 @@
     <div class="address-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="${pageContext.request.contextPath}/img/avt.jpg" alt="Avatar">
-                <button class="change-avatar-btn">Đổi ảnh</button>
+                <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
+                <c:choose>
+                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
+                        <img src="${avatarPath}" alt="Avatar">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
+                    </c:otherwise>
+                </c:choose>
+                <form class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="updateAvatar">
+                    <input type="hidden" name="redirectTo" value="address">
+                    <input type="file"
+                           class="js-avatar-input"
+                           name="avatarFile"
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           hidden>
+                    <button type="button" class="change-avatar-btn js-avatar-trigger">Đổi ảnh</button>
+                </form>
             </div>
         </div>
 
@@ -207,6 +225,7 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/js/views/address.js"></script>
+<script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 <!-- ========== FOOTER ========== -->
 <%@ include file="../include/footer.jsp" %>
 

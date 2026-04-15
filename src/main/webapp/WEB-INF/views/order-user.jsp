@@ -31,8 +31,25 @@
     <div class="profile-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="${pageContext.request.contextPath}/img/avt.jpg" alt="Avatar">
-                <button class="change-avatar-btn">Đổi ảnh</button>
+                <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
+                <c:choose>
+                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
+                        <img src="${avatarPath}" alt="Avatar">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
+                    </c:otherwise>
+                </c:choose>
+                <form class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="updateAvatar">
+                    <input type="hidden" name="redirectTo" value="order-user">
+                    <input type="file"
+                           class="js-avatar-input"
+                           name="avatarFile"
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           hidden>
+                    <button type="button" class="change-avatar-btn js-avatar-trigger">Đổi ảnh</button>
+                </form>
             </div>
         </div>
 
@@ -117,5 +134,6 @@
 </section>
 
 <!-- ===== FOOTER ===== -->
+<script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 <%@ include file="../include/footer.jsp" %>
 
