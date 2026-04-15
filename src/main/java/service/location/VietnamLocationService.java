@@ -32,6 +32,20 @@ public class VietnamLocationService {
         return apiClient.fetchWards(getBaseUrl(), districtCode);
     }
 
+    public boolean isValidLocation(Integer provinceCode, Integer districtCode, Integer wardCode) {
+        if (provinceCode == null || districtCode == null || wardCode == null) {
+            return false;
+        }
+
+        return containsCode(getProvinces(), provinceCode)
+                && containsCode(getDistricts(provinceCode), districtCode)
+                && containsCode(getWards(districtCode), wardCode);
+    }
+
+    private boolean containsCode(List<LocationItem> items, int code) {
+        return items.stream().anyMatch(item -> item.getCode() == code);
+    }
+
     private String getBaseUrl() {
         String propertyValue = System.getProperty(BASE_URL_PROPERTY);
         if (propertyValue != null && !propertyValue.isBlank()) {

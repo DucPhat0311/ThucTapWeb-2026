@@ -81,6 +81,12 @@
             </button>
         </div>
 
+        <c:if test="${not empty addressError}">
+            <div class="address-alert address-alert-error">
+                    ${addressError}
+            </div>
+        </c:if>
+
         <!-- Danh sách địa chỉ -->
         <div class="address-list">
 
