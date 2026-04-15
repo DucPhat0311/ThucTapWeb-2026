@@ -3,6 +3,7 @@
 
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <%
     request.setAttribute("pageCss", "views/change-password.css");
@@ -17,7 +18,15 @@
     <div class="profile-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="${pageContext.request.contextPath}/img/avt.jpg" alt="Avatar">
+                <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
+                <c:choose>
+                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
+                        <img src="${avatarPath}" alt="Avatar">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
+                    </c:otherwise>
+                </c:choose>
                 <button class="change-avatar-btn">Đổi ảnh</button>
             </div>
             <h3>${sessionScope.userlogin.fullName}</h3>
