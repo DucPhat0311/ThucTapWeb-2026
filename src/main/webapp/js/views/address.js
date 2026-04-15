@@ -60,6 +60,7 @@ function setupLocationEvents() {
 
     if (citySelect) {
         citySelect.addEventListener("change", async () => {
+            clearLocationError();
             syncLocationCode(citySelect, "provinceCodeInput");
             resetSelect(districtSelect, PLACEHOLDER.district, true);
             resetSelect(wardSelect, PLACEHOLDER.ward, true);
@@ -75,6 +76,7 @@ function setupLocationEvents() {
 
     if (districtSelect) {
         districtSelect.addEventListener("change", async () => {
+            clearLocationError();
             syncLocationCode(districtSelect, "districtCodeInput");
             resetSelect(wardSelect, PLACEHOLDER.ward, true);
             clearHiddenValue("wardCodeInput");
@@ -88,6 +90,7 @@ function setupLocationEvents() {
 
     if (wardSelect) {
         wardSelect.addEventListener("change", () => {
+            clearLocationError();
             syncLocationCode(wardSelect, "wardCodeInput");
         });
     }
@@ -111,6 +114,7 @@ async function loadProvinces(selectedName = "", selectedCode = "") {
         console.error(error);
         provinceLoadPromise = null;
         showSelectError(citySelect);
+        showLocationError("Không tải được danh sách tỉnh/thành phố. Vui lòng thử lại sau.");
     }
 }
 
@@ -128,6 +132,7 @@ async function loadDistricts(provinceCode, selectedName = "", selectedCode = "")
     } catch (error) {
         console.error(error);
         showSelectError(districtSelect);
+        showLocationError("Không tải được danh sách quận/huyện. Vui lòng chọn lại tỉnh hoặc thử lại sau.");
     }
 }
 
@@ -145,6 +150,7 @@ async function loadWards(districtCode, selectedName = "", selectedCode = "") {
     } catch (error) {
         console.error(error);
         showSelectError(wardSelect);
+        showLocationError("Không tải được danh sách phường/xã. Vui lòng chọn lại quận/huyện hoặc thử lại sau.");
     }
 }
 
@@ -207,6 +213,7 @@ function resetForm() {
     form.querySelector("input[name='action']").value = "add";
     removeAddressIdInput(form);
     clearPhoneError();
+    clearLocationError();
     clearAllLocationCodes();
 
     const title = document.querySelector(".modal-header h3");
@@ -281,6 +288,13 @@ function validateForm(event) {
         return false;
     }
 
+    if (!isLocationReady()) {
+        showLocationError("Vui lòng chọn đầy đủ tỉnh/thành phố, quận/huyện và phường/xã.");
+        focusFirstMissingLocation();
+        event.preventDefault();
+        return false;
+    }
+
     return true;
 }
 
@@ -340,6 +354,22 @@ function clearPhoneError() {
     phoneInput.classList.remove("input-error");
 }
 
+function showLocationError(message) {
+    const locationError = document.getElementById("locationError");
+    if (!locationError) return;
+
+    locationError.textContent = message;
+    locationError.style.display = "block";
+}
+
+function clearLocationError() {
+    const locationError = document.getElementById("locationError");
+    if (!locationError) return;
+
+    locationError.textContent = "";
+    locationError.style.display = "none";
+}
+
 function setLoading(select) {
     resetSelect(select, PLACEHOLDER.loading, true);
 }
@@ -377,6 +407,22 @@ function clearAllLocationCodes() {
     clearHiddenValue("provinceCodeInput");
     clearHiddenValue("districtCodeInput");
     clearHiddenValue("wardCodeInput");
+}
+
+function isLocationReady() {
+    return Boolean(
+        document.getElementById("provinceCodeInput")?.value
+        && document.getElementById("districtCodeInput")?.value
+        && document.getElementById("wardCodeInput")?.value
+    );
+}
+
+function focusFirstMissingLocation() {
+    const selects = [getCitySelect(), getDistrictSelect(), getWardSelect()];
+    const firstMissingSelect = selects.find((select) => !getSelectedCode(select));
+    if (firstMissingSelect && !firstMissingSelect.disabled) {
+        firstMissingSelect.focus();
+    }
 }
 
 function getSelectedCode(select) {

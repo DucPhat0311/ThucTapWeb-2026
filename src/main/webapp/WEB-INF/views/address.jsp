@@ -208,6 +208,7 @@
                     </select>
                 </div>
             </div>
+            <small id="locationError" class="error-message location-error"></small>
 
             <div class="form-group">
                 <label>Địa chỉ chi tiết <span class="required">*</span></label>

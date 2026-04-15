@@ -394,6 +394,11 @@
     font-weight: 500;
 }
 
+.location-error {
+    margin-top: -8px;
+    margin-bottom: 18px;
+}
+
 /* ========== RESPONSIVE ========== */
 
 @media (max-width: 600px) {
