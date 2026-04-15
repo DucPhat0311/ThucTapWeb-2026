@@ -125,19 +125,17 @@
                         <button
                                 type="button"
                                 class="btn-edit"
-                                onclick="openEditModal(
-                                        '${a.id}',
-                                        '${a.name}',
-                                        '${a.phone}',
-                                        '${a.city}',
-                                        '${a.provinceCode}',
-                                        '${a.district}',
-                                        '${a.districtCode}',
-                                        '${a.ward}',
-                                        '${a.wardCode}',
-                                        '${a.detailAddress}',
-                                    ${a.isDefault}
-                                        )">
+                                data-address-id="${a.id}"
+                                data-name="${fn:escapeXml(a.name)}"
+                                data-phone="${fn:escapeXml(a.phone)}"
+                                data-city="${fn:escapeXml(a.city)}"
+                                data-province-code="${a.provinceCode}"
+                                data-district="${fn:escapeXml(a.district)}"
+                                data-district-code="${a.districtCode}"
+                                data-ward="${fn:escapeXml(a.ward)}"
+                                data-ward-code="${a.wardCode}"
+                                data-detail="${fn:escapeXml(a.detailAddress)}"
+                                data-default="${a.isDefault}">
                             Sửa
                         </button>
 

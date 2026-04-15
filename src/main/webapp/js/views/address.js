@@ -6,11 +6,11 @@ const LOCATION_API = {
 };
 
 const PLACEHOLDER = {
-    province: "-- Chọn Tỉnh / Thành phố --",
-    district: "-- Chọn Quận / Huyện --",
-    ward: "-- Chọn Phường / Xã --",
-    loading: "Đang tải...",
-    error: "Không tải được dữ liệu"
+    province: "-- Chá»n Tá»‰nh / ThÃ nh phá»‘ --",
+    district: "-- Chá»n Quáº­n / Huyá»‡n --",
+    ward: "-- Chá»n PhÆ°á»ng / XÃ£ --",
+    loading: "Äang táº£i...",
+    error: "KhÃ´ng táº£i Ä‘Æ°á»£c dá»¯ liá»‡u"
 };
 
 let provinceLoadPromise = null;
@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", initAddressPage);
 
 function initAddressPage() {
     setupModalEvents();
+    setupEditAddressEvents();
     setupLocationEvents();
     setupFormValidation();
     loadProvinces();
@@ -96,6 +97,27 @@ function setupLocationEvents() {
     }
 }
 
+function setupEditAddressEvents() {
+    document.querySelectorAll(".btn-edit[data-address-id]").forEach((button) => {
+        button.addEventListener("click", () => {
+            const data = button.dataset;
+            openEditModal(
+                data.addressId,
+                data.name,
+                data.phone,
+                data.city,
+                data.provinceCode,
+                data.district,
+                data.districtCode,
+                data.ward,
+                data.wardCode,
+                data.detail,
+                data.default === "true"
+            );
+        });
+    });
+}
+
 async function loadProvinces(selectedName = "", selectedCode = "") {
     const citySelect = getCitySelect();
     if (!citySelect) return;
@@ -114,7 +136,7 @@ async function loadProvinces(selectedName = "", selectedCode = "") {
         console.error(error);
         provinceLoadPromise = null;
         showSelectError(citySelect);
-        showLocationError("Không tải được danh sách tỉnh/thành phố. Vui lòng thử lại sau.");
+        showLocationError("KhÃ´ng táº£i Ä‘Æ°á»£c danh sÃ¡ch tá»‰nh/thÃ nh phá»‘. Vui lÃ²ng thá»­ láº¡i sau.");
     }
 }
 
@@ -132,7 +154,7 @@ async function loadDistricts(provinceCode, selectedName = "", selectedCode = "")
     } catch (error) {
         console.error(error);
         showSelectError(districtSelect);
-        showLocationError("Không tải được danh sách quận/huyện. Vui lòng chọn lại tỉnh hoặc thử lại sau.");
+        showLocationError("KhÃ´ng táº£i Ä‘Æ°á»£c danh sÃ¡ch quáº­n/huyá»‡n. Vui lÃ²ng chá»n láº¡i tá»‰nh hoáº·c thá»­ láº¡i sau.");
     }
 }
 
@@ -150,7 +172,7 @@ async function loadWards(districtCode, selectedName = "", selectedCode = "") {
     } catch (error) {
         console.error(error);
         showSelectError(wardSelect);
-        showLocationError("Không tải được danh sách phường/xã. Vui lòng chọn lại quận/huyện hoặc thử lại sau.");
+        showLocationError("KhÃ´ng táº£i Ä‘Æ°á»£c danh sÃ¡ch phÆ°á»ng/xÃ£. Vui lÃ²ng chá»n láº¡i quáº­n/huyá»‡n hoáº·c thá»­ láº¡i sau.");
     }
 }
 
@@ -162,7 +184,7 @@ async function fetchLocations(url) {
     });
 
     if (!response.ok) {
-        throw new Error(`Không thể tải dữ liệu địa chỉ. HTTP ${response.status}`);
+        throw new Error(`KhÃ´ng thá»ƒ táº£i dá»¯ liá»‡u Ä‘á»‹a chá»‰. HTTP ${response.status}`);
     }
 
     return response.json();
@@ -218,7 +240,7 @@ function resetForm() {
 
     const title = document.querySelector(".modal-header h3");
     if (title) {
-        title.textContent = "Thêm địa chỉ mới";
+        title.textContent = "ThÃªm Ä‘á»‹a chá»‰ má»›i";
     }
 
     const citySelect = getCitySelect();
@@ -253,7 +275,7 @@ async function openEditModal(
 
     const title = document.querySelector(".modal-header h3");
     if (title) {
-        title.textContent = "Cập nhật địa chỉ";
+        title.textContent = "Cáº­p nháº­t Ä‘á»‹a chá»‰";
     }
 
     form.querySelector("input[name='action']").value = "update";
@@ -282,14 +304,14 @@ function validateForm(event) {
     const phone = phoneInput.value.trim();
 
     if (!isValidPhone(phone)) {
-        showPhoneError("Vui lòng nhập đúng số điện thoại");
+        showPhoneError("Vui lÃ²ng nháº­p Ä‘Ãºng sá»‘ Ä‘iá»‡n thoáº¡i");
         phoneInput.focus();
         event.preventDefault();
         return false;
     }
 
     if (!isLocationReady()) {
-        showLocationError("Vui lòng chọn đầy đủ tỉnh/thành phố, quận/huyện và phường/xã.");
+        showLocationError("Vui lÃ²ng chá»n Ä‘áº§y Ä‘á»§ tá»‰nh/thÃ nh phá»‘, quáº­n/huyá»‡n vÃ  phÆ°á»ng/xÃ£.");
         focusFirstMissingLocation();
         event.preventDefault();
         return false;
@@ -316,7 +338,7 @@ function setupFormValidation() {
         }
 
         if (!isValidPhone(value)) {
-            showPhoneError("Số điện thoại phải đúng định dạng (VD: 090xxxxxxx)");
+            showPhoneError("Sá»‘ Ä‘iá»‡n thoáº¡i pháº£i Ä‘Ãºng Ä‘á»‹nh dáº¡ng (VD: 090xxxxxxx)");
         } else {
             clearPhoneError();
         }
@@ -324,7 +346,7 @@ function setupFormValidation() {
 
     phoneInput.addEventListener("blur", () => {
         if (phoneInput.value && !isValidPhone(phoneInput.value)) {
-            showPhoneError("Số điện thoại không hợp lệ");
+            showPhoneError("Sá»‘ Ä‘iá»‡n thoáº¡i khÃ´ng há»£p lá»‡");
         }
     });
 }
@@ -466,5 +488,3 @@ function normalizeText(value) {
         .toLowerCase()
         .trim();
 }
-
-window.openEditModal = openEditModal;
