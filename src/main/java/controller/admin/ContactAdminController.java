@@ -122,7 +122,7 @@ public class ContactAdminController extends HttpServlet {
             contact.setMessage(request.getParameter("message"));
 
             contactService.updateContact(contact);
-            response.sendRedirect("contactAdmin?mode=view&id=" + id);
+            response.sendRedirect("contactAdmin");
             return;
         }
 

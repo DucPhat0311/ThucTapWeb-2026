@@ -88,16 +88,10 @@
                                     </c:choose>
                                 </td>
                                 <td class="actions">
-                                    <!-- XEM -->
-                                    <a href="contactAdmin?mode=view&id=${c.id}"
-                                       class="icon-btn view" title="Xem chi tiết">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-
-                                    <!-- SỬA -->
+                                    <!-- XỬ LÝ (Thay cho Xem / Sửa) -->
                                     <a href="contactAdmin?mode=edit&id=${c.id}"
-                                       class="icon-btn edit" title="Chỉnh sửa">
-                                        <i class="fa fa-pen"></i>
+                                       class="icon-btn view" style="color: green;" title="Xử lý liên hệ">
+                                        <i class="fa-solid fa-envelope-open-text"></i>
                                     </a>
 
                                     <!-- XÓA MỀM -->
@@ -122,7 +116,7 @@
                     <c:if test="${not empty currentStatus}">
                         <c:set var="qs" value="${qs}&status=${currentStatus}"/>
                     </c:if>
-                    
+
                     <div class="pagination">
                         <div class="pagination-info">
                             Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize > totalContacts ? totalContacts : currentPage * pageSize} của ${totalContacts} liên hệ

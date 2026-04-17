@@ -19,12 +19,7 @@
     <!-- HEADER -->
     <div class="form-header">
         <a href="contactAdmin" class="btn-back">← Quay lại</a>
-        <h2>
-            <c:choose>
-                <c:when test="${mode == 'edit'}">Chỉnh sửa liên hệ</c:when>
-                <c:otherwise>Xem chi tiết liên hệ</c:otherwise>
-            </c:choose>
-        </h2>
+        <h2>Xử lý liên hệ</h2>
     </div>
 
 
@@ -36,14 +31,14 @@
             <div class="row">
                 <div class="col">
                     <label>ID</label>
-                    <input type="text" value="${contact.id}" readonly>
+                    <input type="text" value="${contact.id}" readonly class="readonly-bg">
                 </div>
 
                 <div class="col">
                     <label>Tên</label>
                     <input type="text" name="name"
                            value="${contact.name}"
-                           <c:if test="${mode == 'view'}">readonly</c:if>>
+                           readonly class="readonly-bg">
 
                 </div>
             </div>
@@ -53,7 +48,7 @@
                     <label>Email</label>
                     <input type="text" name="email"
                            value="${contact.email}"
-                           <c:if test="${mode == 'view'}">readonly</c:if>>
+                           readonly class="readonly-bg">
                 </div>
 
 
@@ -61,7 +56,7 @@
                     <label>Số điện thoại</label>
                     <input type="text" name="phone"
                            value="${contact.phone}"
-                           <c:if test="${mode == 'view'}">readonly</c:if>>
+                           readonly class="readonly-bg">
                 </div>
 
             </div>
@@ -71,7 +66,7 @@
                     <label>Địa chỉ</label>
                     <input type="text" name="address"
                            value="${contact.address}"
-                           <c:if test="${mode == 'view'}">readonly</c:if>>
+                           readonly class="readonly-bg">
                 </div>
                 <div class="col">
                     <label>Trạng thái</label>
@@ -89,7 +84,7 @@
                     <label>Nội dung</label>
                     <textarea name="message"
                               rows="5"
-                              <c:if test="${mode == 'view'}">readonly</c:if>
+                              readonly class="readonly-bg"
                     >${contact.message}</textarea>
                 </div>
             </div>
@@ -99,34 +94,31 @@
 
         <!-- FOOTER -->
         <div class="form-footer">
-            <c:if test="${mode != 'view'}">
-                <button type="submit" name="action"
-                        value="${mode == 'add' ? 'create' : 'update'}"
-                        class="btn-primary">
-                    Lưu
-                </button>
-            </c:if>
+            <button type="submit" name="action"
+                    value="update"
+                    class="btn-primary">
+                Cập nhật trạng thái
+            </button>
             <a href="contactAdmin" class="btn-secondary">Hủy</a>
         </div>
 
         <!-- HIDDEN -->
         <input type="hidden" name="id" value="${contact.id}">
-        <input type="hidden" name="mode" value="${mode}">
 
     </form>
 
 </div>
-<c:if test="${mode == 'view'}">
-    <style>
-        input, select, textarea, button {
-            pointer-events: none;
-            background: #f2f2f2;
-        }
-        .btn-secondary {
-            pointer-events: auto;
-        }
-    </style>
-</c:if>
+<style>
+    .readonly-bg {
+        background-color: #f5f5f5 !important;
+        color: #000 !important;
+        cursor: not-allowed;
+    }
+    .readonly-bg:focus {
+        outline: none !important;
+        border-color: #ddd !important;
+    }
+</style>
 </body>
 </html>
 
