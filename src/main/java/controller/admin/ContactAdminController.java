@@ -33,6 +33,12 @@ public class ContactAdminController extends HttpServlet {
             int totalProcessing = contactService.getAllContactByStatus("Processing").size();
             int totalClosed = contactService.getAllContactByStatus("Closed").size();
 
+            String status = request.getParameter("status");
+            if (status != null && !status.trim().isEmpty()) {
+                allContacts = allContacts.stream()
+                        .filter(c -> status.equalsIgnoreCase(c.getStatus()))
+                        .collect(java.util.stream.Collectors.toList());
+            }
 
             int page = 1;
             int pageSize = 6;
@@ -65,6 +71,10 @@ public class ContactAdminController extends HttpServlet {
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("pageSize", pageSize);
+
+            if (status != null) {
+                request.setAttribute("currentStatus", status);
+            }
 
             request.setAttribute("page", "contact");
         request.getRequestDispatcher("/WEB-INF/admin/contactAdmin.jsp").forward(request, response);
@@ -112,7 +122,7 @@ public class ContactAdminController extends HttpServlet {
             contact.setMessage(request.getParameter("message"));
 
             contactService.updateContact(contact);
-            response.sendRedirect("contactAdmin?mode=view&id=" + id);
+            response.sendRedirect("contactAdmin");
             return;
         }
 
