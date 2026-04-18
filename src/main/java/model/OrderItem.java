@@ -5,13 +5,41 @@ public class OrderItem {
     private int id;
     private int orderId;
     private int variantId;
-    private String productName;
     private String size;
     private String color;
     private int quantity;
     private double price;
     private double total;
     private String thumbnail;
+    private boolean reviewed;
+
+    public boolean isReviewed() {
+        return reviewed;
+    }
+
+    private int productId;
+
+    public int getProductId() {
+        return productId;
+    }
+
+    private String productName;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        this.reviewed = reviewed;
+    }
 
     public String getThumbnail() {
         return thumbnail;
@@ -43,14 +71,6 @@ public class OrderItem {
 
     public void setVariantId(int variantId) {
         this.variantId = variantId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
     }
 
     public String getSize() {

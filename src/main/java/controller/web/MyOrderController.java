@@ -46,7 +46,7 @@ public class MyOrderController extends HttpServlet {
             List<model.OrderItem> items = orderItemDao.getByOrderId(o.getId());
             System.out.println("Order ID: " + o.getId() + " has " + items.size() + " items");
             for (model.OrderItem item : items) {
-                System.out.println("  - Product: " + item.getProductName() + ", Thumbnail: " + item.getThumbnail());
+                System.out.println("  - Product: " + item.getProductId() + ", Thumbnail: " + item.getThumbnail());
             }
             o.setItems(items);
         }
