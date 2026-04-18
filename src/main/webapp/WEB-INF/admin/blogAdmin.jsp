@@ -33,8 +33,12 @@
 
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card">Tổng bài viết<br><span>${total}</span></div>
-                    <div class="card">Đang hiển thị<br><span>${totalActive}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin'">
+                        Tổng bài viết<br><span>${total}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin?status=1'">
+                        Đang hiển thị<br><span>${totalActive}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin?status=0'">
+                        Đang ẩn<br><span>${totalHidden}</span></div>
                 </div>
 
                 <div class="toolbar">
