@@ -93,8 +93,8 @@ public class PlaceOrderController extends HttpServlet {
 
             orderItemDao.insert(
                     orderId,
+                    varientDetail.getProductId(),
                     variantId,
-                    varientDetail.getProductName(),
                     varientDetail.getSizeName(),
                     varientDetail.getColorName(),
                     qty,
@@ -107,6 +107,7 @@ public class PlaceOrderController extends HttpServlet {
             // xoa cart
             cartItemDao.delete(cartId, variantId);
         }
+
 
         int remainingCart = cartItemDao.countTotalQuantity(cartId);
         session.setAttribute("cartSize", remainingCart);
