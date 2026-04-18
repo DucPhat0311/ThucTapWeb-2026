@@ -240,6 +240,30 @@
     text-align: center;
 }
 
+.btn-fb {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #d7ccc8;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #4e342e;
+    background: #ffffff;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.btn-fb:hover {
+    border-color: #bcaaa4;
+    background: #fdf8f6;
+}
+
+
 @media (max-width: 768px) {
     .login-page, .register-page, .forget-page {
         justify-content: center;

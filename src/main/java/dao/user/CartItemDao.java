@@ -159,7 +159,27 @@ public class CartItemDao extends BaseDao {
         );
     }
 
+    // lấy id card dựa vào id user
+    public Integer getCartIdByUserId(int userId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("SELECT id FROM carts WHERE user_id = :userId")
+                        .bind("userId", userId)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
 
+    // tạo giỏ hàng mới
+    public int createCart(int userId) {
+        return getJdbi().withHandle(h ->
+                h.createUpdate("INSERT INTO carts (user_id, created_at) VALUES (:userId, NOW())")
+                        .bind("userId", userId)
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(int.class)
+                        .one()
+        );
+    }
 
 
 }
