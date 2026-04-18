@@ -34,10 +34,21 @@ public class BannerAdminController extends HttpServlet {
             int total = banners.size();
 
             int totalActive = bannerService.getActiveBanners().size();
+            int totalBlocked = total - totalActive;
+
+            String status = request.getParameter("status");
+            if (status != null && !status.trim().isEmpty()) {
+                boolean isStatusActive = "1".equals(status) || "true".equalsIgnoreCase(status);
+                banners = banners.stream()
+                        .filter(b -> b.isStatus() == isStatusActive)
+                        .collect(java.util.stream.Collectors.toList());
+                request.setAttribute("currentStatus", status);
+            }
 
             request.setAttribute("banners", banners);
             request.setAttribute("total", total);
             request.setAttribute("totalActive", totalActive);
+            request.setAttribute("totalBlocked", totalBlocked);
 
             request.setAttribute("page", "banner");
         request.getRequestDispatcher("/WEB-INF/admin/bannerAdmin.jsp").forward(request,response);
