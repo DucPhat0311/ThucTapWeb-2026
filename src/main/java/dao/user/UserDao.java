@@ -260,4 +260,19 @@ public class UserDao extends BaseDao {
                                         .execute()
         );
     }
+
+
+
+    public int insert(User user) {
+        return getJdbi().withHandle(handle ->
+                handle.createUpdate("""
+                    INSERT INTO users (username, email, full_name, role, auth_provider, is_active, status, created_at)
+                    VALUES (:username, :email, :fullName, :role, :authProvider, :isActive, :status, :createdAt)
+                    """)
+                        .bindBean(user)
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(int.class)
+                        .one()
+        );
+    }
 }
