@@ -46,6 +46,7 @@ public class OrderItemDao extends BaseDao {
                    oi.quantity,
                    oi.price,
                    oi.total,
+                   oi.reviewed,
                    p.thumbnail,
                    p.name AS productName
             FROM order_items oi
@@ -56,6 +57,14 @@ public class OrderItemDao extends BaseDao {
                         .bind("oid", orderId)
                         .mapToBean(OrderItem.class)
                         .list()
+        );
+    }
+
+    public void markReviewed(int id) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("UPDATE order_items SET reviewed = 1 WHERE id = :id")
+                        .bind("id", id)
+                        .execute()
         );
     }
 }

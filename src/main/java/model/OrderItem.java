@@ -17,6 +17,11 @@ public class OrderItem {
         return reviewed;
     }
 
+    public void setReviewed(boolean reviewed) {
+        this.reviewed = reviewed;
+    }
+
+
     private int productId;
 
     public int getProductId() {
@@ -37,9 +42,6 @@ public class OrderItem {
         this.productId = productId;
     }
 
-    public void setReviewed(boolean reviewed) {
-        this.reviewed = reviewed;
-    }
 
     public String getThumbnail() {
         return thumbnail;
