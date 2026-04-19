@@ -101,6 +101,12 @@
     box-shadow: 0 5px 15px rgba(111, 78, 55, 0.3);
 }
 
+.contact-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
 .contactInfo {
     flex: 1;
