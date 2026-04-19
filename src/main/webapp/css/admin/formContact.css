@@ -143,14 +143,6 @@ textarea:disabled {
     border-color: #e5dfd8;
 }
 
-input, select, textarea {
-        pointer-events: none;
-        background: #f2f2f2;
-    }
-.btn-secondary {
-        pointer-events: auto;
-    }
-
 button,
 .btn-primary,
 .btn-secondary,

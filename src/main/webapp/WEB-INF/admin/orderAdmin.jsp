@@ -19,7 +19,7 @@
 
     <section class="content">
         <header class="topbar">
-            <h1 id="pageTitle">Đơn hàng</h1>
+            <h1 id="pageTitle">Quản Lý Đơn Hàng</h1>
             <div class="actions">
                 <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>
@@ -59,7 +59,7 @@
                             <tr>
                                 <td>#${o.id}</td>
                                 <td>${o.name}</td>
-                                <td>${o.finalAmount} đ</td>
+                                <td><fmt:formatNumber value="${o.finalAmount}" type="number"/> đ</td>
                                 <td>
                                     <span class="order-status ${o.orderStatus}">
                                         <c:choose>
@@ -86,6 +86,39 @@
                     </table>
 
                 </div>
+
+                <c:if test="${totalPages > 1}">
+                    <div class="pagination">
+                        <div class="pagination-info">
+                            Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize > totalOrders ? totalOrders : currentPage * pageSize} của ${totalOrders} đơn hàng
+                        </div>
+                        <div class="pagination-controls">
+                            <c:if test="${currentPage > 1}">
+                                <a href="orderAdmin?page=1" class="page-btn">« Đầu</a>
+                                <a href="orderAdmin?page=${currentPage - 1}" class="page-btn">‹ Trước</a>
+                            </c:if>
+
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <c:choose>
+                                    <c:when test="${i == currentPage}">
+                                        <span class="page-btn active">${i}</span>
+                                    </c:when>
+                                    <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
+                                        <a href="orderAdmin?page=${i}" class="page-btn">${i}</a>
+                                    </c:when>
+                                    <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
+                                        <span class="page-btn dots">...</span>
+                                    </c:when>
+                                </c:choose>
+                            </c:forEach>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <a href="orderAdmin?page=${currentPage + 1}" class="page-btn">Sau ›</a>
+                                <a href="orderAdmin?page=${totalPages}" class="page-btn">Cuối »</a>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:if>
 
             </section>
 

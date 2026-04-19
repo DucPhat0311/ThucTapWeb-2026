@@ -14,58 +14,58 @@
 </head>
 <body>
 
-<%@include file="../include/header.jsp"%>
+<%@ include file="../include/header.jsp" %>
 
+<div class="title">
+</div>
 
-<div class="title"></div>
-
-<!-- HERO BANNER -->
 <section class="hero-banner">
-  <img src="img/.png" alt="Khuyến mãi" class="hero-bg">
+  <img src="${pageContext.request.contextPath}/img/KhuyenMai.png" alt="Khuyến mãi" class="hero-bg">
   <div class="hero-content">
-    <a href="product" class="btn-hero">Mua ngay</a>
+    <a href="${pageContext.request.contextPath}/product" class="btn-hero">Mua ngay</a>
   </div>
 </section>
 
-<!-- TẤT CẢ SẢN PHẨM ƯU ĐÃI -->
 <section class="products">
   <h2>TẤT CẢ SẢN PHẨM ƯU ĐÃI</h2>
 
   <div class="product-grid discount-grid">
-    <div class="product-card">
-      <span class="badge flash">SALE -25%</span>
-      <img src="img/.jpg" alt="Túi xách">
-      <div class="product-info-wrapper">
-        <h3>Túi xách</h3>
-        <p class="price">
-          <span class="new-price">149000₫</span>
-          <span class="old-price">199000₫</span>
-        </p>
+    <c:forEach items="${discountProducts}" var="p">
+      <div class="product-card" data-product-id="${p.id}" data-sale-price="${p.sale_price}">
+        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a><span class="badge flash">SALE -${p.discountPercent}%</span><img src="${p.thumbnail}" alt="${p.name}">
+        <div class="product-info-wrapper">
+  <h3>${p.name}</h3>
+                    <p class="price">
+                        <c:choose>
+                            <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
+                                </span>
+                                <span class="old-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
+        </div>
+        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">Thêm vào giỏ hàng</a>
       </div>
-      <a href="" class="btn-add">Thêm vào giỏ hàng</a>
-    </div>
-
-    <div class="product-card">
-      <span class="badge flash">SALE -10%</span>
-      <img src="img/.jpg" alt="Mũ lưỡi trai">
-      <div class="product-info-wrapper">
-        <h3>Mũ lưỡi trai</h3>
-        <p class="price">
-          <span class="new-price">89000₫</span>
-          <span class="old-price">99000₫</span>
-        </p>
-      </div>
-      <a href="" class="btn-add">Thêm vào giỏ hàng</a>
-    </div>
-
+    </c:forEach>
   </div>
 
   <div class="load-more-wrapper">
-    <button class="btn-load-more">Xem thêm</button>
+    <button id="load-more" class="btn-load-more">Xem thêm</button>
   </div>
 </section>
 
-<%@include file="../include/footer.jsp"%>
+<%@ include file="../include/footer.jsp" %>
+
+<div id="toast"></div>
 
 
 </body>

@@ -89,19 +89,104 @@ public class ProductDao extends BaseDao {
                         .list());
     }
 
-    // tìm kiếm tên sp
     public List<Product> searchByName(String keyword) {
         String sql = """
-        SELECT p.*, c.name AS categoryName
-        FROM products p
-        JOIN categories c ON p.category_id = c.id
-        WHERE p.status <> 'Đã xoá'
-        AND p.name LIKE :kw
+    SELECT p.*, c.name AS categoryName
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    WHERE p.status <> 'Đã xoá'
+    AND (
+        p.name LIKE :fullKey
+        OR p.name LIKE :startKey
+        OR p.name LIKE :endKey
+        OR p.name LIKE :middleKey
+    )
     """;
+
+        String kw = keyword.trim();
 
         return getJdbi().withHandle(h ->
                 h.createQuery(sql)
-                        .bind("kw", "%" + keyword + "%")
+                        .bind("fullKey", kw)
+                        .bind("startKey", kw + " %")
+                        .bind("endKey", "% " + kw)
+                        .bind("middleKey", "% " + kw + " %")
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+
+    public List<Product> findBoyProducts(int limit) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+            SELECT * FROM products
+            WHERE category_id IN (1,2,3)
+              AND status = 'Đang bán'
+            ORDER BY created_at DESC
+            LIMIT :limit
+        """)
+                        .bind("limit", limit)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+    public List<Product> findGirlProducts(int limit) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+            SELECT * FROM products
+            WHERE category_id IN (4,5,6,7)
+              AND status = 'Đang bán'
+            ORDER BY created_at DESC
+            LIMIT :limit
+        """)
+                        .bind("limit", limit)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+    public List<Product> findAccessoryProducts(int limit) {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+            SELECT * FROM products
+            WHERE category_id IN (8,9,10)
+              AND status = 'Đang bán'
+            ORDER BY created_at DESC
+            LIMIT :limit
+        """)
+                        .bind("limit", limit)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+
+    public List<Product> findByCategories(List<Integer> categoryIds) {
+
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return List.of();
+        }
+
+        String sql = "SELECT * FROM products " +
+                "WHERE category_id IN (<ids>) AND status = 'Đang bán'";
+
+        return getJdbi().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bindList("ids", categoryIds)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+
+    public List<Product> findDiscountProducts() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("""
+                                SELECT *
+                                FROM products
+                                WHERE sale_price IS NOT NULL
+                                    AND sale_price < price
+                                    AND sale_price > 0
+                                    AND status = 'Đang bán'
+                                ORDER BY created_at DESC
+                        """)
                         .mapToBean(Product.class)
                         .list()
         );

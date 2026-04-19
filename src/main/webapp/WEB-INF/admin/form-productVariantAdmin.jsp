@@ -15,72 +15,92 @@
 
 <div class="container">
 
-<div class="form-header">
-    <a href="variant-productAdmin" class="btn-back">
-        ← Quay lại
-    </a>
-    <h2>Chỉnh sửa biến thể</h2>
-</div>
-
-<form method="post" action="variant-productAdmin">
-
-    <div class="card">
-        <h3>Thông tin biến thể</h3>
-
-        <div class="row">
-            <div class="col">
-                <label>ID</label>
-                <input type="text" value="501" readonly>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <label>Size</label>
-                <input type="text" value="Size L" readonly disabled style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #eee;">
-            </div>
-
-            <div class="col">
-                <label>Màu sắc</label>
-                <input type="text" value="Màu Đen" readonly disabled style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #eee;">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <label>Giá</label>
-                <input type="number" name="price" step="0.01" min="0" required value="250000">
-            </div>
-
-            <div class="col">
-                <label>Giá sale</label>
-                <input type="number" name="salePrice" step="0.01" min="0" required value="199000">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <label>Tồn kho</label>
-                <input type="number" name="stock" min="0" required value="45">
-            </div>
-        </div>
-
-    </div>
-
-    <div class="form-footer">
-        <button type="submit" name="action" value="update" class="btn-primary">
-            Lưu
-        </button>
-
-        <a href="variant-productAdmin" class="btn-secondary">
-            Hủy
+    <div class="form-header">
+        <a href="productVariantAdmin?productId=${productId}" class="btn-back">
+            ← Quay lại
         </a>
+        <h2>
+            <c:choose>
+                <c:when test="${mode == 'add'}">Thêm biến thể</c:when>
+                <c:when test="${mode == 'edit'}">Chỉnh sửa biến thể</c:when>
+            </c:choose>
+        </h2>
     </div>
 
-    <input type="hidden" name="productId" value="101">
-    <input type="hidden" name="id" value="501">
 
-</form>
+    <form method="post" action="productVariantAdmin">
+
+        <div class="card">
+            <h3>Thông tin biến thể</h3>
+
+
+            <c:if test="${mode == 'edit'}">
+                <div class="row">
+                    <div class="col">
+                        <label>ID</label>
+                        <input type="text" value="${variant.id}" readonly>
+                    </div>
+                </div>
+            </c:if>
+
+
+            <div class="row">
+                <div class="col">
+                    <label>Size</label>
+                    <c:choose>
+                        <c:when test="${mode == 'edit'}">
+                            <input type="text" value="${variant.sizeName}" readonly disabled style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #eee;">
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" name="sizeName" required placeholder="Tự ghi ra size..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
+                <div class="col">
+                    <label>Màu sắc</label>
+                    <c:choose>
+                        <c:when test="${mode == 'edit'}">
+                            <input type="text" value="${variant.colorName}" readonly disabled style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #eee;">
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" name="colorName" required placeholder="Tự ghi ra màu..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label>Tồn kho</label>
+                    <input type="number" name="stock" min="0" required
+                           value="${mode == 'edit' ? variant.stock : 0}">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-footer">
+            <button type="submit"
+                    name="action"
+                    value="${mode == 'add' ? 'create' : 'update'}"
+                    class="btn-primary">
+                Lưu
+            </button>
+
+            <a href="productVariantAdmin?productId=${productId}"
+               class="btn-secondary">
+                Hủy
+            </a>
+        </div>
+
+        <input type="hidden" name="productId" value="${productId}">
+        <c:if test="${mode == 'edit'}">
+            <input type="hidden" name="id" value="${variant.id}">
+        </c:if>
+
+    </form>
+
 </div>
 
 </body>

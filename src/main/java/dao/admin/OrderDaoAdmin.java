@@ -85,7 +85,7 @@ public class OrderDaoAdmin extends BaseDao {
                             i.setId(rs.getInt("id"));
                             i.setOrderId(rs.getInt("order_id"));
                             i.setVariantId(rs.getInt("variant_id"));
-                            i.setProductName(rs.getString("product_name"));
+//                            i.setProductName(rs.getString("product_name"));
                             i.setSize(rs.getString("size"));
                             i.setColor(rs.getString("color"));
                             i.setQuantity(rs.getInt("quantity"));

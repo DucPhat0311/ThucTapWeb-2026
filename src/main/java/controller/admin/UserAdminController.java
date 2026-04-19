@@ -25,22 +25,63 @@ public class UserAdminController extends HttpServlet {
         String mode = request.getParameter("mode");
 
         if(mode == null){
-            List<User> users = userService.getAllUser();
-            int total = users.size();
+            List<User> allUsers = userService.getAllUser();
+            int total = allUsers.size();
             int countActive = userService.getCountActive();
             int countBlock = userService.getCountBlock();
 
             String keyword = request.getParameter("keyword");
 
             if (keyword != null && !keyword.trim().isEmpty()) {
-                users = userService.searchByUsernameOrEmail(keyword);
+                allUsers = userService.searchByUsernameOrEmail(keyword);
             }
 
+            String status = request.getParameter("status");
+            if (status != null && !status.trim().isEmpty()) {
+                allUsers = allUsers.stream()
+                        .filter(u -> status.equalsIgnoreCase(u.getStatus()))
+                        .collect(java.util.stream.Collectors.toList());
+            }
+
+            int page = 1;
+            int pageSize = 5;
+            
+            String pageParam = request.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+            
+            int totalUsers = allUsers.size();
+            int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
+            
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+            
+            int start = (page - 1) * pageSize;
+            int end = Math.min(start + pageSize, totalUsers);
+            List<User> users = allUsers.subList(start, end);
+
             request.setAttribute("total", total);
+            request.setAttribute("totalUsers", totalUsers);
             request.setAttribute("countActive", countActive);
             request.setAttribute("countBlock", countBlock);
             request.setAttribute("users", users);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", pageSize);
             request.setAttribute("page", "user");
+
+            if (status != null) {
+                request.setAttribute("currentStatus", status);
+            }
+            if (keyword != null) {
+                request.setAttribute("currentKeyword", keyword);
+            }
+            
             request.getRequestDispatcher("/WEB-INF/admin/userAdmin.jsp").forward(request,response);
             return;
         }

@@ -16,7 +16,7 @@
             <i class="fas fa-shopping-cart"></i> Đơn Hàng</a>
         <a href="bannerAdmin" class="nav-item ${page == 'banner' ? 'active' : ''}">
             <i class="fas fa-image"></i> Banner</a>
-        <a href="blogAdmin" class="nav-item ${page == 'news' ? 'active' : ''}">
+        <a href="blogAdmin" class="nav-item ${page == 'blog' ? 'active' : ''}">
             <i class="fas fa-newspaper"></i> Bài Viết</a>
         <a href="contactAdmin" class="nav-item ${page == 'contact' ? 'active' : ''}">
             <i class="fas fa-envelope"></i> Liên hệ</a>

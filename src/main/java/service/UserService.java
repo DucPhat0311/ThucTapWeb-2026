@@ -2,10 +2,12 @@ package service;
 
 import dao.user.UserDao;
 import dao.admin.UserDaoAdmin;
+import model.GoogleUserInfo;
 import model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import util.PassUtil;
 
 public class UserService {
@@ -76,6 +78,66 @@ public class UserService {
 
         return user;
     }
+
+    public User loginWithGoogle(GoogleUserInfo googleInfo) {
+        if (googleInfo == null) {
+            throw new RuntimeException("Không nhận được dữ liệu tài khoản Google");
+        }
+        if (googleInfo.getSub() == null || googleInfo.getSub().isBlank()) {
+            throw new RuntimeException("Thiếu định danh Google (sub)");
+        }
+        if (googleInfo.getEmail() == null || googleInfo.getEmail().isBlank()) {
+            throw new RuntimeException("Thiếu email từ Google");
+        }
+        if (!googleInfo.isEmailVerified()) {
+            throw new RuntimeException("Email Google chưa được xác minh");
+        }
+
+        String email = googleInfo.getEmail().trim().toLowerCase();
+        String fullName = googleInfo.getName();
+        String avatarUrl = googleInfo.getPicture();
+        String googleSub = googleInfo.getSub().trim();
+
+        User bySub = userDao.findByGoogleSub(googleSub);
+        if (bySub != null) {
+            return bySub;
+        }
+
+        User byEmail = userDao.findByEmail(email);
+        if (byEmail != null) {
+            userDao.linkGoogleAccount(byEmail.getId(), googleSub, avatarUrl, fullName);
+            return userDao.findUserById(byEmail.getId());
+        }
+
+        String username = buildUniqueUsername(email, fullName);
+        String passwordHash = PassUtil.hash(UUID.randomUUID().toString());
+        userDao.insertGoogleUser(username, email, passwordHash, fullName, googleSub, avatarUrl);
+        return userDao.findByGoogleSub(googleSub);
+    }
+
+    private String buildUniqueUsername(String email, String fullName) {
+        String base = "";
+        if (email != null && !email.isBlank() && email.contains("@")) {
+            base = email.substring(0, email.indexOf('@'));
+        } else if (fullName != null && !fullName.isBlank()) {
+            base = fullName.replaceAll("\\s+", "_");
+        }
+
+        base = base.replaceAll("[^a-zA-Z0-9._]", "").toLowerCase();
+        if (base.isBlank()) {
+            base = "google_user";
+        }
+        if (base.length() > 20) {
+            base = base.substring(0, 20);
+        }
+
+        String candidate = base;
+        int suffix = 1;
+        while (userDao.existsByUsername(candidate)) {
+            candidate = base + "_" + suffix++;
+        }
+        return candidate;
+    }
     public User findById(int id) {
         return userDao.findUserById(id);
     }
@@ -83,6 +145,11 @@ public class UserService {
     public void update(User user) {
         userDao.update(user);
     }
+
+    public void updateAvatar(int userId, String avatarUrl) {
+        userDao.updateAvatar(userId, avatarUrl);
+    }
+
     public boolean checkOldPass(int id, String oldPass) {
         String hashPass = userDao.getPasswordById(id);
 

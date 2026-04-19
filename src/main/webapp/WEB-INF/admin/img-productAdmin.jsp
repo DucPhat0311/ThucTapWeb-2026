@@ -83,9 +83,9 @@
                                     <td>${status.index + 1}</td>
                                     <td>${img.id}</td>
                                     <td>
-                                        <img src="${img.imageUrl}"
-                                             alt="Product Image"
-                                             class="product-thumbnail">
+                                        <img src="${pageContext.request.contextPath}/${img.imageUrl}"
+                                            alt="Product Image"
+                                            class="product-thumbnail">
                                     </td>
                                     <td>
                                         <c:choose>

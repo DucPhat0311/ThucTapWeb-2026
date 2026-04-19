@@ -52,7 +52,7 @@ function toggleCategoryStatus(id, name, status) {
 function confirmToggleStatus() {
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'category-admin';
+    form.action = 'categoryAdmin';
     
     const actionInput = document.createElement('input');
     actionInput.type = 'hidden';
@@ -84,3 +84,30 @@ function closeToggleStatusModal() {
     currentCategoryId = null;
     currentCategoryStatus = null;
 }
+
+//Đóng mở danh mục con
+    function toggleCategoryStatusFromButton(button) {
+        const id = parseInt(button.getAttribute('data-id'), 10);
+        const name = button.getAttribute('data-name') || '';
+        const status = parseInt(button.getAttribute('data-status'), 10);
+        toggleCategoryStatus(id, name, status);
+    }
+
+    function toggleCategoryChildrenFromButton(button) {
+        const parentId = parseInt(button.getAttribute('data-parent-id'), 10);
+        toggleCategoryChildren(parentId, button);
+    }
+
+    function toggleCategoryChildren(parentId, button) {
+        const childRows = document.querySelectorAll('tr.category-child-row[data-parent-id="' + parentId + '"]');
+        if (!childRows.length) {
+            return;
+        }
+
+        const isCurrentlyHidden = window.getComputedStyle(childRows[0]).display === 'none';
+        childRows.forEach((row) => {
+            row.style.display = isCurrentlyHidden ? 'table-row' : 'none';
+        });
+
+        button.classList.toggle('collapsed', !isCurrentlyHidden);
+    }

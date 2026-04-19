@@ -5,6 +5,7 @@ import dao.user.OrderDao;
 import dao.user.OrderItemDao;
 import dao.user.ProductVariantDao;
 import model.CartItem;
+import model.ProductVariant;
 import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -46,7 +47,6 @@ public class PlaceOrderController extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("userlogin");
-
         Integer cartIdObj = (Integer) session.getAttribute("cartId");
         if (cartIdObj == null) {
             response.sendRedirect("my-cart");
@@ -54,68 +54,65 @@ public class PlaceOrderController extends HttpServlet {
         }
         int cartId = cartIdObj;
 
+        String[] variantIds = request.getParameterValues("variantIds");
+        String[] quantities = request.getParameterValues("quantities");
+
+        if (variantIds == null || variantIds.length == 0) {
+            response.sendRedirect("my-cart");
+            return;
+        }
+
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String note = request.getParameter("note");
         String paymentMethod = request.getParameter("paymentMethod");
 
-        if (name == null || phone == null || address == null) {
-            response.sendRedirect("checkout");
-            return;
-        }
-        List<CartItem> cartItems = cartItemDao.getItemsByCartId(cartId);
-        if (cartItems.isEmpty()) {
-            response.sendRedirect("my-cart");
-            return;
-        }
+        double totalPrice = 0;
+        for (int i = 0; i < variantIds.length; i++) {
+            int variantId = Integer.parseInt(variantIds[i]);
+            int qty = Integer.parseInt(quantities[i]);
 
-        for (CartItem item : cartItems) {
-            int stock = variantDao.getStockByVariantId(item.getVariantId());
-            if (stock < item.getQuantity()) {
+            int stock = variantDao.getStockByVariantId(variantId);
+            if (stock < qty) {
                 response.sendRedirect("checkout?error=out_of_stock");
                 return;
             }
+            double price = variantDao.getPriceByVariantId(variantId);
+            totalPrice += price * qty;
         }
 
-        double totalPrice = 0;
-        for (CartItem item : cartItems) {
-            totalPrice += item.getPrice() * item.getQuantity();
-        }
+        int orderId = orderDao.createOrder(user.getId(), name, phone, address, note, paymentMethod, totalPrice);
 
-        int orderId = orderDao.createOrder(
-                user.getId(),
-                name,
-                phone,
-                address,
-                note,
-                paymentMethod,
-                totalPrice
-        );
+        for (int i = 0; i < variantIds.length; i++) {
+            int variantId = Integer.parseInt(variantIds[i]);
+            int qty = Integer.parseInt(quantities[i]);
 
-        for (CartItem item : cartItems) {
-            int variantId = item.getVariantId();
-            int qty = item.getQuantity();
-            double price = item.getPrice();
+            var varientDetail = variantDao.getVariantDetails(variantId);
+            double price = variantDao.getPriceByVariantId(variantId);
 
             orderItemDao.insert(
                     orderId,
+                    varientDetail.getProductId(),
                     variantId,
-                    item.getProduct().getName(),
-                    item.getSize(),
-                    item.getColor(),
+                    varientDetail.getSizeName(),
+                    varientDetail.getColorName(),
                     qty,
                     price,
                     price * qty
             );
-
+            // xoa stock
             variantDao.decreaseStock(variantId, qty);
+
+            // xoa cart
+            cartItemDao.delete(cartId, variantId);
         }
 
-        cartItemDao.clearCart(cartId);
 
-        session.setAttribute("cartSize", 0);
+        int remainingCart = cartItemDao.countTotalQuantity(cartId);
+        session.setAttribute("cartSize", remainingCart);
         session.setAttribute("lastOrderId", orderId);
+
         response.sendRedirect("order-success");
     }
 }

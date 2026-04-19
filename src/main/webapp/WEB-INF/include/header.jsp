@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+    <meta charset="UTF-8">
     <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
 
 <c:if test="${not empty pageCss}">
@@ -18,7 +19,9 @@
 
     <div class="header-top">
         <div class="logo">
+            <a href="home" class="iconUser">
             <img src="img/logo.png" alt="AURA Studio Logo">
+            </a>
         </div>
 
         <div class="search-bar">
@@ -39,12 +42,12 @@
                     <div class="user-menu">
                         <a href="#" class="iconUser">
                             <i class="fa-regular fa-user"></i>
-                                ${sessionScope.userlogin.username}
+                                ${not empty sessionScope.userlogin.fullName ? sessionScope.userlogin.fullName : sessionScope.userlogin.username}
                         </a>
                         <ul class="user-dropdown">
                             <li><a href="profile">Thông tin cá nhân</a></li>
                             <li><a href="order-user">Đơn hàng của tôi</a></li>
-                            <li><a href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
+                            <li><a href="logout">Đăng xuất</a></li>
                         </ul>
                     </div>
                 </c:when>
@@ -98,20 +101,21 @@
         </div>
     </div>
 
-    <!-- MENU -->
     <nav class="header-bottom">
         <div class="menu">
-            <ul><li><a href="home">Trang chủ</a></li>
-
-                <li>
-                    <a href="product">Danh Mục ▾</a>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
+                <li><a href="product">Danh Mục ▾</a>
                     <ul class="sub">
-                        <li class="subItem"><a>Thời trang Nam</a></li>
-                        <li class="subItem"><a>Thời trang Nữ</a></li>
-                        <li class="subItem"><a>Phụ kiện</a></li>
+                        <jsp:useBean id="categoryDao" class="dao.user.CategoryDao" />
+                        <c:set var="categoryTree" value="${categoryDao.categoryTree}" />
+                        <c:forEach var="parentCat" items="${categoryTree}">
+                            <li class="subItem">
+                                <a href="product?category=${parentCat.id}">${parentCat.name}</a>
+                            </li>
+                        </c:forEach>
                     </ul>
                 </li>
-
                 <li><a href="blog">Bài viết</a></li>
                 <li><a href="sales">Khuyến mãi</a></li>
                 <li><a href="contact">Liên hệ</a></li>

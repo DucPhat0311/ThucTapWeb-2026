@@ -22,7 +22,7 @@
 <body>
 <div class="container">
     <div class="form-header">
-        <a href="img-productAdmin" class="btn-back">
+        <a href="productImgAdmin?productId=${productId}" class="btn-back">
             <i class="fa fa-arrow-left"></i> Quay lại
         </a>
 
@@ -108,13 +108,7 @@
                     </button>
                 </div>
             </c:if>
-            <c:if test="${mode == 'view'}">
-                <div class="form-footer" style="margin-top: 25px;">
-                    <a href="productImgAdmin?productId=${productId}" class="btn-secondary">
-                        <i class="fa fa-arrow-left"></i> Quay lại
-                    </a>
-                </div>
-            </c:if>
+
         </form>
     </div>
 </div>

@@ -40,24 +40,24 @@
             <section id="dashboard" class="page active">
                 
                 <div class="cards">
-                    <div class="card" onclick="window.location.href='${pageContext.request.contextPath}/order-admin'" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" title="Nhấn để xem quản lý đơn hàng">
+                    <div class="card" onclick="window.location.href='${pageContext.request.contextPath}/orderAdmin'" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" title="Nhấn để xem quản lý đơn hàng">
                         Tổng đơn hàng
                         <span>${totalOrders}</span>
                     </div>
 
-                    <div class="card" onclick="window.location.href='${pageContext.request.contextPath}/revenue-admin'" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" title="Nhấn để xem chi tiết doanh thu">
+                    <div class="card" onclick="window.location.href='${pageContext.request.contextPath}/revenueAdmin'" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" title="Nhấn để xem chi tiết doanh thu">
                         Tổng doanh thu
                         <span>
                             <span id="dashboard-total-revenue"><fmt:formatNumber value="${totalRevenue}"/>đ</span>
                         </span>
                     </div>
 
-                    <div class="card" onclick="window.location.href='${pageContext.request.contextPath}/product-admin'" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" title="Nhấn để xem quản lý sản phẩm">
+                    <div class="card" onclick="window.location.href='${pageContext.request.contextPath}/productAdmin'" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" title="Nhấn để xem quản lý sản phẩm">
                         Sản phẩm
                         <span>${totalProducts}</span>
                     </div>
 
-                    <div class="card" onclick="window.location.href='${pageContext.request.contextPath}/user-admin'" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" title="Nhấn để xem quản lý người dùng">
+                    <div class="card" onclick="window.location.href='${pageContext.request.contextPath}/userAdmin'" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'" title="Nhấn để xem quản lý người dùng">
                         Người dùng
                         <span>${totalUsers}</span>
                     </div>

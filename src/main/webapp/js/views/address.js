@@ -1,41 +1,41 @@
-
-const LOCATION_DATA = {
-    "Hồ Chí Minh": {
-        districts: {
-            "Quận 1": ["Bến Nghé", "Bến Thành", "Đa Kao", "Tân Định"],
-            "Quận 3": ["Phường 1", "Phường 2", "Phường 3"],
-            "Quận 5": ["Phường 1", "Phường 2", "Phường 3", "Phường 5"],
-            "Quận 7": ["Tân Phong", "Tân Phú", "Phú Mỹ"],
-            "Thành phố Thủ Đức": ["Linh Trung", "Linh Xuân", "Hiệp Bình Chánh"]
-        }
-    },
-    "Hà Nội": {
-        districts: {
-            "Ba Đình": ["Phúc Xá", "Trúc Bạch", "Ngọc Hà"],
-            "Đống Đa": ["Láng Hạ", "Khâm Thiên"],
-            "Cầu Giấy": ["Dịch Vọng", "Mai Dịch"]
-        }
-    },
-    "Bình Dương": {
-        districts: {
-            "Thủ Dầu Một": ["Phú Cường", "Phú Hòa"],
-            "Dĩ An": ["Dĩ An", "Tân Đông Hiệp"],
-            "Thuận An": ["Lái Thiêu", "An Phú"]
-        }
-    }
+const CONTEXT_PATH = (window.APP_CONTEXT_PATH || "").replace(/\/$/, "");
+const LOCATION_API = {
+    provinces: `${CONTEXT_PATH}/api/locations/provinces`,
+    districts: `${CONTEXT_PATH}/api/locations/districts`,
+    wards: `${CONTEXT_PATH}/api/locations/wards`
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+const PLACEHOLDER = {
+    province: "-- Chá»n Tá»‰nh / ThÃ nh phá»‘ --",
+    district: "-- Chá»n Quáº­n / Huyá»‡n --",
+    ward: "-- Chá»n PhÆ°á»ng / XÃ£ --",
+    loading: "Äang táº£i...",
+    error: "KhÃ´ng táº£i Ä‘Æ°á»£c dá»¯ liá»‡u"
+};
 
+let provinceLoadPromise = null;
+
+document.addEventListener("DOMContentLoaded", initAddressPage);
+
+function initAddressPage() {
+    setupModalEvents();
+    setupEditAddressEvents();
+    setupLocationEvents();
+    setupFormValidation();
+    loadProvinces();
+}
+
+function setupModalEvents() {
     const modal = document.getElementById("addressModal");
     const btnOpen = document.getElementById("btnOpenModal");
     const btnClose = document.getElementById("btnCloseModal");
     const btnCancel = document.getElementById("btnCancelModal");
 
     if (btnOpen) {
-        btnOpen.addEventListener("click", () => {
+        btnOpen.addEventListener("click", async () => {
             resetForm();
             modal.classList.add("active");
+            await loadProvinces();
         });
     }
 
@@ -47,124 +47,411 @@ document.addEventListener("DOMContentLoaded", () => {
         btnCancel.addEventListener("click", () => modal.classList.remove("active"));
     }
 
-    window.addEventListener("click", (e) => {
-        if (e.target === modal) modal.classList.remove("active");
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.classList.remove("active");
+        }
     });
+}
 
-    const citySelect = document.getElementById("citySelect");
-    const districtSelect = document.getElementById("districtSelect");
+function setupLocationEvents() {
+    const citySelect = getCitySelect();
+    const districtSelect = getDistrictSelect();
+    const wardSelect = getWardSelect();
 
     if (citySelect) {
-        citySelect.addEventListener("change", loadDistricts);
+        citySelect.addEventListener("change", async () => {
+            clearLocationError();
+            syncLocationCode(citySelect, "provinceCodeInput");
+            resetSelect(districtSelect, PLACEHOLDER.district, true);
+            resetSelect(wardSelect, PLACEHOLDER.ward, true);
+            clearHiddenValue("districtCodeInput");
+            clearHiddenValue("wardCodeInput");
+
+            const provinceCode = getSelectedCode(citySelect);
+            if (provinceCode) {
+                await loadDistricts(provinceCode);
+            }
+        });
     }
 
     if (districtSelect) {
-        districtSelect.addEventListener("change", loadWards);
+        districtSelect.addEventListener("change", async () => {
+            clearLocationError();
+            syncLocationCode(districtSelect, "districtCodeInput");
+            resetSelect(wardSelect, PLACEHOLDER.ward, true);
+            clearHiddenValue("wardCodeInput");
+
+            const districtCode = getSelectedCode(districtSelect);
+            if (districtCode) {
+                await loadWards(districtCode);
+            }
+        });
     }
 
-    const form = document.querySelector(".address-form");
-    if (form) {
-        form.addEventListener("submit", validateForm);
+    if (wardSelect) {
+        wardSelect.addEventListener("change", () => {
+            clearLocationError();
+            syncLocationCode(wardSelect, "wardCodeInput");
+        });
     }
-});
-
-function loadDistricts() {
-    const city = document.getElementById("citySelect").value;
-    const districtSelect = document.getElementById("districtSelect");
-    const wardSelect = document.getElementById("wardSelect");
-
-    districtSelect.innerHTML = '<option value="">-- Chọn Quận / Huyện --</option>';
-    wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
-
-    districtSelect.disabled = true;
-    wardSelect.disabled = true;
-
-    if (!LOCATION_DATA[city]) return;
-
-    const districts = LOCATION_DATA[city].districts;
-
-    Object.keys(districts).forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = d;
-        opt.textContent = d;
-        districtSelect.appendChild(opt);
-    });
-
-    districtSelect.disabled = false;
 }
 
-function loadWards() {
-    const city = document.getElementById("citySelect").value;
-    const district = document.getElementById("districtSelect").value;
-    const wardSelect = document.getElementById("wardSelect");
+function setupEditAddressEvents() {
+    document.querySelectorAll(".btn-edit[data-address-id]").forEach((button) => {
+        button.addEventListener("click", () => {
+            const data = button.dataset;
+            openEditModal(
+                data.addressId,
+                data.name,
+                data.phone,
+                data.city,
+                data.provinceCode,
+                data.district,
+                data.districtCode,
+                data.ward,
+                data.wardCode,
+                data.detail,
+                data.default === "true"
+            );
+        });
+    });
+}
 
-    wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
-    wardSelect.disabled = true;
+async function loadProvinces(selectedName = "", selectedCode = "") {
+    const citySelect = getCitySelect();
+    if (!citySelect) return;
 
-    if (!LOCATION_DATA[city]) return;
-    if (!LOCATION_DATA[city].districts[district]) return;
+    if (!provinceLoadPromise) {
+        setLoading(citySelect);
+        provinceLoadPromise = fetchLocations(LOCATION_API.provinces);
+    }
 
-    LOCATION_DATA[city].districts[district].forEach(w => {
-        const opt = document.createElement("option");
-        opt.value = w;
-        opt.textContent = w;
-        wardSelect.appendChild(opt);
+    try {
+        const provinces = await provinceLoadPromise;
+        renderOptions(citySelect, provinces, PLACEHOLDER.province, selectedName, selectedCode);
+        citySelect.disabled = false;
+        syncLocationCode(citySelect, "provinceCodeInput");
+    } catch (error) {
+        console.error(error);
+        provinceLoadPromise = null;
+        showSelectError(citySelect);
+        showLocationError("KhÃ´ng táº£i Ä‘Æ°á»£c danh sÃ¡ch tá»‰nh/thÃ nh phá»‘. Vui lÃ²ng thá»­ láº¡i sau.");
+    }
+}
+
+async function loadDistricts(provinceCode, selectedName = "", selectedCode = "") {
+    const districtSelect = getDistrictSelect();
+    if (!districtSelect) return;
+
+    setLoading(districtSelect);
+
+    try {
+        const districts = await fetchLocations(`${LOCATION_API.districts}?provinceCode=${encodeURIComponent(provinceCode)}`);
+        renderOptions(districtSelect, districts, PLACEHOLDER.district, selectedName, selectedCode);
+        districtSelect.disabled = false;
+        syncLocationCode(districtSelect, "districtCodeInput");
+    } catch (error) {
+        console.error(error);
+        showSelectError(districtSelect);
+        showLocationError("KhÃ´ng táº£i Ä‘Æ°á»£c danh sÃ¡ch quáº­n/huyá»‡n. Vui lÃ²ng chá»n láº¡i tá»‰nh hoáº·c thá»­ láº¡i sau.");
+    }
+}
+
+async function loadWards(districtCode, selectedName = "", selectedCode = "") {
+    const wardSelect = getWardSelect();
+    if (!wardSelect) return;
+
+    setLoading(wardSelect);
+
+    try {
+        const wards = await fetchLocations(`${LOCATION_API.wards}?districtCode=${encodeURIComponent(districtCode)}`);
+        renderOptions(wardSelect, wards, PLACEHOLDER.ward, selectedName, selectedCode);
+        wardSelect.disabled = false;
+        syncLocationCode(wardSelect, "wardCodeInput");
+    } catch (error) {
+        console.error(error);
+        showSelectError(wardSelect);
+        showLocationError("KhÃ´ng táº£i Ä‘Æ°á»£c danh sÃ¡ch phÆ°á»ng/xÃ£. Vui lÃ²ng chá»n láº¡i quáº­n/huyá»‡n hoáº·c thá»­ láº¡i sau.");
+    }
+}
+
+async function fetchLocations(url) {
+    const response = await fetch(url, {
+        headers: {
+            "Accept": "application/json"
+        }
     });
 
-    wardSelect.disabled = false;
+    if (!response.ok) {
+        throw new Error(`KhÃ´ng thá»ƒ táº£i dá»¯ liá»‡u Ä‘á»‹a chá»‰. HTTP ${response.status}`);
+    }
+
+    return response.json();
+}
+
+function renderOptions(select, items, placeholder, selectedName = "", selectedCode = "") {
+    resetSelect(select, placeholder, false);
+
+    items.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.name;
+        option.textContent = item.name;
+        option.dataset.code = item.code;
+        select.appendChild(option);
+    });
+
+    selectLocationOption(select, selectedName, selectedCode);
+}
+
+function selectLocationOption(select, selectedName = "", selectedCode = "") {
+    const normalizedName = normalizeText(selectedName);
+    const code = String(selectedCode || "");
+
+    for (const option of select.options) {
+        const optionCode = String(option.dataset.code || "");
+        const optionName = normalizeText(option.value);
+        if (code && optionCode === code) {
+            option.selected = true;
+            return;
+        }
+
+        if (normalizedName && (optionName === normalizedName
+            || optionName.includes(normalizedName)
+            || normalizedName.includes(optionName))) {
+            option.selected = true;
+            return;
+        }
+    }
+
+    select.value = "";
 }
 
 function resetForm() {
-    document.querySelector(".address-form").reset();
+    const form = document.querySelector(".address-form");
+    if (!form) return;
 
-    const districtSelect = document.getElementById("districtSelect");
-    const wardSelect = document.getElementById("wardSelect");
+    form.reset();
+    form.querySelector("input[name='action']").value = "add";
+    removeAddressIdInput(form);
+    clearPhoneError();
+    clearLocationError();
+    clearAllLocationCodes();
 
-    districtSelect.innerHTML = '<option value="">-- Chọn Quận / Huyện --</option>';
-    wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
-
-    districtSelect.disabled = true;
-    wardSelect.disabled = true;
-}
-
-function validateForm(e) {
-    const phoneInput = document.getElementById("phoneInput");
-    const phoneError = document.getElementById("phoneError");
-    const phone = phoneInput.value.trim();
-
-    if (!isValidPhone(phone)) {
-        phoneError.textContent = "Vui lòng nhập đúng số điện thoại";
-        phoneError.style.display = "block";
-        phoneInput.focus();
-        e.preventDefault();
-        return false;
+    const title = document.querySelector(".modal-header h3");
+    if (title) {
+        title.textContent = "ThÃªm Ä‘á»‹a chá»‰ má»›i";
     }
+
+    const citySelect = getCitySelect();
+    const districtSelect = getDistrictSelect();
+    const wardSelect = getWardSelect();
+
+    if (citySelect) {
+        citySelect.value = "";
+    }
+    resetSelect(districtSelect, PLACEHOLDER.district, true);
+    resetSelect(wardSelect, PLACEHOLDER.ward, true);
 }
-function openEditModal(
-    id, name, phone, city, district, ward, detail, isDefault
+
+async function openEditModal(
+    id,
+    name,
+    phone,
+    city,
+    provinceCode,
+    district,
+    districtCode,
+    ward,
+    wardCode,
+    detail,
+    isDefault
 ) {
     const modal = document.getElementById("addressModal");
     const form = document.querySelector(".address-form");
+    if (!modal || !form) return;
 
-    form.action.value = "update";
+    resetForm();
 
+    const title = document.querySelector(".modal-header h3");
+    if (title) {
+        title.textContent = "Cáº­p nháº­t Ä‘á»‹a chá»‰";
+    }
+
+    form.querySelector("input[name='action']").value = "update";
     form.querySelector("input[name='name']").value = name;
     form.querySelector("input[name='phone']").value = phone;
-    form.querySelector("select[name='city']").value = city;
-
-    loadDistricts();
-
-    setTimeout(() => {
-        document.getElementById("districtSelect").value = district;
-        loadWards();
-        setTimeout(() => {
-            document.getElementById("wardSelect").value = ward;
-        }, 50);
-    }, 50);
-
     form.querySelector("textarea[name='detailAddress']").value = detail;
-    form.querySelector("input[name='isDefault']").checked = isDefault;
+    form.querySelector("input[name='isDefault']").checked = Boolean(isDefault);
+    ensureAddressIdInput(form).value = id;
 
+    modal.classList.add("active");
+
+    await loadProvinces(city, provinceCode);
+    const selectedProvinceCode = getSelectedCode(getCitySelect()) || provinceCode;
+    if (selectedProvinceCode) {
+        await loadDistricts(selectedProvinceCode, district, districtCode);
+    }
+
+    const selectedDistrictCode = getSelectedCode(getDistrictSelect()) || districtCode;
+    if (selectedDistrictCode) {
+        await loadWards(selectedDistrictCode, ward, wardCode);
+    }
+}
+
+function validateForm(event) {
+    const phoneInput = document.getElementById("phoneInput");
+    const phone = phoneInput.value.trim();
+
+    if (!isValidPhone(phone)) {
+        showPhoneError("Vui lÃ²ng nháº­p Ä‘Ãºng sá»‘ Ä‘iá»‡n thoáº¡i");
+        phoneInput.focus();
+        event.preventDefault();
+        return false;
+    }
+
+    if (!isLocationReady()) {
+        showLocationError("Vui lÃ²ng chá»n Ä‘áº§y Ä‘á»§ tá»‰nh/thÃ nh phá»‘, quáº­n/huyá»‡n vÃ  phÆ°á»ng/xÃ£.");
+        focusFirstMissingLocation();
+        event.preventDefault();
+        return false;
+    }
+
+    return true;
+}
+
+function setupFormValidation() {
+    const form = document.querySelector(".address-form");
+    const phoneInput = document.getElementById("phoneInput");
+
+    if (form) {
+        form.addEventListener("submit", validateForm);
+    }
+
+    if (!phoneInput) return;
+
+    phoneInput.addEventListener("input", () => {
+        const value = phoneInput.value.trim();
+        if (value === "") {
+            clearPhoneError();
+            return;
+        }
+
+        if (!isValidPhone(value)) {
+            showPhoneError("Sá»‘ Ä‘iá»‡n thoáº¡i pháº£i Ä‘Ãºng Ä‘á»‹nh dáº¡ng (VD: 090xxxxxxx)");
+        } else {
+            clearPhoneError();
+        }
+    });
+
+    phoneInput.addEventListener("blur", () => {
+        if (phoneInput.value && !isValidPhone(phoneInput.value)) {
+            showPhoneError("Sá»‘ Ä‘iá»‡n thoáº¡i khÃ´ng há»£p lá»‡");
+        }
+    });
+}
+
+function isValidPhone(phone) {
+    const normalized = phone.replace(/[\s.-]/g, "");
+    return /^(0[35789])[0-9]{8}$/.test(normalized);
+}
+
+function showPhoneError(message) {
+    const phoneInput = document.getElementById("phoneInput");
+    const phoneError = document.getElementById("phoneError");
+    if (!phoneInput || !phoneError) return;
+
+    phoneError.textContent = message;
+    phoneError.style.display = "block";
+    phoneInput.classList.add("input-error");
+}
+
+function clearPhoneError() {
+    const phoneInput = document.getElementById("phoneInput");
+    const phoneError = document.getElementById("phoneError");
+    if (!phoneInput || !phoneError) return;
+
+    phoneError.textContent = "";
+    phoneError.style.display = "none";
+    phoneInput.classList.remove("input-error");
+}
+
+function showLocationError(message) {
+    const locationError = document.getElementById("locationError");
+    if (!locationError) return;
+
+    locationError.textContent = message;
+    locationError.style.display = "block";
+}
+
+function clearLocationError() {
+    const locationError = document.getElementById("locationError");
+    if (!locationError) return;
+
+    locationError.textContent = "";
+    locationError.style.display = "none";
+}
+
+function setLoading(select) {
+    resetSelect(select, PLACEHOLDER.loading, true);
+}
+
+function showSelectError(select) {
+    resetSelect(select, PLACEHOLDER.error, true);
+}
+
+function resetSelect(select, placeholder, disabled) {
+    if (!select) return;
+
+    select.innerHTML = "";
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = placeholder;
+    select.appendChild(option);
+    select.disabled = disabled;
+}
+
+function syncLocationCode(select, inputId) {
+    const input = document.getElementById(inputId);
+    if (!select || !input) return;
+
+    input.value = getSelectedCode(select) || "";
+}
+
+function clearHiddenValue(inputId) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.value = "";
+    }
+}
+
+function clearAllLocationCodes() {
+    clearHiddenValue("provinceCodeInput");
+    clearHiddenValue("districtCodeInput");
+    clearHiddenValue("wardCodeInput");
+}
+
+function isLocationReady() {
+    return Boolean(
+        document.getElementById("provinceCodeInput")?.value
+        && document.getElementById("districtCodeInput")?.value
+        && document.getElementById("wardCodeInput")?.value
+    );
+}
+
+function focusFirstMissingLocation() {
+    const selects = [getCitySelect(), getDistrictSelect(), getWardSelect()];
+    const firstMissingSelect = selects.find((select) => !getSelectedCode(select));
+    if (firstMissingSelect && !firstMissingSelect.disabled) {
+        firstMissingSelect.focus();
+    }
+}
+
+function getSelectedCode(select) {
+    return select?.selectedOptions?.[0]?.dataset?.code || "";
+}
+
+function ensureAddressIdInput(form) {
     let idInput = form.querySelector("input[name='id']");
     if (!idInput) {
         idInput = document.createElement("input");
@@ -172,54 +459,32 @@ function openEditModal(
         idInput.name = "id";
         form.appendChild(idInput);
     }
-    idInput.value = id;
-
-    modal.classList.add("active");
+    return idInput;
 }
 
-
-function isValidPhone(phone) {
-    const normalized = phone.replace(/\s|\.|-/g, "");
-    const regex = /^(0[3|5|7|8|9])[0-9]{8}$/;
-    return regex.test(normalized);
+function removeAddressIdInput(form) {
+    const idInput = form.querySelector("input[name='id']");
+    if (idInput) {
+        idInput.remove();
+    }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const phoneInput = document.getElementById("phoneInput");
-    const phoneError = document.getElementById("phoneError");
+function getCitySelect() {
+    return document.getElementById("citySelect");
+}
 
-    if (!phoneInput || !phoneError) return;
+function getDistrictSelect() {
+    return document.getElementById("districtSelect");
+}
 
-    phoneInput.addEventListener("input", () => {
-        const value = phoneInput.value.trim();
+function getWardSelect() {
+    return document.getElementById("wardSelect");
+}
 
-        if (value === "") {
-            hidePhoneError();
-            return;
-        }
-
-        if (!isValidPhone(value)) {
-            showPhoneError("Số điện thoại phải đúng định dạng (VD: 090xxxxxxx)");
-        } else {
-            hidePhoneError();
-        }
-    });
-
-    phoneInput.addEventListener("blur", () => {
-        if (phoneInput.value && !isValidPhone(phoneInput.value)) {
-            showPhoneError("Số điện thoại không hợp lệ");
-        }
-    });
-
-    function showPhoneError(msg) {
-        phoneError.textContent = msg;
-        phoneError.style.display = "block";
-        phoneInput.classList.add("input-error");
-    }
-
-    function hidePhoneError() {
-        phoneError.textContent = "";
-        phoneError.style.display = "none";
-        phoneInput.classList.remove("input-error");
-    }
-});
+function normalizeText(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+}

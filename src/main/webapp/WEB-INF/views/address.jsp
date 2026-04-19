@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <%
     request.setAttribute("pageCss", "views/address.css");
@@ -17,8 +18,25 @@
     <div class="address-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="${pageContext.request.contextPath}/img/avt.jpg" alt="Avatar">
-                <button class="change-avatar-btn">Đổi ảnh</button>
+                <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
+                <c:choose>
+                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
+                        <img src="${avatarPath}" alt="Avatar">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
+                    </c:otherwise>
+                </c:choose>
+                <form class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="updateAvatar">
+                    <input type="hidden" name="redirectTo" value="address">
+                    <input type="file"
+                           class="js-avatar-input"
+                           name="avatarFile"
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           hidden>
+                    <button type="button" class="change-avatar-btn js-avatar-trigger">Đổi ảnh</button>
+                </form>
             </div>
         </div>
 
@@ -63,6 +81,12 @@
             </button>
         </div>
 
+        <c:if test="${not empty addressError}">
+            <div class="address-alert address-alert-error">
+                    ${addressError}
+            </div>
+        </c:if>
+
         <!-- Danh sách địa chỉ -->
         <div class="address-list">
 
@@ -101,16 +125,17 @@
                         <button
                                 type="button"
                                 class="btn-edit"
-                                onclick="openEditModal(
-                                        '${a.id}',
-                                        '${a.name}',
-                                        '${a.phone}',
-                                        '${a.city}',
-                                        '${a.district}',
-                                        '${a.ward}',
-                                        '${a.detailAddress}',
-                                    ${a.isDefault}
-                                        )">
+                                data-address-id="${a.id}"
+                                data-name="${fn:escapeXml(a.name)}"
+                                data-phone="${fn:escapeXml(a.phone)}"
+                                data-city="${fn:escapeXml(a.city)}"
+                                data-province-code="${a.provinceCode}"
+                                data-district="${fn:escapeXml(a.district)}"
+                                data-district-code="${a.districtCode}"
+                                data-ward="${fn:escapeXml(a.ward)}"
+                                data-ward-code="${a.wardCode}"
+                                data-detail="${fn:escapeXml(a.detailAddress)}"
+                                data-default="${a.isDefault}">
                             Sửa
                         </button>
 
@@ -142,6 +167,9 @@
 
         <form class="address-form" method="post" action="address">
             <input type="hidden" name="action" value="add">
+            <input type="hidden" name="provinceCode" id="provinceCodeInput">
+            <input type="hidden" name="districtCode" id="districtCodeInput">
+            <input type="hidden" name="wardCode" id="wardCodeInput">
 
             <div class="form-row">
                 <div class="form-group">
@@ -161,9 +189,6 @@
                     <label>Tỉnh / Thành phố <span class="required">*</span></label>
                     <select name="city" id="citySelect" required>
                         <option value="">-- Chọn --</option>
-                        <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                        <option value="Hà Nội">Hà Nội</option>
-                        <option value="Bình Dương">Bình Dương</option>
                     </select>
                 </div>
 
@@ -181,6 +206,7 @@
                     </select>
                 </div>
             </div>
+            <small id="locationError" class="error-message location-error"></small>
 
             <div class="form-group">
                 <label>Địa chỉ chi tiết <span class="required">*</span></label>
@@ -206,7 +232,11 @@
     </div>
 </div>
 
+<script>
+    window.APP_CONTEXT_PATH = "${pageContext.request.contextPath}";
+</script>
 <script src="${pageContext.request.contextPath}/js/views/address.js"></script>
+<script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 <!-- ========== FOOTER ========== -->
 <%@ include file="../include/footer.jsp" %>
 

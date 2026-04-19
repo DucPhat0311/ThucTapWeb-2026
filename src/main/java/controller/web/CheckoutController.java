@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "CheckoutController", value = "/checkout")
@@ -34,23 +35,31 @@ public class CheckoutController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession(false);
-        User user = (User) session.getAttribute("userlogin");
+        String[] selectedIds = req.getParameterValues("selectedIds");
 
-        if (user == null) {
-            resp.sendRedirect("login");
-            return;
-        }
-
-        int cartId = (int) session.getAttribute("cartId");
-
-        List<CartItem> items = cartItemDao.getItemsByCartId(cartId);
-        if (items.isEmpty()) {
+        if (selectedIds == null || selectedIds.length == 0) {
             resp.sendRedirect("my-cart");
             return;
         }
 
-        req.setAttribute("checkoutItems", items);
+        HttpSession session = req.getSession();
+        Integer cartId = (Integer) session.getAttribute("cartId");
+
+        List<CartItem> allItems = cartItemDao.getItemsByCartId(cartId);
+        List<CartItem> checkoutItems = new ArrayList<>();
+
+        for (String idStr : selectedIds) {
+            int id = Integer.parseInt(idStr);
+            for (CartItem item : allItems) {
+                if (item.getVariantId() == id) {
+                    checkoutItems.add(item); // chỉ add nhứng thứu đã chọn
+                    break;
+                }
+            }
+        }
+
+        req.setAttribute("checkoutItems", checkoutItems);
+        System.out.println(checkoutItems.toString());
         req.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(req, resp);
     }
 }

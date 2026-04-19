@@ -1,8 +1,8 @@
 package controller.web;
 
-import dao.user.AddressDao;
 import model.Address;
 import model.User;
+import service.AddressService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,7 +16,7 @@ import java.util.List;
 @WebServlet("/address")
 public class AddressController extends HttpServlet {
 
-    private final AddressDao addressDao = new AddressDao();
+    private final AddressService addressService = new AddressService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -30,7 +30,8 @@ public class AddressController extends HttpServlet {
 
         User user = (User) session.getAttribute("userlogin");
 
-        List<Address> addressList = addressDao.getByUser(user.getId());
+        List<Address> addressList = addressService.getByUser(user.getId());
+        moveFlashMessageToRequest(session, req);
 
         req.setAttribute("addressList", addressList);
         req.getRequestDispatcher("/WEB-INF/views/address.jsp").forward(req, res);
@@ -40,6 +41,8 @@ public class AddressController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
+        req.setCharacterEncoding("UTF-8");
+
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("userlogin") == null) {
             res.sendRedirect("login");
@@ -48,47 +51,84 @@ public class AddressController extends HttpServlet {
 
         User user = (User) session.getAttribute("userlogin");
         String action = req.getParameter("action");
-
-        if ("add".equals(action)) {
-            Address a = new Address();
-            a.setUserId(user.getId());
-            a.setName(req.getParameter("name"));
-            a.setPhone(req.getParameter("phone"));
-            a.setCity(req.getParameter("city"));
-            a.setDistrict(req.getParameter("district"));
-            a.setWard(req.getParameter("ward"));
-            a.setDetailAddress(req.getParameter("detailAddress"));
-            a.setIsDefault(req.getParameter("isDefault") != null);
-
-            addressDao.insert(a);
+        if (action == null) {
+            res.sendRedirect("address");
+            return;
         }
 
-        else if ("update".equals(action)) {
-            Address a = new Address();
-            a.setId(Integer.parseInt(req.getParameter("id")));
-            a.setUserId(user.getId());
-            a.setName(req.getParameter("name"));
-            a.setPhone(req.getParameter("phone"));
-            a.setCity(req.getParameter("city"));
-            a.setDistrict(req.getParameter("district"));
-            a.setWard(req.getParameter("ward"));
-            a.setDetailAddress(req.getParameter("detailAddress"));
-            a.setIsDefault(req.getParameter("isDefault") != null);
-
-            addressDao.update(a);
-        }
-
-        else if ("setDefault".equals(action)) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            addressDao.setDefault(id, user.getId());
-        }
-
-        else if ("delete".equals(action)) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            addressDao.delete(id, user.getId());
+        switch (action) {
+            case "add" -> {
+                Address address = buildAddressFromRequest(req, user);
+                AddressService.SaveResult result = addressService.add(address);
+                if (!result.successful()) {
+                    redirectWithError(session, res, result.errorMessage());
+                    return;
+                }
+            }
+            case "update" -> {
+                Address address = buildAddressFromRequest(req, user);
+                address.setId(Integer.parseInt(req.getParameter("id")));
+                AddressService.SaveResult result = addressService.update(address);
+                if (!result.successful()) {
+                    redirectWithError(session, res, result.errorMessage());
+                    return;
+                }
+            }
+            case "setDefault" -> {
+                int id = Integer.parseInt(req.getParameter("id"));
+                addressService.setDefault(id, user.getId());
+            }
+            case "delete" -> {
+                int id = Integer.parseInt(req.getParameter("id"));
+                addressService.delete(id, user.getId());
+            }
+            default -> {
+            }
         }
 
         res.sendRedirect("address");
+    }
+
+    private Address buildAddressFromRequest(HttpServletRequest req, User user) {
+        Address address = new Address();
+        address.setUserId(user.getId());
+        address.setName(req.getParameter("name"));
+        address.setPhone(req.getParameter("phone"));
+        address.setCity(req.getParameter("city"));
+        address.setProvinceCode(parseNullableInt(req.getParameter("provinceCode")));
+        address.setDistrict(req.getParameter("district"));
+        address.setDistrictCode(parseNullableInt(req.getParameter("districtCode")));
+        address.setWard(req.getParameter("ward"));
+        address.setWardCode(parseNullableInt(req.getParameter("wardCode")));
+        address.setDetailAddress(req.getParameter("detailAddress"));
+        address.setIsDefault(req.getParameter("isDefault") != null);
+        return address;
+    }
+
+    private void redirectWithError(HttpSession session, HttpServletResponse res, String message)
+            throws IOException {
+        session.setAttribute("addressError", message);
+        res.sendRedirect("address");
+    }
+
+    private void moveFlashMessageToRequest(HttpSession session, HttpServletRequest req) {
+        Object addressError = session.getAttribute("addressError");
+        if (addressError != null) {
+            req.setAttribute("addressError", addressError);
+            session.removeAttribute("addressError");
+        }
+    }
+
+    private Integer parseNullableInt(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }
 

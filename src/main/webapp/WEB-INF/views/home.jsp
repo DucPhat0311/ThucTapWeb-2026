@@ -16,24 +16,39 @@
 <%@include file="../include/header.jsp"%>
 
 
-<%--<!-- ========== BANNER ========== -->--%>
-<%--<section class="banner">--%>
-<%--    <div class="slider">--%>
-<%--        <div class="img-slides">--%>
-<%--            <div class="slide">--%>
-<%--                <img src="img/Banner1.jpg" alt="AURA Banner 1">--%>
-<%--            </div>--%>
-<%--            <div class="slide">--%>
-<%--                <img src="img/Banner2.jpg" alt="AURA Banner 2">--%>
-<%--            </div>--%>
-<%--            <div class="slide">--%>
-<%--                <img src="img/Banner3.jpg" alt="AURA Banner 3">--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <button class="prev">&#10094;</button>--%>
-<%--        <button class="next">&#10095;</button>--%>
-<%--    </div>--%>
-<%--</section>--%>
+<!-- ========== BANNER ========== -->
+<section class="banner">
+
+    <div class="slider">
+        <div class="img-slides">
+            <c:choose>
+                <c:when test="${not empty banners}">
+                    <c:forEach var="b" items="${banners}">
+                        <div class="slide">
+                            <a href="${b.navigateTo}">
+                                <img src="${b.imageUrl}" alt="${b.title}">
+                            </a>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <div class="slide">
+                        <img src="${pageContext.request.contextPath}/img/Banner.jpg" alt="AURA Banner 1">
+                    </div>
+                    <div class="slide">
+                        <img src="${pageContext.request.contextPath}/img/Banner1.jpg" alt="AURA Banner 2">
+                    </div>
+                    <div class="slide">
+                        <img src="${pageContext.request.contextPath}/img/Banner2.jpg" alt="AURA Banner 3">
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+        <button class="prev">&#10094;</button>
+        <button class="next">&#10095;</button>
+    </div>
+
+</section>
 
 <!-- ========== SẢN PHẨM ========== -->
 <section class="products">
@@ -47,13 +62,22 @@
                     <img src="${p.thumbnail}" alt="${p.name}">
                     <h3>${p.name}</h3>
 
-                    <p class="price">
-                            <span class="new-price">
-                            <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
-                        </span>
-                        <span class="old-price">
-                            <fmt:formatNumber value="${p.price}" type="number"/>đ
-                        </span>
+ <p class="price">
+                        <c:choose>
+                            <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
+                                </span>
+                                <span class="old-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
 
                     <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
@@ -82,16 +106,25 @@
                             <div class="product-mini">
                                 <a href="" class="link-cover"></a>
                                 <img src="${p.thumbnail}" alt="${p.name}">
-                                <h3>${p.name}</h3>
 
-                                <p class="price">
-                                    <span class="new-price">
-                                        <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
-                                    </span>
-                                    <span class="old-price">
-                                        <fmt:formatNumber value="${p.price}" type="number"/>đ
-                                    </span>
-                                </p>
+                 <h3>${p.name}</h3>
+                    <p class="price">
+                        <c:choose>
+                            <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.sale_price}" type="number"/>đ
+                                </span>
+                                <span class="old-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.price}" type="number"/>đ
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
 
                                 <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}&quantity=1" class="btn-add">
                                     Thêm vào giỏ hàng
@@ -112,6 +145,7 @@
 
 
 <%@include file="../include/footer.jsp"%>
+<script src="${pageContext.request.contextPath}/js/views/slider.js"></script>
 
 
 </body>

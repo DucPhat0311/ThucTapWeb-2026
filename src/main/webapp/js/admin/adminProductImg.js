@@ -15,7 +15,7 @@ let currentImageId = null;
         if (currentImageId) {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = 'product-image-admin';
+            form.action = 'productImgAdmin';
 
             const actionInput = document.createElement('input');
             actionInput.type = 'hidden';
