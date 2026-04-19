@@ -28,7 +28,9 @@ public class ReviewController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
 
         User user = (User) request.getSession().getAttribute("userlogin");
@@ -39,20 +41,19 @@ public class ReviewController extends HttpServlet {
         }
 
         int productId = Integer.parseInt(request.getParameter("product_id"));
+        int orderItemId = Integer.parseInt(request.getParameter("order_item_id"));
         int rating = Integer.parseInt(request.getParameter("rating"));
         String comment = request.getParameter("comment");
 
-        int userId = user.getId();
-
         Review review = new Review();
         review.setProductId(productId);
-        review.setUserId(userId);
+        review.setUserId(user.getId());
         review.setRating(rating);
         review.setComment(comment);
 
         reviewService.addOrUpdateReview(review);
 
-
+        reviewService.markOrderItemReviewed(orderItemId);
         response.sendRedirect("detail-product?id=" + productId);
     }
 }
