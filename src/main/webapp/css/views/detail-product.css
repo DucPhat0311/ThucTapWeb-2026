@@ -291,40 +291,52 @@ html, body {
 }
 
 /* Danh sách dánh giá */
+/* CSS cho danh sách đánh giá */
 .review-list {
-    border-top: 1px solid #eaeaea;
-    padding-top: 25px;
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
-.review-list h3 {
-    color: #111;
-    font-size: 18px;
-    margin-bottom: 20px;
-    font-weight: 600;
-    text-transform: uppercase;
+.review-empty-text {
+    color: #888;
+    font-style: italic;
 }
 
 .review-item {
-    background-color: #fdfdfd;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #f0f0f0;
-    margin-bottom: 15px;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #555;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
 }
 
-.review-item strong {
-    font-size: 16px;
-    color: #222;
-    display: block;
-    margin-bottom: 5px;
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
 }
+
+.review-user-name {
+    font-size: 16px;
+}
+
+.review-stars i {
+    color: #FFD43B;
+    font-size: 12px;
+}
+
+.review-content p {
+    padding: 0 20px;
+    margin: 0;
+    color: #333;
+    line-height: 1.5;
+}
+
+.review-date {
+    padding: 0 20px;
+    color: #999;
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85em;
+}
+
 /* ========== GợI Ý SảN PHẩM ========== */
 .suggested-products {
     padding: 60px 80px;

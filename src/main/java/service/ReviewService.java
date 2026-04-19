@@ -1,5 +1,6 @@
 package service;
 
+import dao.user.OrderItemDao;
 import dao.user.ReviewDao;
 import model.Review;
 
@@ -8,6 +9,7 @@ import java.util.List;
 public class ReviewService {
 
     private ReviewDao reviewDao = new ReviewDao();
+    private OrderItemDao orderItemDao = new OrderItemDao();
 
     public void addOrUpdateReview(Review review) {
         Review exist = reviewDao.findByProductAndUser(
@@ -20,6 +22,10 @@ public class ReviewService {
         } else {
             reviewDao.update(review);
         }
+    }
+
+    public void markOrderItemReviewed(int orderItemId) {
+        orderItemDao.markReviewed(orderItemId);
     }
 
 
