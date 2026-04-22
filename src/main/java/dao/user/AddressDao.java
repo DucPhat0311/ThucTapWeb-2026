@@ -61,6 +61,35 @@ public class AddressDao extends BaseDao {
         );
     }
 
+    public Address findDefaultByUser(int userId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                    SELECT
+                        id,
+                        user_id        AS userId,
+                        name,
+                        phone,
+                        city,
+                        province_code AS provinceCode,
+                        district,
+                        district_code AS districtCode,
+                        ward,
+                        ward_code     AS wardCode,
+                        detailAddress,
+                        is_default     AS isDefault
+                    FROM addresses
+                    WHERE user_id = :uid
+                      AND is_default = 1
+                    ORDER BY id DESC
+                    LIMIT 1
+                """)
+                        .bind("uid", userId)
+                        .mapToBean(Address.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
     public void insert(Address a) {
         getJdbi().useTransaction(h -> {
 
