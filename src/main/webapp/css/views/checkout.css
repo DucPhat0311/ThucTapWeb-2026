@@ -26,6 +26,20 @@
     margin-bottom: 16px;
 }
 
+.checkout-alert {
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.checkout-alert-error {
+    color: #8A2D2D;
+    background: #FFF3F0;
+    border: 1px solid #F0B8AE;
+}
+
 .selected-address {
     margin-bottom: 16px;
     border: 1px solid #eadfce;
@@ -46,6 +60,45 @@
 .selected-address-header h3 {
     margin: 0;
     font-size: 16px;
+}
+
+.checkout-address-empty {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding: 22px;
+    border: 1px dashed #cdb18f;
+    border-radius: 10px;
+    background: #fcfaf7;
+}
+
+.checkout-address-empty h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: #2b2b2b;
+}
+
+.checkout-address-empty p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+.btn-address-primary {
+    flex-shrink: 0;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 999px;
+    background: #6F4E37;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-address-primary:hover {
+    background: #4A3C31;
 }
 
 .selected-address-header a {
@@ -188,6 +241,18 @@
     opacity: 0.9;
 }
 
+.btn-checkout:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.checkout-note {
+    margin: 12px 0 0;
+    color: #8A2D2D;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
 @media (max-width: 991px) {
     .checkout-container > form {
         grid-template-columns: 1fr;
@@ -202,6 +267,10 @@
     .checkout-left,
     .checkout-right {
         padding: 20px;
+    }
+
+    .checkout-address-empty {
+        flex-direction: column;
     }
 
     .selected-address-header,

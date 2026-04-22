@@ -9,6 +9,7 @@
 
 <%@include file="../include/header.jsp"%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/checkout.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/address-form.css">
 
 <section class="checkout">
     <div class="checkout-container">
@@ -16,41 +17,40 @@
             <div class="checkout-left">
                 <h2>Thông tin giao hàng</h2>
 
+                <c:if test="${not empty addressError}">
+                    <div class="checkout-alert checkout-alert-error">
+                        ${addressError}
+                    </div>
+                </c:if>
+
                 <c:choose>
-                    <c:when test="${not empty defaultAddress}">
+                    <c:when test="${not empty selectedAddress}">
                         <div class="selected-address">
                             <div class="selected-address-header">
-                                <h3>Địa chỉ nhận hàng</h3>
-                                <a href="${pageContext.request.contextPath}/address">Thay đổi</a>
+                                <h3>Địa chỉ giao hàng</h3>
+                                <a href="${pageContext.request.contextPath}/address">Quản lý địa chỉ</a>
                             </div>
                             <div class="selected-address-body">
                                 <p class="receiver-line">
-                                    <strong>${defaultAddress.name}</strong>
-                                    <span>${defaultAddress.phone}</span>
+                                    <strong>${selectedAddress.name}</strong>
+                                    <span>${selectedAddress.phone}</span>
                                 </p>
-                                <p>${defaultAddress.detailAddress}, ${defaultAddress.ward}, ${defaultAddress.district}, ${defaultAddress.city}</p>
-                                <span class="default-badge">Mặc định</span>
+                                <p>${selectedAddress.detailAddress}, ${selectedAddress.ward}, ${selectedAddress.district}, ${selectedAddress.city}</p>
+                                <c:if test="${selectedAddress.isDefault}">
+                                    <span class="default-badge">Mặc định</span>
+                                </c:if>
                             </div>
                         </div>
-
-                        <input type="hidden" name="name" value="${defaultAddress.name}">
-                        <input type="hidden" name="phone" value="${defaultAddress.phone}">
-                        <input type="hidden" name="address" value="${defaultAddress.detailAddress}, ${defaultAddress.ward}, ${defaultAddress.district}, ${defaultAddress.city}">
                     </c:when>
                     <c:otherwise>
-                        <div class="form-group">
-                            <label>Họ và tên</label>
-                            <input type="text" name="name" placeholder="Tên người nhận" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Số điện thoại</label>
-                            <input type="text" name="phone" placeholder="Nhập số điện thoại" pattern="[0-9]{9,11}" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Địa chỉ nhận hàng</label>
-                            <input type="text" name="address" placeholder="Số nhà, đường, phường/xã, quận/huyện" required>
+                        <div class="checkout-address-empty">
+                            <div>
+                                <h3>Chưa có địa chỉ giao hàng</h3>
+                                <p>Thêm địa chỉ ngay tại đây để dùng luôn cho đơn hàng. Địa chỉ mới sẽ được lưu vào sổ địa chỉ của bạn.</p>
+                            </div>
+                            <button type="button" class="btn-address-primary" id="btnOpenModal">
+                                Thêm địa chỉ mới
+                            </button>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -124,12 +124,27 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-checkout">
+                <button type="submit" class="btn-checkout" ${empty selectedAddress ? 'disabled' : ''}>
                     XÁC NHẬN THANH TOÁN
                 </button>
+                <c:if test="${empty selectedAddress}">
+                    <p class="checkout-note">Bạn cần thêm địa chỉ giao hàng trước khi xác nhận thanh toán.</p>
+                </c:if>
             </div>
         </form>
     </div>
 </section>
+
+<jsp:include page="address-modal.jsp">
+    <jsp:param name="formAction" value="address" />
+    <jsp:param name="redirectTo" value="checkout" />
+    <jsp:param name="forceDefault" value="true" />
+    <jsp:param name="hideDefaultOption" value="true" />
+</jsp:include>
+
+<script>
+    window.APP_CONTEXT_PATH = "${pageContext.request.contextPath}";
+</script>
+<script src="${pageContext.request.contextPath}/js/views/address.js"></script>
 
 <%@include file="../include/footer.jsp"%>

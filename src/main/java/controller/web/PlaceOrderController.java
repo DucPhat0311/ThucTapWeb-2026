@@ -4,8 +4,7 @@ import dao.user.CartItemDao;
 import dao.user.OrderDao;
 import dao.user.OrderItemDao;
 import dao.user.ProductVariantDao;
-import model.CartItem;
-import model.ProductVariant;
+import model.Address;
 import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,9 +12,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import service.AddressService;
 
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(name = "PlaceOrderController", value = "/place-order")
 public class PlaceOrderController extends HttpServlet {
@@ -24,6 +23,7 @@ public class PlaceOrderController extends HttpServlet {
     private OrderItemDao orderItemDao;
     private CartItemDao cartItemDao;
     private ProductVariantDao variantDao;
+    private AddressService addressService;
 
     @Override
     public void init() {
@@ -31,6 +31,7 @@ public class PlaceOrderController extends HttpServlet {
         orderItemDao = new OrderItemDao();
         cartItemDao = new CartItemDao();
         variantDao = new ProductVariantDao();
+        addressService = new AddressService();
     }
 
     @Override
@@ -64,16 +65,18 @@ public class PlaceOrderController extends HttpServlet {
             return;
         }
 
-        String name = trimToEmpty(request.getParameter("name"));
-        String phone = trimToEmpty(request.getParameter("phone"));
-        String address = trimToEmpty(request.getParameter("address"));
         String note = trimToEmpty(request.getParameter("note"));
         String paymentMethod = trimToEmpty(request.getParameter("paymentMethod"));
-
-        if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
-            response.sendRedirect("my-cart");
+        Address shippingAddress = addressService.getPrimaryByUser(user.getId());
+        if (shippingAddress == null) {
+            session.setAttribute("addressError", "Vui lòng thêm địa chỉ giao hàng trước khi đặt đơn.");
+            response.sendRedirect("checkout");
             return;
         }
+
+        String name = trimToEmpty(shippingAddress.getName());
+        String phone = trimToEmpty(shippingAddress.getPhone());
+        String address = trimToEmpty(formatAddress(shippingAddress));
 
         double totalPrice = 0;
         for (int i = 0; i < variantIds.length; i++) {
@@ -125,6 +128,14 @@ public class PlaceOrderController extends HttpServlet {
 
     private String trimToEmpty(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private String formatAddress(Address address) {
+        return String.join(", ",
+                trimToEmpty(address.getDetailAddress()),
+                trimToEmpty(address.getWard()),
+                trimToEmpty(address.getDistrict()),
+                trimToEmpty(address.getCity()));
     }
 }
 

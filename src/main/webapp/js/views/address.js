@@ -179,7 +179,7 @@ async function loadWards(districtCode, selectedName = "", selectedCode = "") {
 async function fetchLocations(url) {
     const response = await fetch(url, {
         headers: {
-            "Accept": "application/json"
+            Accept: "application/json"
         }
     });
 
@@ -282,7 +282,12 @@ async function openEditModal(
     form.querySelector("input[name='name']").value = name;
     form.querySelector("input[name='phone']").value = phone;
     form.querySelector("textarea[name='detailAddress']").value = detail;
-    form.querySelector("input[name='isDefault']").checked = Boolean(isDefault);
+
+    const defaultCheckbox = form.querySelector("input[name='isDefault']");
+    if (defaultCheckbox) {
+        defaultCheckbox.checked = Boolean(isDefault);
+    }
+
     ensureAddressIdInput(form).value = id;
 
     modal.classList.add("active");
