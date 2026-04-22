@@ -1,4 +1,4 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 .checkout {
     background: #f6f6f6;
     padding: 40px 0;
@@ -9,14 +9,12 @@
     margin: auto;
 }
 
-/* FORM CHÃNH LÃ€ GRID */
 .checkout-container > form {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 30px;
 }
 
-/* ===== LEFT ===== */
 .checkout-left {
     background: #fff;
     padding: 30px;
@@ -26,6 +24,74 @@
 .checkout-left h2 {
     font-size: 20px;
     margin-bottom: 16px;
+}
+
+.selected-address {
+    margin-bottom: 16px;
+    border: 1px solid #eadfce;
+    border-radius: 10px;
+    background: #fcfaf7;
+    overflow: hidden;
+}
+
+.selected-address-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #eee2d2;
+}
+
+.selected-address-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.selected-address-header a {
+    color: #a67c52;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.selected-address-body {
+    position: relative;
+    padding: 18px;
+}
+
+.receiver-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 10px;
+}
+
+.receiver-line strong {
+    font-size: 16px;
+}
+
+.receiver-line span {
+    color: #666;
+}
+
+.selected-address-body p:last-of-type {
+    margin: 0;
+    color: #444;
+    line-height: 1.6;
+    padding-right: 96px;
+}
+
+.default-badge {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    border: 1px solid #c8a47b;
+    color: #a67c52;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .form-group {
@@ -52,7 +118,6 @@
     font-size: 14px;
 }
 
-/* ===== RIGHT ===== */
 .checkout-right {
     background: #fff;
     padding: 24px;
@@ -123,6 +188,35 @@
     opacity: 0.9;
 }
 
+@media (max-width: 991px) {
+    .checkout-container > form {
+        grid-template-columns: 1fr;
+    }
 
+    .checkout-right {
+        position: static;
+    }
+}
 
+@media (max-width: 576px) {
+    .checkout-left,
+    .checkout-right {
+        padding: 20px;
+    }
 
+    .selected-address-header,
+    .receiver-line {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .selected-address-body p:last-of-type {
+        padding-right: 0;
+    }
+
+    .default-badge {
+        position: static;
+        display: inline-block;
+        margin-top: 12px;
+    }
+}

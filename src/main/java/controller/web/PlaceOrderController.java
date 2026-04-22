@@ -40,6 +40,8 @@ public class PlaceOrderController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userlogin") == null) {
             response.sendRedirect("login");
@@ -62,11 +64,16 @@ public class PlaceOrderController extends HttpServlet {
             return;
         }
 
-        String name = request.getParameter("name");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-        String note = request.getParameter("note");
-        String paymentMethod = request.getParameter("paymentMethod");
+        String name = trimToEmpty(request.getParameter("name"));
+        String phone = trimToEmpty(request.getParameter("phone"));
+        String address = trimToEmpty(request.getParameter("address"));
+        String note = trimToEmpty(request.getParameter("note"));
+        String paymentMethod = trimToEmpty(request.getParameter("paymentMethod"));
+
+        if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+            response.sendRedirect("my-cart");
+            return;
+        }
 
         double totalPrice = 0;
         for (int i = 0; i < variantIds.length; i++) {
@@ -114,6 +121,10 @@ public class PlaceOrderController extends HttpServlet {
         session.setAttribute("lastOrderId", orderId);
 
         response.sendRedirect("order-success");
+    }
+
+    private String trimToEmpty(String value) {
+        return value == null ? "" : value.trim();
     }
 }
 

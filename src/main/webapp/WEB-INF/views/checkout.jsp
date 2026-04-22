@@ -13,24 +13,47 @@
 <section class="checkout">
     <div class="checkout-container">
         <form action="place-order" method="post">
-            <!-- ===== LEFT ===== -->
             <div class="checkout-left">
                 <h2>Thông tin giao hàng</h2>
 
-                <div class="form-group">
-                    <label>Họ và tên</label>
-                    <input type="text" name="name" placeholder="Tên người nhận" required>
-                </div>
+                <c:choose>
+                    <c:when test="${not empty defaultAddress}">
+                        <div class="selected-address">
+                            <div class="selected-address-header">
+                                <h3>Địa chỉ nhận hàng</h3>
+                                <a href="${pageContext.request.contextPath}/address">Thay đổi</a>
+                            </div>
+                            <div class="selected-address-body">
+                                <p class="receiver-line">
+                                    <strong>${defaultAddress.name}</strong>
+                                    <span>${defaultAddress.phone}</span>
+                                </p>
+                                <p>${defaultAddress.detailAddress}, ${defaultAddress.ward}, ${defaultAddress.district}, ${defaultAddress.city}</p>
+                                <span class="default-badge">Mặc định</span>
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label>Số điện thoại</label>
-                    <input type="text" name="phone" placeholder="Nhập số điện thoại" pattern="[0-9]{9,11}" required>
-                </div>
+                        <input type="hidden" name="name" value="${defaultAddress.name}">
+                        <input type="hidden" name="phone" value="${defaultAddress.phone}">
+                        <input type="hidden" name="address" value="${defaultAddress.detailAddress}, ${defaultAddress.ward}, ${defaultAddress.district}, ${defaultAddress.city}">
+                    </c:when>
+                    <c:otherwise>
+                        <div class="form-group">
+                            <label>Họ và tên</label>
+                            <input type="text" name="name" placeholder="Tên người nhận" required>
+                        </div>
 
-                <div class="form-group">
-                    <label>Địa chỉ nhận hàng</label>
-                    <input type="text" name="address" placeholder="Số nhà, đường, phường/xã, quận/huyện" required>
-                </div>
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input type="text" name="phone" placeholder="Nhập số điện thoại" pattern="[0-9]{9,11}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Địa chỉ nhận hàng</label>
+                            <input type="text" name="address" placeholder="Số nhà, đường, phường/xã, quận/huyện" required>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
 
                 <div class="form-group">
                     <label>Ghi chú</label>
@@ -57,7 +80,6 @@
                 </div>
             </div>
 
-            <!-- ===== RIGHT ===== -->
             <div class="checkout-right">
                 <h3>Đơn hàng của bạn</h3>
                 <input type="hidden" name="cartId" value="${sessionScope.cartId}">
@@ -66,7 +88,6 @@
                     <input type="hidden" name="quantities" value="${item.quantity}">
                 </c:forEach>
 
-
                 <div class="order-items">
                     <c:set var="total" value="0"/>
                     <c:forEach var="item" items="${checkoutItems}">
@@ -74,8 +95,7 @@
                             <img src="${item.product.thumbnail}">
                             <div class="info">
                                 <p class="name">${item.product.name}</p>
-                                <p class="variant">Size ${item.size} · ${item.color}
-                                </p>
+                                <p class="variant">Size ${item.size} · ${item.color}</p>
                                 <p class="qty">SL: ${item.quantity}</p>
                             </div>
                             <div class="price">
@@ -90,9 +110,7 @@
                 <div class="order-summary">
                     <div>
                         <span>Tạm tính</span>
-                        <span>
-                        <fmt:formatNumber value="${total}" type="number"/>₫
-                    </span>
+                        <span><fmt:formatNumber value="${total}" type="number"/>₫</span>
                     </div>
 
                     <div>
@@ -102,16 +120,13 @@
 
                     <div class="total">
                         <span>Tổng cộng</span>
-                        <span>
-                        <fmt:formatNumber value="${total}" type="number"/>₫
-                    </span>
+                        <span><fmt:formatNumber value="${total}" type="number"/>₫</span>
                     </div>
                 </div>
 
                 <button type="submit" class="btn-checkout">
                     XÁC NHẬN THANH TOÁN
                 </button>
-
             </div>
         </form>
     </div>

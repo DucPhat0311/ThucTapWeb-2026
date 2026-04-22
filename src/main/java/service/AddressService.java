@@ -29,6 +29,10 @@ public class AddressService {
         return addressDao.getByUser(userId);
     }
 
+    public Address getDefaultByUser(int userId) {
+        return addressDao.findDefaultByUser(userId);
+    }
+
     public SaveResult add(Address address) {
         SaveResult validationResult = validateLocation(address);
         if (!validationResult.successful()) {
