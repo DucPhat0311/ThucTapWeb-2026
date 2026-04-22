@@ -5,7 +5,7 @@
 
 <%
     request.setAttribute("pageCss", "views/address.css");
-    request.setAttribute("pageTitle" , "Địa chỉ của tôi");
+    request.setAttribute("pageTitle", "Địa chỉ của tôi");
 %>
 
 <%@ include file="../include/header.jsp" %>
@@ -239,5 +239,3 @@
 <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 <!-- ========== FOOTER ========== -->
 <%@ include file="../include/footer.jsp" %>
-
-
