@@ -11,10 +11,7 @@
 <%@ include file="../include/header.jsp" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/address.css">
 
-<!-- ========== NỘI DUNG CHÍNH ========== -->
 <div class="address-container">
-
-    <!-- ========== SIDEBAR ========== -->
     <div class="address-sidebar">
         <div class="user-info">
             <div class="avatar">
@@ -71,9 +68,7 @@
         </nav>
     </div>
 
-    <!-- ========== ADDRESS CONTENT ========== -->
     <div class="address-content">
-
         <div class="address-header">
             <h2>Địa chỉ của tôi</h2>
             <button class="btn-add-address" id="btnOpenModal">
@@ -83,20 +78,17 @@
 
         <c:if test="${not empty addressError}">
             <div class="address-alert address-alert-error">
-                    ${addressError}
+                ${addressError}
             </div>
         </c:if>
 
-        <!-- Danh sách địa chỉ -->
         <div class="address-list">
-
             <c:if test="${empty addressList}">
                 <p>Bạn chưa có địa chỉ nào.</p>
             </c:if>
 
             <c:forEach var="a" items="${addressList}">
                 <div class="address-card">
-
                     <div class="address-header">
                         <strong>${a.name}</strong>
                         <span>${a.phone}</span>
@@ -107,11 +99,10 @@
                     </div>
 
                     <div class="address-body">
-                            ${a.detailAddress}, ${a.ward}, ${a.district}, ${a.city}
+                        ${a.detailAddress}, ${a.ward}, ${a.district}, ${a.city}
                     </div>
 
                     <div class="address-actions">
-
                         <c:if test="${!a.isDefault}">
                             <form method="post" action="address" style="display:inline">
                                 <input type="hidden" name="action" value="setDefault">
@@ -146,96 +137,20 @@
                                 Xóa
                             </button>
                         </form>
-
                     </div>
-
-
                 </div>
             </c:forEach>
-
         </div>
     </div>
 </div>
 
-<div class="modal-overlay" id="addressModal">
-    <div class="modal-content">
-
-        <div class="modal-header">
-            <h3>Thêm địa chỉ mới</h3>
-            <span class="modal-close" id="btnCloseModal">&times;</span>
-        </div>
-
-        <form class="address-form" method="post" action="address">
-            <input type="hidden" name="action" value="add">
-            <input type="hidden" name="provinceCode" id="provinceCodeInput">
-            <input type="hidden" name="districtCode" id="districtCodeInput">
-            <input type="hidden" name="wardCode" id="wardCodeInput">
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Họ và tên người nhận <span class="required">*</span></label>
-                    <input type="text" name="name" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Số điện thoại <span class="required">*</span></label>
-                    <input type="tel" name="phone" id="phoneInput" required>
-                    <small id="phoneError" class="error-message"></small>
-                </div>
-            </div>
-
-            <div class="form-row three-cols">
-                <div class="form-group">
-                    <label>Tỉnh / Thành phố <span class="required">*</span></label>
-                    <select name="city" id="citySelect" required>
-                        <option value="">-- Chọn --</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Quận / Huyện <span class="required">*</span></label>
-                    <select name="district" id="districtSelect" required disabled>
-                        <option value="">-- Chọn --</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Phường / Xã <span class="required">*</span></label>
-                    <select name="ward" id="wardSelect" required disabled>
-                        <option value="">-- Chọn --</option>
-                    </select>
-                </div>
-            </div>
-            <small id="locationError" class="error-message location-error"></small>
-
-            <div class="form-group">
-                <label>Địa chỉ chi tiết <span class="required">*</span></label>
-                <textarea name="detailAddress" rows="2" placeholder="Số nhà, tên đường..." required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" name="isDefault">
-                    Đặt làm địa chỉ mặc định
-                </label>
-            </div>
-
-            <div class="form-actions">
-                <button type="button" class="btn-cancel" id="btnCancelModal">
-                    Hủy
-                </button>
-                <button type="submit" class="btn-save">
-                    Lưu địa chỉ
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+<jsp:include page="address-modal.jsp">
+    <jsp:param name="formAction" value="address" />
+</jsp:include>
 
 <script>
     window.APP_CONTEXT_PATH = "${pageContext.request.contextPath}";
 </script>
 <script src="${pageContext.request.contextPath}/js/views/address.js"></script>
 <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
-<!-- ========== FOOTER ========== -->
 <%@ include file="../include/footer.jsp" %>

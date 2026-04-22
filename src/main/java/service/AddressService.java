@@ -33,6 +33,10 @@ public class AddressService {
         return addressDao.findDefaultByUser(userId);
     }
 
+    public Address getPrimaryByUser(int userId) {
+        return addressDao.findPrimaryByUser(userId);
+    }
+
     public SaveResult add(Address address) {
         SaveResult validationResult = validateLocation(address);
         if (!validationResult.successful()) {
