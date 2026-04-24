@@ -32,20 +32,8 @@
             </div>
         </div>
 
- <main id="page">
-            <section class="page active">
-
-            <c:if test="${param.error == 'true'}">
-                <div class="alert alert-danger">
-                    Có lỗi xảy ra khi xử lý yêu cầu!
-                </div>
-            </c:if>
-            <c:if test="${param.error == 'no_image'}">
-                <div class="alert alert-danger">
-                    Vui lòng chọn ảnh để tải lên!
-                </div>
-            </c:if>
-
+<main id="page">
+    <section class="page active">
 
             <div class="cards">
                 <div class="card">Tổng Ảnh<span>${totalImages}</span></div>
