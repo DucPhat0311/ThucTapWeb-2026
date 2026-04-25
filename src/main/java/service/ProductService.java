@@ -87,4 +87,10 @@ public class ProductService {
         return productDao.findByCategories(categoryIds);
     }
 
+    public List<Product> handleFilterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice) {
+        return productDao.filterProducts(groupId,categoryId,sortType, minPrice, maxPrice);
+    }
+
+
+
 }
