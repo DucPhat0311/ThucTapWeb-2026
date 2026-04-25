@@ -193,7 +193,7 @@ public class ProductDao extends BaseDao {
         );
     }
 
-    public List<Product> filterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice) {
+    public List<Product> filterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice, int limit, int offset) {
         StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE status = 'Đang bán'");
 
         if (categoryId != null && !categoryId.isEmpty()) {
@@ -233,12 +233,49 @@ public class ProductDao extends BaseDao {
         };
         sql.append(" ORDER BY ").append(orderBy);
 
+        sql.append(" LIMIT ").append(limit).append(" OFFSET ").append(offset);
+
         return getJdbi().withHandle(handle -> {
             var query = handle.createQuery(sql.toString());
             if (categoryId != null && !categoryId.isEmpty()) query.bind("cid", Integer.parseInt(categoryId));
             if (minPrice != null && !minPrice.isEmpty()) query.bind("minP", Double.parseDouble(minPrice));
             if (maxPrice != null && !maxPrice.isEmpty()) query.bind("maxP", Double.parseDouble(maxPrice));
             return query.mapToBean(Product.class).list();
+        });
+    }
+
+    public int countProducts(String groupId, String categoryId, String minPrice, String maxPrice) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE status = 'Đang bán'");
+
+        if (categoryId != null && !categoryId.isEmpty()) {
+            sql.append(" AND (category_id = :cid OR category_id IN (SELECT id FROM categories WHERE parent_id = :cid))");
+        } else if (groupId != null && !groupId.isEmpty()) {
+            int parentId = switch (groupId) {
+                case "phukien" -> 11;
+                case "thoiTrangNam" -> 12;
+                case "thoiTrangNu" -> 13;
+                default -> 0;
+            };
+            if (parentId != 0) {
+                sql.append(" AND (category_id = ").append(parentId)
+                        .append(" OR category_id IN (SELECT id FROM categories WHERE parent_id = ").append(parentId).append("))");
+            }
+        }
+
+        String truePrice = "COALESCE(NULLIF(sale_price, 0), price)";
+        if (minPrice != null && !minPrice.isEmpty()) {
+            sql.append(" AND ").append(truePrice).append(" >= :minP");
+        }
+        if (maxPrice != null && !maxPrice.isEmpty()) {
+            sql.append(" AND ").append(truePrice).append(" <= :maxP");
+        }
+
+        return getJdbi().withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+            if (categoryId != null && !categoryId.isEmpty()) query.bind("cid", Integer.parseInt(categoryId));
+            if (minPrice != null && !minPrice.isEmpty()) query.bind("minP", Double.parseDouble(minPrice));
+            if (maxPrice != null && !maxPrice.isEmpty()) query.bind("maxP", Double.parseDouble(maxPrice));
+            return query.mapTo(Integer.class).one();
         });
     }
 

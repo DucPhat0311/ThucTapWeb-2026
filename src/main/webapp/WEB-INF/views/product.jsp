@@ -121,6 +121,39 @@
                     </c:otherwise>
                 </c:choose>
             </div>
+
+            <div class="pagination">
+                <c:if test="${currentPage > 1}">
+                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage - 1}">&laquo;</a>
+                </c:if>
+
+                <c:if test="${currentPage > 3}">
+                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=1">1</a>
+                    <c:if test="${currentPage > 4}">
+                        <span class="paging-sep">...</span>
+                    </c:if>
+                </c:if>
+
+                <c:set var="begin" value="${currentPage - 2 > 1 ? currentPage - 2 : 1}" />
+                <c:set var="end" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}" />
+
+                <c:forEach var="i" begin="${begin}" end="${end}">
+                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${i}"
+                       class="${currentPage == i ? 'active' : ''}">${i}</a>
+                </c:forEach>
+
+                <c:if test="${currentPage < totalPages - 2}">
+                    <c:if test="${currentPage < totalPages - 3}">
+                        <span class="paging-sep">...</span>
+                    </c:if>
+                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${totalPages}">${totalPages}</a>
+                </c:if>
+
+                <c:if test="${currentPage < totalPages}">
+                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage + 1}">&raquo;</a>
+                </c:if>
+            </div>
+
         </div>
     </div>
 </section>

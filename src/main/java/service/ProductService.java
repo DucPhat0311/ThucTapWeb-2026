@@ -87,8 +87,12 @@ public class ProductService {
         return productDao.findByCategories(categoryIds);
     }
 
-    public List<Product> handleFilterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice) {
-        return productDao.filterProducts(groupId,categoryId,sortType, minPrice, maxPrice);
+    public List<Product> handleFilterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice,int pageSize, int offset) {
+        return productDao.filterProducts(groupId,categoryId,sortType, minPrice, maxPrice,pageSize,offset);
+    }
+
+    public int handleCountProducts(String groupId, String categoryId, String minPrice, String maxPrice){
+        return productDao.countProducts(groupId,categoryId, minPrice, maxPrice);
     }
 
 
