@@ -1,152 +1,165 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <%
     request.setAttribute("pageCss", "views/product.css");
-    request.setAttribute("pageTitle" , "Trang chủ");
+    request.setAttribute("pageTitle" , "Sản phẩm");
 %>
 
 <%@include file="../include/header.jsp"%>
 
-
 <section class="products">
-    <h2>SẢN PHẨM</h2>
+    <div class="shop-header">
+        <h2></h2>
+
+        <div class="sort-dropdown">
+            <span>Sắp xếp theo:</span>
+            <select onchange="window.location.href=this.value;" class="sort-select">
+                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=new" ${param.sortType == 'new' || empty param.sortType ? 'selected' : ''}>Mới nhất</option>
+                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=oldest" ${param.sortType == 'oldest' ? 'selected' : ''}>Cũ nhất</option>
+                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=price_up" ${param.sortType == 'price_up' ? 'selected' : ''}>Giá thấp → cao</option>
+                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=price_down" ${param.sortType == 'price_down' ? 'selected' : ''}>Giá cao → thấp</option>
+                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=name_az" ${param.sortType == 'name_az' ? 'selected' : ''}>Tên A-Z</option>
+                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=name_za" ${param.sortType == 'name_za' ? 'selected' : ''}>Tên Z-A</option>
+                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=best_seller" ${param.sortType == 'best_seller' ? 'selected' : ''}>Bán chạy nhất</option>
+            </select>
+        </div>
+    </div>
 
     <div class="shop-container">
         <aside class="sidebar">
-            <div class="filter-bar">
+            <div class="filter-section">
+                <h3>Khoảng Giá</h3>
+                <div class="price-input">
+                    <input type="number" id="min-price"
+                           value="${not empty param.minPrice ? param.minPrice : 0}">
+                    <span>-</span>
+                    <input type="number" id="max-price"
+                           value="${not empty param.maxPrice ? param.maxPrice : 2000000}">
+                </div>
 
-                <div class="filter-section">
-                    <h3>Sắp xếp theo</h3>
-                    <div class="filter-buttons">
-                        <a href="product?group=${param.group}&category=${param.category}&sort=new">
-                            <button class="${param.sort eq 'new' || empty param.sort ? 'active' : ''}">
-                                Mới nhất
+                <div class="range-slider">
+                    <input type="range" id="range-min" min="0" max="5000000" step="50000"
+                           value="${not empty param.minPrice ? param.minPrice : 0}">
+                </div>
+
+                <button type="button" class="btn-apply" onclick="applyPriceFilter()">Lọc Kết Quả</button>
+                <small class="price-unit">* Đơn vị: VNĐ</small>
+
+                <h3>Danh mục</h3>
+                <div class="filter-buttons">
+                    <a href="product?sortType=${param.sortType}">
+                        <button class="${empty param.categoryId ? 'active' : ''}" style="width: 100%;">Tất cả sản phẩm</button>
+                    </a>
+
+                    <c:forEach var="cat" items="${categoryList}">
+                        <div class="dropdown ${param.categoryId == cat.id ? 'open' : ''}">
+                            <button class="dropbtn ${param.categoryId == cat.id ? 'active' : ''}" onclick="this.parentElement.classList.toggle('open')" style="width: 100%;">
+                                <span>${cat.name}</span> <i class="fa-solid fa-caret-down"></i>
                             </button>
-                        </a>
-
-                        <a href="product?group=${param.group}&category=${param.category}&sort=best">
-                            <button class="${param.sort eq 'best' ? 'active' : ''}">
-                                Bán chạy
-                            </button>
-                        </a>
-
-                        <a href="product?group=${param.group}&category=${param.category}&sort=sale">
-                            <button class="${param.sort eq 'sale' ? 'active' : ''}">
-                                Khuyến mãi
-                            </button>
-                        </a>
-
-                        <!-- Dropdown: GIÁ -->
-                        <div class="dropdown">
-                            <button class="dropbtn
-                        ${param.sort eq 'price_asc' || param.sort eq 'price_desc' ? 'active' : ''}">
-                                Giá <i class="fa-solid fa-caret-down"></i>
-                            </button>
-
                             <div class="dropdown-content">
-                                <a class="${param.sort eq 'price_asc' ? 'active' : ''}"
-                                   href="product?group=${param.group}&category=${param.category}&sort=price_asc">
-                                    Giá thấp đến cao
+                                <a href="product?categoryId=${cat.id}&sortType=${param.sortType}"
+                                   class="${param.categoryId == cat.id ? 'active' : ''}">
+                                    Tất cả
                                 </a>
-
-                                <a class="${param.sort eq 'price_desc' ? 'active' : ''}"
-                                   href="product?group=${param.group}&category=${param.category}&sort=price_desc">
-                                    Giá cao đến thấp
-                                </a>
+                                <c:forEach var="sub" items="${cat.subCategories}">
+                                    <a href="product?categoryId=${sub.id}&sortType=${param.sortType}"
+                                       class="${param.categoryId == sub.id ? 'active' : ''}">
+                                            ${sub.name}
+                                    </a>
+                                </c:forEach>
                             </div>
                         </div>
-                    </div>
+                    </c:forEach>
                 </div>
-
-
-                <div class="filter-section">
-                    <h3>Danh mục</h3>
-                    <div class="filter-buttons">
-
-                        <a href="product?sort=${param.sort}">
-                            <button class="${empty param.category ? 'active' : ''}">
-                                Tất cả
-                            </button>
-                        </a>
-
-                        <c:forEach var="parent" items="${categories}">
-                            <div class="dropdown">
-                                <button class="dropbtn ${param.category == parent.id ? 'active' : ''}">
-                                        ${parent.name} <i class="fa-solid fa-caret-down"></i>
-                                </button>
-                                <div class="dropdown-content">
-                                    <a class="${param.category == parent.id ? 'active' : ''}"
-                                       href="product?category=${parent.id}&sort=${param.sort}">
-                                        Tất cả
-                                    </a>
-
-                                    <c:if test="${not empty parent.subCategories}">
-                                        <c:forEach var="sub" items="${parent.subCategories}">
-                                            <a class="${param.category == sub.id ? 'active' : ''}"
-                                               href="product?category=${sub.id}&sort=${param.sort}">
-                                                    ${sub.name}
-                                            </a>
-                                        </c:forEach>
-                                    </c:if>
-                                </div>
-                            </div>
-                        </c:forEach>
-
-                    </div>
-                </div>
-
             </div>
         </aside>
 
-        <!-- Danh sách sản phẩm -->
         <div class="main-products">
             <div class="product-list">
+                <c:choose>
+                    <c:when test="${not empty productList}">
+                        <c:forEach var="p" items="${productList}">
+                            <div class="product-card">
+                                <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
+                                <img src="${pageContext.request.contextPath}/${p.thumbnail}" alt="${p.name}">
 
-                <c:forEach var="p" items="${list}" >
-                    <div class="product-card">
-                        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
-                        <img src="${pageContext.request.contextPath}/${p.thumbnail}" alt="${p.name}">
-                        <h3>${p.name}</h3>
+                                <div class="card-content">
+                                    <h3>${p.name}</h3>
+                                    <fmt:setLocale value="vi_VN"/>
+                                    <div class="price">
+                                        <c:choose>
+                                            <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
+                                                <span class="new-price">
+                                                    <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ
+                                                </span>
+                                                <span class="old-price">
+                                                    <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="new-price">
+                                                    <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
 
-           <fmt:setLocale value="vi_VN"/>
-                <p class="price">
-                    <c:choose>
-                        <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
-                            <span class="new-price" style="color:red;font-weight:bold">
-                                <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ
-                            </span>
-                            <span class="old-price" style="text-decoration: line-through; color: #888; margin-left: 8px;">
-                                <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
-                            </span>
-                        </c:when>
-                        <c:otherwise>
-                            <span class="new-price" style="font-weight:bold">
-                                <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
-                            </span>
-                        </c:otherwise>
-                    </c:choose>
-                </p>
-
-                        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
-                            Thêm vào giỏ hàng
-                        </a>
-                    </div>
-                </c:forEach>
-
-
-            </div>
-            <div class="load-more-container">
-                <button id="load-more">Xem thêm</button>
+                                <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
+                                    Chi tiết
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="grid-column: 1/-1; text-align: center; padding: 80px 20px;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/6134/6134065.png" alt="No product" style="width: 100px; opacity: 0.3; margin-bottom: 20px;">
+                            <p style="color: #888; font-size: 16px;">Không tìm thấy sản phẩm nào phù hợp trong danh mục này.</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </div>
 </section>
 
+<script>
+    const rangeMin = document.getElementById('range-min');
+    const minInput = document.getElementById('min-price');
+    const maxInput = document.getElementById('max-price');
+
+    window.addEventListener('load', () => {
+        if (rangeMin && minInput) {
+            rangeMin.value = minInput.value;
+        }
+    });
+
+    rangeMin.addEventListener('input', function() {
+        minInput.value = this.value;
+    });
+
+    minInput.addEventListener('change', function() {
+        let val = parseInt(this.value);
+        if (val > 5000000) val = 5000000;
+        if (val < 0) val = 0;
+
+        this.value = val;
+        rangeMin.value = val;
+    });
+
+    function applyPriceFilter() {
+        const minVal = minInput.value || 0;
+        const maxVal = maxInput.value || 5000000;
+
+        let params = new URLSearchParams(window.location.search);
+
+        params.set("minPrice", minVal);
+        params.set("maxPrice", maxVal);
+
+        window.location.href = "product?" + params.toString();
+    }
+</script>
 
 <%@ include file="../include/footer.jsp" %>
-
-
