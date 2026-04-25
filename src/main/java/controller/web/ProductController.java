@@ -30,6 +30,16 @@ public class ProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int page = 1;
+        int pageSize = 9;
+
+        String pageStr = request.getParameter("page");
+
+
+        if (pageStr != null) page = Integer.parseInt(pageStr);
+
+        int offset = (page - 1) * pageSize;
+
         String groupId = request.getParameter("groupId");
         String categoryId = request.getParameter("categoryId");
         String sortType = request.getParameter("sortType");
@@ -37,10 +47,15 @@ public class ProductController extends HttpServlet {
         String minPrice = request.getParameter("minPrice");
         String maxPrice = request.getParameter("maxPrice");
 
-        List<Product> productList = productService.handleFilterProducts(groupId, categoryId, sortType, minPrice, maxPrice);
+        List<Product> productList = productService.handleFilterProducts(groupId, categoryId, sortType, minPrice, maxPrice,pageSize,offset);
+        int totalProducts = productService.handleCountProducts(groupId, categoryId, minPrice, maxPrice);
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
         request.setAttribute("categoryList", categoryService.handleGetAllCategories());
         request.setAttribute("productList", productList);
+
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", page);
 
         request.getRequestDispatcher("/WEB-INF/views/product.jsp").forward(request, response);
     }
