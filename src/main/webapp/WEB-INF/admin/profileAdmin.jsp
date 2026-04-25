@@ -28,42 +28,57 @@
             <div class="profile-container">
                 <div class="profile-left">
                     <div class="avatar-container">
-                        <img src="https://vnn-imgs-a1.vgcloud.vn/znews-photo.zadn.vn/w660/Uploaded/wyhktpu/2021_11_15/250721_lisa_solo_mv_making_1_1.jpg" alt="Avatar" id="avatar-preview">
+                        <img src="${pageContext.request.contextPath}/img/avatars/${adminInfo.avatarUrl}" alt="Avatar" id="avatar-preview">
                         <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
                         <button class="upload-btn" onclick="document.getElementById('avatar-upload').click();">Chọn ảnh</button>
                     </div>
                     <div class="user-info-left">
-                        <h4>Admin</h4>
-                        <p>admin@example.com</p>
+                        <h4>${adminInfo.fullName}</h4>
+                        <p>${adminInfo.email}</p>
                     </div>
                 </div>
                 <div class="profile-right">
                     <div class="info-section">
                         <h3>Thông tin cá nhân</h3>
-                        <form action="" method="post">
+                        <form action="${pageContext.request.contextPath}/profileAdmin" method="post">
+                            <input type="hidden" name="action" value="updateProfile">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="username">Tên đăng nhập</label>
-                                    <input type="text" id="username" name="username" value="admin" readonly>
+                                    <input type="text" id="username" name="username" value="${adminInfo.username}" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="fullname">Họ và tên</label>
-                                    <input type="text" id="fullname" name="fullname" value="Admin" required>
+                                    <input type="text" id="fullname" name="fullName" value="${adminInfo.fullName}" required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" id="email" name="email" value="admin@example.com" required>
+                                    <input type="email" id="email" name="email" value="${adminInfo.email}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Số điện thoại</label>
-                                    <input type="text" id="phone" name="phone" value="0123456789">
+                                    <input type="text" id="phone" name="phone" value="${adminInfo.phone}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="address">Địa chỉ</label>
-                                <input type="text" id="address" name="address" value="123 Đường ABC, Quận 1, TP. HCM">
+                                <input type="text" id="address" name="address" value="${adminInfo.address}">
+                            </div>
+                             <div class="form-row">
+                                <div class="form-group">
+                                    <label for="birthday">Ngày sinh</label>
+                                    <input type="date" id="birthday" name="birthday" value="<fmt:formatDate value="${adminInfo.birthday}" pattern="yyyy-MM-dd" />">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Giới tính</label>
+                                    <select id="gender" name="gender">
+                                        <option value="Nam" ${adminInfo.gender == 'Nam' ? 'selected' : ''}>Nam</option>
+                                        <option value="Nữ" ${adminInfo.gender == 'Nữ' ? 'selected' : ''}>Nữ</option>
+                                        <option value="Khác" ${adminInfo.gender == 'Khác' ? 'selected' : ''}>Khác</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn-save">Lưu thay đổi</button>
@@ -72,18 +87,19 @@
                     </div>
                     <div class="password-section">
                         <h3>Đổi mật khẩu</h3>
-                        <form action="" method="post">
+                        <form action="${pageContext.request.contextPath}/profileAdmin" method="post">
+                            <input type="hidden" name="action" value="changePassword">
                             <div class="form-group">
                                 <label for="current-password">Mật khẩu hiện tại</label>
-                                <input type="password" id="current-password" name="current-password" required>
+                                <input type="password" id="current-password" name="currentPassword" required>
                             </div>
                             <div class="form-group">
                                 <label for="new-password">Mật khẩu mới</label>
-                                <input type="password" id="new-password" name="new-password" required>
+                                <input type="password" id="new-password" name="newPassword" required>
                             </div>
                             <div class="form-group">
                                 <label for="confirm-password">Xác nhận mật khẩu mới</label>
-                                <input type="password" id="confirm-password" name="confirm-password" required>
+                                <input type="password" id="confirm-password" name="confirmPassword" required>
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn-save">Đổi mật khẩu</button>
