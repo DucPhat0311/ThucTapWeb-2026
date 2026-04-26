@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public class BlogDao extends BaseDao {
 
-
-
     public Optional<Blog> getBlogById(int id) {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT * FROM blogs WHERE id = :id")
@@ -44,11 +42,10 @@ public class BlogDao extends BaseDao {
                         .list()
         );
     }
-    public List<Blog> getBlogPaginated(int page, int pageSize) {
-        int offset = (page - 1) * pageSize;
+    public List<Blog> getBlogPaginated(int limit, int offset) {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("SELECT * FROM blogs WHERE status = 1 ORDER BY created_at DESC LIMIT :limit OFFSET :offset")
-                        .bind("limit", pageSize)
+                        .bind("limit", limit)
                         .bind("offset", offset)
                         .mapToBean(Blog.class)
                         .list()
