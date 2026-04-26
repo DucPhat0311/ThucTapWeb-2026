@@ -50,16 +50,38 @@
 
     </div>
 
-    <c:if test="${totalPages > 1}">
-        <div class="pagination">
-            <c:forEach begin="1" end="${totalPages}" var="pageNum">
-                <a href="${pageContext.request.contextPath}/blog?page=${pageNum}"
-                   class="${pageNum == currentPage ? 'active' : ''}">
-                        ${pageNum}
-                </a>
-            </c:forEach>
-        </div>
-    </c:if>
+    <div class="pagination">
+        <c:if test="${currentPage > 1}">
+            <a href="blog?page=${currentPage - 1}">&laquo;</a>
+        </c:if>
+
+        <c:if test="${currentPage > 3}">
+            <a href="blog/page=1">1</a>
+            <c:if test="${currentPage > 4}">
+                <span class="paging-sep">...</span>
+            </c:if>
+        </c:if>
+
+        <c:set var="begin" value="${currentPage - 2 > 1 ? currentPage - 2 : 1}" />
+        <c:set var="end" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}" />
+
+        <c:forEach var="i" begin="${begin}" end="${end}">
+            <a href="blog?page=${i}"
+               class="${currentPage == i ? 'active' : ''}">${i}</a>
+        </c:forEach>
+
+        <c:if test="${currentPage < totalPages - 2}">
+            <c:if test="${currentPage < totalPages - 3}">
+                <span class="paging-sep">...</span>
+            </c:if>
+            <a href="blog?page=${totalPages}">${totalPages}</a>
+        </c:if>
+
+        <c:if test="${currentPage < totalPages}">
+            <a href="blog?page=${currentPage + 1}">&raquo;</a>
+        </c:if>
+    </div>
+
 
 </main>
 

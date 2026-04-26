@@ -96,10 +96,49 @@ body { background-color: #FFFDF9; color: #333; font-family: Arial, sans-serif; }
 .blog-date i { color: #A67B5B; }
 
 /* PHÂN TRANG */
-.pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 50px; padding: 20px 0; }
-.pagination a { padding: 10px 18px; border: 1px solid #EADDCC; border-radius: 8px; color: #6F4E37; text-decoration: none; font-weight: bold; transition: all 0.3s ease; background-color: #FFFDF9; }
-.pagination a:hover { background-color: #F0E6D2; color: #4A3C31; border-color: #A67B5B; }
-.pagination a.active { background-color: #6F4E37; color: #FFF; border-color: #6F4E37; }
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 40px 0;
+}
+
+.pagination a {
+    padding: 10px 18px;
+    border: 1px solid #EADDCC;
+    text-decoration: none;
+    color: #6F4E37;
+    border-radius: 8px;
+    transition: all 0.3s;
+    background-color: #fff;
+}
+
+.pagination a.active {
+    background-color: #6F4E37;
+    color: white;
+    border-color: #6F4E37;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #F0E6D2;
+}
+
+.paging-sep {
+    display: flex;
+    align-items: flex-end;
+    padding: 0 5px;
+    color: #A67B5B;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.pagination a {
+    min-width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 @media (max-width: 768px) {
     .blogContainer { grid-template-columns: 1fr; }
