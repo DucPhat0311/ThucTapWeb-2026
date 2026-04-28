@@ -1,28 +1,33 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
 
-<c:if test="${not empty pageCss}">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/${pageCss}">
-</c:if>
+
+    <c:if test="${not empty pageCss}">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/${pageCss}">
+    </c:if>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
+
 <body><header class="header" id="header">
+
 
     <div class="header-top">
         <div class="logo">
             <a href="home" class="iconUser">
-            <img src="img/logo.png" alt="AURA Studio Logo">
+                <img src="img/logo.png" alt="AURA Studio Logo">
             </a>
         </div>
+
 
         <div class="search-bar">
             <form action="search" method="get">
@@ -33,8 +38,12 @@
             </form>
         </div>
 
+
+
+
         <!-- ACTIONS -->
         <div class="actions">
+
 
             <c:choose>
                 <c:when test="${not empty sessionScope.userlogin}">
@@ -52,6 +61,7 @@
                     </div>
                 </c:when>
 
+
                 <c:otherwise>
                     <!-- CHƯA LOGIN -->
                     <div class="user-menu">
@@ -66,14 +76,15 @@
                 </c:otherwise>
             </c:choose>
 
+
             <c:choose>
                 <c:when test="${not empty sessionScope.userlogin}">
                     <a href="my-cart" class="iconCart">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <c:if test="${sessionScope.cartSize != null && sessionScope.cartSize > 0}">
-                            <span class="cart-count">
-                                ${sessionScope.cartSize != null ? sessionScope.cartSize : 0}
-                            </span>
+                           <span class="cart-count">
+                                   ${sessionScope.cartSize != null ? sessionScope.cartSize : 0}
+                           </span>
                         </c:if>
                     </a>
                 </c:when>
@@ -84,11 +95,13 @@
                 </c:otherwise>
             </c:choose>
 
+
             <!-- NOTIFICATION -->
             <div class="notification-wrapper">
                 <p id="thongBao" class="iconNotification">
                     <i class="fa-regular fa-bell"></i>
                 </p>
+
 
                 <div id="notification-box">
                     <ul>
@@ -98,14 +111,16 @@
                 </div>
             </div>
 
+
         </div>
     </div>
+
 
     <nav class="header-bottom">
         <div class="menu">
             <ul>
                 <li><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
-                <li><a href="product">Danh Mục ▾</a>
+                <li><a href="product">Danh mục ▾</a>
                     <ul class="sub">
                         <jsp:useBean id="categoryDao" class="dao.user.CategoryDao" />
                         <c:set var="categoryTree" value="${categoryDao.categoryTree}" />
@@ -122,5 +137,14 @@
             </ul>
         </div>
     </nav>
+</header>
 
-</header></body>
+
+
+
+
+
+</body>
+
+
+
