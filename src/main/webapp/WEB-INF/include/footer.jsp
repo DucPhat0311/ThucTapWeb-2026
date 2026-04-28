@@ -1,15 +1,18 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
 
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
+
 
 <body><footer class="footer">
     <div class="footer-container">
@@ -21,6 +24,7 @@
             <p><i class="fa-solid fa-envelope"></i> Email: <strong>contact@AURAstudio.vn</strong></p>
         </div>
 
+
         <!-- Chăm sóc khách hàng -->
         <div class="footer-danhmuc">
             <h3>Chăm sóc khách hàng</h3>
@@ -31,6 +35,7 @@
             <a href="#">Câu hỏi thường gặp</a>
         </div>
 
+
         <!-- Chi nhánh -->
         <div class="footer-contact">
             <h3>Hệ thống cửa hàng</h3>
@@ -40,6 +45,7 @@
             <p>Thứ 2 - Thứ 6: 08:00 - 21:30</p>
             <p>Thứ 7 - Chủ nhật: 09:00 - 22:00</p>
         </div>
+
 
         <!-- Mạng xã hội-->
         <div class="footer-social">
@@ -55,10 +61,17 @@
         </div>
     </div>
 
+
     <div class="copyright">
-        <p> &copy; 2026 AURA Studio. Bản quyền đc bảo vệ</p>
+        <p> &copy; 2026 AURA Studio. Bản quyền được bảo vệ</p>
     </div>
 </footer></body>
+
+
+
+
+
+
 
 
 
