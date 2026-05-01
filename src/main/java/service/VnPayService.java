@@ -78,6 +78,10 @@ public class VnPayService {
         return payUrl + "?" + queryString + "&vnp_SecureHash=" + secureHash;
     }
 
+    public String generateTxnRef(int orderId) {
+        return "ORD" + orderId + "_" + formatDate(LocalDateTime.now(VIETNAM_ZONE));
+    }
+
     public boolean verifySignature(Map<String, String> responseParams) {
         ensureConfigured();
         if (responseParams == null || responseParams.isEmpty()) {
@@ -146,7 +150,7 @@ public class VnPayService {
     private String sanitizeOrderInfo(String orderInfo) {
         String normalized = Normalizer.normalize(firstNonBlank(orderInfo, "Thanh toan don hang"), Normalizer.Form.NFD)
                 .replaceAll("\\p{M}+", "");
-        String compact = normalized.replaceAll("[^A-Za-z0-9 .,:_-]", " ").replaceAll("\\s+", " ").trim();
+        String compact = normalized.replaceAll("[^A-Za-z0-9 .,:#_-]", " ").replaceAll("\\s+", " ").trim();
         return compact.isBlank() ? "Thanh toan don hang" : compact;
     }
 

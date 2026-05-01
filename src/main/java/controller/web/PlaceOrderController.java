@@ -3,6 +3,7 @@ package controller.web;
 import dao.user.CartItemDao;
 import dao.user.OrderDao;
 import dao.user.OrderItemDao;
+import dao.user.PaymentTransactionDao;
 import dao.user.ProductVariantDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,7 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.User;
+import model.constant.PaymentMethod;
+import model.constant.PaymentTransactionStatus;
 import service.CheckoutService;
+import service.VnPayService;
 
 import java.io.IOException;
 
@@ -22,7 +26,9 @@ public class PlaceOrderController extends HttpServlet {
     private OrderItemDao orderItemDao;
     private CartItemDao cartItemDao;
     private ProductVariantDao variantDao;
+    private PaymentTransactionDao paymentTransactionDao;
     private CheckoutService checkoutService;
+    private VnPayService vnPayService;
 
     @Override
     public void init() {
@@ -30,7 +36,9 @@ public class PlaceOrderController extends HttpServlet {
         orderItemDao = new OrderItemDao();
         cartItemDao = new CartItemDao();
         variantDao = new ProductVariantDao();
+        paymentTransactionDao = new PaymentTransactionDao();
         checkoutService = new CheckoutService();
+        vnPayService = new VnPayService();
     }
 
     @Override
@@ -91,6 +99,32 @@ public class PlaceOrderController extends HttpServlet {
                     item.unitPrice(),
                     item.lineTotal()
             );
+        }
+
+        if (PaymentMethod.VNPAY.equals(orderPlacement.paymentMethod())) {
+            String txnRef = vnPayService.generateTxnRef(orderId);
+            paymentTransactionDao.createInitiatedTransaction(
+                    orderId,
+                    PaymentMethod.VNPAY,
+                    txnRef,
+                    preparedCheckout.totalPrice(),
+                    PaymentTransactionStatus.INITIATED
+            );
+
+            String paymentUrl = vnPayService.buildPaymentUrl(new VnPayService.PaymentRequest(
+                    txnRef,
+                    preparedCheckout.totalPrice(),
+                    "Thanh toan don hang #" + orderId,
+                    resolveClientIp(request),
+                    null,
+                    null,
+                    null
+            ));
+            response.sendRedirect(paymentUrl);
+            return;
+        }
+
+        for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
             variantDao.decreaseStock(item.variantId(), item.quantity());
             cartItemDao.delete(cartId, item.variantId());
         }
@@ -114,6 +148,15 @@ public class PlaceOrderController extends HttpServlet {
             case INVALID_PAYMENT_METHOD -> response.sendRedirect("checkout?error=invalid_payment_method");
             case CART_NOT_FOUND, EMPTY_SELECTION, INVALID_REQUEST -> response.sendRedirect("my-cart");
         }
+    }
+
+    private String resolveClientIp(HttpServletRequest request) {
+        String forwardedFor = trimToEmpty(request.getHeader("X-Forwarded-For"));
+        if (!forwardedFor.isBlank()) {
+            int commaIndex = forwardedFor.indexOf(',');
+            return commaIndex >= 0 ? forwardedFor.substring(0, commaIndex).trim() : forwardedFor;
+        }
+        return trimToEmpty(request.getRemoteAddr());
     }
 
     private String trimToEmpty(String value) {
