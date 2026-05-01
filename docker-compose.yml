@@ -1,0 +1,27 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: shopquanao-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: aurastudio
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/aurastudio.sql:/docker-entrypoint-initdb.d/init.sql
+
+  web:
+    image: shopquanao-app
+    container_name: shopquanao-web
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_data:
