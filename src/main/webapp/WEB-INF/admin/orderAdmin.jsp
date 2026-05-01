@@ -3,11 +3,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Order</title>
+    <title>Quản lý đơn hàng</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
@@ -15,22 +15,22 @@
 <body>
 <div class="admin">
 
-    <jsp:include page="include/sidebarAdmin.jsp" />
+    <jsp:include page="include/sidebarAdmin.jsp"/>
 
     <section class="content">
         <header class="topbar">
-            <h1 id="pageTitle">Quản Lý Đơn Hàng</h1>
+            <h1 id="pageTitle">Quản lý đơn hàng</h1>
             <div class="actions">
                 <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>
         </header>
 
-
         <main id="page">
             <section id="dashboard" class="page active">
                 <div class="cards">
                     <div class="card">Tổng đơn<br><span>${total}</span></div>
-                    <div class="card">Đang xử lý<br><span>${countPending}</span></div>
+                    <div class="card">Chờ xử lý<br><span>${countPending}</span></div>
+                    <div class="card">Chờ thanh toán<br><span>${countPendingPayment}</span></div>
                     <div class="card">Hoàn thành<br><span>${countCompleted}</span></div>
                 </div>
 
@@ -41,7 +41,9 @@
                             <th>ID</th>
                             <th>Khách hàng</th>
                             <th>Tổng tiền</th>
-                            <th>Trạng thái</th>
+                            <th>Phương thức</th>
+                            <th>Thanh toán</th>
+                            <th>Trạng thái đơn</th>
                             <th>Ngày tạo</th>
                             <th>Hành động</th>
                         </tr>
@@ -49,7 +51,7 @@
                         <tbody>
                         <c:if test="${empty orders}">
                             <tr>
-                                <td colspan="6" style="text-align:center">
+                                <td colspan="8" style="text-align:center">
                                     Chưa có đơn hàng.
                                 </td>
                             </tr>
@@ -60,21 +62,14 @@
                                 <td>#${o.id}</td>
                                 <td>${o.name}</td>
                                 <td><fmt:formatNumber value="${o.finalAmount}" type="number"/> đ</td>
+                                <td>${paymentMethodLabels[o.paymentMethods]}</td>
+                                <td>${paymentStatusLabels[o.paymentStatuses]}</td>
                                 <td>
                                     <span class="order-status ${o.orderStatus}">
-                                        <c:choose>
-                                            <c:when test="${o.orderStatus == 'PENDING'}">Chờ xử lý</c:when>
-                                            <c:when test="${o.orderStatus == 'SHIPPING'}">Đang giao</c:when>
-                                            <c:when test="${o.orderStatus == 'COMPLETED'}">Hoàn thành</c:when>
-                                            <c:when test="${o.orderStatus == 'CANCELLED'}">Đã hủy</c:when>
-                                            <c:otherwise>${o.orderStatus}</c:otherwise>
-                                        </c:choose>
+                                        ${orderStatusLabels[o.orderStatus]}
                                     </span>
                                 </td>
-
-                                <td>
-                                        ${o.createdAtFormatted}
-                                </td>
+                                <td>${o.createdAtFormatted}</td>
                                 <td>
                                     <a href="orderAdmin?mode=view&id=${o.id}" class="icon-btn view">
                                         <i class="fa fa-eye"></i>
@@ -84,13 +79,14 @@
                         </c:forEach>
                         </tbody>
                     </table>
-
                 </div>
 
                 <c:if test="${totalPages > 1}">
                     <div class="pagination">
                         <div class="pagination-info">
-                            Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize > totalOrders ? totalOrders : currentPage * pageSize} của ${totalOrders} đơn hàng
+                            Hiển thị ${(currentPage - 1) * pageSize + 1}
+                            - ${currentPage * pageSize > totalOrders ? totalOrders : currentPage * pageSize}
+                            của ${totalOrders} đơn hàng
                         </div>
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
@@ -119,18 +115,12 @@
                         </div>
                     </div>
                 </c:if>
-
             </section>
-
         </main>
     </section>
 
 </div>
 
-
 <script src="${pageContext.request.contextPath}/js/admin/adminOrder.js"></script>
 </body>
-
-
 </html>
-
