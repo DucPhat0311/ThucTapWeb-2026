@@ -94,6 +94,21 @@ public class OrderDao extends BaseDao {
         );
     }
 
+    public void updatePaymentAndOrderStatus(int orderId, String paymentStatus, String orderStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET payment_statuses = :paymentStatus,
+                order_status = :orderStatus
+            WHERE id = :orderId
+        """)
+                        .bind("paymentStatus", paymentStatus)
+                        .bind("orderStatus", orderStatus)
+                        .bind("orderId", orderId)
+                        .execute()
+        );
+    }
+
     public List<Order> getByUserId(int userId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
