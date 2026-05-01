@@ -48,6 +48,20 @@ public class PaymentTransactionDao extends BaseDao {
         );
     }
 
+    public String findTransactionStatusByTxnRef(String txnRef) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT transaction_status
+            FROM payment_transactions
+            WHERE txn_ref = :txnRef
+        """)
+                        .bind("txnRef", txnRef)
+                        .mapTo(String.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
     public void updatePaymentResult(String txnRef,
                                     String transactionNo,
                                     String bankCode,

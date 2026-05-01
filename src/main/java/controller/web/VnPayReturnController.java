@@ -45,11 +45,7 @@ public class VnPayReturnController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userlogin") == null) {
-            response.sendRedirect("login");
-            return;
-        }
+        HttpSession session = request.getSession();
 
         Map<String, String> vnpParams = vnPayService.extractVnPayParams(request.getParameterMap());
         if (!vnPayService.verifySignature(vnpParams)) {
@@ -73,25 +69,30 @@ public class VnPayReturnController extends HttpServlet {
         String responseCode = trimToEmpty(vnpParams.get("vnp_ResponseCode"));
         String transactionNo = trimToEmpty(vnpParams.get("vnp_TransactionNo"));
         String bankCode = trimToEmpty(vnpParams.get("vnp_BankCode"));
+        String transactionStatus = paymentTransactionDao.findTransactionStatusByTxnRef(txnRef);
+
+        if (PaymentTransactionStatus.SUCCESS.equals(transactionStatus) || PaymentStatus.PAID.equals(order.getPaymentStatuses())) {
+            session.setAttribute("lastOrderId", orderId);
+            response.sendRedirect("order-success");
+            return;
+        }
 
         if (VNPAY_SUCCESS_CODE.equals(responseCode)) {
-            if (!PaymentStatus.PAID.equals(order.getPaymentStatuses())) {
-                paymentTransactionDao.updatePaymentResult(
-                        txnRef,
-                        transactionNo,
-                        bankCode,
-                        responseCode,
-                        PaymentTransactionStatus.SUCCESS
-                );
+            paymentTransactionDao.updatePaymentResult(
+                    txnRef,
+                    transactionNo,
+                    bankCode,
+                    responseCode,
+                    PaymentTransactionStatus.SUCCESS
+            );
 
-                orderDao.updatePaymentAndOrderStatus(
-                        orderId,
-                        PaymentStatus.PAID,
-                        OrderStatus.PENDING
-                );
+            orderDao.updatePaymentAndOrderStatus(
+                    orderId,
+                    PaymentStatus.PAID,
+                    OrderStatus.PENDING
+            );
 
-                finalizePaidOrder(orderId, session);
-            }
+            finalizePaidOrder(order, session);
 
             session.setAttribute("lastOrderId", orderId);
             response.sendRedirect("order-success");
@@ -105,17 +106,23 @@ public class VnPayReturnController extends HttpServlet {
                 responseCode,
                 PaymentTransactionStatus.FAILED
         );
-        orderDao.updatePaymentAndOrderStatus(
-                orderId,
-                PaymentStatus.FAILED,
-                OrderStatus.PENDING_PAYMENT
-        );
-        response.sendRedirect("checkout?error=payment_failed");
+        if (!PaymentStatus.PAID.equals(order.getPaymentStatuses())) {
+            orderDao.updatePaymentAndOrderStatus(
+                    orderId,
+                    PaymentStatus.FAILED,
+                    OrderStatus.PENDING_PAYMENT
+            );
+        }
+        response.sendRedirect(resolveCheckoutErrorRedirect(responseCode));
     }
 
-    private void finalizePaidOrder(int orderId, HttpSession session) {
+    private void finalizePaidOrder(Order order, HttpSession session) {
         Integer cartId = (Integer) session.getAttribute("cartId");
-        List<OrderItem> orderItems = orderItemDao.getByOrderId(orderId);
+        if (cartId == null) {
+            cartId = cartItemDao.getCartIdByUserId(order.getUserId());
+        }
+
+        List<OrderItem> orderItems = orderItemDao.getByOrderId(order.getId());
 
         for (OrderItem orderItem : orderItems) {
             productVariantDao.decreaseStock(orderItem.getVariantId(), orderItem.getQuantity());
@@ -132,5 +139,12 @@ public class VnPayReturnController extends HttpServlet {
 
     private String trimToEmpty(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private String resolveCheckoutErrorRedirect(String responseCode) {
+        if ("24".equals(responseCode)) {
+            return "checkout?error=payment_cancelled";
+        }
+        return "checkout?error=payment_failed";
     }
 }

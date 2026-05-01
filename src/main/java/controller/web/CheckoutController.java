@@ -29,8 +29,6 @@ public class CheckoutController extends HttpServlet {
         addressService = new AddressService();
     }
 
-
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -64,8 +62,10 @@ public class CheckoutController extends HttpServlet {
         renderCheckout(req, resp, session, selectedIds);
     }
 
-    private void renderCheckout(HttpServletRequest req, HttpServletResponse resp, HttpSession session, String[] selectedIds)
-            throws ServletException, IOException {
+    private void renderCheckout(HttpServletRequest req,
+                                HttpServletResponse resp,
+                                HttpSession session,
+                                String[] selectedIds) throws ServletException, IOException {
         Integer cartId = (Integer) session.getAttribute("cartId");
         User user = (User) session.getAttribute("userlogin");
 
@@ -81,7 +81,7 @@ public class CheckoutController extends HttpServlet {
             int id = Integer.parseInt(idStr);
             for (CartItem item : allItems) {
                 if (item.getVariantId() == id) {
-                    checkoutItems.add(item); // chỉ add nhứng thứu đã chọn
+                    checkoutItems.add(item);
                     break;
                 }
             }
@@ -94,6 +94,7 @@ public class CheckoutController extends HttpServlet {
 
         Address selectedAddress = addressService.getPrimaryByUser(user.getId());
         moveFlashMessageToRequest(session, req);
+        moveCheckoutErrorToRequest(req);
 
         req.setAttribute("selectedAddress", selectedAddress);
         req.setAttribute("checkoutItems", checkoutItems);
@@ -107,5 +108,25 @@ public class CheckoutController extends HttpServlet {
             session.removeAttribute("addressError");
         }
     }
-}
 
+    private void moveCheckoutErrorToRequest(HttpServletRequest req) {
+        String error = req.getParameter("error");
+        if (error == null || error.isBlank()) {
+            return;
+        }
+
+        String errorMessage = switch (error) {
+            case "out_of_stock" -> "Một số sản phẩm trong giỏ đã vượt quá số lượng tồn kho.";
+            case "invalid_payment_method" -> "Phương thức thanh toán không hợp lệ. Vui lòng thử lại.";
+            case "invalid_payment_signature" -> "Không thể xác minh kết quả thanh toán VNPay. Vui lòng thử lại.";
+            case "payment_not_found" -> "Không tìm thấy giao dịch thanh toán tương ứng với đơn hàng của bạn.";
+            case "payment_cancelled" -> "Bạn đã hủy thanh toán VNPay. Đơn hàng vẫn đang chờ thanh toán.";
+            case "payment_failed" -> "Thanh toán VNPay không thành công. Vui lòng thử lại.";
+            default -> null;
+        };
+
+        if (errorMessage != null) {
+            req.setAttribute("checkoutError", errorMessage);
+        }
+    }
+}
