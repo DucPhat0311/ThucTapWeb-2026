@@ -4,15 +4,14 @@ import dao.user.CartItemDao;
 import dao.user.OrderDao;
 import dao.user.OrderItemDao;
 import dao.user.ProductVariantDao;
-import model.Address;
-import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import service.AddressService;
+import model.User;
+import service.CheckoutService;
 
 import java.io.IOException;
 
@@ -23,7 +22,7 @@ public class PlaceOrderController extends HttpServlet {
     private OrderItemDao orderItemDao;
     private CartItemDao cartItemDao;
     private ProductVariantDao variantDao;
-    private AddressService addressService;
+    private CheckoutService checkoutService;
 
     @Override
     public void init() {
@@ -31,7 +30,7 @@ public class PlaceOrderController extends HttpServlet {
         orderItemDao = new OrderItemDao();
         cartItemDao = new CartItemDao();
         variantDao = new ProductVariantDao();
-        addressService = new AddressService();
+        checkoutService = new CheckoutService();
     }
 
     @Override
@@ -51,73 +50,46 @@ public class PlaceOrderController extends HttpServlet {
 
         User user = (User) session.getAttribute("userlogin");
         Integer cartIdObj = (Integer) session.getAttribute("cartId");
-        if (cartIdObj == null) {
-            response.sendRedirect("my-cart");
-            return;
-        }
-        int cartId = cartIdObj;
-
         String[] variantIds = request.getParameterValues("variantIds");
         String[] quantities = request.getParameterValues("quantities");
-
-        if (variantIds == null || variantIds.length == 0) {
-            response.sendRedirect("my-cart");
-            return;
-        }
-
         String note = trimToEmpty(request.getParameter("note"));
         String paymentMethod = trimToEmpty(request.getParameter("paymentMethod"));
-        Address shippingAddress = addressService.getPrimaryByUser(user.getId());
-        if (shippingAddress == null) {
-            session.setAttribute("addressError", "Vui lòng thêm địa chỉ giao hàng trước khi đặt đơn.");
-            response.sendRedirect("checkout");
+
+        CheckoutService.PreparedCheckout preparedCheckout;
+        try {
+            preparedCheckout = checkoutService.prepareOrder(user.getId(), cartIdObj, variantIds, quantities);
+        } catch (CheckoutService.CheckoutValidationException e) {
+            handleCheckoutValidationError(e, session, response);
             return;
         }
 
-        String name = trimToEmpty(shippingAddress.getName());
-        String phone = trimToEmpty(shippingAddress.getPhone());
-        String address = trimToEmpty(formatAddress(shippingAddress));
+        int cartId = cartIdObj;
+        int orderId = orderDao.createOrder(
+                user.getId(),
+                preparedCheckout.recipientName(),
+                preparedCheckout.recipientPhone(),
+                preparedCheckout.shippingAddress(),
+                note,
+                paymentMethod,
+                preparedCheckout.totalPrice()
+        );
 
-        double totalPrice = 0;
-        for (int i = 0; i < variantIds.length; i++) {
-            int variantId = Integer.parseInt(variantIds[i]);
-            int qty = Integer.parseInt(quantities[i]);
-
-            int stock = variantDao.getStockByVariantId(variantId);
-            if (stock < qty) {
-                response.sendRedirect("checkout?error=out_of_stock");
-                return;
-            }
-            double price = variantDao.getPriceByVariantId(variantId);
-            totalPrice += price * qty;
-        }
-
-        int orderId = orderDao.createOrder(user.getId(), name, phone, address, note, paymentMethod, totalPrice);
-
-        for (int i = 0; i < variantIds.length; i++) {
-            int variantId = Integer.parseInt(variantIds[i]);
-            int qty = Integer.parseInt(quantities[i]);
-
-            var varientDetail = variantDao.getVariantDetails(variantId);
-            double price = variantDao.getPriceByVariantId(variantId);
+        for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
+            var variantDetail = item.variantDetail();
 
             orderItemDao.insert(
                     orderId,
-                    varientDetail.getProductId(),
-                    variantId,
-                    varientDetail.getSizeName(),
-                    varientDetail.getColorName(),
-                    qty,
-                    price,
-                    price * qty
+                    variantDetail.getProductId(),
+                    item.variantId(),
+                    variantDetail.getSizeName(),
+                    variantDetail.getColorName(),
+                    item.quantity(),
+                    item.unitPrice(),
+                    item.lineTotal()
             );
-            // xoa stock
-            variantDao.decreaseStock(variantId, qty);
-
-            // xoa cart
-            cartItemDao.delete(cartId, variantId);
+            variantDao.decreaseStock(item.variantId(), item.quantity());
+            cartItemDao.delete(cartId, item.variantId());
         }
-
 
         int remainingCart = cartItemDao.countTotalQuantity(cartId);
         session.setAttribute("cartSize", remainingCart);
@@ -126,16 +98,20 @@ public class PlaceOrderController extends HttpServlet {
         response.sendRedirect("order-success");
     }
 
+    private void handleCheckoutValidationError(CheckoutService.CheckoutValidationException exception,
+                                               HttpSession session,
+                                               HttpServletResponse response) throws IOException {
+        switch (exception.getError()) {
+            case ADDRESS_REQUIRED -> {
+                session.setAttribute("addressError", "Vui lòng thêm địa chỉ giao hàng trước khi đặt đơn.");
+                response.sendRedirect("checkout");
+            }
+            case OUT_OF_STOCK -> response.sendRedirect("checkout?error=out_of_stock");
+            case CART_NOT_FOUND, EMPTY_SELECTION, INVALID_REQUEST -> response.sendRedirect("my-cart");
+        }
+    }
+
     private String trimToEmpty(String value) {
         return value == null ? "" : value.trim();
     }
-
-    private String formatAddress(Address address) {
-        return String.join(", ",
-                trimToEmpty(address.getDetailAddress()),
-                trimToEmpty(address.getWard()),
-                trimToEmpty(address.getDistrict()),
-                trimToEmpty(address.getCity()));
-    }
 }
-

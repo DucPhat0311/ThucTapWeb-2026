@@ -63,19 +63,12 @@
                 <h2>Phương thức thanh toán</h2>
 
                 <div class="payment-method">
-                    <label>
+                    <label class="payment-method-option">
                         <input type="radio" name="paymentMethod" value="COD" checked>
-                        Thanh toán khi nhận hàng (COD)
-                    </label>
-
-                    <label>
-                        <input type="radio" name="paymentMethod" value="MOMO">
-                        Ví điện tử MOMO
-                    </label>
-
-                    <label>
-                        <input type="radio" name="paymentMethod" value="ONEPAY">
-                        Thẻ ATM / Visa (OnePay)
+                        <span>
+                            <strong>Thanh toán khi nhận hàng (COD)</strong>
+                            <small>Người nhận thanh toán trực tiếp cho đơn vị giao hàng khi nhận được sản phẩm.</small>
+                        </span>
                     </label>
                 </div>
             </div>

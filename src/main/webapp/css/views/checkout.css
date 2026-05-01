@@ -171,6 +171,35 @@
     font-size: 14px;
 }
 
+.payment-method-option {
+    display: flex !important;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border: 1px solid #eadfce;
+    border-radius: 10px;
+    background: #fcfaf7;
+}
+
+.payment-method-option input {
+    margin-top: 3px;
+}
+
+.payment-method-option span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.payment-method-option strong {
+    color: #2b2b2b;
+}
+
+.payment-method-option small {
+    color: #666;
+    line-height: 1.5;
+}
+
 .checkout-right {
     background: #fff;
     padding: 24px;

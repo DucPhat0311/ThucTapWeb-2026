@@ -1,14 +1,15 @@
 package controller.admin;
 
-import java.io.IOException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.constant.OrderStatus;
 import service.EmailService;
 import service.OrderService;
+
+import java.io.IOException;
 
 @WebServlet(name = "OrderAdminController", value = "/orderAdmin")
 public class OrderAdminController extends HttpServlet {
@@ -27,10 +28,9 @@ public class OrderAdminController extends HttpServlet {
         String mode = req.getParameter("mode");
 
         if (mode == null) {
-   
             int page = 1;
             int pageSize = 5;
-            
+
             String pageParam = req.getParameter("page");
             if (pageParam != null && !pageParam.isEmpty()) {
                 try {
@@ -39,24 +39,28 @@ public class OrderAdminController extends HttpServlet {
                     page = 1;
                 }
             }
-            
+
             var allOrders = orderService.getAllOrders();
             int totalOrders = allOrders.size();
             int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-            
-            if (page < 1) page = 1;
-            if (page > totalPages && totalPages > 0) page = totalPages;
-            
+
+            if (page < 1) {
+                page = 1;
+            }
+            if (page > totalPages && totalPages > 0) {
+                page = totalPages;
+            }
+
             int start = (page - 1) * pageSize;
             int end = Math.min(start + pageSize, totalOrders);
             var orders = allOrders.subList(start, end);
 
             long pending = allOrders.stream()
-                    .filter(o -> "PENDING".equals(o.getOrderStatus()))
+                    .filter(o -> OrderStatus.PENDING.equals(o.getOrderStatus()))
                     .count();
 
             long completed = allOrders.stream()
-                    .filter(o -> "COMPLETED".equals(o.getOrderStatus()))
+                    .filter(o -> OrderStatus.COMPLETED.equals(o.getOrderStatus()))
                     .count();
 
             req.setAttribute("orders", orders);
@@ -69,17 +73,16 @@ public class OrderAdminController extends HttpServlet {
             req.setAttribute("pageSize", pageSize);
 
             req.setAttribute("page", "order");
-        req.getRequestDispatcher("/WEB-INF/admin/orderAdmin.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/admin/orderAdmin.jsp").forward(req, resp);
             return;
         }
-
 
         if ("view".equals(mode)) {
             int id = Integer.parseInt(req.getParameter("id"));
             req.setAttribute("order", orderService.findById(id));
             req.setAttribute("items", orderService.getOrderItems(id));
             req.setAttribute("page", "order");
-        req.getRequestDispatcher("/WEB-INF/admin/order-detailAdmin.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/admin/order-detailAdmin.jsp").forward(req, resp);
         }
     }
 
@@ -88,12 +91,13 @@ public class OrderAdminController extends HttpServlet {
             throws IOException {
 
         String action = req.getParameter("action");
-        if (!"update".equals(action)) return;
+        if (!"update".equals(action)) {
+            return;
+        }
 
         int id = Integer.parseInt(req.getParameter("id"));
         String newStatus = req.getParameter("orderStatus");
 
-  
         var order = orderService.findById(id);
         if (order == null) {
             resp.sendRedirect("orderAdmin");
@@ -102,38 +106,20 @@ public class OrderAdminController extends HttpServlet {
 
         String currentStatus = order.getOrderStatus();
 
-        if ("COMPLETED".equals(currentStatus) || "CANCELLED".equals(currentStatus)) {
+        if (OrderStatus.COMPLETED.equals(currentStatus) || OrderStatus.CANCELLED.equals(currentStatus)) {
             resp.sendRedirect("orderAdmin?mode=view&id=" + id);
             return;
         }
 
-        if ("PENDING".equals(currentStatus) && "COMPLETED".equals(newStatus)) {
+        if (OrderStatus.PENDING.equals(currentStatus) && OrderStatus.COMPLETED.equals(newStatus)) {
             resp.sendRedirect("orderAdmin?mode=view&id=" + id);
             return;
         }
-
 
         orderService.updateStatus(id, newStatus);
         String userEmail = orderService.getUserEmailByOrderId(id);
-        
-        String statusInVietnamese;
-        switch (newStatus) {
-            case "PENDING":
-                statusInVietnamese = "Chờ xử lý";
-                break;
-            case "SHIPPING":
-                statusInVietnamese = "Đang giao";
-                break;
-            case "COMPLETED":
-                statusInVietnamese = "Hoàn thành";
-                break;
-            case "CANCELLED":
-                statusInVietnamese = "Đã hủy";
-                break;
-            default:
-                statusInVietnamese = newStatus;
-        }
-        
+
+        String statusInVietnamese = mapStatusToVietnamese(newStatus);
 
         EmailService.sendEmail(
                 userEmail,
@@ -144,5 +130,13 @@ public class OrderAdminController extends HttpServlet {
         resp.sendRedirect("orderAdmin?mode=view&id=" + id);
     }
 
+    private String mapStatusToVietnamese(String status) {
+        return switch (status) {
+            case OrderStatus.PENDING -> "Chờ xử lý";
+            case OrderStatus.SHIPPING -> "Đang giao";
+            case OrderStatus.COMPLETED -> "Hoàn thành";
+            case OrderStatus.CANCELLED -> "Đã hủy";
+            default -> status;
+        };
+    }
 }
-
