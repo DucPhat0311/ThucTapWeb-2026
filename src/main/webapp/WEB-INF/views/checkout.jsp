@@ -70,6 +70,14 @@
                             <small>Người nhận thanh toán trực tiếp cho đơn vị giao hàng khi nhận được sản phẩm.</small>
                         </span>
                     </label>
+
+                    <label class="payment-method-option">
+                        <input type="radio" name="paymentMethod" value="VNPAY">
+                        <span>
+                            <strong>Thanh toán qua VNPay</strong>
+                            <small>Bạn sẽ được chuyển đến cổng thanh toán VNPay sandbox để hoàn tất giao dịch.</small>
+                        </span>
+                    </label>
                 </div>
             </div>
 

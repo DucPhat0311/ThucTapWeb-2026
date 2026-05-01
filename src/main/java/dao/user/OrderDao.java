@@ -2,8 +2,6 @@ package dao.user;
 
 import dao.core.BaseDao;
 import model.Order;
-import model.constant.OrderStatus;
-import model.constant.PaymentStatus;
 
 import java.util.List;
 
@@ -14,6 +12,8 @@ public class OrderDao extends BaseDao {
                            String address,
                            String note,
                            String paymentMethod,
+                           String paymentStatus,
+                           String orderStatus,
                            double totalPrice) {
 
         return getJdbi().withHandle(h ->
@@ -36,8 +36,8 @@ public class OrderDao extends BaseDao {
                         .bind("note", note)
                         .bind("total", totalPrice)
                         .bind("payment", paymentMethod)
-                        .bind("paymentStatus", PaymentStatus.UNPAID)
-                        .bind("orderStatus", OrderStatus.PENDING)
+                        .bind("paymentStatus", paymentStatus)
+                        .bind("orderStatus", orderStatus)
                         .executeAndReturnGeneratedKeys("id")
                         .mapTo(int.class)
                         .one()
@@ -91,6 +91,21 @@ public class OrderDao extends BaseDao {
                         })
                         .findOne()
                         .orElse(null)
+        );
+    }
+
+    public void updatePaymentAndOrderStatus(int orderId, String paymentStatus, String orderStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET payment_statuses = :paymentStatus,
+                order_status = :orderStatus
+            WHERE id = :orderId
+        """)
+                        .bind("paymentStatus", paymentStatus)
+                        .bind("orderStatus", orderStatus)
+                        .bind("orderId", orderId)
+                        .execute()
         );
     }
 
