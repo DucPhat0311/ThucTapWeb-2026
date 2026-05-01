@@ -2,6 +2,8 @@ package dao.user;
 
 import dao.core.BaseDao;
 import model.Order;
+import model.constant.OrderStatus;
+import model.constant.PaymentStatus;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class OrderDao extends BaseDao {
             VALUES(
                 :uid, :name, :phone, :address, :note,
                 :total, 0, 0, :total,
-                :payment, 'UNPAID', 'PENDING', NOW()
+                :payment, :paymentStatus, :orderStatus, NOW()
             )
         """)
                         .bind("uid", userId)
@@ -34,12 +36,13 @@ public class OrderDao extends BaseDao {
                         .bind("note", note)
                         .bind("total", totalPrice)
                         .bind("payment", paymentMethod)
+                        .bind("paymentStatus", PaymentStatus.UNPAID)
+                        .bind("orderStatus", OrderStatus.PENDING)
                         .executeAndReturnGeneratedKeys("id")
                         .mapTo(int.class)
                         .one()
         );
     }
-
 
     public Order getById(int orderId) {
 
@@ -90,6 +93,7 @@ public class OrderDao extends BaseDao {
                         .orElse(null)
         );
     }
+
     public List<Order> getByUserId(int userId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
@@ -103,6 +107,7 @@ public class OrderDao extends BaseDao {
                         .list()
         );
     }
+
     public List<Order> getByUserIdAndStatus(int userId, String status) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
