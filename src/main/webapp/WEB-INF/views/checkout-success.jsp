@@ -15,7 +15,7 @@
         <div class="success-icon-wrapper">
             <i class="fa-solid fa-check"></i>
         </div>
-        <h2>Cảm ơn <b>${order.name}</b>, đơn hàng đã được đặt thành công!</h2>
+        <h2>${successMessage}</h2>
         <p class="order-code">Mã đơn hàng của bạn: <b>#${order.id}</b></p>
     </div>
 
@@ -36,9 +36,10 @@
             <div class="info-card">
                 <h3><i class="fa-solid fa-circle-info"></i> Thông tin đơn hàng</h3>
                 <ul class="order-updates">
-                    <li><i class="fa-solid fa-money-bill-wave"></i> Phương thức: Thanh toán khi nhận hàng (COD)</li>
+                    <li><i class="fa-solid fa-money-bill-wave"></i> Phương thức: ${paymentMethodLabel}</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Trạng thái thanh toán: ${paymentStatusLabel}</li>
                     <li><i class="fa-solid fa-phone-volume"></i> Nhân viên giao hàng sẽ liên hệ trước khi giao</li>
-                    <li><i class="fa-solid fa-truck-fast"></i> Thời gian dự kiến: Giao hàng tiêu chuẩn (3–5 ngày)</li>
+                    <li><i class="fa-solid fa-truck-fast"></i> Thời gian dự kiến: Giao hàng tiêu chuẩn (3-5 ngày)</li>
                 </ul>
             </div>
 
