@@ -56,8 +56,10 @@ public class PlaceOrderController extends HttpServlet {
         String paymentMethod = trimToEmpty(request.getParameter("paymentMethod"));
 
         CheckoutService.PreparedCheckout preparedCheckout;
+        CheckoutService.OrderPlacement orderPlacement;
         try {
             preparedCheckout = checkoutService.prepareOrder(user.getId(), cartIdObj, variantIds, quantities);
+            orderPlacement = checkoutService.resolveOrderPlacement(paymentMethod);
         } catch (CheckoutService.CheckoutValidationException e) {
             handleCheckoutValidationError(e, session, response);
             return;
@@ -70,7 +72,9 @@ public class PlaceOrderController extends HttpServlet {
                 preparedCheckout.recipientPhone(),
                 preparedCheckout.shippingAddress(),
                 note,
-                paymentMethod,
+                orderPlacement.paymentMethod(),
+                orderPlacement.paymentStatus(),
+                orderPlacement.orderStatus(),
                 preparedCheckout.totalPrice()
         );
 
@@ -107,6 +111,7 @@ public class PlaceOrderController extends HttpServlet {
                 response.sendRedirect("checkout");
             }
             case OUT_OF_STOCK -> response.sendRedirect("checkout?error=out_of_stock");
+            case INVALID_PAYMENT_METHOD -> response.sendRedirect("checkout?error=invalid_payment_method");
             case CART_NOT_FOUND, EMPTY_SELECTION, INVALID_REQUEST -> response.sendRedirect("my-cart");
         }
     }

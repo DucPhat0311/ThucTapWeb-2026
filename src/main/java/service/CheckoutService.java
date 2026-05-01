@@ -3,6 +3,9 @@ package service;
 import dao.user.ProductVariantDao;
 import model.Address;
 import model.ProductVariant;
+import model.constant.OrderStatus;
+import model.constant.PaymentMethod;
+import model.constant.PaymentStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +72,28 @@ public class CheckoutService {
         );
     }
 
+    public OrderPlacement resolveOrderPlacement(String paymentMethod) throws CheckoutValidationException {
+        String normalizedPaymentMethod = trimToEmpty(paymentMethod);
+
+        if (PaymentMethod.COD.equals(normalizedPaymentMethod)) {
+            return new OrderPlacement(
+                    PaymentMethod.COD,
+                    PaymentStatus.UNPAID,
+                    OrderStatus.PENDING
+            );
+        }
+
+        if (PaymentMethod.VNPAY.equals(normalizedPaymentMethod)) {
+            return new OrderPlacement(
+                    PaymentMethod.VNPAY,
+                    PaymentStatus.PENDING,
+                    OrderStatus.PENDING_PAYMENT
+            );
+        }
+
+        throw new CheckoutValidationException(CheckoutError.INVALID_PAYMENT_METHOD);
+    }
+
     private void validateCart(Integer cartId) throws CheckoutValidationException {
         if (cartId == null) {
             throw new CheckoutValidationException(CheckoutError.CART_NOT_FOUND);
@@ -123,11 +148,19 @@ public class CheckoutService {
     ) {
     }
 
+    public record OrderPlacement(
+            String paymentMethod,
+            String paymentStatus,
+            String orderStatus
+    ) {
+    }
+
     public enum CheckoutError {
         CART_NOT_FOUND,
         EMPTY_SELECTION,
         ADDRESS_REQUIRED,
         OUT_OF_STOCK,
+        INVALID_PAYMENT_METHOD,
         INVALID_REQUEST
     }
 
