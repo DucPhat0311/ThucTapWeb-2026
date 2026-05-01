@@ -1102,6 +1102,11 @@ td.actions > *:last-child {
     color: #f08c00;
 }
 
+.order-status.PENDING_PAYMENT {
+    background: #f3e8ff;
+    color: #7b2cbf;
+}
+
 .order-status.SHIPPING {
     background: #e7f5ff;
     color: #1c7ed6;

@@ -23,6 +23,12 @@
                     </div>
                 </c:if>
 
+                <c:if test="${not empty checkoutError}">
+                    <div class="checkout-alert checkout-alert-error">
+                        ${checkoutError}
+                    </div>
+                </c:if>
+
                 <c:choose>
                     <c:when test="${not empty selectedAddress}">
                         <div class="selected-address">
@@ -56,8 +62,8 @@
                 </c:choose>
 
                 <div class="form-group">
-                    <label>Ghi chú</label>
-                    <textarea name="note" placeholder="Giao giờ hành chính..."></textarea>
+                    <label for="note">Ghi chú</label>
+                    <textarea id="note" name="note" placeholder="Giao giờ hành chính..."></textarea>
                 </div>
 
                 <h2>Phương thức thanh toán</h2>
@@ -93,7 +99,7 @@
                     <c:set var="total" value="0"/>
                     <c:forEach var="item" items="${checkoutItems}">
                         <div class="order-item">
-                            <img src="${item.product.thumbnail}">
+                            <img src="${item.product.thumbnail}" alt="${item.product.name}">
                             <div class="info">
                                 <p class="name">${item.product.name}</p>
                                 <p class="variant">Size ${item.size} · ${item.color}</p>
@@ -137,10 +143,10 @@
 </section>
 
 <jsp:include page="address-modal.jsp">
-    <jsp:param name="formAction" value="address" />
-    <jsp:param name="redirectTo" value="checkout" />
-    <jsp:param name="forceDefault" value="true" />
-    <jsp:param name="hideDefaultOption" value="true" />
+    <jsp:param name="formAction" value="address"/>
+    <jsp:param name="redirectTo" value="checkout"/>
+    <jsp:param name="forceDefault" value="true"/>
+    <jsp:param name="hideDefaultOption" value="true"/>
 </jsp:include>
 
 <script>

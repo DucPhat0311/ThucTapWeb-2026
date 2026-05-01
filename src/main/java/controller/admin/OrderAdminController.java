@@ -6,10 +6,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.constant.OrderStatus;
+import model.constant.PaymentMethod;
+import model.constant.PaymentStatus;
 import service.EmailService;
 import service.OrderService;
 
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet(name = "OrderAdminController", value = "/orderAdmin")
 public class OrderAdminController extends HttpServlet {
@@ -24,6 +27,10 @@ public class OrderAdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        req.setAttribute("orderStatusLabels", getOrderStatusLabels());
+        req.setAttribute("paymentMethodLabels", getPaymentMethodLabels());
+        req.setAttribute("paymentStatusLabels", getPaymentStatusLabels());
 
         String mode = req.getParameter("mode");
 
@@ -59,6 +66,10 @@ public class OrderAdminController extends HttpServlet {
                     .filter(o -> OrderStatus.PENDING.equals(o.getOrderStatus()))
                     .count();
 
+            long pendingPayment = allOrders.stream()
+                    .filter(o -> OrderStatus.PENDING_PAYMENT.equals(o.getOrderStatus()))
+                    .count();
+
             long completed = allOrders.stream()
                     .filter(o -> OrderStatus.COMPLETED.equals(o.getOrderStatus()))
                     .count();
@@ -67,6 +78,7 @@ public class OrderAdminController extends HttpServlet {
             req.setAttribute("total", totalOrders);
             req.setAttribute("totalOrders", totalOrders);
             req.setAttribute("countPending", pending);
+            req.setAttribute("countPendingPayment", pendingPayment);
             req.setAttribute("countCompleted", completed);
             req.setAttribute("currentPage", page);
             req.setAttribute("totalPages", totalPages);
@@ -105,9 +117,18 @@ public class OrderAdminController extends HttpServlet {
         }
 
         String currentStatus = order.getOrderStatus();
+        String paymentMethod = order.getPaymentMethods();
+        String paymentStatus = order.getPaymentStatuses();
 
         if (OrderStatus.COMPLETED.equals(currentStatus) || OrderStatus.CANCELLED.equals(currentStatus)) {
             resp.sendRedirect("orderAdmin?mode=view&id=" + id);
+            return;
+        }
+
+        boolean unpaidOnlineOrder = PaymentMethod.VNPAY.equals(paymentMethod)
+                && !PaymentStatus.PAID.equals(paymentStatus);
+        if (unpaidOnlineOrder && !OrderStatus.CANCELLED.equals(newStatus)) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=unpaid_online_order");
             return;
         }
 
@@ -119,24 +140,50 @@ public class OrderAdminController extends HttpServlet {
         orderService.updateStatus(id, newStatus);
         String userEmail = orderService.getUserEmailByOrderId(id);
 
-        String statusInVietnamese = mapStatusToVietnamese(newStatus);
-
         EmailService.sendEmail(
                 userEmail,
                 "Cập nhật trạng thái đơn hàng #" + id,
-                "Đơn hàng của bạn đã chuyển sang trạng thái: " + statusInVietnamese
+                "Đơn hàng của bạn đã chuyển sang trạng thái: " + getOrderStatusLabel(newStatus)
         );
 
         resp.sendRedirect("orderAdmin?mode=view&id=" + id);
     }
 
-    private String mapStatusToVietnamese(String status) {
-        return switch (status) {
-            case OrderStatus.PENDING -> "Chờ xử lý";
-            case OrderStatus.SHIPPING -> "Đang giao";
-            case OrderStatus.COMPLETED -> "Hoàn thành";
-            case OrderStatus.CANCELLED -> "Đã hủy";
-            default -> status;
-        };
+    public static String getOrderStatusLabel(String status) {
+        return getOrderStatusLabels().getOrDefault(status, status);
+    }
+
+    public static String getPaymentMethodLabel(String paymentMethod) {
+        return getPaymentMethodLabels().getOrDefault(paymentMethod, paymentMethod);
+    }
+
+    public static String getPaymentStatusLabel(String paymentStatus) {
+        return getPaymentStatusLabels().getOrDefault(paymentStatus, paymentStatus);
+    }
+
+    public static Map<String, String> getOrderStatusLabels() {
+        return Map.of(
+                OrderStatus.PENDING_PAYMENT, "Chờ thanh toán",
+                OrderStatus.PENDING, "Chờ xử lý",
+                OrderStatus.SHIPPING, "Đang giao",
+                OrderStatus.COMPLETED, "Hoàn thành",
+                OrderStatus.CANCELLED, "Đã hủy"
+        );
+    }
+
+    public static Map<String, String> getPaymentMethodLabels() {
+        return Map.of(
+                PaymentMethod.COD, "Thanh toán khi nhận hàng",
+                PaymentMethod.VNPAY, "VNPay"
+        );
+    }
+
+    public static Map<String, String> getPaymentStatusLabels() {
+        return Map.of(
+                PaymentStatus.UNPAID, "Chưa thanh toán",
+                PaymentStatus.PENDING, "Đang chờ thanh toán",
+                PaymentStatus.PAID, "Đã thanh toán",
+                PaymentStatus.FAILED, "Thanh toán thất bại"
+        );
     }
 }

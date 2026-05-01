@@ -10,7 +10,21 @@ public class OrderDaoAdmin extends BaseDao {
     public List<Order> getAll() {
         return getJdbi().withHandle(h ->
         h.createQuery("""
-            SELECT *
+            SELECT
+                id,
+                user_id,
+                name,
+                phone,
+                shipping_address,
+                total_price,
+                discount,
+                shipping_fee,
+                note,
+                final_amount,
+                payment_methods,
+                payment_statuses,
+                order_status,
+                created_at
             FROM orders
             ORDER BY created_at DESC """)
         .mapToBean(Order.class)
@@ -85,7 +99,7 @@ public class OrderDaoAdmin extends BaseDao {
                             i.setId(rs.getInt("id"));
                             i.setOrderId(rs.getInt("order_id"));
                             i.setVariantId(rs.getInt("variant_id"));
-//                            i.setProductName(rs.getString("product_name"));
+                            i.setProductName(rs.getString("product_name"));
                             i.setSize(rs.getString("size"));
                             i.setColor(rs.getString("color"));
                             i.setQuantity(rs.getInt("quantity"));
