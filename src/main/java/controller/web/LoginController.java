@@ -92,6 +92,10 @@ public class LoginController extends HttpServlet {
         session.setAttribute("userId", user.getId());
         session.setAttribute("userlogin", user);
 
+        if ("ADMIN".equals(user.getRole())) {
+            session.setAttribute("admin", user);
+        }
+
         Integer cartId = cartDao.findCartIdByUser(user.getId());
         if (cartId == null) {
             cartId = cartDao.createCart(user.getId());
@@ -101,6 +105,7 @@ public class LoginController extends HttpServlet {
         session.setAttribute("cartSize", cartSize);
 
         if ("admin".equalsIgnoreCase(user.getRole())) {
+            session.setAttribute("admin", user);
             response.sendRedirect(request.getContextPath() + "/dashboardAdmin");
         } else {
             response.sendRedirect(request.getContextPath() + "/home");
