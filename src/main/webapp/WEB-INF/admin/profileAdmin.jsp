@@ -95,17 +95,20 @@
                         <h3>Đổi mật khẩu</h3>
                         <form action="${pageContext.request.contextPath}/profileAdmin" method="post">
                             <input type="hidden" name="action" value="changePassword">
-                            <div class="form-group">
+                            <div class="form-group password-group">
                                 <label for="current-password">Mật khẩu hiện tại</label>
                                 <input type="password" id="current-password" name="currentPassword" required>
+                                <i class="fas fa-eye" id="toggle-current-password" onclick="togglePassword('current-password', 'toggle-current-password')"></i>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group password-group">
                                 <label for="new-password">Mật khẩu mới</label>
                                 <input type="password" id="new-password" name="newPassword" required>
+                                <i class="fas fa-eye" id="toggle-new-password" onclick="togglePassword('new-password', 'toggle-new-password')"></i>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group password-group">
                                 <label for="confirm-password">Xác nhận mật khẩu mới</label>
                                 <input type="password" id="confirm-password" name="confirmPassword" required>
+                                <i class="fas fa-eye" id="toggle-confirm-password" onclick="togglePassword('confirm-password', 'toggle-confirm-password')"></i>
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn-save">Đổi mật khẩu</button>
@@ -117,5 +120,6 @@
         </section>
     </main>
 </div>
+<script src="${pageContext.request.contextPath}/js/auth/register.js"></script>
 </body>
 </html>

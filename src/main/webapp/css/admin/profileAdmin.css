@@ -287,3 +287,17 @@ body {
     border-color: #ebccd1;
 }
 
+.password-group {
+    position: relative;
+}
+
+.password-group .fa-eye,
+.password-group .fa-eye-slash {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(25%);
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
