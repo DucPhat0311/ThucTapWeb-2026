@@ -25,6 +25,15 @@ public class ProfileAdminController extends HttpServlet {
             request.setAttribute("adminInfo", currentAdmin);
         }
 
+        if (session.getAttribute("success") != null) {
+            request.setAttribute("success", session.getAttribute("success"));
+            session.removeAttribute("success");
+        }
+        if (session.getAttribute("error") != null) {
+            request.setAttribute("error", session.getAttribute("error"));
+            session.removeAttribute("error");
+        }
+
         request.setAttribute("page", "profile");
         request.getRequestDispatcher("/WEB-INF/admin/profileAdmin.jsp").forward(request, response);
     }
@@ -42,10 +51,10 @@ public class ProfileAdminController extends HttpServlet {
         if ("updateProfile".equals(action)) {
             updateProfile(request, response, admin);
         } else if ("changePassword".equals(action)) {
-            changePassword(request, response, admin.getId());
+            changePassword(request, response, admin);
         }
 
-        doGet(request, response);
+        response.sendRedirect(request.getContextPath() + "/profileAdmin");
     }
 
     private void updateProfile(HttpServletRequest request, HttpServletResponse response, User admin) throws IOException {
@@ -68,23 +77,23 @@ public class ProfileAdminController extends HttpServlet {
         try {
             profileAdminService.updateAdmin(admin);
             request.getSession().setAttribute("admin", admin);
-            request.setAttribute("success", "Cập nhật thông tin thành công!");
+            request.getSession().setAttribute("success", "Cập nhật thông tin thành công!");
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Cập nhật thông tin thất bại!");
+            request.getSession().setAttribute("error", "Cập nhật thông tin thất bại!");
         }
     }
 
-    private void changePassword(HttpServletRequest request, HttpServletResponse response, int adminId) throws IOException {
+    private void changePassword(HttpServletRequest request, HttpServletResponse response, User admin) throws IOException {
         String currentPassword = request.getParameter("currentPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        boolean success = profileAdminService.changePassword(adminId, currentPassword, newPassword, confirmPassword);
+        boolean success = profileAdminService.changePassword(admin.getId(), currentPassword, newPassword, confirmPassword);
         if (success) {
-            request.setAttribute("success", "Đổi mật khẩu thành công!");
+            request.getSession().setAttribute("success", "Đổi mật khẩu thành công!");
         } else {
-            request.setAttribute("error", "Đổi mật khẩu thất bại! Vui lòng kiểm tra lại mật khẩu hiện tại và mật khẩu mới.");
+            request.getSession().setAttribute("error", "Đổi mật khẩu thất bại! Vui lòng kiểm tra lại mật khẩu hiện tại và mật khẩu mới.");
         }
     }
 }
