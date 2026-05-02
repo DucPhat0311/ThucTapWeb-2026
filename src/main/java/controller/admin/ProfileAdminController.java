@@ -51,24 +51,26 @@ public class ProfileAdminController extends HttpServlet {
     private void updateProfile(HttpServletRequest request, HttpServletResponse response, User admin) throws IOException {
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
-        String phoneNumber = request.getParameter("phoneNumber");
+        String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        LocalDate birthday = LocalDate.parse(request.getParameter("birthday"));
+        String birthdayStr = request.getParameter("birthday");
         String gender = request.getParameter("gender");
-        
+
         admin.setFullName(fullName);
         admin.setEmail(email);
-        admin.setPhone(phoneNumber);
+        admin.setPhone(phone);
         admin.setAddress(address);
-        admin.setBirthday(birthday);
+        if (birthdayStr != null && !birthdayStr.isEmpty()) {
+            admin.setBirthday(LocalDate.parse(birthdayStr));
+        }
         admin.setGender(gender);
-
 
         try {
             profileAdminService.updateAdmin(admin);
-            request.getSession().setAttribute("admin", admin); 
+            request.getSession().setAttribute("admin", admin);
             request.setAttribute("success", "Cập nhật thông tin thành công!");
         } catch (Exception e) {
+            e.printStackTrace();
             request.setAttribute("error", "Cập nhật thông tin thất bại!");
         }
     }
