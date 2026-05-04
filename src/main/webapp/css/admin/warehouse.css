@@ -1,0 +1,23 @@
+.tab-container {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+.tab-link {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+    margin-right: 5px;
+}
+.tab-link.active {
+    border-color: #ccc;
+    border-bottom: 1px solid white;
+    background-color: white;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
