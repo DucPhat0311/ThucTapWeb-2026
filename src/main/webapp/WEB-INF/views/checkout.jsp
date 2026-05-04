@@ -19,7 +19,7 @@
 
                 <c:if test="${not empty addressError}">
                     <div class="checkout-alert checkout-alert-error">
-                        ${addressError}
+                            ${addressError}
                     </div>
                 </c:if>
 
