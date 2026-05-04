@@ -11,7 +11,6 @@ import model.Category;
 import model.Product;
 import service.CategoryService;
 import service.ProductService;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +33,7 @@ public class ProductController extends HttpServlet {
         int pageSize = 9;
 
         String pageStr = request.getParameter("page");
-
-
         if (pageStr != null) page = Integer.parseInt(pageStr);
-
         int offset = (page - 1) * pageSize;
 
         String groupId = request.getParameter("groupId");
@@ -53,10 +49,8 @@ public class ProductController extends HttpServlet {
 
         request.setAttribute("categoryList", categoryService.handleGetAllCategories());
         request.setAttribute("productList", productList);
-
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentPage", page);
-
         request.getRequestDispatcher("/WEB-INF/views/product.jsp").forward(request, response);
     }
 }
