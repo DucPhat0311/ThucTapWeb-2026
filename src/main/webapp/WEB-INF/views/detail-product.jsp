@@ -24,7 +24,7 @@
 
 <main class="product-detail">
     <div class="detail-wrapper">
-            <a href="home">Trang chủ</a>
+        <a href="home">Trang chủ</a>
 
         <div class="product-container">
             <div class="product-image">
@@ -377,24 +377,24 @@
 
     document.addEventListener("DOMContentLoaded", function() {
 
-    const tabItems = document.querySelectorAll(".tab-item");
-    const tabPanes = document.querySelectorAll(".tab-pane");
+        const tabItems = document.querySelectorAll(".tab-item");
+        const tabPanes = document.querySelectorAll(".tab-pane");
 
-    tabItems.forEach(item => {
-        item.addEventListener("click", function() {
-            tabItems.forEach(t => t.classList.remove("active"));
-            tabPanes.forEach(p => p.classList.remove("active"));
+        tabItems.forEach(item => {
+            item.addEventListener("click", function() {
+                tabItems.forEach(t => t.classList.remove("active"));
+                tabPanes.forEach(p => p.classList.remove("active"));
 
-            this.classList.add("active");
+                this.classList.add("active");
 
-            const tabId = this.getAttribute("data-tab");
-            const targetPane = document.getElementById(tabId);
-            if(targetPane) {
-                targetPane.classList.add("active");
-            }
+                const tabId = this.getAttribute("data-tab");
+                const targetPane = document.getElementById(tabId);
+                if(targetPane) {
+                    targetPane.classList.add("active");
+                }
+            });
         });
     });
-});
 
     const faqQuestions = document.querySelectorAll(".faq-question");
 
@@ -406,13 +406,13 @@
 
             document.querySelectorAll(".faq-item").forEach(item => {
                 item.classList.remove("active");
-        });
+            });
 
-        if (!isActive) {
-            currentItem.classList.add("active");
-        }
+            if (!isActive) {
+                currentItem.classList.add("active");
+            }
+        });
     });
-});
 
 </script>
 

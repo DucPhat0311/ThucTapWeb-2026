@@ -102,32 +102,32 @@
                         <%-- Tên các sản phẩm --%>
                     <c:forEach var="p" items="${cat.products}">
 
-<%--                        <div class="product-card">--%>
-<%--                            <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>--%>
-<%--                            <img src="${pageContext.request.contextPath}/${p.thumbnail}" alt="${p.name}">--%>
+                        <%--                        <div class="product-card">--%>
+                        <%--                            <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>--%>
+                        <%--                            <img src="${pageContext.request.contextPath}/${p.thumbnail}" alt="${p.name}">--%>
 
-<%--                            <div class="card-content">--%>
-<%--                                <h3>${p.name}</h3>--%>
+                        <%--                            <div class="card-content">--%>
+                        <%--                                <h3>${p.name}</h3>--%>
 
-<%--                                <div class="price">--%>
-<%--                                    <c:choose>--%>
-<%--                                        <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">--%>
-<%--                                                <span class="new-price">--%>
-<%--                                                    <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ--%>
-<%--                                                </span>--%>
-<%--                                            <span class="old-price">--%>
-<%--                                                    <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ--%>
-<%--                                                </span>--%>
-<%--                                        </c:when>--%>
-<%--                                        <c:otherwise>--%>
-<%--                                                <span class="new-price">--%>
-<%--                                                    <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ--%>
-<%--                                                </span>--%>
-<%--                                        </c:otherwise>--%>
-<%--                                    </c:choose>--%>
-<%--                                </div>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
+                        <%--                                <div class="price">--%>
+                        <%--                                    <c:choose>--%>
+                        <%--                                        <c:when test="${p.sale_price != null && p.sale_price lt p.price && p.sale_price gt 0}">--%>
+                        <%--                                                <span class="new-price">--%>
+                        <%--                                                    <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ--%>
+                        <%--                                                </span>--%>
+                        <%--                                            <span class="old-price">--%>
+                        <%--                                                    <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ--%>
+                        <%--                                                </span>--%>
+                        <%--                                        </c:when>--%>
+                        <%--                                        <c:otherwise>--%>
+                        <%--                                                <span class="new-price">--%>
+                        <%--                                                    <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ--%>
+                        <%--                                                </span>--%>
+                        <%--                                        </c:otherwise>--%>
+                        <%--                                    </c:choose>--%>
+                        <%--                                </div>--%>
+                        <%--                            </div>--%>
+                        <%--                        </div>--%>
                         <div class="product-card">
                             <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
 
