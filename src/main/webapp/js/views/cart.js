@@ -1,100 +1,97 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     const totalQtyEl = document.getElementById("totalQuantity");
     const totalPriceEl = document.getElementById("totalPrice");
     const totalFinalEl = document.getElementById("totalFinal");
-
     const selectAll = document.getElementById("selectAll");
     const itemCheckbox = document.querySelectorAll(".item-checkbox");
 
-    function updateTotal() {
-        let totalQty = 0;
-        let totalPrice = 0;
-
-        document.querySelectorAll(".item-checkbox:checked").forEach(checkbox => {
-            const row = checkbox.closest("tr");
-            const qtyInput = row.querySelector(".qty-display");
-
-            const price = Number(row.dataset.price);
-            const qty = Number(qtyInput.value);
-
-            totalQty += qty;
-            totalPrice += qty * price;
-        });
-
-        totalQtyEl.innerText = totalQty;
-        totalPriceEl.innerText = totalPrice.toLocaleString("vi-VN");
-        totalFinalEl.innerText = totalPrice.toLocaleString("vi-VN");
-    }
-
-    // tăng giảm
+    // update so lg
     document.querySelectorAll(".qty-form").forEach(form => {
-        const minus = form.querySelector(".btn-minus");
-        const plus = form.querySelector(".btn-plus");
+        const minusBtn = form.querySelector(".btn-minus");
+        const plusBtn = form.querySelector(".btn-plus");
         const qtyInput = form.querySelector(".qty-display");
 
-        minus.addEventListener("click", () => {
-            let qty = Number(qtyInput.value);
-            if (qty > 1) {
-                qtyInput.value = qty - 1;
-                form.submit();
-            }
-        });
 
-        plus.addEventListener("click", () => {
-            qtyInput.value = Number(qtyInput.value) + 1;
-            form.submit();
-        });
+        const updateQuantityAjax = () => {
+            fetch(form.action, {
+                method: "POST",
+                body: new URLSearchParams(new FormData(form))
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const newCartSize = data.cartSize !== undefined ? data.cartSize : data.totalQuantity;
+                    } else {
+                        alert(data.message || "Lỗi cập nhật số lượng");
+                        window.location.reload();
+                    }
+                })
+                .catch(err => console.error("Lỗi AJAX:", err));
+        };
+
+
+        if (minusBtn && plusBtn && qtyInput) {
+            minusBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                let qty = Number(qtyInput.value);
+                if (qty > 1) {
+                    qtyInput.value = qty - 1;
+                    updateQuantityAjax();
+                }
+            });
+
+
+            plusBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                let qty = Number(qtyInput.value);
+                qtyInput.value = qty + 1;
+                updateQuantityAjax();
+            });
+        }
     });
 
-    // chọn tất cả
+
+    // xoa sp
+
+    // cac checkbox
     if (selectAll) {
         selectAll.addEventListener("change", () => {
-            itemCheckbox.forEach(cb => {
+            document.querySelectorAll(".item-checkbox").forEach(cb => {
                 cb.checked = selectAll.checked;
             });
-            updateTotal();
         });
     }
 
-    // chọn riêng lẻ
-    itemCheckbox.forEach(cb => {
+
+    document.querySelectorAll(".item-checkbox").forEach(cb => {
         cb.addEventListener("change", () => {
-            // bỏ tích 1 cái ==> bỏ tất cả
-            if (!cb.checked) selectAll.checked = false;
-            // tất cả đc tích ==> tích tất cả
-            const allChecked = Array.from(itemCheckbox).every(i => i.checked);
-            if (allChecked) selectAll.checked = true;
-
-            updateTotal();
+            const allCheckboxes = document.querySelectorAll(".item-checkbox");
+            if (selectAll) {
+                selectAll.checked = Array.from(allCheckboxes).every(i => i.checked);
+            }
         });
     });
 
-    updateTotal();
+
+
+    // kiem tra form trc khi thanh toan
+    const checkoutForm = document.getElementById("checkoutForm");
+    if (checkoutForm) {
+        checkoutForm.addEventListener("submit", (e) => {
+            const selectedCheckbox = document.querySelectorAll(".item-checkbox:checked");
+            if (selectedCheckbox.length === 0) {
+                e.preventDefault();
+                alert("Trong giỏ của bạn chưa chọn sản phẩm nào để đặt hàng");
+                return;
+            }
+            checkoutForm.querySelectorAll('input[name="selectedIds"]').forEach(input => input.remove());
+            selectedCheckbox.forEach(cb => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "selectedIds";
+                input.value = cb.value;
+                checkoutForm.appendChild(input);
+            });
+        });
+    }
 });
-
-const checkoutForm = document.getElementById("checkoutForm");
-if (checkoutForm) {
-    checkoutForm.addEventListener("submit", (e) => {
-        const selectedCheckbox = document.querySelectorAll(".item-checkbox:checked");
-
-        if (selectedCheckbox.length === 0) {
-            e.preventDefault();
-            alert("Trong giỏ của bạn chưa chọn sản phẩm nào để đặt hàng");
-            return;
-        }
-
-        // xóa input trc đó mỗi lần nhấn Thanh toán
-        const clearInputs = checkoutForm.querySelectorAll('input[name="selectedIds"]');
-        clearInputs.forEach(input => input.remove());
-
-        selectedCheckbox.forEach(cb => {
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "selectedIds";
-            input.value = cb.value;
-            checkoutForm.appendChild(input);
-        });
-    });
-}
-
