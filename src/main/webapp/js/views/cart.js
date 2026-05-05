@@ -5,6 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectAll = document.getElementById("selectAll");
     const itemCheckbox = document.querySelectorAll(".item-checkbox");
 
+
+
+    function updateCartBadge(quantity) {
+        const badge = document.querySelector(".cart-count");
+        if (badge) {
+            badge.textContent = quantity;
+            badge.style.display = quantity > 0 ? "inline-block" : "none";
+        }
+    }
+
+
     function updateTotal() {
         let totalQty = 0;
         let totalPrice = 0;
@@ -47,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(data => {
                     if (data.success) {
                         const newCartSize = data.cartSize !== undefined ? data.cartSize : data.totalQuantity;
+                        updateCartBadge(newCartSize);
                         updateTotal();
                     } else {
                         alert(data.message || "Lỗi cập nhật số lượng");
@@ -103,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 window.location.reload();
                             } else {
                                 row.remove();
+                                updateCartBadge(newCartSize);
                                 const remainingCheckboxes = document.querySelectorAll(".item-checkbox");
                                 if (remainingCheckboxes.length > 0 && selectAll) {
                                     selectAll.checked = Array.from(remainingCheckboxes).every(i => i.checked);
