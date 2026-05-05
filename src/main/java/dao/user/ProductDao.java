@@ -222,23 +222,13 @@ public class ProductDao extends BaseDao {
         );
     }
 
-    public List<Product> filterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice, int limit, int offset) {
+    public List<Product> filterProducts(String categoryId, String sortType, String minPrice, String maxPrice, int limit, int offset) {
         StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE status = 'Đang bán'");
 
         if (categoryId != null && !categoryId.isEmpty()) {
-            sql.append(" AND (category_id = :cid OR category_id IN (SELECT id FROM categories WHERE parent_id = :cid))");
-        }
-        else if (groupId != null && !groupId.isEmpty()) {
-            int parentId = switch (groupId) {
-                case "phukien" -> 11;
-                case "thoiTrangNam" -> 12;
-                case "thoiTrangNu" -> 13;
-                default -> 0;
-            };
-            if (parentId != 0) {
-                sql.append(" AND (category_id = ").append(parentId)
-                        .append(" OR category_id IN (SELECT id FROM categories WHERE parent_id = ").append(parentId).append("))");
-            }
+            sql.append(" AND (category_id = :cid ")
+                    .append(" OR category_id IN (SELECT id FROM categories WHERE parent_id = :cid) ")
+                    .append(" OR category_id IN (SELECT id FROM categories WHERE parent_id IN (SELECT id FROM categories WHERE parent_id = :cid)) )");
         }
 
         String truePrice = "COALESCE(NULLIF(sale_price, 0), price)";
@@ -250,19 +240,20 @@ public class ProductDao extends BaseDao {
             sql.append(" AND ").append(truePrice).append(" <= :maxP");
         }
 
+
         String orderBy = switch (sortType != null ? sortType : "") {
             case "new"         -> "created_at DESC";
             case "oldest"      -> "created_at ASC";
             case "name_az"     -> "name ASC";
             case "name_za"     -> "name DESC";
-            case "price_up"    -> "COALESCE(NULLIF(sale_price, 0), price) ASC";
-            case "price_down"  -> "COALESCE(NULLIF(sale_price, 0), price) DESC";
-            case "best_seller" -> "views DESC"; // best seller là dựa vào view??? để tạm
+            case "price_up"    -> truePrice + " ASC";
+            case "price_down"  -> truePrice + " DESC";
+            case "best_seller" -> "views DESC";
             default            -> "id ASC";
         };
         sql.append(" ORDER BY ").append(orderBy);
-
         sql.append(" LIMIT ").append(limit).append(" OFFSET ").append(offset);
+
 
         return getJdbi().withHandle(handle -> {
             var query = handle.createQuery(sql.toString());
@@ -273,23 +264,16 @@ public class ProductDao extends BaseDao {
         });
     }
 
-    public int countProducts(String groupId, String categoryId, String minPrice, String maxPrice) {
+
+    public int countProducts(String categoryId, String minPrice, String maxPrice) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE status = 'Đang bán'");
 
         if (categoryId != null && !categoryId.isEmpty()) {
-            sql.append(" AND (category_id = :cid OR category_id IN (SELECT id FROM categories WHERE parent_id = :cid))");
-        } else if (groupId != null && !groupId.isEmpty()) {
-            int parentId = switch (groupId) {
-                case "phukien" -> 11;
-                case "thoiTrangNam" -> 12;
-                case "thoiTrangNu" -> 13;
-                default -> 0;
-            };
-            if (parentId != 0) {
-                sql.append(" AND (category_id = ").append(parentId)
-                        .append(" OR category_id IN (SELECT id FROM categories WHERE parent_id = ").append(parentId).append("))");
-            }
+            sql.append(" AND (category_id = :cid ")
+                    .append(" OR category_id IN (SELECT id FROM categories WHERE parent_id = :cid) ")
+                    .append(" OR category_id IN (SELECT id FROM categories WHERE parent_id IN (SELECT id FROM categories WHERE parent_id = :cid)) )");
         }
+
 
         String truePrice = "COALESCE(NULLIF(sale_price, 0), price)";
         if (minPrice != null && !minPrice.isEmpty()) {
@@ -299,6 +283,7 @@ public class ProductDao extends BaseDao {
             sql.append(" AND ").append(truePrice).append(" <= :maxP");
         }
 
+
         return getJdbi().withHandle(handle -> {
             var query = handle.createQuery(sql.toString());
             if (categoryId != null && !categoryId.isEmpty()) query.bind("cid", Integer.parseInt(categoryId));
@@ -307,6 +292,7 @@ public class ProductDao extends BaseDao {
             return query.mapTo(Integer.class).one();
         });
     }
+
 
 
 }
