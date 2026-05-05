@@ -1,5 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="model.User" %>
+<%@ page import="dao.user.CartDao" %>
+<%@ page import="dao.user.CartItemDao" %>
 
 
 <!DOCTYPE html>
@@ -18,9 +20,21 @@
 </head>
 
 
-<body><header class="header" id="header">
+<body>
 
 
+<%
+    if (session.getAttribute("userlogin") != null) {
+        User userLog = (User) session.getAttribute("userlogin");
+        CartDao cDao = new CartDao();
+        Integer cId = cDao.findCartIdByUser(userLog.getId());
+        if (cId != null) {
+            int size = new CartItemDao().countTotalQuantity(cId);
+            session.setAttribute("cartSize", size);
+        }
+    }
+%>
+<header class="header" id="header">
     <div class="header-top">
         <div class="logo">
             <a href="home" class="iconUser">
@@ -39,15 +53,11 @@
         </div>
 
 
-
-
-        <!-- ACTIONS -->
         <div class="actions">
 
 
             <c:choose>
                 <c:when test="${not empty sessionScope.userlogin}">
-                    <!-- ĐÃ LOGIN -->
                     <div class="user-menu">
                         <a href="#" class="iconUser">
                             <i class="fa-regular fa-user"></i>
@@ -63,7 +73,6 @@
 
 
                 <c:otherwise>
-                    <!-- CHƯA LOGIN -->
                     <div class="user-menu">
                         <a href="#" class="iconUser">
                             <i class="fa-regular fa-user"></i>
@@ -81,11 +90,10 @@
                 <c:when test="${not empty sessionScope.userlogin}">
                     <a href="my-cart" class="iconCart">
                         <i class="fa-solid fa-cart-shopping"></i>
-                        <c:if test="${sessionScope.cartSize != null && sessionScope.cartSize > 0}">
-                           <span class="cart-count">
-                                   ${sessionScope.cartSize != null ? sessionScope.cartSize : 0}
-                           </span>
-                        </c:if>
+                        <span class="cart-count" id="cartCountBadge"
+                              style="${(sessionScope.cartSize == null || sessionScope.cartSize == 0) ? 'display:none' : 'display:inline-block'}">
+                                ${sessionScope.cartSize != null ? sessionScope.cartSize : 0}
+                        </span>
                     </a>
                 </c:when>
                 <c:otherwise>
@@ -96,7 +104,6 @@
             </c:choose>
 
 
-            <!-- NOTIFICATION -->
             <div class="notification-wrapper">
                 <p id="thongBao" class="iconNotification">
                     <i class="fa-regular fa-bell"></i>
@@ -142,9 +149,6 @@
 
 
 
-
-
 </body>
-
-
+</html>
 
