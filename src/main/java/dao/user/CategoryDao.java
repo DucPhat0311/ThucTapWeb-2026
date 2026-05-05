@@ -7,14 +7,32 @@ import java.util.List;
 
 public class CategoryDao extends BaseDao {
 
+    // Lấy 1 danh mục theo ID
+    public Category getCategoryById(int id) {
+        String sql = "SELECT * FROM categories WHERE id = :id AND status = 1";
+        return getJdbi().withHandle(h ->
+                h.createQuery(sql)
+                        .bind("id", id)
+                        .mapToBean(Category.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
     // lấy danh mục lớn + nhỏ
     public List<Category> getAllCategories() {
         List<Category> parents = getParentCategories();
         for (Category p : parents) {
-            p.setSubCategories(getSubCategories(p.getId()));
+            List<Category> cate = getSubCategories(p.getId());
+
+            for (Category sub : cate) {
+                sub.setSubCategories(getSubCategories(sub.getId()));
+            }
+            p.setSubCategories(cate);
         }
         return parents;
     }
+
 
     // lấy danh mục lớn
     public List<Category> getParentCategories() {
