@@ -9,7 +9,7 @@ body{
     min-height: 100vh;
 }
 
-/* áº¨n header khi cuá»™n xuá»‘ng */
+
 .header {
     position: fixed;
     top: 0;
@@ -21,24 +21,26 @@ body{
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Khi thÃªm class hide â†’ header trÆ°á»£t lÃªn */
+
 .header.hide {
-    top: -120px; /* áº©n háº³n khá»i mÃ n hÃ¬nh */
+    top: -120px;
 }
 
-/* Äá»ƒ pháº§n ná»™i dung khÃ´ng bá»‹ header che */
+
 body {
     padding-top: 130px;
 }
 
 
-/* Pháº§n notification */
+
+
 .notification-wrapper {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
+
 
 #thongBao {
     margin: 0;
@@ -52,19 +54,23 @@ body {
     height: 40px;
 }
 
+
 #thongBao:hover {
     color: #A67B5B;
 }
+
 
 #thongBao i {
     font-size: 20px;
     transition: color 0.2s, transform 0.2s;
 }
 
+
 #thongBao:hover i {
     color: #A67B5B;
     transform: scale(1.2);
 }
+
 
 #notification-box {
     display: none;
@@ -82,6 +88,7 @@ body {
     transform-origin: top right;
 }
 
+
 #notification-box::before {
     content: '';
     position: absolute;
@@ -95,11 +102,13 @@ body {
     transform: rotate(45deg);
 }
 
+
 #notification-box ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
+
 
 #notification-box ul li {
     padding: 14px 20px;
@@ -114,6 +123,7 @@ body {
     cursor: default;
 }
 
+
 #notification-box ul li::before {
     content: '';
     display: block;
@@ -124,17 +134,21 @@ body {
     margin-top: 7px;
 }
 
+
 #notification-box ul li:hover {
     background-color: #FFFDF9;
 }
+
 
 #notification-box ul li:last-child {
     border-bottom: none;
 }
 
+
 #notification-box.active {
     display: block;
 }
+
 
 .header .header-top {
     display: grid;
@@ -144,6 +158,7 @@ body {
     height: 80px;
 }
 
+
 .logo {
     display: flex;
     justify-content: flex-start;
@@ -151,10 +166,12 @@ body {
     height: 100%;
 }
 
+
 .header-top .search-bar {
     width: 500px;
     margin: 0;
 }
+
 
 .actions{
     display: flex;
@@ -163,6 +180,7 @@ body {
     gap: 40px;
     padding-right: 0;
 }
+
 
 .header-top .search-bar form {
     display: flex;
@@ -174,6 +192,7 @@ body {
     padding: 5px 15px;
 }
 
+
 .header-top .search-bar input {
     flex-grow: 1;
     border: none;
@@ -184,6 +203,7 @@ body {
     color: #6F4E37;
 }
 
+
 .header-top .search-bar button {
     background: transparent;
     border: none;
@@ -193,9 +213,11 @@ body {
     transition: color 0.2s;
 }
 
+
 .header-top .search-bar button:hover {
     color: #A67B5B;
 }
+
 
 .header .header-bottom {
     display: flex;
@@ -207,7 +229,9 @@ body {
     border-bottom: 2px solid #F5F5DC;
 }
 
-/* Class rá»—ng vÃ¬ Ä‘Ã£ gá»™p vÃ o tháº» trÃªn */
+
+/* Class rá»—ng vÃ¬ Ä‘Ã£ gá»™p vÃ o tháº» trÃªn */
+
 
 .header img{
     filter: drop-shadow(0px 0px 4px rgba(166, 124, 82, 0.8));
@@ -221,7 +245,11 @@ body {
 .header h1{
     padding: 25px 5px;
 
+
 }
+
+
+
 
 
 
@@ -241,13 +269,14 @@ body {
     text-decoration: none;
     color: #6F4E37;
     font-weight: bold;
-    transition: color 0.2s;     /*MÃ u chá»¯ thay Ä‘á»•i tá»« tá»« chá»© khÃ´ng pháº£i thay Ä‘á»•i Ä‘á»™t ngá»™t*/
+    transition: color 0.2s;
     display: block;
     padding: 10px 15px;
 }
 .header-bottom a:hover{
     color: #A67B5B;
 }
+
 
 header .sub{
     display: none;
@@ -268,7 +297,7 @@ header .sub{
     animation: fadeInSub 0.3s ease forwards;
 }
 
-/* Cáº§u ná»‘i vÃ´ hÃ¬nh giÃºp khÃ´ng bá»‹ máº¥t hover */
+
 header .sub::before {
     content: "";
     position: absolute;
@@ -278,6 +307,7 @@ header .sub::before {
     height: 10px;
     background: transparent;
 }
+
 
 @keyframes fadeInSub {
     from {
@@ -290,6 +320,7 @@ header .sub::before {
     }
 }
 
+
 header .sub a{
     display: block;
     padding: 10px 20px;
@@ -300,14 +331,17 @@ header .sub a{
     transition: all 0.3s ease;
 }
 
+
 header li:hover .sub{
     display: block;
 }
+
 
 /**/
 .sub li {
     padding: 0 5px;
 }
+
 
 .sub li a:hover{
     background-color: #F5F5DC;
@@ -317,7 +351,9 @@ header li:hover .sub{
 }
 
 
-/* Bá» trá»‘ng vÃ¬ Ä‘Ã£ gá»™p lÃªn CSS bÃªn trÃªn */
+
+
+
 
 .actions > a {
     color: #6F4E37;
@@ -329,32 +365,35 @@ header li:hover .sub{
     font-size: 20px;
 }
 
+
 .actions > a:hover {
     color: #A67B5B;
 }
+
 
 .actions > a i {
     font-size: 20px;
     transition: color 0.2s, transform 0.2s;
 }
 
+
 .actions > a:hover i {
     color: #A67B5B;
     transform: scale(1.2);
 }
 
-/* ========== USER MENU & DROPDOWN ========== */
+
 .user-menu {
     position: relative;
     display: inline-block;
 }
 
-/* Biá»ƒu tÆ°á»£ng user vÃ  tÃªn ngÆ°á»i dÃ¹ng */
+
 .iconUser {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px; /* Khoáº£ng cÃ¡ch giá»¯a icon vÃ  chá»¯ */
+    gap: 8px;
     cursor: pointer;
     text-decoration: none;
     color: #6F4E37;
@@ -364,20 +403,24 @@ header li:hover .sub{
     transition: color 0.2s;
 }
 
+
 .iconUser i {
     font-size: 20px;
     color: #6F4E37;
     transition: color 0.2s, transform 0.2s;
 }
 
+
 .iconUser:hover {
     color: #A67B5B;
 }
+
 
 .iconUser:hover i {
     color: #A67B5B;
     transform: scale(1.1);
 }
+
 
 /* Dropdown */
 .user-dropdown {
@@ -401,7 +444,7 @@ header li:hover .sub{
     animation: fadeInDropdown 0.3s ease forwards;
 }
 
-/* Cáº§u ná»‘i vÃ´ hÃ¬nh chá»‘ng Ä‘á»©t gÃ£y hover */
+
 .user-dropdown::before {
     content: "";
     position: absolute;
@@ -411,6 +454,7 @@ header li:hover .sub{
     height: 15px;
     background: transparent;
 }
+
 
 @keyframes fadeInDropdown {
     from {
@@ -423,14 +467,16 @@ header li:hover .sub{
     }
 }
 
-/* Hiá»ƒn thá»‹ dropdown khi hover */
+
 .user-menu:hover .user-dropdown {
     display: block;
 }
 
+
 .user-dropdown li {
     padding: 0 5px;
 }
+
 
 .user-dropdown li a {
     display: block;
@@ -445,11 +491,14 @@ header li:hover .sub{
 }
 
 
+
+
 .user-dropdown li a:hover {
     background-color: #F5F5DC;
     color: #A67B5B;
     transform: translateX(3px);
 }
+
 
 /* Hiá»‡u á»©ng icon */
 .icon i {
@@ -457,16 +506,19 @@ header li:hover .sub{
     color: #6F4E37;
 }
 
+
 .icon:hover i {
     color: #A67B5B;
 }
 
 
-/* Menu con áº©n */
+
+
 .header-bottom .actions .user-dropdown {
     display: none;
     position: absolute;
-    top: 100%; /* náº±m ngay dÆ°á»›i icon user */
+    top: 100%;
+
 
     background-color: #FFFDF9;
     border: 1px solid #A67B5B;
@@ -478,9 +530,10 @@ header li:hover .sub{
     z-index: 1000;
     min-width: 150px;
 
+
 }
 
-/* CÃ¡c item trong menu con */
+
 .user-dropdown li a {
     display: block;
     padding: 10px 15px;
@@ -490,29 +543,33 @@ header li:hover .sub{
     transition: background-color 0.2s;
 }
 
+
 .user-dropdown li a:hover {
     background-color: #F5F5DC;
     color: #A67B5B;
     border-radius: 5px;
 }
 
-/* Khi hover vÃ o user thÃ¬ hiá»‡n menu con */
+
 .user-menu:hover .user-dropdown {
     display: block;
 }
 
-/* Hiá»‡u á»©ng icon */
+
 .icon i {
     font-size: 20px;
     color: #6F4E37;
     transition: color 0.2s, transform 0.2s;
 }
 
+
 .icon:hover i {
     color: #A67B5B;
     transform: scale(1.2);
 
+
 }
+
 
 .iconCart {
     position: relative;
@@ -520,6 +577,7 @@ header li:hover .sub{
     align-items: center;
     justify-content: center;
 }
+
 
 .cart-count {
     position: absolute;
@@ -538,6 +596,12 @@ header li:hover .sub{
     box-shadow: 0 2px 4px rgba(255, 59, 59, 0.4);
 }
 
+
+.cart-count:empty {
+    display: none !important;
+}
+
+
 @keyframes cartBounce {
     0%, 100% {
         transform: scale(1);
@@ -546,6 +610,10 @@ header li:hover .sub{
         transform: scale(1.3);
     }
 }
+
+
+
+
 
 
 
