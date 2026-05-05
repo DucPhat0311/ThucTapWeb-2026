@@ -34,7 +34,10 @@
             </div>
 
             <div id="import" class="tab-content active">
-                <h3>Lịch sử nhập kho</h3>
+                <div class="tab-header">
+                    <h3>Lịch sử nhập kho</h3>
+                    <a href="${pageContext.request.contextPath}/admin/warehouseForm" class="add-btn">Thêm phiếu nhập</a>
+                </div>
                 <div class="user-table-wrapper">
                     <table class="user-table">
                         <thead>
@@ -60,7 +63,10 @@
             </div>
 
             <div id="export" class="tab-content">
-                <h3>Lịch sử xuất kho</h3>
+                <div class="tab-header">
+                    <h3>Lịch sử xuất kho</h3>
+                    <a href="${pageContext.request.contextPath}/admin/warehouseForm" class="add-btn">Thêm phiếu xuất</a>
+                </div>
                 <div class="user-table-wrapper">
                     <table class="user-table">
                         <thead>
