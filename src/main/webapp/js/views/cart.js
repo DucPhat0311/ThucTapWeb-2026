@@ -5,6 +5,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectAll = document.getElementById("selectAll");
     const itemCheckbox = document.querySelectorAll(".item-checkbox");
 
+    function updateTotal() {
+        let totalQty = 0;
+        let totalPrice = 0;
+        document.querySelectorAll(".cart-item-row").forEach(row => {
+            const checkbox = row.querySelector(".item-checkbox");
+            const qtyInput = row.querySelector(".qty-display");
+            const subtotalEl = row.querySelector(".item-subtotal");
+            if (!qtyInput) return;
+
+            const price = Number(row.dataset.price) || 0;
+            const qty = Number(qtyInput.value) || 0;
+
+            if (subtotalEl) {
+                subtotalEl.innerText = (price * qty).toLocaleString("vi-VN") + " ₫";
+            }
+            if (checkbox && checkbox.checked) {
+                totalQty += qty;
+                totalPrice += qty * price;
+            }
+        });
+
+        if (totalQtyEl) totalQtyEl.innerText = totalQty;
+        if (totalPriceEl) totalPriceEl.innerText = totalPrice.toLocaleString("vi-VN");
+        if (totalFinalEl) totalFinalEl.innerText = totalPrice.toLocaleString("vi-VN");
+    }
+
     // update so lg
     document.querySelectorAll(".qty-form").forEach(form => {
         const minusBtn = form.querySelector(".btn-minus");
@@ -21,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(data => {
                     if (data.success) {
                         const newCartSize = data.cartSize !== undefined ? data.cartSize : data.totalQuantity;
+                        updateTotal();
                     } else {
                         alert(data.message || "Lỗi cập nhật số lượng");
                         window.location.reload();
@@ -97,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".item-checkbox").forEach(cb => {
                 cb.checked = selectAll.checked;
             });
+            updateTotal();
         });
     }
 
@@ -110,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-
+    updateTotal();
 
     // kiem tra form trc khi thanh toan
     const checkoutForm = document.getElementById("checkoutForm");
