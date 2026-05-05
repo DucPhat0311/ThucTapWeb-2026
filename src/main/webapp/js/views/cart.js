@@ -52,6 +52,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // xoa sp
+    document.querySelectorAll(".btn-remove").forEach(btn => {
+        btn.addEventListener("click", function(e) {
+            e.preventDefault();
+            const variantId = this.dataset.variantId;
+            const row = this.closest("tr");
+
+            if (confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) {
+                fetch("del-item", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({ variantId: variantId })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.error === "not_logged_in") {
+                            window.location.href = "login";
+                            return;
+                        }
+                        if (data.success) {
+                            const newCartSize = data.cartSize !== undefined ? data.cartSize : data.totalQuantity;
+                            if (newCartSize === 0) {
+                                window.location.reload();
+                            } else {
+                                row.remove();
+                                const remainingCheckboxes = document.querySelectorAll(".item-checkbox");
+                                if (remainingCheckboxes.length > 0 && selectAll) {
+                                    selectAll.checked = Array.from(remainingCheckboxes).every(i => i.checked);
+                                } else if (selectAll) {
+                                    selectAll.checked = false;
+                                }
+                            }
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+        });
+    });
+
 
     // cac checkbox
     if (selectAll) {
