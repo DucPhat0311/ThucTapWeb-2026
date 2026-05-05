@@ -3,7 +3,6 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -15,57 +14,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-
 <%@include file="../include/header.jsp"%>
-
-
-
-
 <main class="product-detail">
     <div class="detail-wrapper">
-        <a href="home">Trang chủ</a>
+        <nav class="breadcrumb">
+            <a href="${pageContext.request.contextPath}/home">
+                <i class="fa-solid fa-house"></i> Trang chủ
+            </a>
 
-        <div class="product-container">
-            <div class="product-image">
-                <c:set var="hasMain" value="false" />
-                <c:forEach var="img" items="${images}">
-                    <c:if test="${img.main}">
-                        <img id="main-image" src="${img.imageUrl}" alt="${product.name}">
-                        <c:set var="hasMain" value="true" />
-                    </c:if>
+            <c:if test="${not empty breadcrumbs}">
+                <c:forEach var="cat" items="${breadcrumbs}">
+                    <span>/</span>
+                    <a href="${pageContext.request.contextPath}/product?category=${cat.id}">
+                            ${cat.name}
+                    </a>
                 </c:forEach>
-
-
-                <c:if test="${not hasMain}">
-                    <img id="main-image" src="${product.thumbnail}" alt="${product.name}">
-                </c:if>
-
-
-                <div class="image-thumbs">
-                    <c:forEach var="img" items="${images}">
-                        <img class="thumb ${img.main ? 'active' : ''}"
-                             src="${img.imageUrl}"
-                             alt="${product.name}">
-                    </c:forEach>
-                </div>
-            </div>
-
-
+            </c:if>
+            <span>/</span>
+            <span>
+                ${product.name}
+            </span>
+        </nav>
+        <div class="product-container">
             <div class="product-info">
                 <h1 class="product-name">${product.name}</h1>
 
-
-                <div class="product-sku" style="color: #888; font-size: 14px; margin-bottom: 10px;">
+                <div class="product-sku">
                     Mã sản phẩm: <strong>AUR-${product.id}</strong>
                 </div>
-
 
                 <p class="product-price">Giá:
                     <c:choose>
                         <c:when test="${product.sale_price > 0 && product.sale_price < product.price}">
-                            <span style="color:red;font-weight:bold"><fmt:formatNumber value="${product.sale_price}" type="number"/>₫</span>
-                            <span style="text-decoration: line-through; color: #888; margin-left: 8px;"><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
+                            <span><fmt:formatNumber value="${product.sale_price}" type="number"/>₫</span>
+                            <span><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
                         </c:when>
                         <c:otherwise>
                             <span style="font-weight:bold"><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
@@ -73,13 +55,11 @@
                     </c:choose>
                 </p>
 
-
                 <div class="product-rating">
                     <c:forEach begin="1" end="${displayStar}"><i class="fa-solid fa-star" style="color: #FFD43B;"></i></c:forEach>
                     <c:forEach begin="1" end="${5 - displayStar}"><i class="fa-regular fa-star" style="color: #FFD43B;"></i></c:forEach>
                     (${totalReviews} đánh giá)
                 </div>
-
 
                 <div class="product-colors">
                     <p><strong>Màu sắc:</strong></p>
@@ -92,11 +72,10 @@
                     </div>
                 </div>
 
-
                 <div class="product-sizes">
-                    <div class="size-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div class="size-header">
                         <p style="margin: 0;"><strong>Chọn size:</strong></p>
-                        <a href="#size-chart" class="size-chart-link" style="font-size: 14px; color: #6F4E37; text-decoration: underline;"><i class="fa-solid fa-ruler-combined"></i> Gợi ý tìm size</a>
+                        <a href="#size-chart"><i class="fa-solid fa-ruler-combined"></i> Gợi ý tìm size</a>
                     </div>
                     <div class="size-options">
                         <c:forEach var="s" items="${sizes}">
@@ -107,7 +86,6 @@
                     </div>
                 </div>
 
-
                 <div class="product-quantity">
                     <p><strong>Số lượng:</strong></p>
                     <div class="quantity-control">
@@ -117,12 +95,10 @@
                     </div>
                 </div>
 
-
                 <div class="product-actions">
                     <button class="btn-add-cart">Thêm vào giỏ hàng</button>
                     <button class="btn-buy-now">Mua ngay</button>
                 </div>
-
 
                 <div class="product-policy-detailed">
                     <div class="policy-row">
@@ -136,7 +112,6 @@
                         </div>
                     </div>
 
-
                     <div class="policy-row">
                         <div class="policy-col">
                             <i class="fa-solid fa-headset"></i>
@@ -147,7 +122,6 @@
                             <span>Đổi sản phẩm dễ dàng (7 ngày)</span>
                         </div>
                     </div>
-
 
                     <div class="policy-row">
                         <div class="policy-col">
@@ -163,7 +137,6 @@
             </div>
         </div>
 
-
         <section class="product-tabs-container">
             <div class="tabs-header">
                 <button class="tab-item active" data-tab="desc">Mô tả sản phẩm</button>
@@ -173,14 +146,12 @@
                 <button class="tab-item" data-tab="faq">Câu hỏi thường gặp</button>
             </div>
 
-
             <div class="tabs-content">
                 <div class="tab-pane active" id="desc">
                     <div class="product-description-content">
                         ${product.description}
                     </div>
                 </div>
-
 
                 <div class="tab-pane" id="review">
                     <div class="review-list">
@@ -191,13 +162,13 @@
                                         <div class="review-header">
                                             <strong class="review-user-name">Người dùng ẩn danh</strong>
                                             <span class="review-stars">
-                                       <c:forEach begin="1" end="${rv.rating}">
-                                           <i class="fa-solid fa-star"></i>
-                                       </c:forEach>
-                                       <c:forEach begin="1" end="${5 - rv.rating}">
-                                           <i class="fa-regular fa-star"></i>
-                                       </c:forEach>
-                                   </span>
+                                      <c:forEach begin="1" end="${rv.rating}">
+                                          <i class="fa-solid fa-star"></i>
+                                      </c:forEach>
+                                      <c:forEach begin="1" end="${5 - rv.rating}">
+                                          <i class="fa-regular fa-star"></i>
+                                      </c:forEach>
+                                  </span>
                                         </div>
                                         <div class="review-content">
                                             <p><c:out value="${rv.comment}" /></p>
@@ -215,7 +186,6 @@
                     </div>
                 </div>
 
-
                 <div class="tab-pane" id="guide">
                     <div class="guide-content">
                         <h4>QUY TRÌNH MUA HÀNG TRỰC TUYẾN</h4>
@@ -230,7 +200,6 @@
                     </div>
                 </div>
 
-
                 <div class="tab-pane" id="policy">
                     <div class="policy-content">
                         <h4>1. ĐIỀU KIỆN ÁP DỤNG ĐỔI TRẢ</h4>
@@ -242,13 +211,11 @@
                             <li><em>Lưu ý: Không áp dụng trả hàng - hoàn tiền trừ trường hợp sản phẩm bị lỗi nặng từ nhà sản xuất không thể khắc phục. Không hỗ trợ đổi trả với các sản phẩm sale từ 50% trở lên.</em></li>
                         </ul>
 
-
                         <h4>2. CHI PHÍ VẬN CHUYỂN KHI ĐỔI TRẢ</h4>
                         <ul>
                             <li><strong>AURA Studio chịu 100% phí vận chuyển 2 chiều:</strong> Nếu sản phẩm bị lỗi do nhà sản xuất (rách, bẩn, lỗi đường may, phai màu bất thường) hoặc do AURA giao nhầm size, nhầm mẫu.</li>
                             <li><strong>Khách hàng thanh toán phí vận chuyển:</strong> Nếu phát sinh từ nhu cầu chủ quan của khách hàng (muốn đổi size vì chọn nhầm, đổi màu, đổi mẫu khác).</li>
                         </ul>
-
 
                         <h4>3. QUY TRÌNH ĐỔI TRẢ</h4>
                         <ul>
@@ -259,13 +226,8 @@
                     </div>
                 </div>
 
-
-
-
                 <div class="tab-pane" id="faq">
                     <div class="faq-content accordion">
-
-
                         <div class="faq-item">
                             <div class="faq-question">
                                 <span>1. Tất cả sản phẩm trên website đều có sẵn đúng không?</span>
@@ -275,7 +237,6 @@
                                 <p>Dạ đúng ạ. Tất cả các mặt hàng bạn có thể thêm vào giỏ hàng đều đang có sẵn tại kho của AURA Studio và sẵn sàng giao ngay.</p>
                             </div>
                         </div>
-
 
                         <div class="faq-item">
                             <div class="faq-question">
@@ -288,7 +249,6 @@
                             </div>
                         </div>
 
-
                         <div class="faq-item">
                             <div class="faq-question">
                                 <span>3. Phí vận chuyển tính như thế nào?</span>
@@ -298,8 +258,6 @@
                                 <p> <strong>Miễn phí vận chuyển (Freeship)</strong> cho tất cả các đơn hàng có giá trị từ 500.000 VNĐ. Với đơn hàng dưới 500.000 VNĐ, đồng giá ship toàn quốc là 30.000 VNĐ.</p>
                             </div>
                         </div>
-
-
                         <div class="faq-item">
                             <div class="faq-question">
                                 <span>4. Tôi có được kiểm tra hàng trước khi thanh toán không?</span>
@@ -310,7 +268,6 @@
                             </div>
                         </div>
 
-
                         <div class="faq-item">
                             <div class="faq-question">
                                 <span>5. Nếu tôi nhận hàng mặc không vừa thì phải làm sao?</span>
@@ -320,13 +277,10 @@
                                 <p>Bạn hoàn toàn yên tâm nhé! AURA hỗ trợ đổi size tận nhà trong vòng 30 ngày. Bạn chỉ cần inbox Fanpage hoặc gọi Hotline, shipper sẽ mang size mới đến giao tận tay và thu hồi size cũ về, bạn không cần phải ra bưu điện gửi hàng.</p>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
         </section>
-
 
         <section class="suggested-products">
             <h2>Sản phẩm phù hợp khác</h2>
@@ -334,22 +288,22 @@
                 <c:forEach var="item" items="${ralatedProducts}">
                     <div class="product-mini">
                         <a href="${pageContext.request.contextPath}/detail-product?id=${item.id}" class="link-cover"></a>
-                        <img src="${item.thumbnail}" alt="${item.name}">
+                        <img src="img/products${item.thumbnail}" alt="${item.name}">
                         <h3>${item.name}</h3>
                         <p class="price">
                             <c:choose>
                                 <c:when test="${item.sale_price > 0 && item.sale_price < item.price}">
-                           <span class="new-price" style="color:red;font-weight:bold">
-                               <fmt:formatNumber value="${item.sale_price}" type="number"/>đ
-                           </span>
-                                    <span class="old-price" style="text-decoration: line-through; color: #888; margin-left: 8px;">
-                               <fmt:formatNumber value="${item.price}" type="number"/>đ
-                           </span>
+                          <span class="new-price" >
+                              <fmt:formatNumber value="${item.sale_price}" type="number"/>đ
+                          </span>
+                                    <span class="old-price">
+                              <fmt:formatNumber value="${item.price}" type="number"/>đ
+                          </span>
                                 </c:when>
                                 <c:otherwise>
-                           <span class="new-price" style="font-weight:bold">
-                               <fmt:formatNumber value="${item.price}" type="number"/>đ
-                           </span>
+                          <span class="new-price">
+                              <fmt:formatNumber value="${item.price}" type="number"/>đ
+                          </span>
                                 </c:otherwise>
                             </c:choose>
                         </p>
@@ -357,26 +311,18 @@
                     </div>
                 </c:forEach>
 
-
                 <c:if test="${empty ralatedProducts}">
                     <p>Không tìm thấy sản phẩm phù hợp khác.</p>
                 </c:if>
-
 
             </div>
             <a href="product" class="btn-view-more">Xem thêm</a>
         </section>
     </div>
 </main>
-
-
 <div id="toast"></div>
-
-
 <script>
-
     document.addEventListener("DOMContentLoaded", function() {
-
         const tabItems = document.querySelectorAll(".tab-item");
         const tabPanes = document.querySelectorAll(".tab-pane");
 
@@ -397,6 +343,7 @@
     });
 
     const faqQuestions = document.querySelectorAll(".faq-question");
+
 
     faqQuestions.forEach(question => {
         question.addEventListener("click", function() {
@@ -434,6 +381,5 @@
 </body>
 
 <script src="${pageContext.request.contextPath}/js/views/detail-product.js"></script>
-
 </html>
 
