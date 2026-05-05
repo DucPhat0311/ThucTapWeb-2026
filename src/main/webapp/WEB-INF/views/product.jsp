@@ -209,6 +209,53 @@
         rangeMin.value = val;
     });
 
+    function sort(type) {
+        var link = window.location.search;
+        var handleLink = new URLSearchParams(link);
+
+        handleLink.set('sortType', type );
+        handleLink.set('page', 1);
+
+        var newLink = window.location.pathname + "?" + handleLink.toString();
+        window.location.href = newLink;
+    }
+
+
+    function chooseCategory(categoryId) {
+        var link = window.location.search;
+        var handleLink = new URLSearchParams(link);
+
+        if (categoryId === "") {
+            handleLink.delete('categoryId');
+        } else {
+            handleLink.set('categoryId', categoryId);
+        }
+
+        handleLink.set('page', 1);
+
+        var newLink = window.location.pathname + "?" + handleLink.toString();
+        window.location.href = newLink;
+    }
+
+
+    function filterPrice() {
+        var minInput = document.getElementById('min-price').value;
+        var maxInput = document.getElementById('max-price').value;
+
+        if (minInput === "") { minInput = 0; }
+        if (maxInput === "") { maxInput = 5000000; }
+
+        var link = window.location.search;
+        var handleLink = new URLSearchParams(link);
+
+        handleLink.set('minPrice', minInput);
+        handleLink.set('maxPrice', maxInput);
+
+        handleLink.set('page', 1);
+
+        var newLink = window.location.pathname + "?" + handleLink.toString();
+        window.location.href = newLink;
+    }
 
 </script>
 
