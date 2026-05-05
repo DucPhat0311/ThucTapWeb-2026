@@ -174,3 +174,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// back về handle đc cartSize 2 trang home và detail và ..
+window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
