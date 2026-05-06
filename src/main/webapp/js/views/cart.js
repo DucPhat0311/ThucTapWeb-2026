@@ -147,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const allCheckboxes = document.querySelectorAll(".item-checkbox");
             if (selectAll) {
                 selectAll.checked = Array.from(allCheckboxes).every(i => i.checked);
+                updateTotal();
             }
         });
     });
