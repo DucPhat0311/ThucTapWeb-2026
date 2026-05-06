@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 } else if (selectAll) {
                                     selectAll.checked = false;
                                 }
+                                updateTotal();
                             }
                         }
                     })
