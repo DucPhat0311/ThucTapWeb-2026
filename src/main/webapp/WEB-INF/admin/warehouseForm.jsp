@@ -59,9 +59,9 @@
                 </div>
             </div>
         </div>
-        <div class="form-actions">
-            <button type="button" class="btn-cancel" onclick="window.location.href='${pageContext.request.contextPath}/warehouseAdmin'">Hủy</button>
-            <button type="submit" class="btn-save">Lưu</button>
+        <div class="form-footer">
+            <button type="button" class="btn-secondary" onclick="window.location.href='${pageContext.request.contextPath}/warehouseAdmin'">Hủy</button>
+            <button type="submit" class="btn-primary">Lưu</button>
         </div>
     </form>
 </div>

@@ -3,6 +3,12 @@
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
 }
+.tab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
 .tab-link {
     padding: 10px 20px;
     cursor: pointer;
