@@ -48,14 +48,14 @@ public class VietnamLocationService {
         );
     }
 
-    public boolean isValidLocation(Integer provinceCode, Integer districtCode, Integer wardCode) {
+    public boolean isValidLocation(Integer provinceCode, Integer districtCode, String wardCode) {
         if (provinceCode == null || districtCode == null || wardCode == null) {
             return false;
         }
 
         return containsCode(getProvinces(), provinceCode)
                 && containsCode(getDistricts(provinceCode), districtCode)
-                && containsCode(getWards(districtCode), wardCode);
+                && containsCode(getWards(districtCode), Integer.parseInt(wardCode)); // wardCode string -> int
     }
 
     private boolean containsCode(List<LocationItem> items, int code) {

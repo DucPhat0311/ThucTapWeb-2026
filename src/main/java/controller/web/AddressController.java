@@ -1,5 +1,6 @@
 package controller.web;
 
+
 import model.Address;
 import model.User;
 import service.AddressService;
@@ -10,44 +11,56 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+
 import java.io.IOException;
 import java.util.List;
+
 
 @WebServlet("/address")
 public class AddressController extends HttpServlet {
 
+
     private final AddressService addressService = new AddressService();
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
+
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("userlogin") == null) {
             res.sendRedirect("login");
             return;
         }
 
+
         User user = (User) session.getAttribute("userlogin");
+
 
         List<Address> addressList = addressService.getByUser(user.getId());
         moveFlashMessageToRequest(session, req);
+
 
         req.setAttribute("addressList", addressList);
         req.getRequestDispatcher("/WEB-INF/views/address.jsp").forward(req, res);
     }
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
+
         req.setCharacterEncoding("UTF-8");
+
 
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("userlogin") == null) {
             res.sendRedirect("login");
             return;
         }
+
 
         User user = (User) session.getAttribute("userlogin");
         String action = req.getParameter("action");
@@ -56,6 +69,7 @@ public class AddressController extends HttpServlet {
             res.sendRedirect(redirectTo);
             return;
         }
+
 
         switch (action) {
             case "add" -> {
@@ -87,8 +101,10 @@ public class AddressController extends HttpServlet {
             }
         }
 
+
         res.sendRedirect(redirectTo);
     }
+
 
     private Address buildAddressFromRequest(HttpServletRequest req, User user) {
         Address address = new Address();
@@ -100,18 +116,20 @@ public class AddressController extends HttpServlet {
         address.setDistrict(req.getParameter("district"));
         address.setDistrictCode(parseNullableInt(req.getParameter("districtCode")));
         address.setWard(req.getParameter("ward"));
-        address.setWardCode(parseNullableInt(req.getParameter("wardCode")));
+        address.setWardCode(req.getParameter("wardCode"));
         address.setDetailAddress(req.getParameter("detailAddress"));
         boolean forceDefault = req.getParameter("forceDefault") != null;
         address.setIsDefault(forceDefault || req.getParameter("isDefault") != null);
         return address;
     }
 
+
     private void redirectWithError(HttpSession session, HttpServletResponse res, String message, String redirectTo)
             throws IOException {
         session.setAttribute("addressError", message);
         res.sendRedirect(redirectTo);
     }
+
 
     private void moveFlashMessageToRequest(HttpSession session, HttpServletRequest req) {
         Object addressError = session.getAttribute("addressError");
@@ -121,10 +139,12 @@ public class AddressController extends HttpServlet {
         }
     }
 
+
     private Integer parseNullableInt(String value) {
         if (value == null || value.isBlank()) {
             return null;
         }
+
 
         try {
             return Integer.parseInt(value);
@@ -133,6 +153,7 @@ public class AddressController extends HttpServlet {
         }
     }
 
+
     private String resolveRedirectTo(String redirectTo) {
         if ("checkout".equals(redirectTo)) {
             return "checkout";
@@ -140,4 +161,6 @@ public class AddressController extends HttpServlet {
         return "address";
     }
 }
+
+
 
