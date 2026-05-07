@@ -1,5 +1,6 @@
 package controller.web;
 
+import dao.user.CategoryDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import model.*;
 import service.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,6 +22,8 @@ public class ProductDetailController extends HttpServlet {
     private SizeService sizeService;
     private ProductImageService productImageService;
     private ProductVariantService productVariantService;
+    private CategoryService categoryService;
+
 
     @Override
     public void init()  {
@@ -29,6 +33,7 @@ public class ProductDetailController extends HttpServlet {
         colorService = new ColorService();
         sizeService = new SizeService();
         productVariantService = new ProductVariantService();
+        categoryService = new CategoryService();
     }
 
     @Override
@@ -57,6 +62,19 @@ public class ProductDetailController extends HttpServlet {
 
         List<ProductVariant> listVariant = productVariantService.getVariantByProductId(id);
 
+        List<Category> breadcrumbs = new ArrayList<>();
+
+        Category currentCat = categoryService.handleGetCategoryById(product.getCategoryId());
+        while (currentCat != null) {
+            breadcrumbs.add(0, currentCat);
+
+            if (currentCat.getParentId() > 0) {
+                currentCat = categoryService.handleGetCategoryById(currentCat.getParentId());
+            } else {
+                currentCat = null;
+            }
+        }
+        request.setAttribute("breadcrumbs", breadcrumbs);
 
         request.setAttribute("variants", listVariant);
         request.setAttribute("sizes", listSize);

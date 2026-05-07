@@ -10,7 +10,7 @@ public class Address {
     private String district;
     private Integer districtCode;
     private String ward;
-    private Integer wardCode;
+    private String wardCode;
     private String detailAddress;
     private boolean isDefault;
 
@@ -43,8 +43,8 @@ public class Address {
     public String getWard() { return ward; }
     public void setWard(String ward) { this.ward = ward; }
 
-    public Integer getWardCode() { return wardCode; }
-    public void setWardCode(Integer wardCode) { this.wardCode = wardCode; }
+    public String getWardCode() { return wardCode; }
+    public void setWardCode(String wardCode) { this.wardCode = wardCode; }
 
     public String getDetailAddress() { return detailAddress; }
     public void setDetailAddress(String detailAddress) { this.detailAddress = detailAddress; }

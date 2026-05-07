@@ -2,12 +2,15 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
+
 <%
     request.setAttribute("pageCss", "views/product.css");
     request.setAttribute("pageTitle" , "Sản phẩm");
 %>
 
+
 <%@include file="../include/header.jsp"%>
+
 
 <section class="products">
     <div class="shop-header">
@@ -15,17 +18,18 @@
 
         <div class="sort-dropdown">
             <span>Sắp xếp theo:</span>
-            <select onchange="window.location.href=this.value;" class="sort-select">
-                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=new" ${param.sortType == 'new' || empty param.sortType ? 'selected' : ''}>Mới nhất</option>
-                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=oldest" ${param.sortType == 'oldest' ? 'selected' : ''}>Cũ nhất</option>
-                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=price_up" ${param.sortType == 'price_up' ? 'selected' : ''}>Giá thấp → cao</option>
-                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=price_down" ${param.sortType == 'price_down' ? 'selected' : ''}>Giá cao → thấp</option>
-                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=name_az" ${param.sortType == 'name_az' ? 'selected' : ''}>Tên A-Z</option>
-                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=name_za" ${param.sortType == 'name_za' ? 'selected' : ''}>Tên Z-A</option>
-                <option value="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=best_seller" ${param.sortType == 'best_seller' ? 'selected' : ''}>Bán chạy nhất</option>
+            <select onchange="sort(this.value)" class="sort-select">
+                <option value="new" ${param.sortType == 'new' || empty param.sortType ? 'selected' : ''}>Mới nhất</option>
+                <option value="oldest" ${param.sortType == 'oldest' ? 'selected' : ''}>Cũ nhất</option>
+                <option value="price_up" ${param.sortType == 'price_up' ? 'selected' : ''}>Giá thấp → cao</option>
+                <option value="price_down" ${param.sortType == 'price_down' ? 'selected' : ''}>Giá cao → thấp</option>
+                <option value="name_az" ${param.sortType == 'name_az' ? 'selected' : ''}>Tên A-Z</option>
+                <option value="name_za" ${param.sortType == 'name_za' ? 'selected' : ''}>Tên Z-A</option>
+                <option value="best_seller" ${param.sortType == 'best_seller' ? 'selected' : ''}>Bán chạy nhất</option>
             </select>
         </div>
     </div>
+
 
     <div class="shop-container">
         <aside class="sidebar">
@@ -39,19 +43,19 @@
                            value="${not empty param.maxPrice ? param.maxPrice : 2000000}">
                 </div>
 
+
                 <div class="range-slider">
                     <input type="range" id="range-min" min="0" max="5000000" step="50000"
                            value="${not empty param.minPrice ? param.minPrice : 0}">
                 </div>
 
-                <button type="button" class="btn-apply" onclick="applyPriceFilter()">Lọc Kết Quả</button>
+                <button type="button" class="btn-apply" onclick="filterPrice()">Lọc Kết Quả</button>
                 <small class="price-unit">* Đơn vị: VNĐ</small>
 
                 <h3>Danh mục</h3>
                 <div class="filter-buttons">
-                    <a href="product?sortType=${param.sortType}">
-                        <button class="${empty param.categoryId ? 'active' : ''}" style="width: 100%;">Tất cả sản phẩm</button>
-                    </a>
+                    <button class="${empty param.categoryId ? 'active' : ''}" style="width: 100%;" onclick="chooseCategory('')">Tất cả sản phẩm</button>
+
 
                     <c:forEach var="cat" items="${categoryList}">
                         <div class="dropdown ${param.categoryId == cat.id ? 'open' : ''}">
@@ -59,22 +63,37 @@
                                 <span>${cat.name}</span> <i class="fa-solid fa-caret-down"></i>
                             </button>
                             <div class="dropdown-content">
-                                <a href="product?categoryId=${cat.id}&sortType=${param.sortType}"
+                                <a style="cursor: pointer;" onclick="chooseCategory('${cat.id}')"
                                    class="${param.categoryId == cat.id ? 'active' : ''}">
-                                    Tất cả
+                                    Tất cả ${cat.name}
                                 </a>
+
+
                                 <c:forEach var="sub" items="${cat.subCategories}">
-                                    <a href="product?categoryId=${sub.id}&sortType=${param.sortType}"
-                                       class="${param.categoryId == sub.id ? 'active' : ''}">
+                                    <a style="cursor: pointer;" onclick="chooseCategory('${sub.id}')"
+                                       class="${param.categoryId == sub.id ? 'active' : ''}" style="font-weight: 600; background-color: #f9f9f9;">
                                             ${sub.name}
                                     </a>
+
+
+                                    <c:if test="${not empty sub.subCategories}">
+                                        <c:forEach var="sub3" items="${sub.subCategories}">
+                                            <a style="cursor: pointer;" onclick="chooseCategory('${sub3.id}')"
+                                               class="${param.categoryId == sub3.id ? 'active' : ''}" style="padding-left: 20px; font-size: 0.9em; color: #555;">
+                                                - ${sub3.name}
+                                            </a>
+                                        </c:forEach>
+                                    </c:if>
                                 </c:forEach>
+
+
                             </div>
                         </div>
                     </c:forEach>
                 </div>
             </div>
         </aside>
+
 
         <div class="main-products">
             <div class="product-list">
@@ -83,7 +102,8 @@
                         <c:forEach var="p" items="${productList}">
                             <div class="product-card">
                                 <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
-                                <img src="${pageContext.request.contextPath}/${p.thumbnail}" alt="${p.name}">
+                                <img src="${pageContext.request.contextPath}/img/products${p.thumbnail}" alt="${p.name}">
+
 
                                 <div class="card-content">
                                     <h3>${p.name}</h3>
@@ -91,21 +111,22 @@
                                     <div class="price">
                                         <c:choose>
                                             <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
-                                                <span class="new-price">
-                                                    <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ
-                                                </span>
+                                               <span class="new-price">
+                                                   <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ
+                                               </span>
                                                 <span class="old-price">
-                                                    <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
-                                                </span>
+                                                   <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
+                                               </span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="new-price">
-                                                    <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
-                                                </span>
+                                               <span class="new-price">
+                                                   <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
+                                               </span>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
                                 </div>
+
 
                                 <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
                                     Chi tiết
@@ -122,10 +143,12 @@
                 </c:choose>
             </div>
 
+
             <div class="pagination">
                 <c:if test="${currentPage > 1}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage - 1}">&laquo;</a>
                 </c:if>
+
 
                 <c:if test="${currentPage > 3}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=1">1</a>
@@ -134,13 +157,16 @@
                     </c:if>
                 </c:if>
 
+
                 <c:set var="begin" value="${currentPage - 2 > 1 ? currentPage - 2 : 1}" />
                 <c:set var="end" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}" />
+
 
                 <c:forEach var="i" begin="${begin}" end="${end}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${i}"
                        class="${currentPage == i ? 'active' : ''}">${i}</a>
                 </c:forEach>
+
 
                 <c:if test="${currentPage < totalPages - 2}">
                     <c:if test="${currentPage < totalPages - 3}">
@@ -149,10 +175,12 @@
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${totalPages}">${totalPages}</a>
                 </c:if>
 
+
                 <c:if test="${currentPage < totalPages}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage + 1}">&raquo;</a>
                 </c:if>
             </div>
+
 
         </div>
     </div>
@@ -177,22 +205,59 @@
         let val = parseInt(this.value);
         if (val > 5000000) val = 5000000;
         if (val < 0) val = 0;
-
         this.value = val;
         rangeMin.value = val;
     });
 
-    function applyPriceFilter() {
-        const minVal = minInput.value || 0;
-        const maxVal = maxInput.value || 5000000;
+    function sort(type) {
+        var link = window.location.search;
+        var handleLink = new URLSearchParams(link);
 
-        let params = new URLSearchParams(window.location.search);
+        handleLink.set('sortType', type );
+        handleLink.set('page', 1);
 
-        params.set("minPrice", minVal);
-        params.set("maxPrice", maxVal);
-
-        window.location.href = "product?" + params.toString();
+        var newLink = window.location.pathname + "?" + handleLink.toString();
+        window.location.href = newLink;
     }
+
+
+    function chooseCategory(categoryId) {
+        var link = window.location.search;
+        var handleLink = new URLSearchParams(link);
+
+        if (categoryId === "") {
+            handleLink.delete('categoryId');
+        } else {
+            handleLink.set('categoryId', categoryId);
+        }
+
+        handleLink.set('page', 1);
+
+        var newLink = window.location.pathname + "?" + handleLink.toString();
+        window.location.href = newLink;
+    }
+
+
+    function filterPrice() {
+        var minInput = document.getElementById('min-price').value;
+        var maxInput = document.getElementById('max-price').value;
+
+        if (minInput === "") { minInput = 0; }
+        if (maxInput === "") { maxInput = 5000000; }
+
+        var link = window.location.search;
+        var handleLink = new URLSearchParams(link);
+
+        handleLink.set('minPrice', minInput);
+        handleLink.set('maxPrice', maxInput);
+
+        handleLink.set('page', 1);
+
+        var newLink = window.location.pathname + "?" + handleLink.toString();
+        window.location.href = newLink;
+    }
+
 </script>
+
 
 <%@ include file="../include/footer.jsp" %>

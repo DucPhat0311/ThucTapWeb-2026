@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 
 @WebServlet(name = "UpdateCart", value = "/update-cart")
@@ -20,15 +19,13 @@ public class UpdateCart extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("cartId") == null) {
-            response.sendRedirect("login");
+            response.getWriter().write("{\"error\": \"not_logged_in\"}");
             return;
         }
 
@@ -47,9 +44,11 @@ public class UpdateCart extends HttpServlet {
             int cartSize = cartItemDao.countTotalQuantity(cartId);
             session.setAttribute("cartSize", cartSize);
 
-            response.sendRedirect("my-cart");
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"success\": true, \"cartSize\": " + cartSize + "}");
+
+
+        } catch (Exception e) {
+            response.getWriter().write("{\"success\": false, \"message\": \"Dữ liệu không hợp lệ\"}");
         }
     }
 }

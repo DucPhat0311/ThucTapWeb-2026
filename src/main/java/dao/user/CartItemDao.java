@@ -119,11 +119,10 @@ public class CartItemDao extends BaseDao {
                         .execute();
             } else {
                 h.createUpdate("""
-                INSERT INTO cart_items(cart_id, product_id, variant_id, quantity, price)
-                VALUES (:cid, :pid, :vid, :q, :price)
+                INSERT INTO cart_items(cart_id, variant_id, quantity, price)
+                VALUES (:cid, :vid, :q, :price)
             """)
                         .bind("cid", cartId)
-                        .bind("pid", productId)
                         .bind("vid", variantId)
                         .bind("q", quantity)
                         .bind("price", price)

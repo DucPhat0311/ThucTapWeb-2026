@@ -11,7 +11,6 @@ import model.Category;
 import model.Product;
 import service.CategoryService;
 import service.ProductService;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,29 +33,23 @@ public class ProductController extends HttpServlet {
         int pageSize = 9;
 
         String pageStr = request.getParameter("page");
-
-
         if (pageStr != null) page = Integer.parseInt(pageStr);
-
         int offset = (page - 1) * pageSize;
 
-        String groupId = request.getParameter("groupId");
         String categoryId = request.getParameter("categoryId");
         String sortType = request.getParameter("sortType");
 
         String minPrice = request.getParameter("minPrice");
         String maxPrice = request.getParameter("maxPrice");
 
-        List<Product> productList = productService.handleFilterProducts(groupId, categoryId, sortType, minPrice, maxPrice,pageSize,offset);
-        int totalProducts = productService.handleCountProducts(groupId, categoryId, minPrice, maxPrice);
+        List<Product> productList = productService.handleFilterProducts(categoryId, sortType, minPrice, maxPrice,pageSize,offset);
+        int totalProducts = productService.handleCountProducts(categoryId, minPrice, maxPrice);
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
         request.setAttribute("categoryList", categoryService.handleGetAllCategories());
         request.setAttribute("productList", productList);
-
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentPage", page);
-
         request.getRequestDispatcher("/WEB-INF/views/product.jsp").forward(request, response);
     }
 }
