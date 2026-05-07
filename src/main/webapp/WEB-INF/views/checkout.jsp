@@ -245,8 +245,93 @@
             }
         }
 
+        async function calculateLeadTime() {
+            const toDistrictInput = document.getElementById('ghn-district-id');
+            const toWardInput = document.getElementById('ghn-ward-code');
+            const leadTimeDisplay = document.getElementById('lead-time-display');
+
+            if (!toDistrictInput || !toDistrictInput.value || toDistrictInput.value.trim() === '') {
+                return;
+            }
+
+            const toDistrictId = parseInt(toDistrictInput.value);
+            const toWardCode = toWardInput.value;
+
+            try {
+                const serviceResponse = await fetch(window.APP_CONTEXT_PATH +'/api/shipping-service', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        "shop_id": SHOP_ID,
+                        "from_district": SHOP_DISTRICT_ID,
+                        "to_district": toDistrictId
+                    })
+                });
+
+                const serviceResult = await serviceResponse.json();
+                let validServiceId = null;
+
+
+                if (serviceResult.code === 200 && serviceResult.data) {
+                    const standardService = serviceResult.data.find(s => s.service_type_id === 2);
+                    if (standardService) {
+                        validServiceId = standardService.service_id;
+                    } else if (serviceResult.data.length > 0) {
+                        validServiceId = serviceResult.data[0].service_id;
+                    }
+                }
+
+
+                if (!validServiceId) {
+                    if (leadTimeDisplay) leadTimeDisplay.innerText = "Không hỗ trợ giao";
+                    return;
+                }
+
+                const payload = {
+                    "from_district_id": SHOP_DISTRICT_ID,
+                    "from_ward_code": SHOP_WARD_ID,
+                    "to_district_id": toDistrictId,
+                    "to_ward_code": toWardCode,
+                    "service_id": validServiceId
+                };
+
+                const response = await fetch(window.APP_CONTEXT_PATH +'/api/shipping-time', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'ShopId': SHOP_ID
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.code === 200 && result.data) {
+                    if (result.data.leadtime > 0) {
+                        const leadTimeDate = new Date(result.data.leadtime * 1000);
+                        const formattedDate = leadTimeDate.toLocaleDateString('vi-VN', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                        if (leadTimeDisplay) leadTimeDisplay.innerText = formattedDate;
+                    } else {
+                        // return 0
+                        if (leadTimeDisplay) leadTimeDisplay.innerText = "Giao hàng trong ngày";
+                    }
+                } else {
+                    if (leadTimeDisplay) leadTimeDisplay.innerText = "Không xác định";
+                }
+            } catch (error) {
+                if (leadTimeDisplay) leadTimeDisplay.innerText = "Lỗi kết nối";
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             calculateShippingFee();
+            calculateLeadTime()
         });
     </script>
 
