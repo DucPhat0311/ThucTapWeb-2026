@@ -197,7 +197,7 @@ function renderOptions(select, items, placeholder, selectedName = "", selectedCo
         const option = document.createElement("option");
         option.value = item.name;
         option.textContent = item.name;
-        option.dataset.code = item.code;
+        option.dataset.code = item.codeString || item.code || "";
         select.appendChild(option);
     });
 

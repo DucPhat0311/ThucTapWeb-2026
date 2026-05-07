@@ -9,57 +9,60 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class VietnamLocationService {
-    private static final String DEFAULT_BASE_URL = "https://provinces.open-api.vn/api/v1";
-    private static final String BASE_URL_PROPERTY = "location.api.base-url";
-    private static final String BASE_URL_ENV = "LOCATION_API_BASE_URL";
+public class LocationService {
     private static final Duration CACHE_TTL = Duration.ofHours(24);
-    private static final VietnamLocationService INSTANCE = new VietnamLocationService(new ProvinceOpenApiClient());
+    private static final LocationService INSTANCE = new LocationService(
+            new GhnLocationProvider()
+    );
 
-    private final ProvinceOpenApiClient apiClient;
+    private final LocationProvider locationProvider;
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
 
-    public VietnamLocationService(ProvinceOpenApiClient apiClient) {
-        this.apiClient = apiClient;
+    public LocationService(LocationProvider locationProvider) {
+        this.locationProvider = locationProvider;
     }
 
-    public static VietnamLocationService getInstance() {
+    public static LocationService getInstance() {
         return INSTANCE;
     }
 
     public List<LocationItem> getProvinces() {
-        String baseUrl = getBaseUrl();
-        return getCached("provinces:" + baseUrl, () -> apiClient.fetchProvinces(baseUrl));
+        return getCached(
+                buildCacheKey("provinces"),
+                locationProvider::getProvinces
+        );
     }
 
     public List<LocationItem> getDistricts(int provinceCode) {
-        String baseUrl = getBaseUrl();
         return getCached(
-                "districts:" + baseUrl + ":" + provinceCode,
-                () -> apiClient.fetchDistricts(baseUrl, provinceCode)
+                buildCacheKey("districts", provinceCode),
+                () -> locationProvider.getDistricts(provinceCode)
         );
     }
 
     public List<LocationItem> getWards(int districtCode) {
-        String baseUrl = getBaseUrl();
         return getCached(
-                "wards:" + baseUrl + ":" + districtCode,
-                () -> apiClient.fetchWards(baseUrl, districtCode)
+                buildCacheKey("wards", districtCode),
+                () -> locationProvider.getWards(districtCode)
         );
     }
 
     public boolean isValidLocation(Integer provinceCode, Integer districtCode, String wardCode) {
-        if (provinceCode == null || districtCode == null || wardCode == null) {
+        if (provinceCode == null || districtCode == null || wardCode == null || wardCode.isBlank()) {
             return false;
         }
 
         return containsCode(getProvinces(), provinceCode)
                 && containsCode(getDistricts(provinceCode), districtCode)
-                && containsCode(getWards(districtCode), Integer.parseInt(wardCode)); // wardCode string -> int
+                && containsCodeString(getWards(districtCode), wardCode);
     }
 
     private boolean containsCode(List<LocationItem> items, int code) {
-        return items.stream().anyMatch(item -> item.getCode() == code);
+        return items.stream().anyMatch(item -> item.getCode() != null && item.getCode() == code);
+    }
+
+    private boolean containsCodeString(List<LocationItem> items, String code) {
+        return items.stream().anyMatch(item -> code.equals(item.getCodeString()));
     }
 
     private List<LocationItem> getCached(String key, Supplier<List<LocationItem>> supplier) {
@@ -80,18 +83,12 @@ public class VietnamLocationService {
         }
     }
 
-    private String getBaseUrl() {
-        String propertyValue = System.getProperty(BASE_URL_PROPERTY);
-        if (propertyValue != null && !propertyValue.isBlank()) {
-            return propertyValue;
-        }
+    private String buildCacheKey(String resourceName) {
+        return locationProvider.getProviderKey() + ":" + resourceName;
+    }
 
-        String envValue = System.getenv(BASE_URL_ENV);
-        if (envValue != null && !envValue.isBlank()) {
-            return envValue;
-        }
-
-        return DEFAULT_BASE_URL;
+    private String buildCacheKey(String resourceName, int code) {
+        return buildCacheKey(resourceName) + ":" + code;
     }
 
     private record CacheEntry(List<LocationItem> items, Instant expiresAt) {
