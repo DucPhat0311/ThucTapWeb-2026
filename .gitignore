@@ -41,3 +41,7 @@ build/
 # IntelliJ IDEA
 .idea/
 *.iml
+gradle.properties
+.gradle/
+build/
+target/
