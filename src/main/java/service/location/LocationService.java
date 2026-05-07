@@ -9,20 +9,20 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class VietnamLocationService {
+public class LocationService {
     private static final Duration CACHE_TTL = Duration.ofHours(24);
-    private static final VietnamLocationService INSTANCE = new VietnamLocationService(
+    private static final LocationService INSTANCE = new LocationService(
             new GhnLocationProvider()
     );
 
     private final LocationProvider locationProvider;
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
 
-    public VietnamLocationService(LocationProvider locationProvider) {
+    public LocationService(LocationProvider locationProvider) {
         this.locationProvider = locationProvider;
     }
 
-    public static VietnamLocationService getInstance() {
+    public static LocationService getInstance() {
         return INSTANCE;
     }
 

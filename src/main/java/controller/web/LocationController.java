@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.location.LocationItem;
 import service.location.LocationApiException;
-import service.location.VietnamLocationService;
+import service.location.LocationService;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 @WebServlet("/api/locations/*")
 public class LocationController extends HttpServlet {
-    private final VietnamLocationService locationService = VietnamLocationService.getInstance();
+    private final LocationService locationService = LocationService.getInstance();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

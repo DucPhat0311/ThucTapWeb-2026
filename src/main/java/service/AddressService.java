@@ -3,7 +3,7 @@ package service;
 import dao.user.AddressDao;
 import model.Address;
 import service.location.LocationApiException;
-import service.location.VietnamLocationService;
+import service.location.LocationService;
 
 import java.util.List;
 
@@ -14,13 +14,13 @@ public class AddressService {
             "Không thể kiểm tra địa chỉ lúc này, vui lòng thử lại sau.";
 
     private final AddressDao addressDao;
-    private final VietnamLocationService locationService;
+    private final LocationService locationService;
 
     public AddressService() {
-        this(new AddressDao(), VietnamLocationService.getInstance());
+        this(new AddressDao(), LocationService.getInstance());
     }
 
-    public AddressService(AddressDao addressDao, VietnamLocationService locationService) {
+    public AddressService(AddressDao addressDao, LocationService locationService) {
         this.addressDao = addressDao;
         this.locationService = locationService;
     }
