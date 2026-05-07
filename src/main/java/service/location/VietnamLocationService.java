@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 public class VietnamLocationService {
     private static final Duration CACHE_TTL = Duration.ofHours(24);
     private static final VietnamLocationService INSTANCE = new VietnamLocationService(
-            new ProvinceOpenApiLocationProvider(new ProvinceOpenApiClient())
+            new GhnLocationProvider()
     );
 
     private final LocationProvider locationProvider;
@@ -48,17 +48,21 @@ public class VietnamLocationService {
     }
 
     public boolean isValidLocation(Integer provinceCode, Integer districtCode, String wardCode) {
-        if (provinceCode == null || districtCode == null || wardCode == null) {
+        if (provinceCode == null || districtCode == null || wardCode == null || wardCode.isBlank()) {
             return false;
         }
 
         return containsCode(getProvinces(), provinceCode)
                 && containsCode(getDistricts(provinceCode), districtCode)
-                && containsCode(getWards(districtCode), Integer.parseInt(wardCode)); // wardCode string -> int
+                && containsCodeString(getWards(districtCode), wardCode);
     }
 
     private boolean containsCode(List<LocationItem> items, int code) {
-        return items.stream().anyMatch(item -> item.getCode() == code);
+        return items.stream().anyMatch(item -> item.getCode() != null && item.getCode() == code);
+    }
+
+    private boolean containsCodeString(List<LocationItem> items, String code) {
+        return items.stream().anyMatch(item -> code.equals(item.getCodeString()));
     }
 
     private List<LocationItem> getCached(String key, Supplier<List<LocationItem>> supplier) {
