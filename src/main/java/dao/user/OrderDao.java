@@ -14,27 +14,31 @@ public class OrderDao extends BaseDao {
                            String paymentMethod,
                            String paymentStatus,
                            String orderStatus,
-                           double totalPrice) {
+                           double totalPrice,
+                           double shippingFee,
+                           double finalAmount) { 
 
         return getJdbi().withHandle(h ->
                 h.createUpdate("""
-            INSERT INTO orders(
-                user_id, name, phone, shipping_address, note,
-                total_price, discount, shipping_fee, final_amount,
-                payment_methods, payment_statuses, order_status, created_at
-            )
-            VALUES(
-                :uid, :name, :phone, :address, :note,
-                :total, 0, 0, :total,
-                :payment, :paymentStatus, :orderStatus, NOW()
-            )
-        """)
+        INSERT INTO orders(
+            user_id, name, phone, shipping_address, note,
+            total_price, discount, shipping_fee, final_amount,
+            payment_methods, payment_statuses, order_status, created_at
+        )
+        VALUES(
+            :uid, :name, :phone, :address, :note,
+            :total, 0, :ship, :final,
+            :payment, :paymentStatus, :orderStatus, NOW()
+        )
+    """)
                         .bind("uid", userId)
                         .bind("name", name)
                         .bind("phone", phone)
                         .bind("address", address)
                         .bind("note", note)
                         .bind("total", totalPrice)
+                        .bind("ship", shippingFee)
+                        .bind("final", finalAmount)
                         .bind("payment", paymentMethod)
                         .bind("paymentStatus", paymentStatus)
                         .bind("orderStatus", orderStatus)

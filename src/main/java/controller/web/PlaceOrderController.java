@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import model.User;
 import model.constant.PaymentMethod;
 import model.constant.PaymentTransactionStatus;
+import service.AddressService;
 import service.CheckoutService;
 import service.VnPayService;
 
@@ -29,6 +30,7 @@ public class PlaceOrderController extends HttpServlet {
     private PaymentTransactionDao paymentTransactionDao;
     private CheckoutService checkoutService;
     private VnPayService vnPayService;
+    private AddressService addressService;
 
     @Override
     public void init() {
@@ -39,6 +41,7 @@ public class PlaceOrderController extends HttpServlet {
         paymentTransactionDao = new PaymentTransactionDao();
         checkoutService = new CheckoutService();
         vnPayService = new VnPayService();
+        addressService = new AddressService();
     }
 
     @Override
@@ -60,6 +63,7 @@ public class PlaceOrderController extends HttpServlet {
         Integer cartIdObj = (Integer) session.getAttribute("cartId");
         String[] variantIds = request.getParameterValues("variantIds");
         String[] quantities = request.getParameterValues("quantities");
+
         String note = trimToEmpty(request.getParameter("note"));
         String paymentMethod = trimToEmpty(request.getParameter("paymentMethod"));
 
@@ -73,6 +77,11 @@ public class PlaceOrderController extends HttpServlet {
             return;
         }
 
+        String shippingFeeStr = request.getParameter("shippingFee");
+        double shippingFee = 0;
+        shippingFee = Double.parseDouble(shippingFeeStr);
+        double finalAmount = preparedCheckout.totalPrice() + shippingFee;
+
         int cartId = cartIdObj;
         int orderId = orderDao.createOrder(
                 user.getId(),
@@ -83,7 +92,9 @@ public class PlaceOrderController extends HttpServlet {
                 orderPlacement.paymentMethod(),
                 orderPlacement.paymentStatus(),
                 orderPlacement.orderStatus(),
-                preparedCheckout.totalPrice()
+                preparedCheckout.totalPrice(),
+                shippingFee,
+                finalAmount
         );
 
         for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {

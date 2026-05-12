@@ -74,14 +74,26 @@
                     <span>Tạm tính</span>
                     <span><fmt:formatNumber value="${order.totalPrice}" type="number"/>₫</span>
                 </div>
+
                 <div class="summary-row">
                     <span>Phí vận chuyển</span>
-                    <span>MIỄN PHÍ</span>
+                    <c:choose>
+                        <c:when test="${order.shippingFee > 0}">
+                            <span><fmt:formatNumber value="${order.shippingFee}" type="number"/>₫</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="color: #28a745; font-weight: bold;">MIỄN PHÍ</span>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
+
                 <hr class="divider">
+
                 <div class="summary-total">
                     <span>Tổng cộng</span>
-                    <span class="total-price"><fmt:formatNumber value="${order.finalAmount}" type="number"/>₫</span>
+                    <span class="total-price">
+            <fmt:formatNumber value="${order.finalAmount}" type="number"/>₫
+        </span>
                 </div>
             </div>
         </div>
