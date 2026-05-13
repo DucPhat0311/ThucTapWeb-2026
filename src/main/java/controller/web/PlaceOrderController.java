@@ -118,13 +118,13 @@ public class PlaceOrderController extends HttpServlet {
                     orderId,
                     PaymentMethod.VNPAY,
                     txnRef,
-                    preparedCheckout.totalPrice(),
+                    finalAmount,
                     PaymentTransactionStatus.INITIATED
             );
 
             String paymentUrl = vnPayService.buildPaymentUrl(new VnPayService.PaymentRequest(
                     txnRef,
-                    preparedCheckout.totalPrice(),
+                    finalAmount,
                     "Thanh toan don hang #" + orderId,
                     resolveClientIp(request),
                     null,

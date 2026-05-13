@@ -57,7 +57,12 @@
             </c:if>
 
             <div class="failed-actions">
-                <a href="checkout" class="btn-main">Thử thanh toán lại</a>
+                <c:if test="${not empty order && order.paymentMethods == 'VNPAY' && order.paymentStatuses != 'PAID'}">
+                    <form action="payment-failed" method="post" class="retry-payment-form">
+                        <input type="hidden" name="orderId" value="${order.id}">
+                        <button type="submit" class="btn-main">Thử thanh toán lại</button>
+                    </form>
+                </c:if>
                 <a href="order-user" class="btn-secondary">Đơn hàng của tôi</a>
                 <a href="home" class="btn-light">Tiếp tục mua sắm</a>
             </div>

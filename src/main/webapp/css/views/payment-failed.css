@@ -151,7 +151,8 @@
     margin-top: 10px;
 }
 
-.failed-actions a {
+.failed-actions a,
+.failed-actions button {
     flex: 1;
     text-align: center;
     padding: 14px 20px;
@@ -162,6 +163,18 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.retry-payment-form {
+    flex: 1;
+    display: flex;
+}
+
+.retry-payment-form button {
+    width: 100%;
 }
 
 .btn-main {
