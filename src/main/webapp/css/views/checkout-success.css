@@ -8,7 +8,7 @@
     padding: 0 20px;
 }
 
-/* Biá»ƒu ngá»¯ Top */
+/* Biểu ngữ Top */
 .success-top-banner {
     text-align: center;
     margin-bottom: 40px;
@@ -46,14 +46,14 @@
     color: #000;
 }
 
-/* Ná»™i dung chia cá»™t */
+/* Nội dung chia cột */
 .order-success-content {
     display: flex;
     gap: 40px;
     align-items: flex-start;
 }
 
-/* Cá»™t trÃ¡i */
+/* Cột trái */
 .order-left {
     flex: 6;
     display: flex;
@@ -85,7 +85,7 @@
     color: #a67c52;
 }
 
-/* Äá»‹a chá»‰ */
+/* Địa chỉ */
 .address-details p {
     margin: 8px 0;
     font-size: 0.95rem;
@@ -109,7 +109,7 @@
     border-radius: 4px;
 }
 
-/* ThÃ´ng tin Ä‘Æ¡n hÃ ng (rules) */
+/* Thông tin đơn hàng (rules) */
 .order-updates {
     list-style: none;
     padding: 0;
@@ -175,7 +175,7 @@
     color: #000;
 }
 
-/* Cá»™t pháº£i */
+/* Cột phải */
 .order-right {
     flex: 4;
     background: #fff;
@@ -275,7 +275,7 @@
     white-space: nowrap;
 }
 
-/* Báº£ng tá»•ng */
+/* Bảng tổng */
 .summary-box {
     margin-top: 25px;
     background: #fafafa;
