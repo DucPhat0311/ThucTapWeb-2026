@@ -103,6 +103,11 @@ public class OrderAdminController extends HttpServlet {
             throws IOException {
 
         String action = req.getParameter("action");
+        if ("createGhnOrder".equals(action)) {
+            createGhnOrder(req, resp);
+            return;
+        }
+
         if (!"update".equals(action)) {
             return;
         }
@@ -147,6 +152,35 @@ public class OrderAdminController extends HttpServlet {
         );
 
         resp.sendRedirect("orderAdmin?mode=view&id=" + id);
+    }
+
+    private void createGhnOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        var order = orderService.findById(id);
+        if (order == null) {
+            resp.sendRedirect("orderAdmin");
+            return;
+        }
+
+        boolean unpaidOnlineOrder = PaymentMethod.VNPAY.equals(order.getPaymentMethods())
+                && !PaymentStatus.PAID.equals(order.getPaymentStatuses());
+        if (unpaidOnlineOrder) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=unpaid_online_order");
+            return;
+        }
+
+        if (!orderService.canCreateGhnShippingOrder(order)) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=ghn_not_allowed");
+            return;
+        }
+
+        try {
+            orderService.createGhnShippingOrder(id);
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&success=ghn_created");
+        } catch (RuntimeException e) {
+            String message = e.getMessage() == null ? "Lỗi không xác định từ GHN." : e.getMessage();
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=ghn_create_failed&message=" + java.net.URLEncoder.encode(message, java.nio.charset.StandardCharsets.UTF_8));
+        }
     }
 
     public static String getOrderStatusLabel(String status) {

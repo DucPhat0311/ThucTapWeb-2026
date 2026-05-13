@@ -141,6 +141,32 @@ public class OrderDaoAdmin extends BaseDao {
                         .execute()
         );
     }
+
+    public void updateGhnOrderCreated(int id,
+                                      String ghnOrderCode,
+                                      String ghnStatus,
+                                      String ghnStatusName,
+                                      java.time.LocalDateTime expectedDeliveryTime) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET ghn_order_code = :ghnOrderCode,
+                ghn_status = :ghnStatus,
+                ghn_status_name = :ghnStatusName,
+                ghn_expected_delivery_time = :expectedDeliveryTime,
+                ghn_last_updated_at = NOW(),
+                order_status = :orderStatus
+            WHERE id = :id
+        """)
+                        .bind("ghnOrderCode", ghnOrderCode)
+                        .bind("ghnStatus", ghnStatus)
+                        .bind("ghnStatusName", ghnStatusName)
+                        .bind("expectedDeliveryTime", expectedDeliveryTime)
+                        .bind("orderStatus", model.constant.OrderStatus.SHIPPING)
+                        .bind("id", id)
+                        .execute()
+        );
+    }
     public String getUserEmailByOrderId(int orderId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""

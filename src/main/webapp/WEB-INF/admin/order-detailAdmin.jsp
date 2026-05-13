@@ -27,6 +27,24 @@
         </div>
     </c:if>
 
+    <c:if test="${param.error == 'ghn_not_allowed'}">
+        <div class="card" style="border-left: 4px solid #dc3545;">
+            <p>Đơn hàng này không thể tạo vận đơn GHN hoặc đã có mã vận đơn.</p>
+        </div>
+    </c:if>
+
+    <c:if test="${param.error == 'ghn_create_failed'}">
+        <div class="card" style="border-left: 4px solid #dc3545;">
+            <p>Không thể tạo vận đơn GHN. ${param.message}</p>
+        </div>
+    </c:if>
+
+    <c:if test="${param.success == 'ghn_created'}">
+        <div class="card" style="border-left: 4px solid #28a745;">
+            <p>Tạo vận đơn GHN thành công.</p>
+        </div>
+    </c:if>
+
     <div class="card">
         <h3>Thông tin người nhận</h3>
         <p><b>Người nhận:</b> ${order.name}</p>
@@ -44,6 +62,30 @@
         <p><b>Trạng thái đơn hàng:</b> ${orderStatusLabels[order.orderStatus]}</p>
         <p><b>Ngày tạo:</b> ${order.createdAtFormatted}</p>
         <p><b>Tổng thanh toán:</b> <fmt:formatNumber value="${order.finalAmount}" type="number"/> đ</p>
+    </div>
+
+    <div class="card">
+        <h3>Vận chuyển GHN</h3>
+        <c:choose>
+            <c:when test="${not empty order.ghnOrderCode}">
+                <p><b>Mã vận đơn:</b> ${order.ghnOrderCode}</p>
+                <p><b>Trạng thái GHN:</b> ${not empty order.ghnStatusName ? order.ghnStatusName : 'Chưa có trạng thái'}</p>
+                <c:if test="${not empty order.ghnExpectedDeliveryTimeFormatted}">
+                    <p><b>Dự kiến giao:</b> ${order.ghnExpectedDeliveryTimeFormatted}</p>
+                </c:if>
+                <c:if test="${not empty order.ghnLastUpdatedAtFormatted}">
+                    <p><b>Cập nhật lúc:</b> ${order.ghnLastUpdatedAtFormatted}</p>
+                </c:if>
+            </c:when>
+            <c:otherwise>
+                <p>Đơn hàng chưa có mã vận đơn GHN.</p>
+                <form method="post" action="orderAdmin" class="status-form">
+                    <input type="hidden" name="action" value="createGhnOrder">
+                    <input type="hidden" name="id" value="${order.id}">
+                    <button class="btn-primary">Tạo vận đơn GHN</button>
+                </form>
+            </c:otherwise>
+        </c:choose>
     </div>
 
     <div class="card">
@@ -101,7 +143,7 @@
                 <tr>
                     <td>
                         <img src="${i.thumbnail}" class="product-thumb"
-                             onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
+                             onerror="this.onerror=null; this.style.display='none';">
                     </td>
                     <td>${i.productName}</td>
                     <td>${i.size}</td>

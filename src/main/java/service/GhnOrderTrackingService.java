@@ -7,11 +7,13 @@ import model.constant.OrderStatus;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -19,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class GhnOrderTrackingService {
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
     private static final String PROVIDER = "GHN";
     private static final ZoneId VIETNAM_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
     private static final Map<String, String> STATUS_LABELS = Map.ofEntries(
@@ -61,7 +64,9 @@ public class GhnOrderTrackingService {
     private final ObjectMapper objectMapper;
 
     public GhnOrderTrackingService() {
-        this.httpClient = HttpClient.newHttpClient();
+        this.httpClient = HttpClient.newBuilder()
+                .connectTimeout(REQUEST_TIMEOUT)
+                .build();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -78,6 +83,7 @@ public class GhnOrderTrackingService {
             String payload = objectMapper.writeValueAsString(Map.of("order_code", normalizedOrderCode));
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(trimBaseUrl(ApiConstant.GHN_BASE_URL) + "/v2/shipping-order/detail"))
+                    .timeout(REQUEST_TIMEOUT)
                     .header("Content-Type", "application/json")
                     .header("Token", ApiConstant.GHN_TOKEN)
                     .POST(HttpRequest.BodyPublishers.ofString(payload))
@@ -111,6 +117,8 @@ public class GhnOrderTrackingService {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("Yêu cầu theo dõi đơn hàng GHN bị gián đoạn.", e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Cấu hình đường dẫn GHN không hợp lệ.", e);
         }
     }
 
@@ -160,9 +168,13 @@ public class GhnOrderTrackingService {
             return null;
         }
         try {
-            return LocalDateTime.parse(rawValue, DateTimeFormatter.ISO_DATE_TIME);
+            return OffsetDateTime.parse(rawValue, DateTimeFormatter.ISO_DATE_TIME).toLocalDateTime();
         } catch (DateTimeParseException ignored) {
-            return null;
+            try {
+                return LocalDateTime.parse(rawValue, DateTimeFormatter.ISO_DATE_TIME);
+            } catch (DateTimeParseException e) {
+                return null;
+            }
         }
     }
 
