@@ -116,8 +116,12 @@
                                     <div class="tracking-item">
                                         <div class="tracking-dot"></div>
                                         <div class="tracking-content">
-                                            <h4>${log.statusName}</h4>
-                                            <p>${log.description}</p>
+                                            <div>
+                                                <h4>${log.statusName}</h4>
+                                                <c:if test="${not empty log.description}">
+                                                    <p>${log.description}</p>
+                                                </c:if>
+                                            </div>
                                             <span>${log.eventTimeFormatted}</span>
                                         </div>
                                     </div>

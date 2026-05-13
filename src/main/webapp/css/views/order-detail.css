@@ -175,6 +175,10 @@
 }
 
 .tracking-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
     flex: 1;
     padding: 16px 18px;
     background: #fffdf9;
@@ -189,12 +193,14 @@
 }
 
 .tracking-content p {
-    margin: 0 0 8px;
+    margin: 0;
     color: #666;
     font-size: 14px;
 }
 
 .tracking-content span {
+    flex-shrink: 0;
+    white-space: nowrap;
     color: #999;
     font-size: 13px;
 }
@@ -386,5 +392,14 @@
     .product-left img {
         width: 80px;
         height: 80px;
+    }
+
+    .tracking-content {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .tracking-content span {
+        white-space: normal;
     }
 }

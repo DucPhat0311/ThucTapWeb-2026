@@ -123,9 +123,18 @@
                         <p class="price">
                             <fmt:formatNumber value="${o.finalAmount}" type="number"/>₫
                         </p>
+                        <c:if test="${not empty o.ghnOrderCode}">
+                            <p class="tracking-inline">GHN: ${o.ghnOrderCode}</p>
+                        </c:if>
                     </div>
                 </div>
                 <div class="order-actions">
+                    <c:if test="${not empty o.ghnOrderCode}">
+                        <span class="tracking-chip">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            ${not empty o.ghnStatusName ? o.ghnStatusName : "Đang chờ GHN"}
+                        </span>
+                    </c:if>
                     <a href="order-detail?id=${o.id}" class="btn-order-action btn-detail">Xem chi tiết</a>
                 </div>
             </div>
