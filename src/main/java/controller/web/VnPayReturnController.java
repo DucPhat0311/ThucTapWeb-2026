@@ -6,7 +6,6 @@ import dao.user.OrderItemDao;
 import dao.user.PaymentTransactionDao;
 import dao.user.ProductVariantDao;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "VnPayReturnController", value = "/vnpay-return")
 public class VnPayReturnController extends HttpServlet {
     private static final String VNPAY_SUCCESS_CODE = "00";
 
