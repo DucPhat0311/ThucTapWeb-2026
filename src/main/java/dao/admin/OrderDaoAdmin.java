@@ -24,6 +24,11 @@ public class OrderDaoAdmin extends BaseDao {
                 payment_methods,
                 payment_statuses,
                 order_status,
+                ghn_order_code,
+                ghn_status,
+                ghn_status_name,
+                ghn_expected_delivery_time,
+                ghn_last_updated_at,
                 created_at
             FROM orders
             ORDER BY created_at DESC """)
@@ -49,6 +54,11 @@ public class OrderDaoAdmin extends BaseDao {
             payment_methods,
             payment_statuses,
             order_status,
+            ghn_order_code,
+            ghn_status,
+            ghn_status_name,
+            ghn_expected_delivery_time,
+            ghn_last_updated_at,
             created_at
         FROM orders
         WHERE id = :oid
@@ -72,6 +82,13 @@ public class OrderDaoAdmin extends BaseDao {
                             o.setPaymentMethods(rs.getString("payment_methods"));
                             o.setPaymentStatuses(rs.getString("payment_statuses"));
                             o.setOrderStatus(rs.getString("order_status"));
+                            o.setGhnOrderCode(rs.getString("ghn_order_code"));
+                            o.setGhnStatus(rs.getString("ghn_status"));
+                            o.setGhnStatusName(rs.getString("ghn_status_name"));
+                            var expectedDeliveryTime = rs.getTimestamp("ghn_expected_delivery_time");
+                            var lastUpdatedAt = rs.getTimestamp("ghn_last_updated_at");
+                            o.setGhnExpectedDeliveryTime(expectedDeliveryTime == null ? null : expectedDeliveryTime.toLocalDateTime());
+                            o.setGhnLastUpdatedAt(lastUpdatedAt == null ? null : lastUpdatedAt.toLocalDateTime());
                             o.setCreatedAt(
                                     rs.getTimestamp("created_at").toLocalDateTime()
                             );
