@@ -3,6 +3,7 @@ package service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.ApiConstant;
+import model.constant.OrderStatus;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +16,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
+import java.util.Set;
 
 public class GhnOrderTrackingService {
     private static final String PROVIDER = "GHN";
@@ -35,6 +37,24 @@ public class GhnOrderTrackingService {
             Map.entry("return", "Đang hoàn hàng"),
             Map.entry("returned", "Đã hoàn hàng"),
             Map.entry("cancel", "Đã hủy")
+    );
+    private static final Set<String> SHIPPING_STATUSES = Set.of(
+            "ready_to_pick",
+            "picking",
+            "money_collect_picking",
+            "picked",
+            "storing",
+            "transporting",
+            "sorting",
+            "delivering",
+            "money_collect_delivering",
+            "delivery_fail",
+            "waiting_to_return",
+            "return"
+    );
+    private static final Set<String> CANCELLED_STATUSES = Set.of(
+            "cancel",
+            "returned"
     );
 
     private final HttpClient httpClient;
@@ -100,6 +120,28 @@ public class GhnOrderTrackingService {
             return "Chưa có trạng thái GHN";
         }
         return STATUS_LABELS.getOrDefault(normalizedStatusCode, normalizedStatusCode);
+    }
+
+    public String resolveOrderStatus(String ghnStatusCode, String currentOrderStatus) {
+        String normalizedGhnStatusCode = trimToEmpty(ghnStatusCode);
+        String normalizedOrderStatus = trimToEmpty(currentOrderStatus);
+
+        if (OrderStatus.CANCELLED.equals(normalizedOrderStatus)) {
+            return OrderStatus.CANCELLED;
+        }
+        if (OrderStatus.COMPLETED.equals(normalizedOrderStatus)) {
+            return OrderStatus.COMPLETED;
+        }
+        if ("delivered".equals(normalizedGhnStatusCode)) {
+            return OrderStatus.COMPLETED;
+        }
+        if (CANCELLED_STATUSES.contains(normalizedGhnStatusCode)) {
+            return OrderStatus.CANCELLED;
+        }
+        if (SHIPPING_STATUSES.contains(normalizedGhnStatusCode)) {
+            return OrderStatus.SHIPPING;
+        }
+        return normalizedOrderStatus.isBlank() ? null : normalizedOrderStatus;
     }
 
     private LocalDateTime parseGhnDateTime(JsonNode node) {

@@ -86,6 +86,7 @@ public class OrderDetailController extends HttpServlet {
                     result.statusName(),
                     result.expectedDeliveryTime()
             );
+            syncOrderStatusFromGhn(order, result.statusCode());
 
             trackingLogDao.insertIfStatusChanged(
                     order.getId(),
@@ -105,6 +106,15 @@ public class OrderDetailController extends HttpServlet {
         } catch (RuntimeException e) {
             request.setAttribute("trackingError", e.getMessage());
         }
+    }
+
+    private void syncOrderStatusFromGhn(Order order, String ghnStatusCode) {
+        String syncedOrderStatus = ghnOrderTrackingService.resolveOrderStatus(ghnStatusCode, order.getOrderStatus());
+        if (syncedOrderStatus == null || syncedOrderStatus.equals(order.getOrderStatus())) {
+            return;
+        }
+        orderDao.updateOrderStatus(order.getId(), syncedOrderStatus);
+        order.setOrderStatus(syncedOrderStatus);
     }
 
     private Integer parseOrderId(String rawOrderId) {

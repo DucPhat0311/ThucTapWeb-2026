@@ -125,6 +125,19 @@ public class OrderDao extends BaseDao {
         );
     }
 
+    public void updateOrderStatus(int orderId, String orderStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET order_status = :orderStatus
+            WHERE id = :orderId
+        """)
+                        .bind("orderStatus", orderStatus)
+                        .bind("orderId", orderId)
+                        .execute()
+        );
+    }
+
     public void updateGhnTrackingInfo(int orderId,
                                       String ghnOrderCode,
                                       String ghnStatus,
