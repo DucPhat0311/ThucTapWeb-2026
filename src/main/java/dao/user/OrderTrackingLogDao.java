@@ -46,6 +46,20 @@ public class OrderTrackingLogDao extends BaseDao {
         );
     }
 
+    public void insertIfStatusChanged(int orderId,
+                                      String provider,
+                                      String trackingCode,
+                                      String statusCode,
+                                      String statusName,
+                                      String description,
+                                      LocalDateTime eventTime) {
+        String latestStatusCode = findLatestStatusCode(orderId, trackingCode);
+        if (statusCode != null && statusCode.equals(latestStatusCode)) {
+            return;
+        }
+        insert(orderId, provider, trackingCode, statusCode, statusName, description, eventTime);
+    }
+
     public List<OrderTrackingLog> getByOrderId(int orderId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
@@ -66,6 +80,24 @@ public class OrderTrackingLogDao extends BaseDao {
                         .bind("orderId", orderId)
                         .mapToBean(OrderTrackingLog.class)
                         .list()
+        );
+    }
+
+    private String findLatestStatusCode(int orderId, String trackingCode) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT status_code
+            FROM order_tracking_logs
+            WHERE order_id = :orderId
+              AND (tracking_code = :trackingCode OR (:trackingCode IS NULL AND tracking_code IS NULL))
+            ORDER BY COALESCE(event_time, created_at) DESC, id DESC
+            LIMIT 1
+        """)
+                        .bind("orderId", orderId)
+                        .bind("trackingCode", trackingCode)
+                        .mapTo(String.class)
+                        .findOne()
+                        .orElse(null)
         );
     }
 }

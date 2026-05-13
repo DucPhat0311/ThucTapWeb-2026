@@ -125,6 +125,9 @@
                         </p>
                     </div>
                 </div>
+                <div class="order-actions">
+                    <a href="order-detail?id=${o.id}" class="btn-order-action btn-detail">Xem chi tiết</a>
+                </div>
             </div>
         </c:forEach>
     </div>
