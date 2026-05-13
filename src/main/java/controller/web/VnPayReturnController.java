@@ -111,7 +111,8 @@ public class VnPayReturnController extends HttpServlet {
                     OrderStatus.PENDING_PAYMENT
             );
         }
-        response.sendRedirect(resolveCheckoutErrorRedirect(responseCode));
+        prepareFailedPaymentSession(session, orderId, responseCode);
+        response.sendRedirect("payment-failed");
     }
 
     private void finalizePaidOrder(Order order, HttpSession session) {
@@ -139,10 +140,14 @@ public class VnPayReturnController extends HttpServlet {
         return value == null ? "" : value.trim();
     }
 
-    private String resolveCheckoutErrorRedirect(String responseCode) {
+    private void prepareFailedPaymentSession(HttpSession session, int orderId, String responseCode) {
+        session.setAttribute("failedOrderId", orderId);
         if ("24".equals(responseCode)) {
-            return "checkout?error=payment_cancelled";
+            session.setAttribute("failedTitle", "Bạn đã hủy thanh toán");
+            session.setAttribute("failedMessage", "Đơn hàng của bạn vẫn đang chờ thanh toán. Bạn có thể thử thanh toán lại hoặc xem lại trong danh sách đơn hàng.");
+            return;
         }
-        return "checkout?error=payment_failed";
+        session.setAttribute("failedTitle", "Thanh toán không thành công");
+        session.setAttribute("failedMessage", "VNPay chưa ghi nhận thanh toán thành công cho đơn hàng này. Bạn có thể thử thanh toán lại hoặc chọn phương thức khác.");
     }
 }
