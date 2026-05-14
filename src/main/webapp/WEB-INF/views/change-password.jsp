@@ -9,11 +9,9 @@
     request.setAttribute("pageCss", "views/change-password.css");
     request.setAttribute("pageTitle" , "Đổi mật khẩu");
 %>
-<!-- ========== HEADER ========== -->
 <%@include file="../include/header.jsp"%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/change-password.css">
 
-<!-- ========== ĐỔI MẬT KHẨU ========== -->
 <section class="profile-container">
     <div class="profile-sidebar">
         <div class="user-info">
@@ -41,8 +39,12 @@
             <h3>${sessionScope.userlogin.fullName}</h3>
             <p>
                 Thành viên từ:
-                <fmt:formatDate value="${sessionScope.userlogin.createdAtDate}"
-                                pattern="dd/MM/yyyy"/>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.userlogin.createdAtDate}">
+                        <fmt:formatDate value="${sessionScope.userlogin.createdAtDate}" pattern="dd/MM/yyyy"/>
+                    </c:when>
+                    <c:otherwise>Chưa xác định</c:otherwise>
+                </c:choose>
             </p>
         </div>
 
@@ -94,6 +96,5 @@
     </div>
 </section>
 
-<!-- ========== FOOTER ========== -->
 <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 <%@ include file="../include/footer.jsp" %>
