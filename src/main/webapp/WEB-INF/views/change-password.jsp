@@ -66,21 +66,36 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="oldpass">Mật khẩu hiện tại</label>
-                    <input type="password" id="oldpass" name="oldpass" placeholder="Nhập mật khẩu cũ">
+                    <div class="password-input-wrap">
+                        <input type="password" id="oldpass" name="oldpass" placeholder="Nhập mật khẩu cũ">
+                        <button type="button" class="toggle-password-btn" data-target="oldpass" aria-label="Hiển thị mật khẩu">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="newpass">Mật khẩu mới</label>
-                    <input type="password" id="newpass" name="newpass" placeholder="Nhập mật khẩu mới">
+                    <div class="password-input-wrap">
+                        <input type="password" id="newpass" name="newpass" placeholder="Nhập mật khẩu mới">
+                        <button type="button" class="toggle-password-btn" data-target="newpass" aria-label="Hiển thị mật khẩu">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="repass">Nhập lại mật khẩu mới</label>
-                    <input type="password" id="repass" name="repass" placeholder="Nhập lại mật khẩu mới">
+                    <div class="password-input-wrap">
+                        <input type="password" id="repass" name="repass" placeholder="Nhập lại mật khẩu mới">
+                        <button type="button" class="toggle-password-btn" data-target="repass" aria-label="Hiển thị mật khẩu">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -97,4 +112,17 @@
 </section>
 
 <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
+<script>
+    document.querySelectorAll(".toggle-password-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = document.getElementById(button.dataset.target);
+            const icon = button.querySelector("i");
+            const showing = input.type === "text";
+            input.type = showing ? "password" : "text";
+            icon.classList.toggle("fa-eye", showing);
+            icon.classList.toggle("fa-eye-slash", !showing);
+            button.setAttribute("aria-label", showing ? "Hiển thị mật khẩu" : "Ẩn mật khẩu");
+        });
+    });
+</script>
 <%@ include file="../include/footer.jsp" %>
