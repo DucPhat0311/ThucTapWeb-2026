@@ -12,6 +12,8 @@ import service.EmailService;
 import service.OrderService;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @WebServlet(name = "OrderAdminController", value = "/orderAdmin")
@@ -142,6 +144,14 @@ public class OrderAdminController extends HttpServlet {
             return;
         }
 
+        if (OrderStatus.CANCELLED.equals(newStatus)) {
+            var cancellationCheck = orderService.checkAdminCancellation(order);
+            if (!cancellationCheck.cancellable()) {
+                redirectWithMessage(resp, id, "cancel_not_allowed", cancellationCheck.message());
+                return;
+            }
+        }
+
         orderService.updateStatus(id, newStatus);
         String userEmail = orderService.getUserEmailByOrderId(id);
 
@@ -179,8 +189,12 @@ public class OrderAdminController extends HttpServlet {
             resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&success=ghn_created");
         } catch (RuntimeException e) {
             String message = e.getMessage() == null ? "Lỗi không xác định từ GHN." : e.getMessage();
-            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=ghn_create_failed&message=" + java.net.URLEncoder.encode(message, java.nio.charset.StandardCharsets.UTF_8));
+            redirectWithMessage(resp, id, "ghn_create_failed", message);
         }
+    }
+
+    private void redirectWithMessage(HttpServletResponse resp, int id, String error, String message) throws IOException {
+        resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=" + error + "&message=" + URLEncoder.encode(message, StandardCharsets.UTF_8));
     }
 
     public static String getOrderStatusLabel(String status) {

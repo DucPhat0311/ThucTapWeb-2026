@@ -14,6 +14,7 @@ public class OrderService {
     private GhnOrderCreationService ghnOrderCreationService = new GhnOrderCreationService();
     private GhnOrderTrackingService ghnOrderTrackingService = new GhnOrderTrackingService();
     private AddressService addressService = new AddressService();
+    private OrderCancellationService orderCancellationService = new OrderCancellationService();
 
     public List<Order> getAllOrders() {
         return dao.getAll();
@@ -29,6 +30,14 @@ public class OrderService {
 
     public void updateStatus(int id, String status) {
         dao.updateStatus(id, status);
+    }
+
+    public OrderCancellationService.CancellationCheck checkUserCancellation(Order order, int userId) {
+        return orderCancellationService.checkUserCancellation(order, userId);
+    }
+
+    public OrderCancellationService.CancellationCheck checkAdminCancellation(Order order) {
+        return orderCancellationService.checkAdminCancellation(order);
     }
 
     public GhnOrderCreationService.CreateOrderResult createGhnShippingOrder(int orderId) {
