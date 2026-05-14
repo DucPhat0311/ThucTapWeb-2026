@@ -39,6 +39,12 @@
         </div>
     </c:if>
 
+    <c:if test="${param.error == 'cancel_not_allowed'}">
+        <div class="card" style="border-left: 4px solid #dc3545;">
+            <p>Không thể hủy đơn hàng. ${param.message}</p>
+        </div>
+    </c:if>
+
     <c:if test="${param.success == 'ghn_created'}">
         <div class="card" style="border-left: 4px solid #28a745;">
             <p>Tạo vận đơn GHN thành công.</p>

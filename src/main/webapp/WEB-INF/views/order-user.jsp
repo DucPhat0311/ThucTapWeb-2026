@@ -52,6 +52,16 @@
     <div class="profile-content">
         <h2>Đơn hàng của tôi</h2>
 
+        <c:if test="${param.cancel == 'success'}">
+            <div class="order-alert order-alert-success">Hủy đơn hàng thành công.</div>
+        </c:if>
+        <c:if test="${param.cancel == 'failed'}">
+            <div class="order-alert order-alert-error">${param.message}</div>
+        </c:if>
+        <c:if test="${param.cancel == 'invalid'}">
+            <div class="order-alert order-alert-error">Yêu cầu hủy đơn hàng không hợp lệ.</div>
+        </c:if>
+
         <div class="order-tabs">
             <a href="order-user?status=all" class="tab-item ${currentStatus == 'all' || empty currentStatus ? 'active' : ''}">
                 Tất cả
@@ -129,6 +139,12 @@
                     </div>
                 </div>
                 <div class="order-actions">
+                    <c:if test="${(o.orderStatus == 'PENDING' || o.orderStatus == 'PENDING_PAYMENT') && !(o.paymentMethods == 'VNPAY' && o.paymentStatuses == 'PAID') && empty o.ghnOrderCode}">
+                        <form method="post" action="cancel-order" class="cancel-order-form">
+                            <input type="hidden" name="id" value="${o.id}">
+                            <button type="submit" class="btn-order-action btn-cancel">Hủy đơn</button>
+                        </form>
+                    </c:if>
                     <c:if test="${not empty o.ghnOrderCode}">
                         <span class="tracking-chip">
                             <i class="fa-solid fa-truck-fast"></i>
@@ -209,9 +225,25 @@
         });
 
         const modal = document.getElementById("reviewModal");
+        const cancelModal = document.getElementById("cancelOrderModal");
+        const cancelForms = document.querySelectorAll(".cancel-order-form");
+        const cancelConfirmForm = document.getElementById("cancelConfirmForm");
+        const cancelOrderIdInput = document.getElementById("cancelOrderId");
+
+        cancelForms.forEach(form => {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                cancelOrderIdInput.value = form.querySelector("input[name='id']").value;
+                cancelModal.style.display = "flex";
+            });
+        });
+
         window.addEventListener("click", (e) => {
             if (e.target === modal) {
                 closeReviewModal();
+            }
+            if (e.target === cancelModal) {
+                closeCancelOrderModal();
             }
         });
     });
@@ -235,9 +267,28 @@
     window.closeReviewModal = function() {
         document.getElementById("reviewModal").style.display = "none";
     };
+
+    window.closeCancelOrderModal = function() {
+        document.getElementById("cancelOrderModal").style.display = "none";
+        document.getElementById("cancelOrderId").value = "";
+    };
 </script>
 
 <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
+
+<div id="cancelOrderModal" class="cancel-order-modal">
+    <div class="cancel-order-dialog">
+        <h3>Xác nhận hủy đơn hàng</h3>
+        <p>Đơn hàng sẽ chuyển sang trạng thái đã hủy. Thao tác này không thể hoàn tác.</p>
+        <div class="cancel-order-actions">
+            <button type="button" class="btn-cancel-back" onclick="closeCancelOrderModal()">Quay lại</button>
+            <form method="post" action="cancel-order" id="cancelConfirmForm">
+                <input type="hidden" name="id" id="cancelOrderId">
+                <button type="submit" class="btn-cancel-confirm">Xác nhận hủy</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div id="reviewModal" class="review-modal">
     <div class="review-modal-content">

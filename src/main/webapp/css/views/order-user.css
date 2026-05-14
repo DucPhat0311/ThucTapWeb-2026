@@ -36,6 +36,26 @@
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
+.order-alert {
+    margin-bottom: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.order-alert-success {
+    background: #eef8ef;
+    color: #2e7d32;
+    border: 1px solid #cce8d0;
+}
+
+.order-alert-error {
+    background: #fff1f1;
+    color: #c62828;
+    border: 1px solid #efc1c1;
+}
+
 .order-item {
     padding: 25px;
     margin-bottom: 20px;
@@ -151,6 +171,86 @@
     border-radius: 24px;
     font-size: 13px;
     font-weight: 600;
+}
+
+.cancel-order-form {
+    margin: 0;
+}
+
+.cancel-order-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(17, 17, 17, 0.48);
+}
+
+.cancel-order-dialog {
+    width: 420px;
+    max-width: 100%;
+    padding: 28px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+}
+
+.cancel-order-dialog h3 {
+    margin: 0 0 12px;
+    color: #222;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.cancel-order-dialog p {
+    margin: 0;
+    color: #666;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.cancel-order-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.cancel-order-actions form {
+    margin: 0;
+}
+
+.btn-cancel-back,
+.btn-cancel-confirm {
+    padding: 11px 18px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel-back {
+    background: transparent;
+    color: #444;
+    border: 1px solid #cccccc;
+}
+
+.btn-cancel-back:hover {
+    background: #f5f5f5;
+}
+
+.btn-cancel-confirm {
+    background: #c62828;
+    color: #fff;
+    border: 1px solid #c62828;
+}
+
+.btn-cancel-confirm:hover {
+    background: #a91f1f;
+    border-color: #a91f1f;
 }
 
 .btn-order-action {
@@ -299,5 +399,15 @@
 @media (max-width: 767px) {
     .order-actions {
         justify-content: flex-start;
+    }
+
+    .cancel-order-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-cancel-back,
+    .btn-cancel-confirm,
+    .cancel-order-actions form {
+        width: 100%;
     }
 }
