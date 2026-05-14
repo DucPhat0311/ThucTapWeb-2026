@@ -2,6 +2,7 @@
          pageEncoding="UTF-8" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -36,6 +37,36 @@
             </span>
         </nav>
         <div class="product-container">
+            <div class="product-image">
+                <div class="main-image-container">
+                    <c:set var="hasMain" value="false" />
+                    <c:forEach var="img" items="${images}">
+                        <c:if test="${img.main && not hasMain}">
+                            <img id="main-image" src="${pageContext.request.contextPath}/img/products${img.imageUrl}" alt="${product.name}">
+                            <c:set var="hasMain" value="true" />
+                        </c:if>
+                    </c:forEach>
+
+                </div>
+
+                <div class="swiper thumbSwiper">
+                    <div class="swiper-wrapper">
+                        <c:set var="hasMain" value="false" />
+                        <c:forEach var="img" items="${images}">
+                            <div class="swiper-slide">
+                                <img class="thumb-item ${img.main && not hasMain ? 'active' : ''}"
+                                     src="${pageContext.request.contextPath}/img/products${img.imageUrl}"
+                                     alt="${product.name}">
+                            </div>
+                            <c:set var="hasMain" value="true" />
+                        </c:forEach>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+
+
             <div class="product-info">
                 <h1 class="product-name">${product.name}</h1>
 
@@ -374,8 +405,44 @@
         }<c:if test="${!st.last}">,</c:if>
         </c:forEach>
     ];
+
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const swiper = new Swiper(".thumbSwiper", {
+            spaceBetween: 10,
+            slidesPerView: 4,
+            freeMode: true,
+            watchSlidesProgress: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                320: { slidesPerView: 3 },
+                768: { slidesPerView: 4 }
+            }
+        });
+
+        const mainImg = document.getElementById("main-image");
+        const thumbs = document.querySelectorAll(".thumb-item");
+
+        thumbs.forEach(thumb => {
+            thumb.addEventListener("click", function() {
+                mainImg.src = this.src;
+
+                thumbs.forEach(t => t.classList.remove("active"));
+                this.classList.add("active");
+                mainImg.style.opacity = "0.5";
+                setTimeout(() => {
+                    mainImg.style.opacity = "1";
+                }, 150);
+            });
+        });thêm
+    });
+</script>
 <%@include file="../include/footer.jsp"%>
 
 </body>
