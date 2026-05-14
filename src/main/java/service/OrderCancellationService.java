@@ -27,10 +27,13 @@ public class OrderCancellationService {
             return baseCheck;
         }
         String status = trimToEmpty(order.getOrderStatus());
-        if (!OrderStatus.PENDING.equals(status) && !OrderStatus.PENDING_PAYMENT.equals(status)) {
-            return CancellationCheck.rejected("Admin chỉ có thể hủy đơn hàng chưa chuyển sang giao hàng.");
+        if (OrderStatus.PENDING.equals(status) || OrderStatus.PENDING_PAYMENT.equals(status)) {
+            return CancellationCheck.accepted();
         }
-        return CancellationCheck.accepted();
+        if (OrderStatus.SHIPPING.equals(status) && !trimToEmpty(order.getGhnOrderCode()).isBlank()) {
+            return CancellationCheck.accepted();
+        }
+        return CancellationCheck.rejected("Admin chỉ có thể hủy đơn chưa giao hoặc đơn có vận đơn GHN còn được GHN cho phép hủy.");
     }
 
     private CancellationCheck checkBaseCancellation(Order order) {
@@ -44,14 +47,8 @@ public class OrderCancellationService {
         if (OrderStatus.COMPLETED.equals(status)) {
             return CancellationCheck.rejected("Đơn hàng đã hoàn thành nên không thể hủy.");
         }
-        if (OrderStatus.SHIPPING.equals(status)) {
-            return CancellationCheck.rejected("Đơn hàng đang giao nên không thể hủy trực tiếp.");
-        }
         if (PaymentMethod.VNPAY.equals(order.getPaymentMethods()) && PaymentStatus.PAID.equals(order.getPaymentStatuses())) {
             return CancellationCheck.rejected("Đơn VNPay đã thanh toán cần xử lý hoàn tiền trước khi hủy.");
-        }
-        if (!trimToEmpty(order.getGhnOrderCode()).isBlank()) {
-            return CancellationCheck.rejected("Đơn hàng đã có vận đơn GHN, cần đồng bộ hủy với GHN trước.");
         }
         return CancellationCheck.accepted();
     }

@@ -145,14 +145,15 @@ public class OrderAdminController extends HttpServlet {
         }
 
         if (OrderStatus.CANCELLED.equals(newStatus)) {
-            var cancellationCheck = orderService.checkAdminCancellation(order);
+            var cancellationCheck = orderService.cancelAdminOrder(id);
             if (!cancellationCheck.cancellable()) {
                 redirectWithMessage(resp, id, "cancel_not_allowed", cancellationCheck.message());
                 return;
             }
+        } else {
+            orderService.updateStatus(id, newStatus);
         }
 
-        orderService.updateStatus(id, newStatus);
         String userEmail = orderService.getUserEmailByOrderId(id);
 
         EmailService.sendEmail(
