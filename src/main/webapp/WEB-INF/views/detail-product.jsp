@@ -426,7 +426,21 @@
             }
         });
 
+        const mainImg = document.getElementById("main-image");
+        const thumbs = document.querySelectorAll(".thumb-item");
 
+        thumbs.forEach(thumb => {
+            thumb.addEventListener("click", function() {
+                mainImg.src = this.src;
+
+                thumbs.forEach(t => t.classList.remove("active"));
+                this.classList.add("active");
+                mainImg.style.opacity = "0.5";
+                setTimeout(() => {
+                    mainImg.style.opacity = "1";
+                }, 150);
+            });
+        });thêm
     });
 </script>
 <%@include file="../include/footer.jsp"%>
