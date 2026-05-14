@@ -55,7 +55,6 @@ public class ProductVariantDao extends BaseDao {
         );
     }
 
-    // giam stock khi thanh toan xong
     public void decreaseStock(int variantId, int qty) {
         getJdbi().useHandle(h ->
                 h.createUpdate("""
@@ -69,7 +68,19 @@ public class ProductVariantDao extends BaseDao {
         );
     }
 
-   // variant siêu chitieset
+    public void increaseStock(int variantId, int qty) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE product_variants
+            SET stock = stock + :q
+            WHERE id = :vid
+        """)
+                        .bind("q", qty)
+                        .bind("vid", variantId)
+                        .execute()
+        );
+    }
+
     public ProductVariant getVariantDetails(int variantId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""

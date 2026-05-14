@@ -36,6 +36,26 @@
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
+.order-alert {
+    margin-bottom: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.order-alert-success {
+    background: #eef8ef;
+    color: #2e7d32;
+    border: 1px solid #cce8d0;
+}
+
+.order-alert-error {
+    background: #fff1f1;
+    color: #c62828;
+    border: 1px solid #efc1c1;
+}
+
 .order-item {
     padding: 25px;
     margin-bottom: 20px;
@@ -151,6 +171,10 @@
     border-radius: 24px;
     font-size: 13px;
     font-weight: 600;
+}
+
+.cancel-order-form {
+    margin: 0;
 }
 
 .btn-order-action {

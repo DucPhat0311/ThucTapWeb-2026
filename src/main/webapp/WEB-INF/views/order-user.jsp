@@ -52,6 +52,16 @@
     <div class="profile-content">
         <h2>Đơn hàng của tôi</h2>
 
+        <c:if test="${param.cancel == 'success'}">
+            <div class="order-alert order-alert-success">Hủy đơn hàng thành công.</div>
+        </c:if>
+        <c:if test="${param.cancel == 'failed'}">
+            <div class="order-alert order-alert-error">${param.message}</div>
+        </c:if>
+        <c:if test="${param.cancel == 'invalid'}">
+            <div class="order-alert order-alert-error">Yêu cầu hủy đơn hàng không hợp lệ.</div>
+        </c:if>
+
         <div class="order-tabs">
             <a href="order-user?status=all" class="tab-item ${currentStatus == 'all' || empty currentStatus ? 'active' : ''}">
                 Tất cả
@@ -129,6 +139,12 @@
                     </div>
                 </div>
                 <div class="order-actions">
+                    <c:if test="${(o.orderStatus == 'PENDING' || o.orderStatus == 'PENDING_PAYMENT') && !(o.paymentMethods == 'VNPAY' && o.paymentStatuses == 'PAID') && empty o.ghnOrderCode}">
+                        <form method="post" action="cancel-order" class="cancel-order-form" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này?');">
+                            <input type="hidden" name="id" value="${o.id}">
+                            <button type="submit" class="btn-order-action btn-cancel">Hủy đơn</button>
+                        </form>
+                    </c:if>
                     <c:if test="${not empty o.ghnOrderCode}">
                         <span class="tracking-chip">
                             <i class="fa-solid fa-truck-fast"></i>

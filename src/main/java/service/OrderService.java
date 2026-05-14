@@ -1,6 +1,7 @@
 package service;
 
 import dao.admin.OrderDaoAdmin;
+import dao.user.ProductVariantDao;
 import dao.user.OrderTrackingLogDao;
 import model.*;
 import model.constant.OrderStatus;
@@ -15,6 +16,7 @@ public class OrderService {
     private GhnOrderTrackingService ghnOrderTrackingService = new GhnOrderTrackingService();
     private AddressService addressService = new AddressService();
     private OrderCancellationService orderCancellationService = new OrderCancellationService();
+    private ProductVariantDao productVariantDao = new ProductVariantDao();
 
     public List<Order> getAllOrders() {
         return dao.getAll();
@@ -38,6 +40,23 @@ public class OrderService {
 
     public OrderCancellationService.CancellationCheck checkAdminCancellation(Order order) {
         return orderCancellationService.checkAdminCancellation(order);
+    }
+
+    public OrderCancellationService.CancellationCheck cancelUserOrder(int orderId, int userId) {
+        Order order = dao.findById(orderId);
+        var cancellationCheck = orderCancellationService.checkUserCancellation(order, userId);
+        if (!cancellationCheck.cancellable()) {
+            return cancellationCheck;
+        }
+
+        if (OrderStatus.PENDING.equals(order.getOrderStatus())) {
+            for (OrderItem item : dao.getItems(orderId)) {
+                productVariantDao.increaseStock(item.getVariantId(), item.getQuantity());
+            }
+        }
+
+        dao.updateStatus(orderId, OrderStatus.CANCELLED);
+        return OrderCancellationService.CancellationCheck.accepted();
     }
 
     public GhnOrderCreationService.CreateOrderResult createGhnShippingOrder(int orderId) {
