@@ -9,11 +9,9 @@
     request.setAttribute("pageCss", "views/change-password.css");
     request.setAttribute("pageTitle" , "Đổi mật khẩu");
 %>
-<!-- ========== HEADER ========== -->
 <%@include file="../include/header.jsp"%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/change-password.css">
 
-<!-- ========== ĐỔI MẬT KHẨU ========== -->
 <section class="profile-container">
     <div class="profile-sidebar">
         <div class="user-info">
@@ -41,8 +39,12 @@
             <h3>${sessionScope.userlogin.fullName}</h3>
             <p>
                 Thành viên từ:
-                <fmt:formatDate value="${sessionScope.userlogin.createdAtDate}"
-                                pattern="dd/MM/yyyy"/>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.userlogin.createdAtDate}">
+                        <fmt:formatDate value="${sessionScope.userlogin.createdAtDate}" pattern="dd/MM/yyyy"/>
+                    </c:when>
+                    <c:otherwise>Chưa xác định</c:otherwise>
+                </c:choose>
             </p>
         </div>
 
@@ -64,21 +66,36 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="oldpass">Mật khẩu hiện tại</label>
-                    <input type="password" id="oldpass" name="oldpass" placeholder="Nhập mật khẩu cũ">
+                    <div class="password-input-wrap">
+                        <input type="password" id="oldpass" name="oldpass" placeholder="Nhập mật khẩu cũ">
+                        <button type="button" class="toggle-password-btn" data-target="oldpass" aria-label="Hiển thị mật khẩu">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="newpass">Mật khẩu mới</label>
-                    <input type="password" id="newpass" name="newpass" placeholder="Nhập mật khẩu mới">
+                    <div class="password-input-wrap">
+                        <input type="password" id="newpass" name="newpass" placeholder="Nhập mật khẩu mới">
+                        <button type="button" class="toggle-password-btn" data-target="newpass" aria-label="Hiển thị mật khẩu">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="repass">Nhập lại mật khẩu mới</label>
-                    <input type="password" id="repass" name="repass" placeholder="Nhập lại mật khẩu mới">
+                    <div class="password-input-wrap">
+                        <input type="password" id="repass" name="repass" placeholder="Nhập lại mật khẩu mới">
+                        <button type="button" class="toggle-password-btn" data-target="repass" aria-label="Hiển thị mật khẩu">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -94,6 +111,18 @@
     </div>
 </section>
 
-<!-- ========== FOOTER ========== -->
 <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
+<script>
+    document.querySelectorAll(".toggle-password-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = document.getElementById(button.dataset.target);
+            const icon = button.querySelector("i");
+            const showing = input.type === "text";
+            input.type = showing ? "password" : "text";
+            icon.classList.toggle("fa-eye", showing);
+            icon.classList.toggle("fa-eye-slash", !showing);
+            button.setAttribute("aria-label", showing ? "Hiển thị mật khẩu" : "Ẩn mật khẩu");
+        });
+    });
+</script>
 <%@ include file="../include/footer.jsp" %>
