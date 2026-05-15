@@ -20,6 +20,8 @@
             <i class="fas fa-newspaper"></i> Bài Viết</a>
         <a href="contactAdmin" class="nav-item ${page == 'contact' ? 'active' : ''}">
             <i class="fas fa-envelope"></i> Liên hệ</a>
+        <a href="warehouseAdmin" class="nav-item ${page == 'warehouse' ? 'active' : ''}">
+            <i class="fas fa-warehouse"></i> Quản Lý Kho</a>
         <a href="profileAdmin" class="nav-item ${page == 'profile' ? 'active' : ''}">
             <i class="fas fa-user-circle"></i> Hồ Sơ Admin</a>
     </div>
