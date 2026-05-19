@@ -26,6 +26,25 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
                         .one();
 
                 for (InventoryReceiptDetail detail : details) {
+                    if ("IMPORT".equalsIgnoreCase(receipt.getType()) && detail.getProductVariantId() == 0) {
+                        Integer variantId = handle.createQuery("SELECT id FROM product_variants WHERE product_id = :pId AND color_id = :cId AND size_id = :sId LIMIT 1")
+                                .bind("pId", detail.getProductId())
+                                .bind("cId", detail.getColorId())
+                                .bind("sId", detail.getSizeId())
+                                .mapTo(Integer.class)
+                                .findOne().orElse(null);
+                        
+                        if (variantId == null) {
+                            variantId = handle.createUpdate("INSERT INTO product_variants (product_id, color_id, size_id, stock) VALUES (:pId, :cId, :sId, 0)")
+                                    .bind("pId", detail.getProductId())
+                                    .bind("cId", detail.getColorId())
+                                    .bind("sId", detail.getSizeId())
+                                    .executeAndReturnGeneratedKeys()
+                                    .mapTo(Integer.class)
+                                    .one();
+                        }
+                        detail.setProductVariantId(variantId);
+                    }
                     handle.createUpdate("INSERT INTO inventory_receipt_details (receipt_id, product_variant_id, quantity, price) " +
                                     "VALUES (:receiptId, :productVariantId, :quantity, :price)")
                             .bind("receiptId", receiptId)
@@ -41,10 +60,13 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
                                 .bind("productVariantId", detail.getProductVariantId())
                                 .execute();
                     } else if ("EXPORT".equalsIgnoreCase(receipt.getType())) {
-                        handle.createUpdate("UPDATE product_variants SET stock = stock - :quantity WHERE id = :productVariantId")
+                        int affectedRows = handle.createUpdate("UPDATE product_variants SET stock = stock - :quantity WHERE id = :productVariantId AND stock >= :quantity")
                                 .bind("quantity", detail.getQuantity())
                                 .bind("productVariantId", detail.getProductVariantId())
                                 .execute();
+                        if (affectedRows == 0) {
+                            throw new RuntimeException("Không đủ tồn kho để xuất cho mã biến thể: " + detail.getProductVariantId());
+                        }
                     }
                 }
                 return true;

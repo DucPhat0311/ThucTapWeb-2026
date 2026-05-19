@@ -119,4 +119,42 @@ public class ProductVariantDaoAdmin extends BaseDao {
             .mapToBean(ProductVariant.class)
             .list());
     }
+
+    public List<ProductVariant> getAllVariantsWithDetails() {
+        return getJdbi().withHandle(handle -> handle.createQuery("""
+            SELECT pv.id, pv.product_id, pv.size_id, pv.color_id, pv.stock,
+                   p.name AS productName, s.code AS sizeName, c.name AS colorName
+            FROM product_variants pv
+            JOIN products p ON pv.product_id = p.id
+            LEFT JOIN sizes s ON pv.size_id = s.id
+            LEFT JOIN colors c ON pv.color_id = c.id
+            ORDER BY p.name, c.name, s.sort_order
+            """)
+            .mapToBean(ProductVariant.class)
+            .list());
+    }
+
+    public Integer findVariantId(int productId, int colorId, int sizeId) {
+        return getJdbi().withHandle(handle -> handle.createQuery("""
+            SELECT id FROM product_variants
+            WHERE product_id = :productId AND color_id = :colorId AND size_id = :sizeId
+            """)
+            .bind("productId", productId)
+            .bind("colorId", colorId)
+            .bind("sizeId", sizeId)
+            .mapTo(Integer.class)
+            .findOne()
+            .orElse(null));
+    }
+
+    public int createAndReturnId(ProductVariant variant) {
+        return getJdbi().withHandle(handle -> handle.createUpdate("""
+            INSERT INTO product_variants(product_id, size_id, color_id, stock)
+            VALUES (:productId, :sizeId, :colorId, 0)
+            """)
+            .bindBean(variant)
+            .executeAndReturnGeneratedKeys("id")
+            .mapTo(int.class)
+            .one());
+    }
 }

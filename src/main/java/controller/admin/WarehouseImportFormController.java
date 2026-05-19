@@ -12,43 +12,56 @@ import service.admin.InventoryServiceAdmin;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import dao.admin.ProductDaoAdmin;
 import dao.admin.ProductVariantDaoAdmin;
 
-@WebServlet("/admin/warehouseForm")
-public class WarehouseFormController extends HttpServlet {
+@WebServlet("/admin/warehouseImportForm")
+public class WarehouseImportFormController extends HttpServlet {
     private final InventoryServiceAdmin inventoryService = new InventoryServiceAdmin();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductDaoAdmin productDao = new ProductDaoAdmin();
         ProductVariantDaoAdmin variantDao = new ProductVariantDaoAdmin();
-        request.setAttribute("variants", variantDao.getAllVariantsWithDetails());
+        
+        request.setAttribute("products", productDao.findAll());
+        request.setAttribute("colors", variantDao.getAllColors());
+        request.setAttribute("sizes", variantDao.getAllSizes());
         request.setAttribute("page", "warehouse");
-        request.getRequestDispatcher("/WEB-INF/admin/warehouseForm.jsp").forward(request, response);
+        
+        request.getRequestDispatcher("/WEB-INF/admin/warehouseImportForm.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String type = request.getParameter("type"); 
             String note = request.getParameter("note");
             
             InventoryReceipt receipt = new InventoryReceipt();
-            receipt.setType(type);
+            receipt.setType("IMPORT");
             receipt.setNote(note);
 
             model.User user = (model.User) request.getSession().getAttribute("adminLogined");
             receipt.setUserId(user != null ? user.getId() : 1);
 
-            String[] variantIds = request.getParameterValues("productVariantId[]");
+            String[] productIds = request.getParameterValues("productId[]");
+            String[] colorIds = request.getParameterValues("colorId[]");
+            String[] sizeIds = request.getParameterValues("sizeId[]");
             String[] quantities = request.getParameterValues("quantity[]");
             String[] prices = request.getParameterValues("price[]");
 
             List<InventoryReceiptDetail> details = new ArrayList<>();
+            ProductVariantDaoAdmin variantDao = new ProductVariantDaoAdmin();
             
-            if (variantIds != null && quantities != null && prices != null) {
-                for (int i = 0; i < variantIds.length; i++) {
+            if (productIds != null && quantities != null && prices != null) {
+                for (int i = 0; i < productIds.length; i++) {
+                    int pId = Integer.parseInt(productIds[i]);
+                    int cId = Integer.parseInt(colorIds[i]);
+                    int sId = Integer.parseInt(sizeIds[i]);
                     InventoryReceiptDetail detail = new InventoryReceiptDetail();
-                    detail.setProductVariantId(Integer.parseInt(variantIds[i]));
+                    detail.setProductId(pId);
+                    detail.setColorId(cId);
+                    detail.setSizeId(sId);
                     detail.setQuantity(Integer.parseInt(quantities[i]));
                     detail.setPrice(Double.parseDouble(prices[i]));
                     details.add(detail);
@@ -58,7 +71,7 @@ public class WarehouseFormController extends HttpServlet {
             boolean isSuccess = inventoryService.processInventoryReceipt(receipt, details);
             
             if (isSuccess) {
-                request.getSession().setAttribute("message", "Thêm phiếu kho thành công!");
+                request.getSession().setAttribute("message", "Thêm phiếu nhập kho thành công!");
             } else {
                 request.getSession().setAttribute("error", "Có lỗi xảy ra khi tạo phiếu!");
             }
