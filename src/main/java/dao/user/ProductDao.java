@@ -250,5 +250,45 @@ public class ProductDao extends BaseDao {
         );
     }
 
+    public List<Product> filterProducts(String categoryIds, int limit, int offset) {
+        StringBuilder sql = new StringBuilder("SELECT DISTINCT p.*, ");
+        sql.append("(SELECT image_url FROM product_images WHERE product_id = p.id AND is_main = 0 ORDER BY id ASC LIMIT 1) AS hoverImage, ");
+        sql.append("(SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, ");
+        sql.append("(SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount, ");
+        sql.append("(SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) AS avgRating, ");
+        sql.append("(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews ");
+        sql.append("FROM products p ");
+        sql.append(" LIMIT :limit OFFSET :offset");
+        return getJdbi().withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+            query.bind("limit", limit);
+            query.bind("offset", offset);
+            return query.mapToBean(Product.class).list();
+        });
+    }
 
+    public int countProducts(String categoryIds) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT p.id) FROM products p ");
+        sql.append(" WHERE p.status = 'Đang bán' ");
+        List<Integer> catIds = new ArrayList<>();
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            for (String id : categoryIds.split(",")) {
+                try { catIds.add(Integer.parseInt(id.trim())); } catch (Exception e) {}
+            }
+            if (!catIds.isEmpty()) {
+                sql.append(" AND p.category_id IN (<ids>) ");
+            }
+        }
+        String truePrice = "COALESCE(NULLIF(p.sale_price, 0), p.price)";
+
+        return getJdbi().withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+            if (!catIds.isEmpty()) {
+                query.bindList("ids", catIds);
+            }
+
+
+            return query.mapTo(Integer.class).one();
+        });
+    }
 }

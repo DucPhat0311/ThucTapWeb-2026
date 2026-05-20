@@ -69,6 +69,16 @@ public class ProductController extends HttpServlet {
             displayTags = categoryService.handleGetParentCategories();
         }
 
+        String categoryIds = categoryService.handleGetCategoryIdsWithChildren(categoryIdStr);
+        List<Product> productList = productService.handleFilterProducts(categoryIds,pageSize, offset);
+        int totalProducts = productService.handleCountProducts(categoryIds);
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+
+        request.setAttribute("productList", productList);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", page);
+
         request.setAttribute("breadcrumbList", breadcrumbList);
         request.setAttribute("displayTags", displayTags);
         request.setAttribute("currentCategory", currentCategory);

@@ -1,7 +1,10 @@
 package service;
 
 import dao.user.ProductDao;
+import model.Category;
 import model.Product;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -92,8 +95,11 @@ public class ProductService {
 //    public List<Product> handleFilterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice,int pageSize, int offset) {
 //        return productDao.filterProducts(groupId,categoryId,sortType, minPrice, maxPrice,pageSize,offset);
 //    }
+public List<Product> handleFilterProducts(String categoryId, int pageSize, int offset) {
+    return productDao.filterProducts(categoryId,pageSize,offset);
+}
 
-
-
-
+    public int handleCountProducts(String categoryId){
+        return productDao.countProducts(categoryId);
+    }
 }
