@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/include/header.css">
   <link rel="stylesheet" href="css/include/footer.css">
   <link rel="stylesheet" href="css/views/search.css">
+  <link rel="stylesheet" href="css/views/productCard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -40,26 +41,8 @@
 
   <div class="product-list search-results">
     <c:forEach var="p" items="${list}" >
-
-      <div class="product-card">
-        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
-        <img src="${p.thumbnail}" alt="${p.name}">
-        <h3>${p.name}</h3>
-
-        <fmt:setLocale value="vi_VN"/>
-        <p class="price">
-                    <span class="new-price">
-                        <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ
-                    </span>
-          <span class="old-price">
-                        <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
-                    </span>
-        </p>
-
-        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
-          Thêm vào giỏ hàng
-        </a>
-      </div>
+      <c:set var="product_item" value="${p}" scope="request" />
+      <jsp:include page="../include/productCard.jsp" />
 
     </c:forEach>
   </div>
