@@ -20,7 +20,7 @@
     <div class="detail-wrapper">
         <nav class="breadcrumb">
             <a href="${pageContext.request.contextPath}/home">
-                <i class="fa-solid fa-house"></i> Trang chủ
+                <i></i> Trang chủ
             </a>
 
             <c:if test="${not empty breadcrumbs}">
@@ -47,7 +47,9 @@
                         </c:if>
                     </c:forEach>
 
+
                 </div>
+
 
                 <div class="swiper thumbSwiper">
                     <div class="swiper-wrapper">
@@ -67,30 +69,38 @@
             </div>
 
 
+
+
             <div class="product-info">
                 <h1 class="product-name">${product.name}</h1>
 
+
                 <div class="product-sku">
-                    Mã sản phẩm: <strong>AUR-${product.id}</strong>
+                    Mã sản phẩm: <strong id="display-sku">AUR-${product.id}</strong>
                 </div>
 
+
                 <p class="product-price">Giá:
-                    <c:choose>
-                        <c:when test="${product.sale_price > 0 && product.sale_price < product.price}">
-                            <span><fmt:formatNumber value="${product.sale_price}" type="number"/>₫</span>
-                            <span><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
-                        </c:when>
-                        <c:otherwise>
-                            <span style="font-weight:bold"><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
-                        </c:otherwise>
-                    </c:choose>
+                    <span id="display-price-container">
+       <c:choose>
+           <c:when test="${product.sale_price > 0 && product.sale_price < product.price}">
+               <span><fmt:formatNumber value="${product.sale_price}" type="number"/>₫</span>
+               <span style="text-decoration: line-through; color: #999; font-size: 0.9em; margin-left: 8px;"><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
+           </c:when>
+           <c:otherwise>
+               <span style="font-weight:bold"><fmt:formatNumber value="${product.price}" type="number"/>₫</span>
+           </c:otherwise>
+       </c:choose>
+   </span>
                 </p>
+
 
                 <div class="product-rating">
                     <c:forEach begin="1" end="${displayStar}"><i class="fa-solid fa-star" style="color: #FFD43B;"></i></c:forEach>
                     <c:forEach begin="1" end="${5 - displayStar}"><i class="fa-regular fa-star" style="color: #FFD43B;"></i></c:forEach>
                     (${totalReviews} đánh giá)
                 </div>
+
 
                 <div class="product-colors">
                     <p><strong>Màu sắc:</strong></p>
@@ -102,6 +112,7 @@
                         </c:forEach>
                     </div>
                 </div>
+
 
                 <div class="product-sizes">
                     <div class="size-header">
@@ -117,6 +128,7 @@
                     </div>
                 </div>
 
+
                 <div class="product-quantity">
                     <p><strong>Số lượng:</strong></p>
                     <div class="quantity-control">
@@ -126,10 +138,12 @@
                     </div>
                 </div>
 
+
                 <div class="product-actions">
                     <button class="btn-add-cart">Thêm vào giỏ hàng</button>
                     <button class="btn-buy-now">Mua ngay</button>
                 </div>
+
 
                 <div class="product-policy-detailed">
                     <div class="policy-row">
@@ -143,6 +157,7 @@
                         </div>
                     </div>
 
+
                     <div class="policy-row">
                         <div class="policy-col">
                             <i class="fa-solid fa-headset"></i>
@@ -153,6 +168,7 @@
                             <span>Đổi sản phẩm dễ dàng (7 ngày)</span>
                         </div>
                     </div>
+
 
                     <div class="policy-row">
                         <div class="policy-col">
@@ -168,6 +184,7 @@
             </div>
         </div>
 
+
         <section class="product-tabs-container">
             <div class="tabs-header">
                 <button class="tab-item active" data-tab="desc">Mô tả sản phẩm</button>
@@ -177,12 +194,14 @@
                 <button class="tab-item" data-tab="faq">Câu hỏi thường gặp</button>
             </div>
 
+
             <div class="tabs-content">
                 <div class="tab-pane active" id="desc">
                     <div class="product-description-content">
                         ${product.description}
                     </div>
                 </div>
+
 
                 <div class="tab-pane" id="review">
                     <div class="review-list">
@@ -217,6 +236,7 @@
                     </div>
                 </div>
 
+
                 <div class="tab-pane" id="guide">
                     <div class="guide-content">
                         <h4>QUY TRÌNH MUA HÀNG TRỰC TUYẾN</h4>
@@ -231,6 +251,7 @@
                     </div>
                 </div>
 
+
                 <div class="tab-pane" id="policy">
                     <div class="policy-content">
                         <h4>1. ĐIỀU KIỆN ÁP DỤNG ĐỔI TRẢ</h4>
@@ -242,11 +263,13 @@
                             <li><em>Lưu ý: Không áp dụng trả hàng - hoàn tiền trừ trường hợp sản phẩm bị lỗi nặng từ nhà sản xuất không thể khắc phục. Không hỗ trợ đổi trả với các sản phẩm sale từ 50% trở lên.</em></li>
                         </ul>
 
+
                         <h4>2. CHI PHÍ VẬN CHUYỂN KHI ĐỔI TRẢ</h4>
                         <ul>
                             <li><strong>AURA Studio chịu 100% phí vận chuyển 2 chiều:</strong> Nếu sản phẩm bị lỗi do nhà sản xuất (rách, bẩn, lỗi đường may, phai màu bất thường) hoặc do AURA giao nhầm size, nhầm mẫu.</li>
                             <li><strong>Khách hàng thanh toán phí vận chuyển:</strong> Nếu phát sinh từ nhu cầu chủ quan của khách hàng (muốn đổi size vì chọn nhầm, đổi màu, đổi mẫu khác).</li>
                         </ul>
+
 
                         <h4>3. QUY TRÌNH ĐỔI TRẢ</h4>
                         <ul>
@@ -256,6 +279,7 @@
                         </ul>
                     </div>
                 </div>
+
 
                 <div class="tab-pane" id="faq">
                     <div class="faq-content accordion">
@@ -269,6 +293,7 @@
                             </div>
                         </div>
 
+
                         <div class="faq-item">
                             <div class="faq-question">
                                 <span>2. Bao lâu thì tôi sẽ nhận được hàng?</span>
@@ -279,6 +304,7 @@
                                     - Các tỉnh thành khác: Nhận hàng từ 3-5 ngày làm việc tùy khu vực.</p>
                             </div>
                         </div>
+
 
                         <div class="faq-item">
                             <div class="faq-question">
@@ -299,6 +325,7 @@
                             </div>
                         </div>
 
+
                         <div class="faq-item">
                             <div class="faq-question">
                                 <span>5. Nếu tôi nhận hàng mặc không vừa thì phải làm sao?</span>
@@ -313,6 +340,7 @@
             </div>
         </section>
 
+
         <section class="suggested-products">
             <h2>Sản phẩm phù hợp khác</h2>
             <div class="suggested-list">
@@ -324,17 +352,17 @@
                         <p class="price">
                             <c:choose>
                                 <c:when test="${item.sale_price > 0 && item.sale_price < item.price}">
-                          <span class="new-price" >
-                              <fmt:formatNumber value="${item.sale_price}" type="number"/>đ
-                          </span>
+                         <span class="new-price" >
+                             <fmt:formatNumber value="${item.sale_price}" type="number"/>đ
+                         </span>
                                     <span class="old-price">
-                              <fmt:formatNumber value="${item.price}" type="number"/>đ
-                          </span>
+                             <fmt:formatNumber value="${item.price}" type="number"/>đ
+                         </span>
                                 </c:when>
                                 <c:otherwise>
-                          <span class="new-price">
-                              <fmt:formatNumber value="${item.price}" type="number"/>đ
-                          </span>
+                         <span class="new-price">
+                             <fmt:formatNumber value="${item.price}" type="number"/>đ
+                         </span>
                                 </c:otherwise>
                             </c:choose>
                         </p>
@@ -342,9 +370,11 @@
                     </div>
                 </c:forEach>
 
+
                 <c:if test="${empty ralatedProducts}">
                     <p>Không tìm thấy sản phẩm phù hợp khác.</p>
                 </c:if>
+
 
             </div>
             <a href="product" class="btn-view-more">Xem thêm</a>
@@ -382,6 +412,7 @@
 
             const isActive = currentItem.classList.contains("active");
 
+
             document.querySelectorAll(".faq-item").forEach(item => {
                 item.classList.remove("active");
             });
@@ -401,11 +432,12 @@
             id: ${v.id},
             colorId: ${v.colorId},
             sizeId: ${v.sizeId},
-            stock: ${v.stock}
+            stock: ${v.stock},
+            price: ${v.price},
+            salePrice: ${v.salePrice}
         }<c:if test="${!st.last}">,</c:if>
         </c:forEach>
     ];
-
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -429,9 +461,11 @@
         const mainImg = document.getElementById("main-image");
         const thumbs = document.querySelectorAll(".thumb-item");
 
+
         thumbs.forEach(thumb => {
             thumb.addEventListener("click", function() {
                 mainImg.src = this.src;
+
 
                 thumbs.forEach(t => t.classList.remove("active"));
                 this.classList.add("active");
@@ -440,13 +474,20 @@
                     mainImg.style.opacity = "1";
                 }, 150);
             });
-        });thêm
+        });
     });
+
 </script>
 <%@include file="../include/footer.jsp"%>
 
-</body>
 
+</body>
+<script>
+    var requestContextPath = '${pageContext.request.contextPath}';
+    var currentProductId = '${product.id}';
+</script>
 <script src="${pageContext.request.contextPath}/js/views/detail-product.js"></script>
 </html>
+
+
 
