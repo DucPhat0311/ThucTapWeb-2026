@@ -100,38 +100,8 @@
                 <c:choose>
                     <c:when test="${not empty productList}">
                         <c:forEach var="p" items="${productList}">
-                            <div class="product-card">
-                                <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
-                                <img src="${pageContext.request.contextPath}/img/products${p.thumbnail}" alt="${p.name}">
-
-
-                                <div class="card-content">
-                                    <h3>${p.name}</h3>
-                                    <fmt:setLocale value="vi_VN"/>
-                                    <div class="price">
-                                        <c:choose>
-                                            <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
-                                               <span class="new-price">
-                                                   <fmt:formatNumber value="${p.sale_price}" type="number" groupingUsed="true"/>đ
-                                               </span>
-                                                <span class="old-price">
-                                                   <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
-                                               </span>
-                                            </c:when>
-                                            <c:otherwise>
-                                               <span class="new-price">
-                                                   <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/>đ
-                                               </span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
-                                </div>
-
-
-                                <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="btn-add">
-                                    Chi tiết
-                                </a>
-                            </div>
+                            <c:set var="product_item" value="${p}" scope="request" />
+                            <jsp:include page="../include/productCard.jsp" />
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
