@@ -17,7 +17,6 @@
                 <span class="breadcrumb-item active">${currentParentCategory.name}</span>
             </c:if>
         </div>
-
         <div class="sort-dropdown">
             <span>Sắp xếp theo:</span>
             <select onchange="sort(this.value)" class="sort-select">
@@ -28,9 +27,51 @@
             </select>
         </div>
     </div>
-
     <div class="shop-container">
+        <aside class="sidebar">
+            <div class="filter-section">
+                <h3>Khoảng Giá</h3>
+                <div class="price-input">
+                    <input type="number" id="min-price" value="${param.minPrice != null ? param.minPrice : 0}">
+                    <span>-</span>
+                    <input type="number" id="max-price" value="${param.maxPrice != null ? param.maxPrice : 5000000}">
+                </div>
+                <div class="range-slider">
+                    <input type="range" id="range-min" min="0" max="5000000" step="50000" value="${param.minPrice != null ? param.minPrice : 0}">
+                </div>
+            </div>
 
+            <div class="filter-group">
+                <div class="group-title">Kích thước</div>
+                <div class="size-options">
+                    <c:forEach var="s" items="${['S', 'M', 'L', 'XL', '2XL', 'FreeSize']}">
+                        <label class="amazon-filter-item">
+                            <input type="checkbox" class="size-checkbox" value="${s}"
+                                ${param.sizes != null && param.sizes.contains(s) ? 'checked' : ''}>
+                            <span class="custom-checkbox"></span>
+                            <span class="filter-text">${s}</span>
+                        </label>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="group-title">Màu sắc</div>
+                <div class="color-grid">
+                    <c:set var="colorsList" value="${['Black', 'White', 'Red', 'Blue', 'Beige']}" />
+                    <c:set var="colorCodes" value="${['#000', '#fff', '#ee4d2d', '#0046be', '#f5f5dc']}" />
+                    <c:forEach var="colorName" items="${colorsList}" varStatus="loop">
+                        <label class="color-filter-item">
+                            <input type="checkbox" class="color-checkbox" value="${colorName}"
+                                ${param.colors != null && param.colors.contains(colorName) ? 'checked' : ''}>
+                            <span class="color-circle" style="background-color: ${colorCodes[loop.index]};" title="${colorName}"></span>
+                        </label>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <button type="button" class="btn-apply" onclick="applyFilters()">Lọc kết quả</button>
+        </aside>
 
         <div class="main-products">
             <div class="category-navigation-wrapper">
@@ -70,6 +111,7 @@
                     </c:otherwise>
                 </c:choose>
             </div>
+
             <div class="pagination">
                 <c:if test="${currentPage > 1}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage - 1}">&laquo;</a>
@@ -96,15 +138,14 @@
                     </c:if>
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${totalPages}">${totalPages}</a>
                 </c:if>
-
                 <c:if test="${currentPage < totalPages}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage + 1}">&raquo;</a>
                 </c:if>
             </div>
-
         </div>
     </div>
 </section>
+
 
 <script>
     const rangeMin = document.getElementById('range-min');
