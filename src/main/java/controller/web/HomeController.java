@@ -37,7 +37,7 @@ public class HomeController extends HttpServlet {
             throws ServletException, IOException {
 
         req.setAttribute("banners",
-            bannerService.getActiveBanners());
+                bannerService.getActiveBanners());
 
         req.setAttribute("latestProducts",
                 productService.getLatestProducts(8));

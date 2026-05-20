@@ -8,6 +8,50 @@ import java.util.List;
 
 public class CartItemDao extends BaseDao {
 
+    public CartItem getVariantDetailsForBuyNow(int variantId) {
+        String sql = """
+       SELECT s.code AS size, c.name AS color
+       FROM product_variants v
+       JOIN sizes s ON v.size_id = s.id
+       JOIN colors c ON v.color_id = c.id
+       WHERE v.id = :vid
+   """;
+        return getJdbi().withHandle(h ->
+                h.createQuery(sql)
+                        .bind("vid", variantId)
+                        .map((rs, ctx) -> {
+                            CartItem item = new CartItem();
+                            item.setSize(rs.getString("size"));
+                            item.setColor(rs.getString("color"));
+                            return item;
+                        })
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+
+    public double getPriceByVariantId(int variantId) {
+        String sql = """
+       SELECT COALESCE(
+           CASE
+               WHEN v.sale_price > 0 AND v.sale_price < v.price THEN v.sale_price
+               ELSE v.price
+           END, 0.0)
+       FROM product_variants v
+       WHERE v.id = :vid
+   """;
+
+        return getJdbi().withHandle(h ->
+                h.createQuery(sql)
+                        .bind("vid", variantId)
+                        .mapTo(double.class)
+                        .findOne()
+                        .orElse(0.0)
+        );
+    }
+
+
     public int getQuantityByVariant(int cartId, int variantId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""

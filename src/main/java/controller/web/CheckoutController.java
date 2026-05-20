@@ -37,6 +37,12 @@ public class CheckoutController extends HttpServlet {
             return;
         }
 
+        // check phải luồng mua ngay ko
+        if (session.getAttribute("buyNowItem") != null) {
+            renderCheckout(request, response, session, null);
+            return;
+        }
+
         String[] selectedIds = (String[]) session.getAttribute(CHECKOUT_SELECTED_IDS);
         if (selectedIds == null || selectedIds.length == 0) {
             response.sendRedirect("my-cart");
@@ -46,19 +52,23 @@ public class CheckoutController extends HttpServlet {
         renderCheckout(request, response, session, selectedIds);
     }
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        HttpSession session = req.getSession();
         String[] selectedIds = req.getParameterValues("selectedIds");
+
 
         if (selectedIds == null || selectedIds.length == 0) {
             resp.sendRedirect("my-cart");
             return;
         }
 
-        HttpSession session = req.getSession();
         session.setAttribute(CHECKOUT_SELECTED_IDS, selectedIds);
+        session.removeAttribute("buyNowItem");
+
         renderCheckout(req, resp, session, selectedIds);
     }
 
@@ -66,23 +76,34 @@ public class CheckoutController extends HttpServlet {
                                 HttpServletResponse resp,
                                 HttpSession session,
                                 String[] selectedIds) throws ServletException, IOException {
-        Integer cartId = (Integer) session.getAttribute("cartId");
         User user = (User) session.getAttribute("userlogin");
-
-        if (cartId == null || user == null) {
-            resp.sendRedirect("my-cart");
+        if (user == null) {
+            resp.sendRedirect("login");
             return;
         }
 
-        List<CartItem> allItems = cartItemDao.getItemsByCartId(cartId);
         List<CartItem> checkoutItems = new ArrayList<>();
 
-        for (String idStr : selectedIds) {
-            int id = Integer.parseInt(idStr);
-            for (CartItem item : allItems) {
-                if (item.getVariantId() == id) {
-                    checkoutItems.add(item);
-                    break;
+        CartItem buyNowItem = (CartItem) session.getAttribute("buyNowItem");
+        if (buyNowItem != null) {
+            checkoutItems.add(buyNowItem);
+        }
+
+        else {
+            Integer cartId = (Integer) session.getAttribute("cartId");
+            if (cartId == null || selectedIds == null) {
+                resp.sendRedirect("my-cart");
+                return;
+            }
+
+            List<CartItem> allItems = cartItemDao.getItemsByCartId(cartId);
+            for (String idStr : selectedIds) {
+                int id = Integer.parseInt(idStr);
+                for (CartItem item : allItems) {
+                    if (item.getVariantId() == id) {
+                        checkoutItems.add(item);
+                        break;
+                    }
                 }
             }
         }
@@ -100,6 +121,7 @@ public class CheckoutController extends HttpServlet {
         req.setAttribute("checkoutItems", checkoutItems);
         req.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(req, resp);
     }
+
 
     private void moveFlashMessageToRequest(HttpSession session, HttpServletRequest req) {
         Object addressError = session.getAttribute("addressError");
