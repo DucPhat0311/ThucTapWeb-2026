@@ -47,9 +47,7 @@
                         </c:if>
                     </c:forEach>
 
-
                 </div>
-
 
                 <div class="swiper thumbSwiper">
                     <div class="swiper-wrapper">
@@ -67,9 +65,6 @@
                     <div class="swiper-button-prev"></div>
                 </div>
             </div>
-
-
-
 
             <div class="product-info">
                 <h1 class="product-name">${product.name}</h1>
