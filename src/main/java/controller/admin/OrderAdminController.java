@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "OrderAdminController", value = "/orderAdmin")
 public class OrderAdminController extends HttpServlet {
@@ -38,7 +39,7 @@ public class OrderAdminController extends HttpServlet {
 
         if (mode == null) {
             int page = 1;
-            int pageSize = 5;
+            int pageSize = 6;
 
             String pageParam = req.getParameter("page");
             if (pageParam != null && !pageParam.isEmpty()) {
@@ -51,18 +52,6 @@ public class OrderAdminController extends HttpServlet {
 
             var allOrders = orderService.getAllOrders();
             int totalOrders = allOrders.size();
-            int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-
-            if (page < 1) {
-                page = 1;
-            }
-            if (page > totalPages && totalPages > 0) {
-                page = totalPages;
-            }
-
-            int start = (page - 1) * pageSize;
-            int end = Math.min(start + pageSize, totalOrders);
-            var orders = allOrders.subList(start, end);
 
             long pending = allOrders.stream()
                     .filter(o -> OrderStatus.PENDING.equals(o.getOrderStatus()))
@@ -76,12 +65,48 @@ public class OrderAdminController extends HttpServlet {
                     .filter(o -> OrderStatus.COMPLETED.equals(o.getOrderStatus()))
                     .count();
 
+                long shipping = allOrders.stream()
+                    .filter(o -> OrderStatus.SHIPPING.equals(o.getOrderStatus()))
+                    .count();
+
+                long cancelled = allOrders.stream()
+                    .filter(o -> OrderStatus.CANCELLED.equals(o.getOrderStatus()))
+                    .count();
+
+            String status = req.getParameter("status");
+            var filteredOrders = allOrders;
+            if (status != null && !status.trim().isEmpty()) {
+                String normalizedStatus = status.trim();
+                if (getOrderStatusLabels().containsKey(normalizedStatus)) {
+                    filteredOrders = allOrders.stream()
+                            .filter(o -> normalizedStatus.equals(o.getOrderStatus()))
+                            .collect(Collectors.toList());
+                    req.setAttribute("currentStatus", normalizedStatus);
+                }
+            }
+
+            int filteredTotal = filteredOrders.size();
+            int totalPages = (int) Math.ceil((double) filteredTotal / pageSize);
+
+            if (page < 1) {
+                page = 1;
+            }
+            if (page > totalPages && totalPages > 0) {
+                page = totalPages;
+            }
+
+            int start = (page - 1) * pageSize;
+            int end = Math.min(start + pageSize, filteredTotal);
+            var orders = filteredOrders.subList(start, end);
+
             req.setAttribute("orders", orders);
             req.setAttribute("total", totalOrders);
-            req.setAttribute("totalOrders", totalOrders);
+            req.setAttribute("totalOrders", filteredTotal);
             req.setAttribute("countPending", pending);
             req.setAttribute("countPendingPayment", pendingPayment);
             req.setAttribute("countCompleted", completed);
+            req.setAttribute("countShipping", shipping);
+            req.setAttribute("countCancelled", cancelled);
             req.setAttribute("currentPage", page);
             req.setAttribute("totalPages", totalPages);
             req.setAttribute("pageSize", pageSize);
