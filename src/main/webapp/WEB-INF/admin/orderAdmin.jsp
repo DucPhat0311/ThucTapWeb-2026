@@ -27,11 +27,13 @@
 
         <main id="page">
             <section id="dashboard" class="page active">
-                <div class="cards">
-                    <div class="card">Tổng đơn<br><span>${total}</span></div>
-                    <div class="card">Chờ xử lý<br><span>${countPending}</span></div>
-                    <div class="card">Chờ thanh toán<br><span>${countPendingPayment}</span></div>
-                    <div class="card">Hoàn thành<br><span>${countCompleted}</span></div>
+                <div class="cards order-cards">
+                    <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin'">Tổng đơn<br><span>${total}</span></div>
+                    <div class="card ${currentStatus == 'PENDING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PENDING'">Chờ xử lý<br><span>${countPending}</span></div>
+                    <div class="card ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PENDING_PAYMENT'">Chờ thanh toán<br><span>${countPendingPayment}</span></div>
+                    <div class="card ${currentStatus == 'SHIPPING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=SHIPPING'">Đang giao<br><span>${countShipping}</span></div>
+                    <div class="card ${currentStatus == 'COMPLETED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=COMPLETED'">Hoàn thành<br><span>${countCompleted}</span></div>
+                    <div class="card ${currentStatus == 'CANCELLED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=CANCELLED'">Đã hủy<br><span>${countCancelled}</span></div>
                 </div>
 
                 <div class="user-table-wrapper">
@@ -82,6 +84,14 @@
                 </div>
 
                 <c:if test="${totalPages > 1}">
+                    <c:choose>
+                        <c:when test="${not empty currentStatus}">
+                            <c:set var="statusParam" value="&amp;status=${currentStatus}" />
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="statusParam" value="" />
+                        </c:otherwise>
+                    </c:choose>
                     <div class="pagination">
                         <div class="pagination-info">
                             Hiển thị ${(currentPage - 1) * pageSize + 1}
@@ -90,8 +100,8 @@
                         </div>
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
-                                <a href="orderAdmin?page=1" class="page-btn">« Đầu</a>
-                                <a href="orderAdmin?page=${currentPage - 1}" class="page-btn">‹ Trước</a>
+                                <a href="orderAdmin?page=1${statusParam}" class="page-btn">« Đầu</a>
+                                <a href="orderAdmin?page=${currentPage - 1}${statusParam}" class="page-btn">‹ Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -100,7 +110,7 @@
                                         <span class="page-btn active">${i}</span>
                                     </c:when>
                                     <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="orderAdmin?page=${i}" class="page-btn">${i}</a>
+                                        <a href="orderAdmin?page=${i}${statusParam}" class="page-btn">${i}</a>
                                     </c:when>
                                     <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
                                         <span class="page-btn dots">...</span>
@@ -109,8 +119,8 @@
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="orderAdmin?page=${currentPage + 1}" class="page-btn">Sau ›</a>
-                                <a href="orderAdmin?page=${totalPages}" class="page-btn">Cuối »</a>
+                                <a href="orderAdmin?page=${currentPage + 1}${statusParam}" class="page-btn">Sau ›</a>
+                                <a href="orderAdmin?page=${totalPages}${statusParam}" class="page-btn">Cuối »</a>
                             </c:if>
                         </div>
                     </div>

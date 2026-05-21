@@ -89,6 +89,25 @@ body, .admin { height: 100vh; }
     margin-bottom: 35px;
 }
 
+.cards.order-cards {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.cards.order-cards .card {
+    padding: 16px 18px;
+}
+
+.cards.order-cards .card {
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+
+.cards.order-cards .card span {
+    font-size: 24px;
+    margin-top: 4px;
+}
+
 .card {
     background: var(--card-bg);
     padding: 25px;
@@ -104,6 +123,11 @@ body, .admin { height: 100vh; }
     transform: translateY(-5px);
     box-shadow: var(--shadow-md);
     border-color: var(--primary-color);
+}
+
+.card.active {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
 }
 
 .card h3, .cards .card {
