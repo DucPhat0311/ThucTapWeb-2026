@@ -244,6 +244,36 @@
             });
         });
 
+        // preview
+        const fileInput = document.getElementById("reviewImages");
+        const previewContainer = document.getElementById("image-preview-container");
+
+        fileInput.addEventListener("change", function() {
+            previewContainer.innerHTML = "";
+            const files = this.files;
+            if (files.length === 0) return;
+
+            Array.from(files).forEach((file) => {
+                const fileRow = document.createElement("div");
+                fileRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; background: #f5f5f5; padding: 6px 12px; border-radius: 4px; font-size: 13px; color: #555; border: 1px solid #eee;";
+
+
+                fileRow.innerHTML = `
+   <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 85%;"><i class="fa-regular fa-image" style="margin-right: 6px;"></i>${file.name}</span>
+   <span class="remove-img-btn" style="color: #c62828; cursor: pointer; font-weight: bold; font-size: 16px; padding: 0 4px;">&times;</span>
+`;
+
+                previewContainer.appendChild(fileRow);
+            });
+        });
+
+        // delete pic
+        previewContainer.addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-img-btn")) {
+                e.target.parentElement.remove();
+            }
+        });
+
         const reviewForm = document.getElementById("reviewForm");
         reviewForm.addEventListener("submit", async (e) => {
             e.preventDefault();
