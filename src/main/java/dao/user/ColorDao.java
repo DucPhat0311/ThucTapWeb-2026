@@ -17,4 +17,13 @@ public class ColorDao extends BaseDao {
                 .mapToBean(Color.class)
                 .list());
     }
+
+    public List<Color> getAllColors() {
+        return getJdbi().withHandle(handle -> handle.createQuery("""
+                SELECT id, name, code
+                FROM colors
+                """)
+                .mapToBean(Color.class)
+                .list());
+    }
 }

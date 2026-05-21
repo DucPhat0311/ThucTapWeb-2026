@@ -10,6 +10,9 @@ public class SizeService {
     private final SizeDao sizeDao = new SizeDao();
     private final SizeDaoAdmin sizeDaoAdmin = new SizeDaoAdmin();
 
+    public List<Size> handleGetAllSizes() {
+        return sizeDao.getAllSizes();
+    }
 
     public List<Size> getSizeByProductId(int id) {
         return sizeDao.getSizeByProductId(id);

@@ -1,14 +1,9 @@
 package dao.user;
-
-
 import dao.core.BaseDao;
 import model.Product;
 import org.jdbi.v3.core.Jdbi;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ProductDao extends BaseDao {
     public List<Product> findAll() {
@@ -25,9 +20,6 @@ public class ProductDao extends BaseDao {
                         .list()
         );
     }
-
-
-
 
     public List<Product> findLatest(int limit) {
         Jdbi jdbi = getJdbi();
@@ -49,18 +41,11 @@ public class ProductDao extends BaseDao {
         );
     }
 
-
-
-
     //  các sản phẩm tương ứng với category đó
     public List<Product> findLatestByCategories(List<Integer> categoryIds, int limit) {
         if (categoryIds == null || categoryIds.isEmpty()) {
             return List.of();
         }
-
-
-
-
         String sql = "SELECT p.*, " +
                 "(SELECT image_url FROM product_images WHERE product_id = p.id AND is_main = 0 ORDER BY id ASC LIMIT 1) AS hoverImage, " +
                 "(SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, " +
@@ -208,23 +193,11 @@ public class ProductDao extends BaseDao {
 
 
     public List<Product> findByCategories(List<Integer> categoryIds) {
-
-
-
-
         if (categoryIds == null || categoryIds.isEmpty()) {
             return List.of();
         }
-
-
-
-
         String sql = "SELECT * FROM products " +
                 "WHERE category_id IN (<ids>) AND status = 'Đang bán'";
-
-
-
-
         return getJdbi().withHandle(handle ->
                 handle.createQuery(sql)
                         .bindList("ids", categoryIds)
@@ -250,7 +223,8 @@ public class ProductDao extends BaseDao {
         );
     }
 
-    public List<Product> filterProducts(String categoryIds, int limit, int offset) {
+    public List<Product> filterProducts(String categoryIds, String sortType, String minPrice, String maxPrice,
+                                        String sizes, String colors, int limit, int offset) {
         StringBuilder sql = new StringBuilder("SELECT DISTINCT p.*, ");
         sql.append("(SELECT image_url FROM product_images WHERE product_id = p.id AND is_main = 0 ORDER BY id ASC LIMIT 1) AS hoverImage, ");
         sql.append("(SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, ");
@@ -258,17 +232,60 @@ public class ProductDao extends BaseDao {
         sql.append("(SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) AS avgRating, ");
         sql.append("(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews ");
         sql.append("FROM products p ");
+        if (sizes != null || colors != null) {
+            sql.append(" JOIN product_variants pv ON p.id = pv.product_id ");
+            sql.append(" JOIN colors c_v ON pv.color_id = c_v.id ");
+            sql.append(" JOIN sizes s_v ON pv.size_id = s_v.id ");
+        }
+        sql.append(" WHERE p.status = 'Đang bán' ");
+        List<Integer> catIdList = new ArrayList<>();
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            for (String id : categoryIds.split(",")) {
+                try { catIdList.add(Integer.parseInt(id.trim())); } catch (Exception e) {}
+            }
+            if (!catIdList.isEmpty()) sql.append(" AND p.category_id IN (<catIds>) ");
+        }
+        if (colors != null && !colors.isEmpty()) {
+            sql.append(" AND c_v.name IN (<colorList>) ");
+        }
+        if (sizes != null && !sizes.isEmpty()) {
+            sql.append(" AND s_v.code IN (<sizeList>) ");
+        }
+        String truePrice = "COALESCE(NULLIF(p.sale_price, 0), p.price)";
+        if (minPrice != null && !minPrice.isEmpty()) sql.append(" AND ").append(truePrice).append(" >= :minP ");
+        if (maxPrice != null && !maxPrice.isEmpty()) sql.append(" AND ").append(truePrice).append(" <= :maxP ");
+        // Sắp xếp
+        String orderBy = switch (sortType != null ? sortType : "") {
+            case "price_up" -> truePrice + " ASC";
+            case "price_down" -> truePrice + " DESC";
+            case "best_seller" -> "p.views DESC";
+            case "oldest" -> "p.created_at ASC";
+            default -> "p.created_at DESC";
+        };
+        sql.append(" ORDER BY ").append(orderBy);
         sql.append(" LIMIT :limit OFFSET :offset");
         return getJdbi().withHandle(handle -> {
             var query = handle.createQuery(sql.toString());
+            if (!catIdList.isEmpty()) query.bindList("catIds", catIdList);
+            if (colors != null && !colors.isEmpty()) query.bindList("colorList", List.of(colors.split(",")));
+            if (sizes != null && !sizes.isEmpty()) query.bindList("sizeList", List.of(sizes.split(",")));
+            query.bind("minP", (minPrice == null || minPrice.isEmpty()) ? 0 : Double.parseDouble(minPrice));
+            query.bind("maxP", (maxPrice == null || maxPrice.isEmpty()) ? 99999999 : Double.parseDouble(maxPrice));
             query.bind("limit", limit);
             query.bind("offset", offset);
             return query.mapToBean(Product.class).list();
         });
     }
 
-    public int countProducts(String categoryIds) {
+    public int countProducts(String categoryIds, String minPrice, String maxPrice, String sizes, String colors) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT p.id) FROM products p ");
+        boolean hasSize = (sizes != null && !sizes.isEmpty());
+        boolean hasColor = (colors != null && !colors.isEmpty());
+        if (sizes != null || colors != null) {
+            sql.append(" JOIN product_variants pv ON p.id = pv.product_id ");
+            sql.append(" JOIN colors c_v ON pv.color_id = c_v.id ");
+            sql.append(" JOIN sizes s_v ON pv.size_id = s_v.id ");
+        }
         sql.append(" WHERE p.status = 'Đang bán' ");
         List<Integer> catIds = new ArrayList<>();
         if (categoryIds != null && !categoryIds.isEmpty()) {
@@ -280,6 +297,12 @@ public class ProductDao extends BaseDao {
             }
         }
         String truePrice = "COALESCE(NULLIF(p.sale_price, 0), p.price)";
+        boolean bindMin = (minPrice != null && !minPrice.isEmpty());
+        boolean bindMax = (maxPrice != null && !maxPrice.isEmpty());
+        if (bindMin) sql.append(" AND ").append(truePrice).append(" >= :minP ");
+        if (bindMax) sql.append(" AND ").append(truePrice).append(" <= :maxP ");
+        if (hasColor) sql.append(" AND c_v.name IN (<colorList>) ");
+        if (hasSize) sql.append(" AND s_v.code IN (<sizeList>) ");
 
         return getJdbi().withHandle(handle -> {
             var query = handle.createQuery(sql.toString());
@@ -287,8 +310,24 @@ public class ProductDao extends BaseDao {
                 query.bindList("ids", catIds);
             }
 
+            if (bindMin) {
+                query.bind("minP", Double.parseDouble(minPrice));
+            }
+
+            if (bindMax) {
+                query.bind("maxP", Double.parseDouble(maxPrice));
+            }
+
+            if (hasColor) {
+                query.bindList("colorList", List.of(colors.split(",")));
+            }
+
+            if (hasSize) {
+                query.bindList("sizeList", List.of(sizes.split(",")));
+            }
 
             return query.mapTo(Integer.class).one();
         });
     }
+
 }

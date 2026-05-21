@@ -18,4 +18,8 @@ public class ColorService {
     public int findOrCreateColor(String colorName) {
         return colorDaoAdmin.findOrCreateColor(colorName);
     }
+
+    public List<Color> handleGetAllColors() {
+        return colorDao.getAllColors();
+    }
 }

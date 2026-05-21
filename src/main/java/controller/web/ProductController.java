@@ -8,9 +8,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Category;
+import model.Color;
 import model.Product;
+import model.Size;
 import service.CategoryService;
+import service.ColorService;
 import service.ProductService;
+import service.SizeService;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +25,16 @@ import java.util.List;
 public class ProductController extends HttpServlet {
     private ProductService productService;
     private CategoryService categoryService;
+    private ColorService colorService;
+    private SizeService sizeService;
 
 
     @Override
     public void init() {
         productService = new ProductService();
         categoryService = new CategoryService();
+        colorService = new ColorService();
+        sizeService = new SizeService();
     }
 
 
@@ -69,11 +78,30 @@ public class ProductController extends HttpServlet {
             displayTags = categoryService.handleGetParentCategories();
         }
 
-        String categoryIds = categoryService.handleGetCategoryIdsWithChildren(categoryIdStr);
-        List<Product> productList = productService.handleFilterProducts(categoryIds,pageSize, offset);
-        int totalProducts = productService.handleCountProducts(categoryIds);
-        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+        List<Size> allSizes = sizeService.handleGetAllSizes(); // Lấy từ bảng size trong DB
+        List<Color> allColors = colorService.handleGetAllColors(); // Lấy từ bảng color trong DB
 
+        request.setAttribute("sizes", allSizes);
+        request.setAttribute("colors", allColors);
+
+        String sortType = request.getParameter("sortType");
+        String minPrice = request.getParameter("minPrice");
+        String maxPrice = request.getParameter("maxPrice");
+        String sizes = request.getParameter("sizes");
+        String colors = request.getParameter("colors");
+
+        String categoryIds = categoryService.handleGetCategoryIdsWithChildren(categoryIdStr);
+
+        if (sizes == null || sizes.trim().isEmpty()) sizes = null;
+        if (colors == null || colors.trim().isEmpty()) colors = null;
+        if (minPrice == null || minPrice.trim().isEmpty()) minPrice = null;
+        if (maxPrice == null || maxPrice.trim().isEmpty()) maxPrice = null;
+        if (sortType == null || sortType.trim().isEmpty()) sortType = "latest"; // default
+
+
+        List<Product> productList = productService.handleFilterProducts(categoryIds, sortType, minPrice, maxPrice, sizes, colors, pageSize, offset);
+        int totalProducts = productService.handleCountProducts(categoryIds, minPrice, maxPrice, sizes, colors);
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
         request.setAttribute("productList", productList);
         request.setAttribute("totalPages", totalPages);

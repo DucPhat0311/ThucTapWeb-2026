@@ -95,11 +95,11 @@ public class ProductService {
 //    public List<Product> handleFilterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice,int pageSize, int offset) {
 //        return productDao.filterProducts(groupId,categoryId,sortType, minPrice, maxPrice,pageSize,offset);
 //    }
-public List<Product> handleFilterProducts(String categoryId, int pageSize, int offset) {
-    return productDao.filterProducts(categoryId,pageSize,offset);
+public List<Product> handleFilterProducts(String categoryId, String sortType, String minPrice, String maxPrice,String sizes, String colors,int pageSize, int offset) {
+    return productDao.filterProducts(categoryId,sortType, minPrice, maxPrice,sizes, colors,pageSize,offset);
 }
 
-    public int handleCountProducts(String categoryId){
-        return productDao.countProducts(categoryId);
+    public int handleCountProducts(String categoryId, String minPrice, String maxPrice,String sizes, String colors){
+        return productDao.countProducts(categoryId, minPrice, maxPrice, sizes, colors);
     }
 }

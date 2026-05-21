@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%
     request.setAttribute("pageCss", "views/product.css");
@@ -41,15 +42,24 @@
                 </div>
             </div>
 
+            <c:set var="selectedSizes" value="${fn:split(param.sizes, ',')}" />
+            <c:set var="selectedColors" value="${fn:split(param.colors, ',')}" />
+
             <div class="filter-group">
                 <div class="group-title">Kích thước</div>
                 <div class="size-options">
-                    <c:forEach var="s" items="${['S', 'M', 'L', 'XL', '2XL', 'FreeSize']}">
+                    <c:forEach var="sizeItem" items="${sizes}">
+                        <c:set var="isSizeChecked" value="false" />
+                        <c:forEach var="selectedSize" items="${selectedSizes}">
+                            <c:if test="${selectedSize eq sizeItem.code}">
+                                <c:set var="isSizeChecked" value="true" />
+                            </c:if>
+                        </c:forEach>
+
                         <label class="amazon-filter-item">
-                            <input type="checkbox" class="size-checkbox" value="${s}"
-                                ${param.sizes != null && param.sizes.contains(s) ? 'checked' : ''}>
+                            <input type="checkbox" class="size-checkbox" value="${sizeItem.code}" ${isSizeChecked ? 'checked' : ''}>
                             <span class="custom-checkbox"></span>
-                            <span class="filter-text">${s}</span>
+                            <span class="filter-text">${sizeItem.code}</span>
                         </label>
                     </c:forEach>
                 </div>
@@ -58,13 +68,17 @@
             <div class="filter-group">
                 <div class="group-title">Màu sắc</div>
                 <div class="color-grid">
-                    <c:set var="colorsList" value="${['Black', 'White', 'Red', 'Blue', 'Beige']}" />
-                    <c:set var="colorCodes" value="${['#000', '#fff', '#ee4d2d', '#0046be', '#f5f5dc']}" />
-                    <c:forEach var="colorName" items="${colorsList}" varStatus="loop">
+                    <c:forEach var="colorItem" items="${colors}">
+                        <c:set var="isColorChecked" value="false" />
+                        <c:forEach var="selectedColor" items="${selectedColors}">
+                            <c:if test="${selectedColor eq colorItem.code}">
+                                <c:set var="isColorChecked" value="true" />
+                            </c:if>
+                        </c:forEach>
+
                         <label class="color-filter-item">
-                            <input type="checkbox" class="color-checkbox" value="${colorName}"
-                                ${param.colors != null && param.colors.contains(colorName) ? 'checked' : ''}>
-                            <span class="color-circle" style="background-color: ${colorCodes[loop.index]};" title="${colorName}"></span>
+                            <input type="checkbox" class="color-checkbox" value="${colorItem.name}" ${isColorChecked ? 'checked' : ''}>
+                            <span class="color-circle" style="background-color: ${colorItem.code};" title="${colorItem.name}"></span>
                         </label>
                     </c:forEach>
                 </div>
@@ -176,6 +190,21 @@
         urlParams.set('page', 1);
         window.location.href = window.location.pathname + "?" + urlParams.toString();
     }
+
+    function applyFilters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => cb.value);
+        const colors = Array.from(document.querySelectorAll('.color-checkbox:checked')).map(cb => cb.value);
+        if (sizes.length > 0) urlParams.set('sizes', sizes.join(','));
+        else urlParams.delete('sizes');
+        if (colors.length > 0) urlParams.set('colors', colors.join(','));
+        else urlParams.delete('colors');
+        urlParams.set('minPrice', document.getElementById('min-price').value);
+        urlParams.set('maxPrice', document.getElementById('max-price').value);
+        urlParams.set('page', 1);
+        window.location.href = window.location.pathname + "?" + urlParams.toString();
+    }
+
 
 </script>
 
