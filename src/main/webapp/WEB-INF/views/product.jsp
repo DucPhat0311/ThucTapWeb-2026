@@ -1,101 +1,114 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%
     request.setAttribute("pageCss", "views/product.css");
     request.setAttribute("pageTitle" , "Sản phẩm");
 %>
 
-
 <%@include file="../include/header.jsp"%>
-
 
 <section class="products">
     <div class="shop-header">
-        <h2></h2>
-
+        <div class="category-breadcrumb">
+            <c:if test="${not empty currentParentCategory}">
+                <span class="sep">/</span>
+                <span class="breadcrumb-item active">${currentParentCategory.name}</span>
+            </c:if>
+        </div>
         <div class="sort-dropdown">
             <span>Sắp xếp theo:</span>
             <select onchange="sort(this.value)" class="sort-select">
                 <option value="new" ${param.sortType == 'new' || empty param.sortType ? 'selected' : ''}>Mới nhất</option>
-                <option value="oldest" ${param.sortType == 'oldest' ? 'selected' : ''}>Cũ nhất</option>
                 <option value="price_up" ${param.sortType == 'price_up' ? 'selected' : ''}>Giá thấp → cao</option>
                 <option value="price_down" ${param.sortType == 'price_down' ? 'selected' : ''}>Giá cao → thấp</option>
-                <option value="name_az" ${param.sortType == 'name_az' ? 'selected' : ''}>Tên A-Z</option>
-                <option value="name_za" ${param.sortType == 'name_za' ? 'selected' : ''}>Tên Z-A</option>
                 <option value="best_seller" ${param.sortType == 'best_seller' ? 'selected' : ''}>Bán chạy nhất</option>
             </select>
         </div>
     </div>
-
-
     <div class="shop-container">
         <aside class="sidebar">
             <div class="filter-section">
                 <h3>Khoảng Giá</h3>
                 <div class="price-input">
-                    <input type="number" id="min-price"
-                           value="${not empty param.minPrice ? param.minPrice : 0}">
+                    <input type="number" id="min-price" value="${param.minPrice != null ? param.minPrice : 0}">
                     <span>-</span>
-                    <input type="number" id="max-price"
-                           value="${not empty param.maxPrice ? param.maxPrice : 2000000}">
+                    <input type="number" id="max-price" value="${param.maxPrice != null ? param.maxPrice : 5000000}">
                 </div>
-
-
                 <div class="range-slider">
-                    <input type="range" id="range-min" min="0" max="5000000" step="50000"
-                           value="${not empty param.minPrice ? param.minPrice : 0}">
+                    <input type="range" id="range-min" min="0" max="5000000" step="50000" value="${param.minPrice != null ? param.minPrice : 0}">
                 </div>
+            </div>
 
-                <button type="button" class="btn-apply" onclick="filterPrice()">Lọc Kết Quả</button>
-                <small class="price-unit">* Đơn vị: VNĐ</small>
+            <c:set var="selectedSizes" value="${fn:split(param.sizes, ',')}" />
+            <c:set var="selectedColors" value="${fn:split(param.colors, ',')}" />
 
-                <h3>Danh mục</h3>
-                <div class="filter-buttons">
-                    <button class="${empty param.categoryId ? 'active' : ''}" style="width: 100%;" onclick="chooseCategory('')">Tất cả sản phẩm</button>
+            <div class="filter-group">
+                <div class="group-title">Kích thước</div>
+                <div class="size-options">
+                    <c:forEach var="sizeItem" items="${sizes}">
+                        <c:set var="isSizeChecked" value="false" />
+                        <c:forEach var="selectedSize" items="${selectedSizes}">
+                            <c:if test="${selectedSize eq sizeItem.code}">
+                                <c:set var="isSizeChecked" value="true" />
+                            </c:if>
+                        </c:forEach>
 
-
-                    <c:forEach var="cat" items="${categoryList}">
-                        <div class="dropdown ${param.categoryId == cat.id ? 'open' : ''}">
-                            <button class="dropbtn ${param.categoryId == cat.id ? 'active' : ''}" onclick="this.parentElement.classList.toggle('open')" style="width: 100%;">
-                                <span>${cat.name}</span> <i class="fa-solid fa-caret-down"></i>
-                            </button>
-                            <div class="dropdown-content">
-                                <a style="cursor: pointer;" onclick="chooseCategory('${cat.id}')"
-                                   class="${param.categoryId == cat.id ? 'active' : ''}">
-                                    Tất cả ${cat.name}
-                                </a>
-
-
-                                <c:forEach var="sub" items="${cat.subCategories}">
-                                    <a style="cursor: pointer;" onclick="chooseCategory('${sub.id}')"
-                                       class="${param.categoryId == sub.id ? 'active' : ''}" style="font-weight: 600; background-color: #f9f9f9;">
-                                            ${sub.name}
-                                    </a>
-
-
-                                    <c:if test="${not empty sub.subCategories}">
-                                        <c:forEach var="sub3" items="${sub.subCategories}">
-                                            <a style="cursor: pointer;" onclick="chooseCategory('${sub3.id}')"
-                                               class="${param.categoryId == sub3.id ? 'active' : ''}" style="padding-left: 20px; font-size: 0.9em; color: #555;">
-                                                - ${sub3.name}
-                                            </a>
-                                        </c:forEach>
-                                    </c:if>
-                                </c:forEach>
-
-
-                            </div>
-                        </div>
+                        <label class="amazon-filter-item">
+                            <input type="checkbox" class="size-checkbox" value="${sizeItem.code}" ${isSizeChecked ? 'checked' : ''}>
+                            <span class="custom-checkbox"></span>
+                            <span class="filter-text">${sizeItem.code}</span>
+                        </label>
                     </c:forEach>
                 </div>
             </div>
+
+            <div class="filter-group">
+                <div class="group-title">Màu sắc</div>
+                <div class="color-grid">
+                    <c:forEach var="colorItem" items="${colors}">
+                        <c:set var="isColorChecked" value="false" />
+                        <c:forEach var="selectedColor" items="${selectedColors}">
+                            <c:if test="${selectedColor eq colorItem.code}">
+                                <c:set var="isColorChecked" value="true" />
+                            </c:if>
+                        </c:forEach>
+
+                        <label class="color-filter-item">
+                            <input type="checkbox" class="color-checkbox" value="${colorItem.name}" ${isColorChecked ? 'checked' : ''}>
+                            <span class="color-circle" style="background-color: ${colorItem.code};" title="${colorItem.name}"></span>
+                        </label>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <button type="button" class="btn-apply" onclick="applyFilters()">Lọc kết quả</button>
         </aside>
 
-
         <div class="main-products">
+            <div class="category-navigation-wrapper">
+                <nav class="routine-breadcrumb">
+                    <a href="product">Trang chủ</a>
+                    <c:forEach var="bc" items="${breadcrumbList}">
+                        <span class="arrow">/</span>
+                        <a href="product?categoryId=${bc.id}"
+                           class="${bc.id == currentCategory.id ? 'active-link' : ''}">
+                                ${bc.name}
+                        </a>
+                    </c:forEach>
+                </nav>
+                <div class="routine-tag-list">
+                    <c:forEach var="tag" items="${displayTags}">
+                        <a href="product?categoryId=${tag.id}"
+                           class="tag-node ${param.categoryId == tag.id.toString() ? 'node-selected' : ''}">
+                                ${tag.name}
+                        </a>
+                    </c:forEach>
+                </div>
+            </div>
+
             <div class="product-list">
                 <c:choose>
                     <c:when test="${not empty productList}">
@@ -113,12 +126,10 @@
                 </c:choose>
             </div>
 
-
             <div class="pagination">
                 <c:if test="${currentPage > 1}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage - 1}">&laquo;</a>
                 </c:if>
-
 
                 <c:if test="${currentPage > 3}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=1">1</a>
@@ -127,16 +138,13 @@
                     </c:if>
                 </c:if>
 
-
                 <c:set var="begin" value="${currentPage - 2 > 1 ? currentPage - 2 : 1}" />
                 <c:set var="end" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}" />
-
 
                 <c:forEach var="i" begin="${begin}" end="${end}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${i}"
                        class="${currentPage == i ? 'active' : ''}">${i}</a>
                 </c:forEach>
-
 
                 <c:if test="${currentPage < totalPages - 2}">
                     <c:if test="${currentPage < totalPages - 3}">
@@ -144,17 +152,14 @@
                     </c:if>
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${totalPages}">${totalPages}</a>
                 </c:if>
-
-
                 <c:if test="${currentPage < totalPages}">
                     <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage + 1}">&raquo;</a>
                 </c:if>
             </div>
-
-
         </div>
     </div>
 </section>
+
 
 <script>
     const rangeMin = document.getElementById('range-min');
@@ -179,55 +184,34 @@
         rangeMin.value = val;
     });
 
+    function changeCategory(catId) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('categoryId', catId);
+        urlParams.set('page', 1);
+        window.location.href = window.location.pathname + "?" + urlParams.toString();
+    }
+
+    function applyFilters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => cb.value);
+        const colors = Array.from(document.querySelectorAll('.color-checkbox:checked')).map(cb => cb.value);
+        if (sizes.length > 0) urlParams.set('sizes', sizes.join(','));
+        else urlParams.delete('sizes');
+        if (colors.length > 0) urlParams.set('colors', colors.join(','));
+        else urlParams.delete('colors');
+        urlParams.set('minPrice', document.getElementById('min-price').value);
+        urlParams.set('maxPrice', document.getElementById('max-price').value);
+        urlParams.set('page', 1);
+        window.location.href = window.location.pathname + "?" + urlParams.toString();
+    }
+
     function sort(type) {
-        var link = window.location.search;
-        var handleLink = new URLSearchParams(link);
-
-        handleLink.set('sortType', type );
-        handleLink.set('page', 1);
-
-        var newLink = window.location.pathname + "?" + handleLink.toString();
-        window.location.href = newLink;
-    }
-
-
-    function chooseCategory(categoryId) {
-        var link = window.location.search;
-        var handleLink = new URLSearchParams(link);
-
-        if (categoryId === "") {
-            handleLink.delete('categoryId');
-        } else {
-            handleLink.set('categoryId', categoryId);
-        }
-
-        handleLink.set('page', 1);
-
-        var newLink = window.location.pathname + "?" + handleLink.toString();
-        window.location.href = newLink;
-    }
-
-
-    function filterPrice() {
-        var minInput = document.getElementById('min-price').value;
-        var maxInput = document.getElementById('max-price').value;
-
-        if (minInput === "") { minInput = 0; }
-        if (maxInput === "") { maxInput = 5000000; }
-
-        var link = window.location.search;
-        var handleLink = new URLSearchParams(link);
-
-        handleLink.set('minPrice', minInput);
-        handleLink.set('maxPrice', maxInput);
-
-        handleLink.set('page', 1);
-
-        var newLink = window.location.pathname + "?" + handleLink.toString();
-        window.location.href = newLink;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('sortType', type);
+        urlParams.set('page', 1);
+        window.location.href = window.location.pathname + "?" + urlParams.toString();
     }
 
 </script>
-
 
 <%@ include file="../include/footer.jsp" %>

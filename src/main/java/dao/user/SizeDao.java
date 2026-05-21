@@ -18,4 +18,14 @@ public class SizeDao extends BaseDao {
                 .mapToBean(Size.class)
                 .list());
     }
+
+    public List<Size> getAllSizes() {
+        return getJdbi().withHandle(handle -> handle.createQuery("""
+                        SELECT id, code, sort_order
+                        FROM sizes
+                        ORDER BY sort_order
+                        """)
+                .mapToBean(Size.class)
+                .list());
+    }
 }
