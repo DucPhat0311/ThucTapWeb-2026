@@ -86,4 +86,30 @@ public class ReviewDao extends BaseDao {
                 .list()
         );
     }
+
+    // void -> int
+    public int insert(Review review) {
+        return getJdbi().withHandle(handle ->
+                handle.createUpdate("""
+               INSERT INTO reviews(product_id, user_id, rating, comment, created_at)
+               VALUES (:pid, :uid, :rating, :comment, NOW())
+           """)
+                        .bind("pid", review.getProductId())
+                        .bind("uid", review.getUserId())
+                        .bind("rating", review.getRating())
+                        .bind("comment", review.getComment())
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    public void insertReviewImage(int reviewId, String imageUrl) {
+        getJdbi().useHandle(handle -> handle.createUpdate(
+                        "INSERT INTO review_images(review_id, image_url) VALUES (:rid, :img)")
+                .bind("rid", reviewId)
+                .bind("img", imageUrl)
+                .execute()
+        );
+    }
 }

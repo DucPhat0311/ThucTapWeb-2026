@@ -40,4 +40,16 @@ public class ReviewService {
     public int getTotalReviews(int id) {
         return reviewDao.getTotalReviews(id);
     }
+
+    public int addReview(Review review) {
+        return reviewDao.insert(review);
+    }
+
+    public void saveReviewImage(int reviewId, String imagePath) {
+        reviewDao.insertReviewImage(reviewId, imagePath);
+    }
+
+    public List<String> getImagesByReviewId(int reviewId) {
+        return reviewDao.getImagesByReviewId(reviewId);
+    }
 }
