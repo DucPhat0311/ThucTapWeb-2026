@@ -101,10 +101,17 @@
             </select>
 
             <script>
-                function addRow(variantId = "", qty = "", price = "") {
+                function addRow(variantId = "", qty = "", price = "", hint = "") {
                     const variantOptions = document.getElementById('variantTemplate').innerHTML;
                     const row = document.createElement('div');
-                    row.className = 'row product-row';
+                    row.className = 'row product-row' + (hint ? ' unmatched' : '');
+
+                    if (hint) {
+                        const hintDiv = document.createElement('div');
+                        hintDiv.className = 'unmatched-hint';
+                        hintDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Chưa tìm thấy trong hệ thống: <strong>' + hint + '</strong> &mdash; Hãy thêm mới sản phẩm trước khi nhập.';
+                        row.appendChild(hintDiv);
+                    }
 
                     const colProduct = document.createElement('div');
                     colProduct.className = 'col col-product';
@@ -202,7 +209,8 @@
                                     break;
                                 }
                             }
-                            addRow(matchedValue, pQty, pPrice);
+                            const hint = !matchedValue ? (pName + ' - ' + pColor + ' - ' + pSize) : '';
+                            addRow(matchedValue, pQty, pPrice, hint);
                         }
                         event.target.value = ""; 
                     };

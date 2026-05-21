@@ -7,6 +7,28 @@
     gap: 8px;
 }
 
+.product-row.unmatched {
+    background: #fff8e1;
+    border: 1.5px dashed #f0ad4e;
+    border-radius: 8px;
+    padding: 10px 12px 4px;
+}
+
+.unmatched-hint {
+    width: 100%;
+    font-size: 12px;
+    color: #856404;
+    background: #fff3cd;
+    border: 1px solid #ffc10755;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
 .col-product {
     flex: 2;
     min-width: 160px;
