@@ -218,9 +218,23 @@
                                         <div class="review-content">
                                             <p><c:out value="${rv.comment}" /></p>
                                         </div>
-                                        <c:if test="${not empty rv.createdAt}">
-                                            <small class="review-date">${rv.createdAt}</small>
+                                        <c:if test="${not empty rv.images}">
+                                            <div class="review-images" style="display: flex; gap: 10px; margin-top: 10px;">
+                                                <c:forEach var="imgUrl" items="${rv.images}">
+                                                    <img src="${pageContext.request.contextPath}/${imgUrl}"
+                                                         alt="Ảnh review"
+                                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer;"
+                                                         onclick="window.open(this.src)">
+                                                </c:forEach>
+                                            </div>
                                         </c:if>
+                                        <c:if test="${not empty rv.createdAt}">
+                                            <small class="review-date">
+                                                <fmt:parseDate value="${rv.createdAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDate" />
+                                                <fmt:formatDate value="${parsedDate}" pattern="HH:mm dd/MM/yyyy" />
+                                            </small>
+                                        </c:if>
+
                                     </div>
                                 </c:forEach>
                             </c:when>

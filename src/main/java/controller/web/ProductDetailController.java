@@ -74,8 +74,15 @@ public class ProductDetailController extends HttpServlet {
                 currentCat = null;
             }
         }
-        request.setAttribute("breadcrumbs", breadcrumbs);
 
+        if (reviews != null) {
+            for (Review rv : reviews) {
+                List<String> imgList = reviewService.getImagesByReviewId(rv.getId());
+                rv.setImages(imgList);
+            }
+        }
+
+        request.setAttribute("breadcrumbs", breadcrumbs);
         request.setAttribute("variants", listVariant);
         request.setAttribute("sizes", listSize);
         request.setAttribute("colors", listColor);

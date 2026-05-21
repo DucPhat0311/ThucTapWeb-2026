@@ -146,10 +146,10 @@
                         </form>
                     </c:if>
                     <c:if test="${not empty o.ghnOrderCode}">
-                        <span class="tracking-chip">
-                            <i class="fa-solid fa-truck-fast"></i>
-                            ${not empty o.ghnStatusName ? o.ghnStatusName : "Đang chờ GHN"}
-                        </span>
+                       <span class="tracking-chip">
+                           <i class="fa-solid fa-truck-fast"></i>
+                           ${not empty o.ghnStatusName ? o.ghnStatusName : "Đang chờ GHN"}
+                       </span>
                     </c:if>
                     <a href="order-detail?id=${o.id}" class="btn-order-action btn-detail">Xem chi tiết</a>
                 </div>
@@ -157,124 +157,6 @@
         </c:forEach>
     </div>
 </section>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const stars = document.querySelectorAll(".star-rating .star");
-        const ratingInput = document.getElementById("rating-value");
-
-        const renderStars = (rating) => {
-            stars.forEach(star => {
-                star.classList.toggle("selected", star.dataset.value <= rating);
-            });
-        };
-
-        stars.forEach(star => {
-            star.addEventListener("mouseover", () => renderStars(star.dataset.value));
-            star.addEventListener("mouseout", () => renderStars(ratingInput.value || 0));
-            star.addEventListener("click", () => {
-                ratingInput.value = star.dataset.value;
-                renderStars(star.dataset.value);
-            });
-        });
-
-        const reviewForm = document.getElementById("reviewForm");
-
-        reviewForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const rating = ratingInput.value;
-            if (!rating || rating === "0") {
-                alert("Vui lòng chọn số sao để đánh giá!");
-                return;
-            }
-
-            const submitBtn = reviewForm.querySelector(".btn-submit-review");
-            const originalBtnText = submitBtn.innerText;
-
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Đang gửi...";
-
-            try {
-                const formData = new FormData(reviewForm);
-                const urlEncodedData = new URLSearchParams(formData).toString();
-
-                const response = await fetch("review", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: urlEncodedData
-                });
-
-                if (!response.ok) {
-                    throw new Error("Lỗi: " + response.status);
-                }
-
-                alert("Cảm ơn bạn đã đánh giá sản phẩm!");
-                closeReviewModal();
-                window.location.reload();
-
-            } catch (error) {
-                console.error("Lỗi: ", error);
-                alert("Lỗi");
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = originalBtnText;
-            }
-        });
-
-        const modal = document.getElementById("reviewModal");
-        const cancelModal = document.getElementById("cancelOrderModal");
-        const cancelForms = document.querySelectorAll(".cancel-order-form");
-        const cancelConfirmForm = document.getElementById("cancelConfirmForm");
-        const cancelOrderIdInput = document.getElementById("cancelOrderId");
-
-        cancelForms.forEach(form => {
-            form.addEventListener("submit", (e) => {
-                e.preventDefault();
-                cancelOrderIdInput.value = form.querySelector("input[name='id']").value;
-                cancelModal.style.display = "flex";
-            });
-        });
-
-        window.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                closeReviewModal();
-            }
-            if (e.target === cancelModal) {
-                closeCancelOrderModal();
-            }
-        });
-    });
-
-    window.openReviewModal = function(productId, orderItemId) {
-        const modal = document.getElementById("reviewModal");
-        const form = document.getElementById("reviewForm");
-
-        document.getElementById("popup_product_id").value = productId;
-        document.getElementById("popup_order_item_id").value = orderItemId;
-
-        form.reset();
-        document.getElementById("rating-value").value = "";
-        document.querySelectorAll(".star-rating .star").forEach(star => {
-            star.classList.remove("selected");
-        });
-
-        modal.style.display = "block";
-    };
-
-    window.closeReviewModal = function() {
-        document.getElementById("reviewModal").style.display = "none";
-    };
-
-    window.closeCancelOrderModal = function() {
-        document.getElementById("cancelOrderModal").style.display = "none";
-        document.getElementById("cancelOrderId").value = "";
-    };
-</script>
-
-<script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
 
 <div id="cancelOrderModal" class="cancel-order-modal">
     <div class="cancel-order-dialog">
@@ -293,27 +175,195 @@
 <div id="reviewModal" class="review-modal">
     <div class="review-modal-content">
         <span class="close-btn" onclick="closeReviewModal()">&times;</span>
-
         <h3>Đánh giá sản phẩm</h3>
 
-        <form id="reviewForm" onsubmit="return submitReviewPopup()">
+        <form id="reviewForm" class="modern-review-form" enctype="multipart/form-data">
             <input type="hidden" name="product_id" id="popup_product_id">
             <input type="hidden" name="order_item_id" id="popup_order_item_id">
             <input type="hidden" name="rating" id="rating-value">
 
-            <div class="star-rating">
-                <span class="star" data-value="1">★</span>
-                <span class="star" data-value="2">★</span>
-                <span class="star" data-value="3">★</span>
-                <span class="star" data-value="4">★</span>
-                <span class="star" data-value="5">★</span>
+            <div class="form-group center-group">
+                <label class="form-label">Chất lượng sản phẩm</label>
+                <div class="star-rating">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <span id="rating-text" class="rating-text">Vui lòng chọn số sao</span>
             </div>
 
-            <textarea name="comment" placeholder="Nhập đánh giá..." required></textarea>
+            <div class="form-group">
+                <label for="review-comment" class="form-label">Chia sẻ trải nghiệm của bạn</label>
+                <textarea id="review-comment" name="comment" placeholder="Hãy điền đánh giá của bạn về sản phẩm của chúng tôi... Xin cảm ơn...." required></textarea>
+            </div>
 
-            <button type="submit" class="btn-submit-review">Gửi đánh giá</button>
+            <div class="form-group">
+                <label class="form-label">Hình ảnh thực tế</label>
+                <div class="upload-zone">
+                    <input type="file" id="reviewImages" name="reviewImages" accept="image/*" multiple class="file-input">
+                    <label for="reviewImages" class="upload-placeholder">
+                        <span class="upload-text">Thêm hình ảnh sản phẩm</span>
+                    </label>
+                </div>
+                <div id="image-preview-container" style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit-review">Gửi đánh giá ngay</button>
+            </div>
         </form>
     </div>
 </div>
 
-<%@ include file="../include/footer.jsp" %>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const stars = document.querySelectorAll(".star-rating .star");
+        const ratingInput = document.getElementById("rating-value");
+        const ratingText = document.getElementById("rating-text");
+
+        const renderStars = (rating) => {
+            stars.forEach(star => {
+                star.classList.toggle("selected", star.dataset.value <= rating);
+            });
+            if(rating > 0) {
+                ratingText.style.color = "#ffbe00";
+            } else {
+                ratingText.innerText = "Vui lòng chọn số sao";
+                ratingText.style.color = "#888888";
+            }
+        };
+
+        stars.forEach(star => {
+            star.addEventListener("mouseover", () => renderStars(star.dataset.value));
+            star.addEventListener("mouseout", () => renderStars(ratingInput.value || 0));
+            star.addEventListener("click", () => {
+                ratingInput.value = star.dataset.value;
+                renderStars(star.dataset.value);
+            });
+        });
+
+        // preview
+        const fileInput = document.getElementById("reviewImages");
+        const previewContainer = document.getElementById("image-preview-container");
+
+        fileInput.addEventListener("change", function() {
+            previewContainer.innerHTML = "";
+            const files = this.files;
+            if (files.length === 0) return;
+
+            Array.from(files).forEach((file) => {
+                const fileRow = document.createElement("div");
+                fileRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; background: #f5f5f5; padding: 6px 12px; border-radius: 4px; font-size: 13px; color: #555; border: 1px solid #eee;";
+
+
+                fileRow.innerHTML = `
+   <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 85%;"><i class="fa-regular fa-image" style="margin-right: 6px;"></i>${file.name}</span>
+   <span class="remove-img-btn" style="color: #c62828; cursor: pointer; font-weight: bold; font-size: 16px; padding: 0 4px;">&times;</span>
+`;
+
+                previewContainer.appendChild(fileRow);
+            });
+        });
+
+        // delete pic
+        previewContainer.addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-img-btn")) {
+                e.target.parentElement.remove();
+            }
+        });
+
+        const reviewForm = document.getElementById("reviewForm");
+        reviewForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const rating = ratingInput ? ratingInput.value : "0";
+            if (!rating || rating === "0") {
+                alert("Vui lòng chọn số sao để đánh giá!");
+                return;
+            }
+
+            const submitBtn = reviewForm.querySelector(".btn-submit-review");
+            if (submitBtn.disabled) return;
+
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Đang gửi...";
+
+            try {
+                const formData = new FormData(reviewForm);
+                const response = await fetch("review", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error("Lỗi Server: " + response.status);
+                }
+
+                alert("Cảm ơn bạn đã đánh giá sản phẩm!");
+                closeReviewModal();
+                window.location.reload();
+
+            } catch (error) {
+                console.error("Chi tiết lỗi: ", error);
+                alert("Không thể gửi đánh giá. Vui lòng kiểm tra lại!");
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+            }
+        });
+
+        const cancelModal = document.getElementById("cancelOrderModal");
+        const cancelForms = document.querySelectorAll(".cancel-order-form");
+        const cancelOrderIdInput = document.getElementById("cancelOrderId");
+
+        cancelForms.forEach(form => {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                cancelOrderIdInput.value = form.querySelector("input[name='id']").value;
+                cancelModal.style.display = "flex";
+            });
+        });
+
+        const reviewModalEl = document.getElementById("reviewModal");
+        window.addEventListener("click", (e) => {
+            if (e.target === reviewModalEl) {
+                closeReviewModal();
+            }
+            if (e.target === cancelModal) {
+                closeCancelOrderModal();
+            }
+        });
+    });
+
+    window.openReviewModal = function(productId, orderItemId) {
+        const modal = document.getElementById("reviewModal");
+        const form = document.getElementById("reviewForm");
+        const previewContainer = document.getElementById("image-preview-container");
+
+        document.getElementById("popup_product_id").value = productId;
+        document.getElementById("popup_order_item_id").value = orderItemId;
+
+        form.reset();
+        previewContainer.innerHTML = "";
+        document.getElementById("rating-value").value = "";
+        document.getElementById("rating-text").innerText = "Vui lòng chọn số sao";
+        document.getElementById("rating-text").style.color = "#888888";
+
+        document.querySelectorAll(".star-rating .star").forEach(star => {
+            star.classList.remove("selected");
+        });
+
+        modal.style.display = "flex";
+    };
+
+    window.closeReviewModal = function() {
+        document.getElementById("reviewModal").style.display = "none";
+    };
+
+    window.closeCancelOrderModal = function() {
+        document.getElementById("cancelOrderModal").style.display = "none";
+        document.getElementById("cancelOrderId").value = "";
+    };
+</script>

@@ -8,8 +8,14 @@ import model.User;
 import service.ReviewService;
 
 import java.io.IOException;
+import java.util.Collection;
 
 @WebServlet("/review")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 20,      // 20MB
+        maxRequestSize = 1024 * 1024 * 100    // 100MB
+)
 public class ReviewController extends HttpServlet {
 
     private ReviewService reviewService;
@@ -30,30 +36,53 @@ public class ReviewController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         request.setCharacterEncoding("UTF-8");
-
         User user = (User) request.getSession().getAttribute("userlogin");
 
+
         if (user == null) {
-            response.sendRedirect("login");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        int productId = Integer.parseInt(request.getParameter("product_id"));
-        int orderItemId = Integer.parseInt(request.getParameter("order_item_id"));
-        int rating = Integer.parseInt(request.getParameter("rating"));
-        String comment = request.getParameter("comment");
+        try {
+            int productId = Integer.parseInt(request.getParameter("product_id"));
+            int orderItemId = Integer.parseInt(request.getParameter("order_item_id"));
+            int rating = Integer.parseInt(request.getParameter("rating"));
+            String comment = request.getParameter("comment");
 
-        Review review = new Review();
-        review.setProductId(productId);
-        review.setUserId(user.getId());
-        review.setRating(rating);
-        review.setComment(comment);
+            Review review = new Review();
+            review.setProductId(productId);
+            review.setUserId(user.getId());
+            review.setRating(rating);
+            review.setComment(comment);
 
-        reviewService.addOrUpdateReview(review);
+            // lấy id
+            int reviewId = reviewService.addReview(review);
 
-        reviewService.markOrderItemReviewed(orderItemId);
-        response.sendRedirect("detail-product?id=" + productId);
+            // upload nhiều ảnh
+            String uploadPath = getServletContext().getRealPath("/") + "img/reviews";
+            java.io.File uploadDir = new java.io.File(uploadPath);
+            if (!uploadDir.exists()) uploadDir.mkdirs();
+
+            Collection<Part> parts = request.getParts();
+            for (Part part : parts) {
+                if (part.getName().equals("reviewImages") && part.getSize() > 0) {
+                    String fileName = System.currentTimeMillis() + "_" + part.getSubmittedFileName();
+                    part.write(uploadPath + java.io.File.separator + fileName);
+                    // lưu
+                    reviewService.saveReviewImage(reviewId, "img/reviews/" + fileName);
+                }
+            }
+
+            // set đã đáh gias
+            reviewService.markOrderItemReviewed(orderItemId);
+
+            response.setStatus(HttpServletResponse.SC_OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 }
+

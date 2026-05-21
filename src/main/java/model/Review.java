@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Review {
     private int id;
@@ -9,6 +10,7 @@ public class Review {
     private int rating;
     private String comment;
     private LocalDateTime createdAt;
+    private List<String> images;
 
 
     public Review(int id, int productId, int userId, int rating, String comment, LocalDateTime createdAt) {
@@ -70,4 +72,8 @@ public class Review {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public List<String> getImages() { return images; }
+
+    public void setImages(List<String> images) { this.images = images; }
 }
