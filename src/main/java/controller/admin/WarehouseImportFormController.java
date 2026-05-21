@@ -39,7 +39,7 @@ public class WarehouseImportFormController extends HttpServlet {
             receipt.setNote(note);
             receipt.setSupplier(supplier);
 
-            model.User user = (model.User) request.getSession().getAttribute("adminLogined");
+            model.User user = (model.User) request.getSession().getAttribute("admin");
             receipt.setUserId(user != null ? user.getId() : 1);
 
             String[] variantIds = request.getParameterValues("productVariantId[]");
