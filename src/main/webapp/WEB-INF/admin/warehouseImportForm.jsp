@@ -169,6 +169,13 @@
                         const worksheet = workbook.Sheets[firstSheetName];
                         const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
 
+                        const existingRows = document.querySelectorAll('#product-list .product-row');
+                        existingRows.forEach(function(row) {
+                            const select = row.querySelector('select[name="productVariantId[]"]');
+                            if (!select || !select.value) {
+                                row.remove();
+                            }
+                        });
 
                         for (let i = 1; i < json.length; i++) {
                             const rowData = json[i];
