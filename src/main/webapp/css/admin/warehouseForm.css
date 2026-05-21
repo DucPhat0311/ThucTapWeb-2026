@@ -67,3 +67,27 @@
     font-size: 13px;
     margin-bottom: 12px;
 }
+
+.product-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.product-header label {
+    margin: 0;
+}
+
+.link-add-new {
+    font-size: 13px;
+    color: #007bff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.link-add-new:hover {
+    text-decoration: underline;
+}

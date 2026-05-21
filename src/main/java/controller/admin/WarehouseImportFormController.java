@@ -21,12 +21,8 @@ public class WarehouseImportFormController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ProductDaoAdmin productDao = new ProductDaoAdmin();
         ProductVariantDaoAdmin variantDao = new ProductVariantDaoAdmin();
-        
-        request.setAttribute("products", productDao.findAll());
-        request.setAttribute("colors", variantDao.getAllColors());
-        request.setAttribute("sizes", variantDao.getAllSizes());
+        request.setAttribute("variants", variantDao.getAllVariantsWithDetails());
         request.setAttribute("page", "warehouse");
         
         request.getRequestDispatcher("/WEB-INF/admin/warehouseImportForm.jsp").forward(request, response);
@@ -44,24 +40,16 @@ public class WarehouseImportFormController extends HttpServlet {
             model.User user = (model.User) request.getSession().getAttribute("adminLogined");
             receipt.setUserId(user != null ? user.getId() : 1);
 
-            String[] productIds = request.getParameterValues("productId[]");
-            String[] colorIds = request.getParameterValues("colorId[]");
-            String[] sizeIds = request.getParameterValues("sizeId[]");
+            String[] variantIds = request.getParameterValues("productVariantId[]");
             String[] quantities = request.getParameterValues("quantity[]");
             String[] prices = request.getParameterValues("price[]");
 
             List<InventoryReceiptDetail> details = new ArrayList<>();
-            ProductVariantDaoAdmin variantDao = new ProductVariantDaoAdmin();
             
-            if (productIds != null && quantities != null && prices != null) {
-                for (int i = 0; i < productIds.length; i++) {
-                    int pId = Integer.parseInt(productIds[i]);
-                    int cId = Integer.parseInt(colorIds[i]);
-                    int sId = Integer.parseInt(sizeIds[i]);
+            if (variantIds != null && quantities != null && prices != null) {
+                for (int i = 0; i < variantIds.length; i++) {
                     InventoryReceiptDetail detail = new InventoryReceiptDetail();
-                    detail.setProductId(pId);
-                    detail.setColorId(cId);
-                    detail.setSizeId(sId);
+                    detail.setProductVariantId(Integer.parseInt(variantIds[i]));
                     detail.setQuantity(Integer.parseInt(quantities[i]));
                     detail.setPrice(Double.parseDouble(prices[i]));
                     details.add(detail);
