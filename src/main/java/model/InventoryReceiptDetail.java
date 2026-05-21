@@ -20,6 +20,11 @@ public class InventoryReceiptDetail implements Serializable {
     private String colorName;
     private String sizeName;
 
+    // Transient fields for import variant creation
+    private int productId;
+    private int colorId;
+    private int sizeId;
+
     public InventoryReceiptDetail() {
     }
 
@@ -85,5 +90,29 @@ public class InventoryReceiptDetail implements Serializable {
 
     public void setSizeName(String sizeName) {
         this.sizeName = sizeName;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(int colorId) {
+        this.colorId = colorId;
+    }
+
+    public int getSizeId() {
+        return sizeId;
+    }
+
+    public void setSizeId(int sizeId) {
+        this.sizeId = sizeId;
     }
 }

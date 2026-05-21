@@ -12,10 +12,11 @@ import service.admin.InventoryServiceAdmin;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import dao.admin.ProductDaoAdmin;
 import dao.admin.ProductVariantDaoAdmin;
 
-@WebServlet("/admin/warehouseForm")
-public class WarehouseFormController extends HttpServlet {
+@WebServlet("/admin/warehouseImportForm")
+public class WarehouseImportFormController extends HttpServlet {
     private final InventoryServiceAdmin inventoryService = new InventoryServiceAdmin();
 
     @Override
@@ -23,17 +24,17 @@ public class WarehouseFormController extends HttpServlet {
         ProductVariantDaoAdmin variantDao = new ProductVariantDaoAdmin();
         request.setAttribute("variants", variantDao.getAllVariantsWithDetails());
         request.setAttribute("page", "warehouse");
-        request.getRequestDispatcher("/WEB-INF/admin/warehouseForm.jsp").forward(request, response);
+        
+        request.getRequestDispatcher("/WEB-INF/admin/warehouseImportForm.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String type = request.getParameter("type"); 
             String note = request.getParameter("note");
             
             InventoryReceipt receipt = new InventoryReceipt();
-            receipt.setType(type);
+            receipt.setType("IMPORT");
             receipt.setNote(note);
 
             model.User user = (model.User) request.getSession().getAttribute("adminLogined");
@@ -58,7 +59,7 @@ public class WarehouseFormController extends HttpServlet {
             boolean isSuccess = inventoryService.processInventoryReceipt(receipt, details);
             
             if (isSuccess) {
-                request.getSession().setAttribute("message", "Thêm phiếu kho thành công!");
+                request.getSession().setAttribute("message", "Thêm phiếu nhập kho thành công!");
             } else {
                 request.getSession().setAttribute("error", "Có lỗi xảy ra khi tạo phiếu!");
             }
