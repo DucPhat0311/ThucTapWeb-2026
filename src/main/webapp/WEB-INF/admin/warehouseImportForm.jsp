@@ -24,6 +24,10 @@
                         <h3>Thông tin phiếu</h3>
                         <div class="row">
                             <div class="col">
+                                <label for="supplier">Nhà cung cấp</label>
+                                <input type="text" id="supplier" name="supplier" placeholder="Nhập tên nhà cung cấp..." required>
+                            </div>
+                            <div class="col">
                                 <label for="note">Ghi chú</label>
                                 <input type="text" id="note" name="note" placeholder="Nhập ghi chú cho phiếu nhập...">
                             </div>

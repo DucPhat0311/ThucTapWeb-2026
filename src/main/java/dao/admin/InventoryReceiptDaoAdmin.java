@@ -13,14 +13,15 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
         return getJdbi().inTransaction(handle -> {
             try {
 
-                int receiptId = handle.createUpdate("INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status) " +
-                                "VALUES (:userId, :type, :note, :totalAmount, :createdAt, :status)")
+                int receiptId = handle.createUpdate("INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, supplier) " +
+                                "VALUES (:userId, :type, :note, :totalAmount, :createdAt, :status, :supplier)")
                         .bind("userId", receipt.getUserId())
                         .bind("type", receipt.getType())
                         .bind("note", receipt.getNote())
                         .bind("totalAmount", receipt.getTotalAmount())
                         .bind("createdAt", LocalDateTime.now())
                         .bind("status", "COMPLETED") 
+                        .bind("supplier", receipt.getSupplier())
                         .executeAndReturnGeneratedKeys()
                         .mapTo(Integer.class)
                         .one();

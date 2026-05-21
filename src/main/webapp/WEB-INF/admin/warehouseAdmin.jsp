@@ -74,8 +74,17 @@
                                                                     type="currency" currencySymbol="₫" />
                                                             </td>
                                                             <td>${r.createdAt}</td>
-                                                            <td><span
-                                                                    style="color: green; font-weight: bold;">${r.status}</span>
+                                                            <td><span style="color: green; font-weight: bold;">
+                                                                    <c:choose>
+                                                                        <c:when test="${r.status == 'COMPLETED'}">Hoàn
+                                                                            thành</c:when>
+                                                                        <c:when test="${r.status == 'PENDING'}">Chờ xử
+                                                                            lý</c:when>
+                                                                        <c:when test="${r.status == 'CANCELLED'}">Đã hủy
+                                                                        </c:when>
+                                                                        <c:otherwise>${r.status}</c:otherwise>
+                                                                    </c:choose>
+                                                                </span>
                                                             </td>
                                                             <td><a href="?action=view&id=${r.id}"
                                                                     style="color: blue; text-decoration: underline;">Chi
@@ -123,8 +132,17 @@
                                                                     type="currency" currencySymbol="₫" />
                                                             </td>
                                                             <td>${r.createdAt}</td>
-                                                            <td><span
-                                                                    style="color: orange; font-weight: bold;">${r.status}</span>
+                                                            <td><span style="color: orange; font-weight: bold;">
+                                                                    <c:choose>
+                                                                        <c:when test="${r.status == 'COMPLETED'}">Hoàn
+                                                                            thành</c:when>
+                                                                        <c:when test="${r.status == 'PENDING'}">Chờ xử
+                                                                            lý</c:when>
+                                                                        <c:when test="${r.status == 'CANCELLED'}">Đã hủy
+                                                                        </c:when>
+                                                                        <c:otherwise>${r.status}</c:otherwise>
+                                                                    </c:choose>
+                                                                </span>
                                                             </td>
                                                             <td><a href="?action=view&id=${r.id}"
                                                                     style="color: blue; text-decoration: underline;">Chi
