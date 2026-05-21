@@ -31,13 +31,15 @@ public class WarehouseImportFormController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            String supplier = request.getParameter("supplier");
             String note = request.getParameter("note");
             
             InventoryReceipt receipt = new InventoryReceipt();
             receipt.setType("IMPORT");
             receipt.setNote(note);
+            receipt.setSupplier(supplier);
 
-            model.User user = (model.User) request.getSession().getAttribute("adminLogined");
+            model.User user = (model.User) request.getSession().getAttribute("admin");
             receipt.setUserId(user != null ? user.getId() : 1);
 
             String[] variantIds = request.getParameterValues("productVariantId[]");

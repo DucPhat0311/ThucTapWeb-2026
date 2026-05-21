@@ -21,6 +21,8 @@ public class InventoryReceipt implements Serializable {
     
     private String status; 
 
+    private String supplier;
+
     private String userName;
 
     public InventoryReceipt() {
@@ -88,5 +90,13 @@ public class InventoryReceipt implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 }
