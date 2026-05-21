@@ -219,8 +219,12 @@
                                             <p><c:out value="${rv.comment}" /></p>
                                         </div>
                                         <c:if test="${not empty rv.createdAt}">
-                                            <small class="review-date">${rv.createdAt}</small>
+                                            <small class="review-date">
+                                                <fmt:parseDate value="${rv.createdAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDate" />
+                                                <fmt:formatDate value="${parsedDate}" pattern="HH:mm dd/MM/yyyy" />
+                                            </small>
                                         </c:if>
+
                                     </div>
                                 </c:forEach>
                             </c:when>
