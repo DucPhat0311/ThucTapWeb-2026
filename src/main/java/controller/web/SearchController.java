@@ -1,33 +1,55 @@
 package controller.web;
 
-import dao.user.CategoryDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Category;
+import jakarta.servlet.http.HttpSession;
 import model.Product;
+import model.User;
 import service.ProductService;
+
 
 import java.io.IOException;
 import java.util.List;
 
+
 @WebServlet("/search")
 public class SearchController extends HttpServlet {
+    private ProductService productService;
+
+
+    @Override
+    public void init() {
+        productService = new ProductService();
+    }
+
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String keyword = request.getParameter("keyword");
-        ProductService ps = new ProductService();
-        List<Product> list = ps.searchProducts(keyword);
+        int page = 1;
+        int pageSize = 15;
+
+        String pageStr = request.getParameter("page");
+        if (pageStr != null && !pageStr.trim().isEmpty()) {
+            page = Integer.parseInt(pageStr);
+        }
+        int offset = (page - 1) * pageSize;
+        List<Product> list = productService.handlePaginateForSearch(keyword, pageSize, offset);
+        int totalProducts = productService.countSearchProducts(keyword);
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
         request.setAttribute("list", list);
+        request.setAttribute("totalProducts", totalProducts);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", page);
+
 
         request.getRequestDispatcher("/WEB-INF/views/search.jsp").forward(request, response);
     }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
 }
+

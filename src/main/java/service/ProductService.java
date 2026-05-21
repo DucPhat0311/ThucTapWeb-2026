@@ -102,4 +102,18 @@ public List<Product> handleFilterProducts(String categoryId, String sortType, St
     public int handleCountProducts(String categoryId, String minPrice, String maxPrice,String sizes, String colors){
         return productDao.countProducts(categoryId, minPrice, maxPrice, sizes, colors);
     }
+
+    public List<Product> handlePaginateForSearch(String keyword, int pageSize, int offset) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return productDao.searchAndPaginate(keyword.trim(), pageSize, offset);
+    }
+
+    public int countSearchProducts(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return 0;
+        }
+        return productDao.countAndSearch(keyword.trim());
+    }
 }

@@ -330,4 +330,58 @@ public class ProductDao extends BaseDao {
         });
     }
 
+    public List<Product> searchAndPaginate(String keyword, int limit, int offset) {
+        StringBuilder sql = new StringBuilder("""
+           SELECT p.*,
+              (SELECT image_url FROM product_images WHERE product_id = p.id AND is_main = 0 ORDER BY id ASC LIMIT 1) AS hoverImage,
+              (SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount,
+              (SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount,
+              (SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) AS avgRating,
+              (SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews
+           FROM products p
+           WHERE p.status = 'Đang bán'
+       """);
+
+        String[] words = keyword.trim().replaceAll("\\s+", " ").split(" ");
+        for (int i = 0; i < words.length; i++) {
+            sql.append(" AND CONCAT(' ', LOWER(p.name), ' ') LIKE :word").append(i);
+        }
+
+        sql.append(" ORDER BY p.id DESC LIMIT :limit OFFSET :offset");
+        return getJdbi().withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+
+            for (int i = 0; i < words.length; i++) {
+                query.bind("word" + i, "% " + words[i].toLowerCase() + " %");
+            }
+            query.bind("limit", limit);
+            query.bind("offset", offset);
+
+
+            return query.mapToBean(Product.class).list();
+        });
+    }
+
+    public int countAndSearch(String keyword) {
+        StringBuilder sql = new StringBuilder("""
+           SELECT COUNT(*)
+           FROM products p
+           WHERE p.status = 'Đang bán'
+       """);
+
+        String[] words = keyword.trim().replaceAll("\\s+", " ").split(" ");
+        for (int i = 0; i < words.length; i++) {
+            sql.append(" AND CONCAT(' ', LOWER(p.name), ' ') LIKE :word").append(i);
+        }
+
+        return getJdbi().withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+            for (int i = 0; i < words.length; i++) {
+                query.bind("word" + i, "% " + words[i].toLowerCase() + " %");
+            }
+            return query.mapTo(Integer.class).one();
+        });
+    }
+
+
 }
