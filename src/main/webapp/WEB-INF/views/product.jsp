@@ -205,6 +205,12 @@
         window.location.href = window.location.pathname + "?" + urlParams.toString();
     }
 
+    function sort(type) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('sortType', type);
+        urlParams.set('page', 1);
+        window.location.href = window.location.pathname + "?" + urlParams.toString();
+    }
 
 </script>
 
