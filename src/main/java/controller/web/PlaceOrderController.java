@@ -1,8 +1,6 @@
 package controller.web;
 
 import dao.user.CartItemDao;
-import dao.user.OrderDao;
-import dao.user.OrderItemDao;
 import dao.user.PaymentTransactionDao;
 import dao.user.ProductVariantDao;
 import jakarta.servlet.ServletException;
@@ -14,8 +12,8 @@ import jakarta.servlet.http.HttpSession;
 import model.User;
 import model.constant.PaymentMethod;
 import model.constant.PaymentTransactionStatus;
-import service.AddressService;
 import service.CheckoutService;
+import service.OrderPlacementService;
 import service.VnPayService;
 
 import java.io.IOException;
@@ -23,25 +21,19 @@ import java.io.IOException;
 @WebServlet(name = "PlaceOrderController", value = "/place-order")
 public class PlaceOrderController extends HttpServlet {
 
-    private OrderDao orderDao;
-    private OrderItemDao orderItemDao;
     private CartItemDao cartItemDao;
-    private ProductVariantDao variantDao;
     private PaymentTransactionDao paymentTransactionDao;
     private CheckoutService checkoutService;
+    private OrderPlacementService orderPlacementService;
     private VnPayService vnPayService;
-    private AddressService addressService;
 
     @Override
     public void init() {
-        orderDao = new OrderDao();
-        orderItemDao = new OrderItemDao();
         cartItemDao = new CartItemDao();
-        variantDao = new ProductVariantDao();
         paymentTransactionDao = new PaymentTransactionDao();
         checkoutService = new CheckoutService();
+        orderPlacementService = new OrderPlacementService();
         vnPayService = new VnPayService();
-        addressService = new AddressService();
     }
 
     @Override
@@ -83,33 +75,20 @@ public class PlaceOrderController extends HttpServlet {
         double finalAmount = preparedCheckout.totalPrice() + shippingFee;
 
         int cartId = cartIdObj;
-        int orderId = orderDao.createOrder(
-                user.getId(),
-                preparedCheckout.recipientName(),
-                preparedCheckout.recipientPhone(),
-                preparedCheckout.shippingAddress(),
-                note,
-                orderPlacement.paymentMethod(),
-                orderPlacement.paymentStatus(),
-                orderPlacement.orderStatus(),
-                preparedCheckout.totalPrice(),
-                shippingFee,
-                finalAmount
-        );
-
-        for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
-            var variantDetail = item.variantDetail();
-
-            orderItemDao.insert(
-                    orderId,
-                    variantDetail.getProductId(),
-                    item.variantId(),
-                    variantDetail.getSizeName(),
-                    variantDetail.getColorName(),
-                    item.quantity(),
-                    item.unitPrice(),
-                    item.lineTotal()
+        int orderId;
+        try {
+            orderId = orderPlacementService.placeOrder(
+                    user.getId(),
+                    cartId,
+                    preparedCheckout,
+                    orderPlacement,
+                    note,
+                    shippingFee,
+                    finalAmount
             );
+        } catch (ProductVariantDao.InsufficientStockException e) {
+            response.sendRedirect("checkout?error=out_of_stock");
+            return;
         }
 
         if (PaymentMethod.VNPAY.equals(orderPlacement.paymentMethod())) {
@@ -133,11 +112,6 @@ public class PlaceOrderController extends HttpServlet {
             ));
             response.sendRedirect(paymentUrl);
             return;
-        }
-
-        for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
-            variantDao.decreaseStock(item.variantId(), item.quantity());
-            cartItemDao.delete(cartId, item.variantId());
         }
 
         int remainingCart = cartItemDao.countTotalQuantity(cartId);
