@@ -601,6 +601,115 @@ header li:hover .sub{
     display: none !important;
 }
 
+.logout-confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(34, 28, 24, 0.45);
+}
+
+.logout-confirm-modal.is-open {
+    display: flex;
+}
+
+.logout-confirm-dialog {
+    width: min(420px, 100%);
+    padding: 32px 28px 26px;
+    background: #fffdf9;
+    border: 1px solid #eadfcc;
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    text-align: center;
+    color: #3f3127;
+    animation: logoutModalIn 0.18s ease-out;
+}
+
+.logout-confirm-icon {
+    width: 58px;
+    height: 58px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 50%;
+    background: #f5eddf;
+    color: #8a6548;
+    font-size: 24px;
+}
+
+.logout-confirm-dialog h3 {
+    margin: 0 0 10px;
+    color: #1f1a16;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.logout-confirm-dialog p {
+    margin: 0;
+    color: #6f6259;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.logout-confirm-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.logout-confirm-actions button {
+    flex: 1;
+    min-height: 44px;
+    border-radius: 999px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.logout-cancel-btn {
+    background: #f1ece5;
+    color: #4d4138;
+}
+
+.logout-cancel-btn:hover {
+    background: #e5dace;
+}
+
+.logout-submit-btn {
+    background: #111111;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+}
+
+.logout-submit-btn:hover {
+    background: #a67c52;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(166, 124, 82, 0.24);
+}
+
+@keyframes logoutModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 520px) {
+    .logout-confirm-actions {
+        flex-direction: column-reverse;
+    }
+}
+
 
 @keyframes cartBounce {
     0%, 100% {
