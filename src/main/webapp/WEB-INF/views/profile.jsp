@@ -68,6 +68,9 @@
             <c:if test="${param.emailChange == 'old_otp_sent'}">
                 <p class="avatar-message success">Mã OTP xác nhận đã được gửi về email hiện tại của bạn.</p>
             </c:if>
+            <c:if test="${param.emailChange == 'completed'}">
+                <p class="avatar-message success">Email đã được cập nhật thành công.</p>
+            </c:if>
         </div>
 
         <nav class="profile-menu">

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class ProfileEmailChangeController extends HttpServlet {
     private static final String PENDING_EMAIL_CHANGE_ATTR = "pendingProfileEmailChange";
     private static final String DEFAULT_STEP = "old";
+    private static final String NEW_EMAIL_STEP = "new";
 
     private UserService userService;
 
@@ -60,9 +61,20 @@ public class ProfileEmailChangeController extends HttpServlet {
             return;
         }
 
+        String action = trimToEmpty(request.getParameter("action"));
         String step = request.getParameter("step");
+        if ("resendNewOtp".equals(action)) {
+            resendNewEmailOtp(request, response, session, pendingChange);
+            return;
+        }
+
         if ("old".equals(step)) {
             verifyOldEmailOtp(request, response, session, pendingChange);
+            return;
+        }
+
+        if (NEW_EMAIL_STEP.equals(step)) {
+            verifyNewEmailOtp(request, response, session, user, pendingChange);
             return;
         }
 
@@ -86,9 +98,64 @@ public class ProfileEmailChangeController extends HttpServlet {
                     newEmailVerification.newEmailOtp(),
                     newEmailVerification.newEmailOtpExpiredAt()
             ));
-            response.sendRedirect("profile-email-change?step=new");
+            response.sendRedirect("profile-email-change?step=new&sent=1");
         } catch (RuntimeException e) {
             forwardWithError(request, response, pendingChange, e.getMessage(), DEFAULT_STEP);
+        }
+    }
+
+    private void resendNewEmailOtp(HttpServletRequest request,
+                                   HttpServletResponse response,
+                                   HttpSession session,
+                                   ProfileController.PendingProfileEmailChange pendingChange) throws ServletException, IOException {
+        if (pendingChange.newEmailOtp() == null || pendingChange.newEmailOtpExpiredAt() == null) {
+            response.sendRedirect("profile-email-change");
+            return;
+        }
+
+        try {
+            var newEmailVerification = userService.createProfileEmailChangeNewEmailVerification(pendingChange.newEmail());
+            session.setAttribute(PENDING_EMAIL_CHANGE_ATTR, pendingChange.withNewEmailVerification(
+                    newEmailVerification.newEmailOtp(),
+                    newEmailVerification.newEmailOtpExpiredAt()
+            ));
+            response.sendRedirect("profile-email-change?step=new&resent=1");
+        } catch (RuntimeException e) {
+            forwardWithError(request, response, pendingChange, e.getMessage(), NEW_EMAIL_STEP);
+        }
+    }
+
+    private void verifyNewEmailOtp(HttpServletRequest request,
+                                   HttpServletResponse response,
+                                   HttpSession session,
+                                   User user,
+                                   ProfileController.PendingProfileEmailChange pendingChange) throws ServletException, IOException {
+        String otp = trimToEmpty(request.getParameter("otp"));
+        if (pendingChange.newEmailOtp() == null || pendingChange.newEmailOtpExpiredAt() == null) {
+            response.sendRedirect("profile-email-change");
+            return;
+        }
+
+        if (otp.isBlank() || LocalDateTime.now().isAfter(pendingChange.newEmailOtpExpiredAt())
+                || !otp.equals(pendingChange.newEmailOtp())) {
+            forwardWithError(request, response, pendingChange, "OTP email mới không đúng hoặc đã hết hạn.", NEW_EMAIL_STEP);
+            return;
+        }
+
+        try {
+            User refreshedUser = userService.completeProfileEmailChange(
+                    user.getId(),
+                    pendingChange.fullName(),
+                    pendingChange.phone(),
+                    pendingChange.newEmail(),
+                    pendingChange.birthday(),
+                    pendingChange.gender()
+            );
+            session.setAttribute("userlogin", refreshedUser);
+            session.removeAttribute(PENDING_EMAIL_CHANGE_ATTR);
+            response.sendRedirect("profile?emailChange=completed");
+        } catch (RuntimeException e) {
+            forwardWithError(request, response, pendingChange, e.getMessage(), NEW_EMAIL_STEP);
         }
     }
 
@@ -105,8 +172,8 @@ public class ProfileEmailChangeController extends HttpServlet {
 
     private String resolveStep(HttpServletRequest request, ProfileController.PendingProfileEmailChange pendingChange) {
         String requestedStep = trimToEmpty(request.getParameter("step"));
-        if ("new".equals(requestedStep) && pendingChange.newEmailOtp() != null) {
-            return "new";
+        if (NEW_EMAIL_STEP.equals(requestedStep) && pendingChange.newEmailOtp() != null) {
+            return NEW_EMAIL_STEP;
         }
         return DEFAULT_STEP;
     }

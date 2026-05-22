@@ -4,6 +4,7 @@ import dao.user.UserDao;
 import dao.admin.UserDaoAdmin;
 import model.GoogleUserInfo;
 import model.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -255,6 +256,32 @@ public class UserService {
 
     private String normalizeEmail(String email) {
         return email == null ? "" : email.trim().toLowerCase();
+    }
+
+    public User completeProfileEmailChange(int userId,
+                                           String fullName,
+                                           String phone,
+                                           String newEmail,
+                                           LocalDate birthday,
+                                           String gender) {
+        String normalizedNewEmail = normalizeEmail(newEmail);
+        User existingUser = userDao.findByEmail(normalizedNewEmail);
+        if (existingUser != null && existingUser.getId() != userId) {
+            throw new RuntimeException("Email mới đã được sử dụng bởi tài khoản khác");
+        }
+
+        User user = userDao.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("Không tìm thấy tài khoản cần cập nhật");
+        }
+
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setEmail(normalizedNewEmail);
+        user.setBirthday(birthday);
+        user.setGender(gender);
+        userDao.update(user);
+        return userDao.findUserById(userId);
     }
 
     public boolean verifyOtp(String email, String otp) {

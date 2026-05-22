@@ -222,6 +222,15 @@
     border-radius: 8px;
 }
 
+.profile-email-success {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    color: #25633c;
+    background: #eefaf2;
+    border: 1px solid #bfe7cb;
+    border-radius: 8px;
+}
+
 .profile-email-form {
     display: grid;
     gap: 12px;
@@ -262,4 +271,14 @@
 
 .profile-email-form button:hover {
     background: #a67c52;
+}
+
+.profile-email-form .profile-email-secondary-btn {
+    background: #fff;
+    color: #7a583c;
+    border: 1px solid #d7c2ad;
+}
+
+.profile-email-form .profile-email-secondary-btn:hover {
+    background: #f8f3ee;
 }
