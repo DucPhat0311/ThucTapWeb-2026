@@ -130,6 +130,19 @@ public class UserDao extends BaseDao {
         );
     }
 
+    public int deleteExpiredPendingUsers() {
+        return getJdbi().withHandle(h ->
+                h.createUpdate("""
+                    DELETE FROM users
+                    WHERE is_active = 0
+                      AND status = 'PENDING'
+                      AND otp_expired_at IS NOT NULL
+                      AND otp_expired_at <= NOW()
+                """)
+                        .execute()
+        );
+    }
+
     public User findUserById(int id) {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("""

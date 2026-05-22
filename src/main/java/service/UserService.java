@@ -15,6 +15,10 @@ public class UserService {
     private final UserDao userDao = new UserDao();
     private final UserDaoAdmin userDaoAdmin = new UserDaoAdmin();
 
+    public int cleanupExpiredPendingRegistrations() {
+        return userDao.deleteExpiredPendingUsers();
+    }
+
     private String checkPasswordStrength(String password) {
         if (password == null || password.length() < 8)
             return "Mật khẩu phải có ít nhất 8 ký tự";

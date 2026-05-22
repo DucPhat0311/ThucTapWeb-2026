@@ -28,12 +28,14 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        userService.cleanupExpiredPendingRegistrations();
         request.getRequestDispatcher("/WEB-INF/auth/login.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        userService.cleanupExpiredPendingRegistrations();
 
         String usernameRaw = request.getParameter("username");
         String password = request.getParameter("password");
