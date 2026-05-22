@@ -146,6 +146,81 @@
     </nav>
 </header>
 
+<div class="logout-confirm-modal" id="logoutConfirmModal" aria-hidden="true">
+    <div class="logout-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="logoutConfirmTitle">
+        <div class="logout-confirm-icon">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </div>
+        <h3 id="logoutConfirmTitle">Xác nhận đăng xuất</h3>
+        <p>Bạn có chắc chắn muốn đăng xuất khỏi tài khoản hiện tại không?</p>
+        <div class="logout-confirm-actions">
+            <button type="button" class="logout-cancel-btn" id="logoutCancelBtn">Ở lại</button>
+            <button type="button" class="logout-submit-btn" id="logoutSubmitBtn">Đăng xuất</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var modal = document.getElementById("logoutConfirmModal");
+        var cancelBtn = document.getElementById("logoutCancelBtn");
+        var submitBtn = document.getElementById("logoutSubmitBtn");
+        var logoutUrl = "";
+
+        function isLogoutLink(link) {
+            if (!link) return false;
+            var href = link.getAttribute("href");
+            return href && /(^|\/)logout(\?.*)?$/.test(href);
+        }
+
+        function openLogoutModal(url) {
+            logoutUrl = url;
+            modal.classList.add("is-open");
+            modal.setAttribute("aria-hidden", "false");
+        }
+
+        function closeLogoutModal() {
+            modal.classList.remove("is-open");
+            modal.setAttribute("aria-hidden", "true");
+            logoutUrl = "";
+        }
+
+        document.addEventListener("click", function (event) {
+            var link = event.target.closest ? event.target.closest("a") : null;
+            if (!isLogoutLink(link)) return;
+
+            event.preventDefault();
+            openLogoutModal(link.href);
+        });
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener("click", closeLogoutModal);
+        }
+
+        if (submitBtn) {
+            submitBtn.addEventListener("click", function () {
+                if (logoutUrl) {
+                    window.location.href = logoutUrl;
+                }
+            });
+        }
+
+        if (modal) {
+            modal.addEventListener("click", function (event) {
+                if (event.target === modal) {
+                    closeLogoutModal();
+                }
+            });
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && modal.classList.contains("is-open")) {
+                closeLogoutModal();
+            }
+        });
+    })();
+</script>
+
 
 
 
