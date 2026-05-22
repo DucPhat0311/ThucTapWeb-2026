@@ -203,6 +203,52 @@ public class OrderDao extends BaseDao {
         return matchingOrders > 0;
     }
 
+    public boolean expirePendingVnPayOrderAndRestoreStock(int orderId, int holdMinutes) {
+        return getJdbi().inTransaction(handle -> {
+            int affectedRows = handle.createUpdate("""
+            UPDATE orders
+            SET order_status = :cancelledStatus,
+                payment_statuses = :failedPaymentStatus
+            WHERE id = :orderId
+              AND payment_methods = :paymentMethod
+              AND order_status = :pendingPaymentStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                    .bind("cancelledStatus", OrderStatus.CANCELLED)
+                    .bind("failedPaymentStatus", PaymentStatus.FAILED)
+                    .bind("orderId", orderId)
+                    .bind("paymentMethod", PaymentMethod.VNPAY)
+                    .bind("pendingPaymentStatus", OrderStatus.PENDING_PAYMENT)
+                    .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                    .bind("holdMinutes", holdMinutes)
+                    .execute();
+
+            if (affectedRows == 0) {
+                return false;
+            }
+
+            handle.createQuery("""
+            SELECT variant_id, quantity
+            FROM order_items
+            WHERE order_id = :orderId
+        """)
+                    .bind("orderId", orderId)
+                    .map((rs, ctx) -> new int[]{rs.getInt("variant_id"), rs.getInt("quantity")})
+                    .list()
+                    .forEach(item -> handle.createUpdate("""
+            UPDATE product_variants
+            SET stock = stock + :quantity
+            WHERE id = :variantId
+        """)
+                            .bind("quantity", item[1])
+                            .bind("variantId", item[0])
+                            .execute());
+
+            return true;
+        });
+    }
+
     public void updateGhnTrackingInfo(int orderId,
                                       String ghnOrderCode,
                                       String ghnStatus,

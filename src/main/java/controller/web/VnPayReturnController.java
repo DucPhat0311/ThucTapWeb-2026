@@ -12,6 +12,7 @@ import model.Order;
 import model.constant.OrderStatus;
 import model.constant.PaymentStatus;
 import model.constant.PaymentTransactionStatus;
+import service.OrderService;
 import service.VnPayService;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class VnPayReturnController extends HttpServlet {
     private PaymentTransactionDao paymentTransactionDao;
     private OrderDao orderDao;
     private CartItemDao cartItemDao;
+    private OrderService orderService;
 
     @Override
     public void init() {
@@ -31,6 +33,7 @@ public class VnPayReturnController extends HttpServlet {
         paymentTransactionDao = new PaymentTransactionDao();
         orderDao = new OrderDao();
         cartItemDao = new CartItemDao();
+        orderService = new OrderService();
     }
 
     @Override
@@ -60,6 +63,19 @@ public class VnPayReturnController extends HttpServlet {
         String transactionNo = trimToEmpty(vnpParams.get("vnp_TransactionNo"));
         String bankCode = trimToEmpty(vnpParams.get("vnp_BankCode"));
         String transactionStatus = paymentTransactionDao.findTransactionStatusByTxnRef(txnRef);
+
+        if (!PaymentStatus.PAID.equals(order.getPaymentStatuses()) && orderService.expirePendingPaymentOrder(orderId)) {
+            paymentTransactionDao.updatePaymentResult(
+                    txnRef,
+                    transactionNo,
+                    bankCode,
+                    responseCode,
+                    PaymentTransactionStatus.FAILED
+            );
+            prepareExpiredPaymentSession(session, orderId);
+            response.sendRedirect("payment-failed");
+            return;
+        }
 
         if (PaymentTransactionStatus.SUCCESS.equals(transactionStatus) || PaymentStatus.PAID.equals(order.getPaymentStatuses())) {
             session.setAttribute("lastOrderId", orderId);
@@ -132,5 +148,11 @@ public class VnPayReturnController extends HttpServlet {
         }
         session.setAttribute("failedTitle", "Thanh toán không thành công");
         session.setAttribute("failedMessage", "VNPay chưa ghi nhận thanh toán thành công cho đơn hàng này. Bạn có thể thử thanh toán lại hoặc chọn phương thức khác.");
+    }
+
+    private void prepareExpiredPaymentSession(HttpSession session, int orderId) {
+        session.setAttribute("failedOrderId", orderId);
+        session.setAttribute("failedTitle", "Đơn hàng đã quá hạn thanh toán");
+        session.setAttribute("failedMessage", "Đơn VNPay đã quá thời gian giữ hàng và đã được hoàn tồn kho.");
     }
 }

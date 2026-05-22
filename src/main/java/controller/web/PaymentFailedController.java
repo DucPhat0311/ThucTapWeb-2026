@@ -14,6 +14,7 @@ import model.constant.OrderStatus;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
 import model.constant.PaymentTransactionStatus;
+import service.OrderService;
 import service.VnPayService;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class PaymentFailedController extends HttpServlet {
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
     private PaymentTransactionDao paymentTransactionDao;
+    private OrderService orderService;
     private VnPayService vnPayService;
 
     @Override
@@ -30,6 +32,7 @@ public class PaymentFailedController extends HttpServlet {
         orderDao = new OrderDao();
         orderItemDao = new OrderItemDao();
         paymentTransactionDao = new PaymentTransactionDao();
+        orderService = new OrderService();
         vnPayService = new VnPayService();
     }
 
@@ -51,6 +54,10 @@ public class PaymentFailedController extends HttpServlet {
         if (order == null) {
             response.sendRedirect("checkout?error=payment_not_found");
             return;
+        }
+
+        if (orderService.expirePendingPaymentOrder(orderId)) {
+            order = orderDao.getById(orderId);
         }
 
         var orderItems = orderItemDao.getByOrderId(orderId);
@@ -95,6 +102,11 @@ public class PaymentFailedController extends HttpServlet {
 
         if (!PaymentMethod.VNPAY.equals(order.getPaymentMethods()) || PaymentStatus.PAID.equals(order.getPaymentStatuses())) {
             response.sendRedirect("order-user");
+            return;
+        }
+
+        if (orderService.expirePendingPaymentOrder(orderId)) {
+            response.sendRedirect("order-user?status=CANCELLED");
             return;
         }
 

@@ -54,6 +54,30 @@ public class OrderService {
         return orderDao.isExpiredPendingVnPayOrder(orderId, PENDING_PAYMENT_HOLD_MINUTES);
     }
 
+    public int expirePendingPaymentOrders() {
+        int expiredOrders = 0;
+        for (Integer orderId : findExpiredPendingPaymentOrderIds()) {
+            if (expirePendingPaymentOrder(orderId)) {
+                expiredOrders++;
+            }
+        }
+        return expiredOrders;
+    }
+
+    public int expirePendingPaymentOrdersByUserId(int userId) {
+        int expiredOrders = 0;
+        for (Integer orderId : findExpiredPendingPaymentOrderIdsByUserId(userId)) {
+            if (expirePendingPaymentOrder(orderId)) {
+                expiredOrders++;
+            }
+        }
+        return expiredOrders;
+    }
+
+    public boolean expirePendingPaymentOrder(int orderId) {
+        return orderDao.expirePendingVnPayOrderAndRestoreStock(orderId, PENDING_PAYMENT_HOLD_MINUTES);
+    }
+
     public OrderCancellationService.CancellationCheck checkUserCancellation(Order order, int userId) {
         return orderCancellationService.checkUserCancellation(order, userId);
     }
