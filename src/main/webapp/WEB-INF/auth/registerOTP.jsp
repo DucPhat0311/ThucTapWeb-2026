@@ -21,7 +21,17 @@
             <% } %>
             <div class="input-group">
                 <input type="hidden" name="email" value="${param.email}">
+                <input type="hidden" name="type" value="register">
                 <input type="text" name="otp" placeholder="Nhập OTP 6 số" maxlength="6" pattern="[0-9]{6}" required>
+            </div>
+            <div class="resend" style="font-size:14px; margin-bottom:25px;">
+                <span id="resendText">
+                    Bạn vẫn chưa nhận được?
+                    <a href="#" id="resendLink">Gửi lại</a>
+                </span>
+                <span id="countdown" style="display:none; color:#999999;">
+                    Vui lòng chờ <b id="time">60</b> giây để gửi lại
+                </span>
             </div>
             <button type="submit" class="btn-primary">Xác nhận</button>
         </form>
@@ -34,4 +44,4 @@
 
 <%@ include file="../include/footer.jsp" %>
 
-
+<script src="${pageContext.request.contextPath}/js/auth/enterOTP.js"></script>

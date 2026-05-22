@@ -183,6 +183,27 @@ public class UserService {
         );
     }
 
+    public void resendRegistrationOtp(String email) {
+        User user = userDao.findByEmail(email);
+        if (user == null || user.getIsActive() != 0) {
+            throw new RuntimeException("Email không có yêu cầu đăng ký cần xác minh");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1_000_000));
+        LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+        EmailService.sendEmail(
+                email,
+                "OTP xác nhận đăng ký",
+                "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
+        );
+
+        boolean updated = userDao.updateOtpForPendingRegistration(email, otp, expiredAt);
+        if (!updated) {
+            throw new RuntimeException("Không thể cập nhật OTP đăng ký");
+        }
+    }
+
     public boolean verifyOtp(String email, String otp) {
         return userDao.verifyOtp(email, otp);
     }

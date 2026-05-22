@@ -226,6 +226,21 @@ public class UserDao extends BaseDao {
                 .execute());
     }
 
+    public boolean updateOtpForPendingRegistration(String email, String otp, LocalDateTime expiredAt) {
+        return getJdbi().withHandle(h ->
+                h.createUpdate("""
+                    UPDATE users
+                    SET otp_code = :otp,
+                        otp_expired_at = :exp
+                    WHERE email = :email AND is_active = 0
+                """)
+                        .bind("otp", otp)
+                        .bind("exp", expiredAt)
+                        .bind("email", email)
+                        .execute()
+        ) > 0;
+    }
+
     public boolean verifyOtp(String email, String otp) {
         return getJdbi().withHandle(h ->
                 h.createUpdate(
