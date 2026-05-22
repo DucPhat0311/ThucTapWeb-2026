@@ -20,12 +20,14 @@ public class RegisterController extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        userService.cleanupExpiredPendingRegistrations();
         request.getRequestDispatcher("/WEB-INF/auth/register.jsp")
                 .forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        userService.cleanupExpiredPendingRegistrations();
 
         String username = request.getParameter("username");
         String email = request.getParameter("email");
