@@ -54,6 +54,9 @@
             <c:if test="${param.avatarError == 'upload'}">
                 <p class="avatar-message error">Không thể tải ảnh lên, vui lòng thử lại.</p>
             </c:if>
+            <c:if test="${param.profileError == 'invalid_phone'}">
+                <p class="avatar-message error">Số điện thoại không hợp lệ. Vui lòng nhập số di động Việt Nam gồm 10 chữ số, bắt đầu bằng 03, 05, 07, 08 hoặc 09.</p>
+            </c:if>
         </div>
 
         <nav class="profile-menu">
@@ -79,7 +82,13 @@
                 </div>
                 <div class="form-group">
                     <label for="phone">Số điện thoại</label>
-                    <input type="tel" id="phone" name="phone" value="${user.phone}" disabled>
+                    <input type="tel"
+                           id="phone"
+                           name="phone"
+                           value="${user.phone}"
+                           pattern="0[35789][0-9]{8}"
+                           title="Vui lòng nhập số di động Việt Nam gồm 10 chữ số, bắt đầu bằng 03, 05, 07, 08 hoặc 09."
+                           disabled>
                 </div>
             </div>
 

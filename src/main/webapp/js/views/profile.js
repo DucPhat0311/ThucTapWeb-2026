@@ -16,7 +16,34 @@ function setupEvents() {
         btnCancel.onclick = cancelEdit;
     }
 
+    setupProfileValidation();
     setupAvatarUpload();
+}
+
+function setupProfileValidation() {
+    var profileForm = document.querySelector(".profile-form");
+    if (!profileForm) {
+        return;
+    }
+
+    profileForm.addEventListener("submit", function (event) {
+        var phoneInput = document.getElementById("phone");
+        if (!phoneInput) {
+            return;
+        }
+
+        var normalizedPhone = phoneInput.value.trim().replace(/[\s.-]/g, "");
+        var validPhone = normalizedPhone === "" || /^0[35789][0-9]{8}$/.test(normalizedPhone);
+        if (!validPhone) {
+            event.preventDefault();
+            phoneInput.setCustomValidity("Vui lòng nhập số di động Việt Nam gồm 10 chữ số, bắt đầu bằng 03, 05, 07, 08 hoặc 09.");
+            phoneInput.reportValidity();
+            return;
+        }
+
+        phoneInput.value = normalizedPhone;
+        phoneInput.setCustomValidity("");
+    });
 }
 
 function setupAvatarUpload() {
