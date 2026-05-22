@@ -234,6 +234,25 @@ public class UserService {
         return new EmailChangeOldEmailVerification(normalizedNewEmail, otp, expiredAt);
     }
 
+    public EmailChangeNewEmailVerification createProfileEmailChangeNewEmailVerification(String newEmail) {
+        String normalizedNewEmail = normalizeEmail(newEmail);
+        if (normalizedNewEmail.isBlank()) {
+            throw new RuntimeException("Email mới không hợp lệ");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1_000_000));
+        LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+        EmailService.sendEmail(
+                normalizedNewEmail,
+                "OTP xác nhận email mới",
+                "<h3>Mã OTP xác nhận email mới của bạn: <b>" + otp + "</b></h3>"
+                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>"
+        );
+
+        return new EmailChangeNewEmailVerification(otp, expiredAt);
+    }
+
     private String normalizeEmail(String email) {
         return email == null ? "" : email.trim().toLowerCase();
     }
@@ -305,6 +324,12 @@ public class UserService {
             String newEmail,
             String oldEmailOtp,
             LocalDateTime oldEmailOtpExpiredAt
+    ) {
+    }
+
+    public record EmailChangeNewEmailVerification(
+            String newEmailOtp,
+            LocalDateTime newEmailOtpExpiredAt
     ) {
     }
 }

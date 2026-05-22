@@ -165,9 +165,11 @@ public class ProfileController extends HttpServlet {
                         birthday,
                         gender,
                         verification.oldEmailOtp(),
-                        verification.oldEmailOtpExpiredAt()
+                        verification.oldEmailOtpExpiredAt(),
+                        null,
+                        null
                 ));
-                response.sendRedirect(DEFAULT_REDIRECT + "?emailChange=old_otp_sent");
+                response.sendRedirect("profile-email-change");
             } catch (RuntimeException e) {
                 session.setAttribute(PROFILE_FLASH_ERROR_ATTR, e.getMessage());
                 response.sendRedirect(DEFAULT_REDIRECT + "?profileError=email_change_failed");
@@ -345,7 +347,23 @@ public class ProfileController extends HttpServlet {
             LocalDate birthday,
             String gender,
             String oldEmailOtp,
-            LocalDateTime oldEmailOtpExpiredAt
+            LocalDateTime oldEmailOtpExpiredAt,
+            String newEmailOtp,
+            LocalDateTime newEmailOtpExpiredAt
     ) implements Serializable {
+        public PendingProfileEmailChange withNewEmailVerification(String newEmailOtp,
+                                                                  LocalDateTime newEmailOtpExpiredAt) {
+            return new PendingProfileEmailChange(
+                    fullName,
+                    phone,
+                    newEmail,
+                    birthday,
+                    gender,
+                    oldEmailOtp,
+                    oldEmailOtpExpiredAt,
+                    newEmailOtp,
+                    newEmailOtpExpiredAt
+            );
+        }
     }
 }
