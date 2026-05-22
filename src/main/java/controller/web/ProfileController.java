@@ -15,10 +15,12 @@ import util.AvatarStorageUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -32,6 +34,8 @@ import java.util.Set;
 public class ProfileController extends HttpServlet {
 
     private static final String DEFAULT_REDIRECT = "profile";
+    private static final String PENDING_EMAIL_CHANGE_ATTR = "pendingProfileEmailChange";
+    private static final String PROFILE_FLASH_ERROR_ATTR = "profileFlashError";
     private static final long MAX_AVATAR_SIZE = 5 * 1024 * 1024;
     private static final String AVATAR_MEDIA_PREFIX = AvatarStorageUtil.AVATAR_MEDIA_PREFIX;
     private static final Set<String> AVATAR_REDIRECT_TARGETS = Set.of(
@@ -61,6 +65,7 @@ public class ProfileController extends HttpServlet {
         User fullUser = userService.findById(user.getId());
 
         request.setAttribute("user", fullUser);
+        moveFlashMessages(session, request);
 
         if (fullUser.getBirthday() != null) {
             request.setAttribute(
@@ -128,29 +133,75 @@ public class ProfileController extends HttpServlet {
             return;
         }
 
-        user.setFullName(fullName);
-        user.setPhone(normalizedPhone);
-        user.setEmail(email);
-
-
-        user.setGender(gender);
-
+        LocalDate birthday = null;
         if (birthdayStr == null || birthdayStr.isBlank()) {
-            user.setBirthday(null);
+            birthday = null;
         } else {
             try {
-                user.setBirthday(LocalDate.parse(birthdayStr));
+                birthday = LocalDate.parse(birthdayStr);
             } catch (DateTimeParseException ex) {
                 response.sendRedirect(DEFAULT_REDIRECT + "?profileError=invalid_birthday");
                 return;
             }
         }
 
+        String normalizedEmail = normalizeEmail(email);
+        if (normalizedEmail.isBlank()) {
+            response.sendRedirect(DEFAULT_REDIRECT + "?profileError=invalid_email");
+            return;
+        }
+
+        if (isEmailChanged(user.getEmail(), normalizedEmail)) {
+            try {
+                var verification = userService.createProfileEmailChangeOldEmailVerification(
+                        user.getId(),
+                        user.getEmail(),
+                        normalizedEmail
+                );
+                session.setAttribute(PENDING_EMAIL_CHANGE_ATTR, new PendingProfileEmailChange(
+                        fullName,
+                        normalizedPhone,
+                        verification.newEmail(),
+                        birthday,
+                        gender,
+                        verification.oldEmailOtp(),
+                        verification.oldEmailOtpExpiredAt()
+                ));
+                response.sendRedirect(DEFAULT_REDIRECT + "?emailChange=old_otp_sent");
+            } catch (RuntimeException e) {
+                session.setAttribute(PROFILE_FLASH_ERROR_ATTR, e.getMessage());
+                response.sendRedirect(DEFAULT_REDIRECT + "?profileError=email_change_failed");
+            }
+            return;
+        }
+
+        user.setFullName(fullName);
+        user.setPhone(normalizedPhone);
+        user.setEmail(normalizedEmail);
+        user.setGender(gender);
+        user.setBirthday(birthday);
+
         userService.update(user);
         User refreshedUser = userService.findById(userSession.getId());
         session.setAttribute("userlogin", refreshedUser);
 
         response.sendRedirect(DEFAULT_REDIRECT + "?profileUpdated=1");
+    }
+
+    private void moveFlashMessages(HttpSession session, HttpServletRequest request) {
+        Object profileFlashError = session.getAttribute(PROFILE_FLASH_ERROR_ATTR);
+        if (profileFlashError != null) {
+            request.setAttribute("profileFlashError", profileFlashError);
+            session.removeAttribute(PROFILE_FLASH_ERROR_ATTR);
+        }
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isEmailChanged(String currentEmail, String submittedEmail) {
+        return !normalizeEmail(currentEmail).equals(submittedEmail);
     }
 
     private String normalizePhone(String phone) {
@@ -285,5 +336,16 @@ public class ProfileController extends HttpServlet {
         }
 
         return DEFAULT_REDIRECT;
+    }
+
+    public record PendingProfileEmailChange(
+            String fullName,
+            String phone,
+            String newEmail,
+            LocalDate birthday,
+            String gender,
+            String oldEmailOtp,
+            LocalDateTime oldEmailOtpExpiredAt
+    ) implements Serializable {
     }
 }

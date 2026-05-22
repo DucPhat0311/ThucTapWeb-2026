@@ -59,6 +59,15 @@
             <c:if test="${param.profileError == 'invalid_phone'}">
                 <p class="avatar-message error">Số điện thoại không hợp lệ. Vui lòng nhập số di động Việt Nam gồm 10 chữ số, bắt đầu bằng 03, 05, 07, 08 hoặc 09.</p>
             </c:if>
+            <c:if test="${param.profileError == 'invalid_email'}">
+                <p class="avatar-message error">Email không hợp lệ. Vui lòng nhập email trước khi lưu thay đổi.</p>
+            </c:if>
+            <c:if test="${param.profileError == 'email_change_failed' && not empty profileFlashError}">
+                <p class="avatar-message error">${profileFlashError}</p>
+            </c:if>
+            <c:if test="${param.emailChange == 'old_otp_sent'}">
+                <p class="avatar-message success">Mã OTP xác nhận đã được gửi về email hiện tại của bạn.</p>
+            </c:if>
         </div>
 
         <nav class="profile-menu">
