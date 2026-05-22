@@ -31,6 +31,8 @@ public class OrderAdminController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        orderService.expirePendingPaymentOrders();
+
         req.setAttribute("orderStatusLabels", getOrderStatusLabels());
         req.setAttribute("paymentMethodLabels", getPaymentMethodLabels());
         req.setAttribute("paymentStatusLabels", getPaymentStatusLabels());
@@ -128,6 +130,8 @@ public class OrderAdminController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+
+        orderService.expirePendingPaymentOrders();
 
         String action = req.getParameter("action");
         if ("createGhnOrder".equals(action)) {

@@ -2,6 +2,9 @@ package dao.user;
 
 import dao.core.BaseDao;
 import model.Order;
+import model.constant.OrderStatus;
+import model.constant.PaymentMethod;
+import model.constant.PaymentStatus;
 
 import java.util.List;
 
@@ -136,6 +139,114 @@ public class OrderDao extends BaseDao {
                         .bind("orderId", orderId)
                         .execute()
         );
+    }
+
+    public List<Integer> findExpiredPendingVnPayOrderIds(int holdMinutes) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT id
+            FROM orders
+            WHERE payment_methods = :paymentMethod
+              AND order_status = :orderStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                        .bind("paymentMethod", PaymentMethod.VNPAY)
+                        .bind("orderStatus", OrderStatus.PENDING_PAYMENT)
+                        .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                        .bind("holdMinutes", holdMinutes)
+                        .mapTo(Integer.class)
+                        .list()
+        );
+    }
+
+    public List<Integer> findExpiredPendingVnPayOrderIdsByUserId(int userId, int holdMinutes) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT id
+            FROM orders
+            WHERE user_id = :userId
+              AND payment_methods = :paymentMethod
+              AND order_status = :orderStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                        .bind("userId", userId)
+                        .bind("paymentMethod", PaymentMethod.VNPAY)
+                        .bind("orderStatus", OrderStatus.PENDING_PAYMENT)
+                        .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                        .bind("holdMinutes", holdMinutes)
+                        .mapTo(Integer.class)
+                        .list()
+        );
+    }
+
+    public boolean isExpiredPendingVnPayOrder(int orderId, int holdMinutes) {
+        int matchingOrders = getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT COUNT(*)
+            FROM orders
+            WHERE id = :orderId
+              AND payment_methods = :paymentMethod
+              AND order_status = :orderStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                        .bind("orderId", orderId)
+                        .bind("paymentMethod", PaymentMethod.VNPAY)
+                        .bind("orderStatus", OrderStatus.PENDING_PAYMENT)
+                        .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                        .bind("holdMinutes", holdMinutes)
+                        .mapTo(int.class)
+                        .one()
+        );
+        return matchingOrders > 0;
+    }
+
+    public boolean expirePendingVnPayOrderAndRestoreStock(int orderId, int holdMinutes) {
+        return getJdbi().inTransaction(handle -> {
+            int affectedRows = handle.createUpdate("""
+            UPDATE orders
+            SET order_status = :cancelledStatus,
+                payment_statuses = :failedPaymentStatus
+            WHERE id = :orderId
+              AND payment_methods = :paymentMethod
+              AND order_status = :pendingPaymentStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                    .bind("cancelledStatus", OrderStatus.CANCELLED)
+                    .bind("failedPaymentStatus", PaymentStatus.FAILED)
+                    .bind("orderId", orderId)
+                    .bind("paymentMethod", PaymentMethod.VNPAY)
+                    .bind("pendingPaymentStatus", OrderStatus.PENDING_PAYMENT)
+                    .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                    .bind("holdMinutes", holdMinutes)
+                    .execute();
+
+            if (affectedRows == 0) {
+                return false;
+            }
+
+            handle.createQuery("""
+            SELECT variant_id, quantity
+            FROM order_items
+            WHERE order_id = :orderId
+        """)
+                    .bind("orderId", orderId)
+                    .map((rs, ctx) -> new int[]{rs.getInt("variant_id"), rs.getInt("quantity")})
+                    .list()
+                    .forEach(item -> handle.createUpdate("""
+            UPDATE product_variants
+            SET stock = stock + :quantity
+            WHERE id = :variantId
+        """)
+                            .bind("quantity", item[1])
+                            .bind("variantId", item[0])
+                            .execute());
+
+            return true;
+        });
     }
 
     public void updateGhnTrackingInfo(int orderId,

@@ -13,6 +13,7 @@ import model.User;
 import model.constant.OrderStatus;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
+import service.OrderService;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,6 +23,7 @@ public class MyOrderController extends HttpServlet {
 
     private final OrderDao orderDao = new OrderDao();
     private final OrderItemDao orderItemDao = new OrderItemDao();
+    private final OrderService orderService = new OrderService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -34,6 +36,8 @@ public class MyOrderController extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("userlogin");
+        orderService.expirePendingPaymentOrdersByUserId(user.getId());
+
         String status = req.getParameter("status");
 
         List<Order> orders;

@@ -15,6 +15,7 @@ import model.constant.OrderStatus;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
 import service.GhnOrderTrackingService;
+import service.OrderService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class OrderDetailController extends HttpServlet {
     private OrderItemDao orderItemDao;
     private OrderTrackingLogDao trackingLogDao;
     private GhnOrderTrackingService ghnOrderTrackingService;
+    private OrderService orderService;
 
     @Override
     public void init() {
@@ -32,6 +34,7 @@ public class OrderDetailController extends HttpServlet {
         orderItemDao = new OrderItemDao();
         trackingLogDao = new OrderTrackingLogDao();
         ghnOrderTrackingService = new GhnOrderTrackingService();
+        orderService = new OrderService();
     }
 
     @Override
@@ -53,6 +56,10 @@ public class OrderDetailController extends HttpServlet {
         if (order == null || order.getUserId() != user.getId()) {
             response.sendRedirect("order-user");
             return;
+        }
+
+        if (orderService.expirePendingPaymentOrder(orderId)) {
+            order = orderDao.getById(orderId);
         }
 
         syncGhnTracking(order, request);

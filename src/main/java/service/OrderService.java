@@ -1,6 +1,7 @@
 package service;
 
 import dao.admin.OrderDaoAdmin;
+import dao.user.OrderDao;
 import dao.user.ProductVariantDao;
 import dao.user.OrderTrackingLogDao;
 import model.*;
@@ -9,8 +10,10 @@ import model.constant.OrderStatus;
 import java.util.List;
 
 public class OrderService {
+    private static final int PENDING_PAYMENT_HOLD_MINUTES = 30;
     
     private OrderDaoAdmin dao = new OrderDaoAdmin();
+    private OrderDao orderDao = new OrderDao();
     private OrderTrackingLogDao trackingLogDao = new OrderTrackingLogDao();
     private GhnOrderCreationService ghnOrderCreationService = new GhnOrderCreationService();
     private GhnOrderTrackingService ghnOrderTrackingService = new GhnOrderTrackingService();
@@ -33,6 +36,46 @@ public class OrderService {
 
     public void updateStatus(int id, String status) {
         dao.updateStatus(id, status);
+    }
+
+    public int getPendingPaymentHoldMinutes() {
+        return PENDING_PAYMENT_HOLD_MINUTES;
+    }
+
+    public List<Integer> findExpiredPendingPaymentOrderIds() {
+        return orderDao.findExpiredPendingVnPayOrderIds(PENDING_PAYMENT_HOLD_MINUTES);
+    }
+
+    public List<Integer> findExpiredPendingPaymentOrderIdsByUserId(int userId) {
+        return orderDao.findExpiredPendingVnPayOrderIdsByUserId(userId, PENDING_PAYMENT_HOLD_MINUTES);
+    }
+
+    public boolean isPendingPaymentExpired(int orderId) {
+        return orderDao.isExpiredPendingVnPayOrder(orderId, PENDING_PAYMENT_HOLD_MINUTES);
+    }
+
+    public int expirePendingPaymentOrders() {
+        int expiredOrders = 0;
+        for (Integer orderId : findExpiredPendingPaymentOrderIds()) {
+            if (expirePendingPaymentOrder(orderId)) {
+                expiredOrders++;
+            }
+        }
+        return expiredOrders;
+    }
+
+    public int expirePendingPaymentOrdersByUserId(int userId) {
+        int expiredOrders = 0;
+        for (Integer orderId : findExpiredPendingPaymentOrderIdsByUserId(userId)) {
+            if (expirePendingPaymentOrder(orderId)) {
+                expiredOrders++;
+            }
+        }
+        return expiredOrders;
+    }
+
+    public boolean expirePendingPaymentOrder(int orderId) {
+        return orderDao.expirePendingVnPayOrderAndRestoreStock(orderId, PENDING_PAYMENT_HOLD_MINUTES);
     }
 
     public OrderCancellationService.CancellationCheck checkUserCancellation(Order order, int userId) {
