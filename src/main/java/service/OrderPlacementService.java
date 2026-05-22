@@ -2,7 +2,6 @@ package service;
 
 import dao.core.BaseDao;
 import dao.user.ProductVariantDao;
-import model.constant.PaymentMethod;
 import org.jdbi.v3.core.Handle;
 
 public class OrderPlacementService extends BaseDao {
@@ -46,11 +45,9 @@ public class OrderPlacementService extends BaseDao {
                 );
             }
 
-            if (!PaymentMethod.VNPAY.equals(orderPlacement.paymentMethod())) {
-                for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
-                    decreaseStock(handle, item.variantId(), item.quantity());
-                    deleteCartItem(handle, cartId, item.variantId());
-                }
+            for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
+                decreaseStock(handle, item.variantId(), item.quantity());
+                deleteCartItem(handle, cartId, item.variantId());
             }
 
             return orderId;

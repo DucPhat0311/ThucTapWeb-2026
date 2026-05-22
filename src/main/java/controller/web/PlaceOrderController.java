@@ -91,6 +91,9 @@ public class PlaceOrderController extends HttpServlet {
             return;
         }
 
+        int remainingCart = cartItemDao.countTotalQuantity(cartId);
+        session.setAttribute("cartSize", remainingCart);
+
         if (PaymentMethod.VNPAY.equals(orderPlacement.paymentMethod())) {
             String txnRef = vnPayService.generateTxnRef(orderId);
             paymentTransactionDao.createInitiatedTransaction(
@@ -114,8 +117,6 @@ public class PlaceOrderController extends HttpServlet {
             return;
         }
 
-        int remainingCart = cartItemDao.countTotalQuantity(cartId);
-        session.setAttribute("cartSize", remainingCart);
         session.setAttribute("lastOrderId", orderId);
 
         response.sendRedirect("order-success");
