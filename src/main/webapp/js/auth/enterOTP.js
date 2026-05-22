@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (timer) return;
 
         const email = document.querySelector("input[name='email']").value;
+        const typeInput = document.querySelector("input[name='type']");
+        const type = typeInput ? typeInput.value : "";
 
         fetch("sendOTP", {
             method: "POST",
@@ -40,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: "action=resend&email=" + encodeURIComponent(email)
+                + "&type=" + encodeURIComponent(type)
         })
             .then(res => res.json())
             .then(data => {
