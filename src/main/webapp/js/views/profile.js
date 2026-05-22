@@ -84,7 +84,7 @@ function disableEditMode() {
 }
 
 function toggleInputs(disabled) {
-    var ids = ["fullname", "phone", "email", "birthdayDisplay", "address"];
+    var ids = ["fullname", "phone", "email", "birthdayDisplay"];
     ids.forEach(function (id) {
         var el = document.getElementById(id);
         if (el) {
@@ -106,7 +106,6 @@ function saveOriginalValues() {
         phone: document.getElementById("phone") ? document.getElementById("phone").value : "",
         email: document.getElementById("email") ? document.getElementById("email").value : "",
         birthday: document.getElementById("birthdayDisplay") ? document.getElementById("birthdayDisplay").value : "",
-        address: document.getElementById("address") ? document.getElementById("address").value : "",
         gender: selectedGender ? selectedGender.value : ""
     };
 }
@@ -116,7 +115,6 @@ function cancelEdit() {
     document.getElementById("phone").value = originalValues.phone;
     document.getElementById("email").value = originalValues.email;
     document.getElementById("birthdayDisplay").value = originalValues.birthday;
-    document.getElementById("address").value = originalValues.address;
 
     var genders = Array.from(document.getElementsByName("gender"));
     genders.forEach(function (genderInput) {

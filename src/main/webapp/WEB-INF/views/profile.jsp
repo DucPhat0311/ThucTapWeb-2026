@@ -112,13 +112,6 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="address">Địa chỉ</label>
-                    <input type="text" id="address" name="address" value="${user.address}" disabled>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
                     <label>Giới tính</label>
                     <div class="radio-group">
                         <label>
