@@ -4,6 +4,7 @@ import dao.user.UserDao;
 import dao.admin.UserDaoAdmin;
 import model.GoogleUserInfo;
 import model.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -208,6 +209,81 @@ public class UserService {
         }
     }
 
+    public EmailChangeOldEmailVerification createProfileEmailChangeOldEmailVerification(int userId,
+                                                                                        String currentEmail,
+                                                                                        String newEmail) {
+        String normalizedNewEmail = normalizeEmail(newEmail);
+        if (normalizedNewEmail.isBlank()) {
+            throw new RuntimeException("Email mới không hợp lệ");
+        }
+
+        User existingUser = userDao.findByEmail(normalizedNewEmail);
+        if (existingUser != null && existingUser.getId() != userId) {
+            throw new RuntimeException("Email mới đã được sử dụng bởi tài khoản khác");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1_000_000));
+        LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+        EmailService.sendEmail(
+                currentEmail,
+                "OTP xác nhận thay đổi email",
+                "<h3>Mã OTP xác nhận email hiện tại của bạn: <b>" + otp + "</b></h3>"
+                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>"
+        );
+
+        return new EmailChangeOldEmailVerification(normalizedNewEmail, otp, expiredAt);
+    }
+
+    public EmailChangeNewEmailVerification createProfileEmailChangeNewEmailVerification(String newEmail) {
+        String normalizedNewEmail = normalizeEmail(newEmail);
+        if (normalizedNewEmail.isBlank()) {
+            throw new RuntimeException("Email mới không hợp lệ");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1_000_000));
+        LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+        EmailService.sendEmail(
+                normalizedNewEmail,
+                "OTP xác nhận email mới",
+                "<h3>Mã OTP xác nhận email mới của bạn: <b>" + otp + "</b></h3>"
+                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>"
+        );
+
+        return new EmailChangeNewEmailVerification(otp, expiredAt);
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase();
+    }
+
+    public User completeProfileEmailChange(int userId,
+                                           String fullName,
+                                           String phone,
+                                           String newEmail,
+                                           LocalDate birthday,
+                                           String gender) {
+        String normalizedNewEmail = normalizeEmail(newEmail);
+        User existingUser = userDao.findByEmail(normalizedNewEmail);
+        if (existingUser != null && existingUser.getId() != userId) {
+            throw new RuntimeException("Email mới đã được sử dụng bởi tài khoản khác");
+        }
+
+        User user = userDao.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("Không tìm thấy tài khoản cần cập nhật");
+        }
+
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setEmail(normalizedNewEmail);
+        user.setBirthday(birthday);
+        user.setGender(gender);
+        userDao.update(user);
+        return userDao.findUserById(userId);
+    }
+
     public boolean verifyOtp(String email, String otp) {
         return userDao.verifyOtp(email, otp);
     }
@@ -269,5 +345,18 @@ public class UserService {
 
     public void unblockUser(int id) {
         userDaoAdmin.blockUser(id, "ACTIVE");
+    }
+
+    public record EmailChangeOldEmailVerification(
+            String newEmail,
+            String oldEmailOtp,
+            LocalDateTime oldEmailOtpExpiredAt
+    ) {
+    }
+
+    public record EmailChangeNewEmailVerification(
+            String newEmailOtp,
+            LocalDateTime newEmailOtpExpiredAt
+    ) {
     }
 }
