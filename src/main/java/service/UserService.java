@@ -62,11 +62,16 @@ public class UserService {
             throw new RuntimeException("Email đã được đăng ký");
         }
 
-        EmailService.sendEmail(
-                email,
-                "OTP xác nhận đăng ký ",
-                "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
-        );
+        try {
+            EmailService.sendEmail(
+                    email,
+                    "OTP xác nhận đăng ký ",
+                    "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
+            );
+        } catch (EmailService.EmailDeliveryException e) {
+            userDao.deletePendingUserByEmail(email);
+            throw new RuntimeException("Không thể gửi OTP đến email này. Vui lòng kiểm tra email hoặc thử lại sau.", e);
+        }
     }
 
     public User login(String username, String password) {
