@@ -39,6 +39,8 @@
                     <button type="button" class="change-avatar-btn js-avatar-trigger" id="btn-change-avatar">Đổi ảnh</button>
                 </form>
             </div>
+            <h3>${empty user.fullName ? user.username : user.fullName}</h3>
+            <p>${user.email}</p>
             <c:if test="${param.avatarUpdated == '1'}">
                 <p class="avatar-message success">Đổi ảnh đại diện thành công.</p>
             </c:if>
@@ -71,14 +73,19 @@
     </div>
 
     <div class="profile-content">
-        <h2>Thông tin cá nhân</h2>
+        <div class="profile-heading">
+            <h2>Thông tin cá nhân</h2>
+            <c:if test="${param.profileUpdated == '1'}">
+                <span class="profile-status success">Đã cập nhật</span>
+            </c:if>
+        </div>
 
         <form class="profile-form" method="post" action="profile" onsubmit="syncBirthday()">
             <input type="hidden" name="action" value="updateProfile">
             <div class="form-row">
                 <div class="form-group">
                     <label for="fullname">Họ và tên</label>
-                    <input type="text" id="fullname" name="fullname" value="${user.fullName}" disabled>
+                    <input type="text" id="fullname" name="fullname" value="${user.fullName}" autocomplete="name" disabled>
                 </div>
                 <div class="form-group">
                     <label for="phone">Số điện thoại</label>
@@ -88,6 +95,7 @@
                            value="${user.phone}"
                            pattern="0[35789][0-9]{8}"
                            title="Vui lòng nhập số di động Việt Nam gồm 10 chữ số, bắt đầu bằng 03, 05, 07, 08 hoặc 09."
+                           autocomplete="tel"
                            disabled>
                 </div>
             </div>
@@ -95,7 +103,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="${user.email}" disabled>
+                    <input type="email" id="email" name="email" value="${user.email}" autocomplete="email" disabled>
                 </div>
                 <div class="form-group">
                     <label for="birthday">Ngày sinh</label>
