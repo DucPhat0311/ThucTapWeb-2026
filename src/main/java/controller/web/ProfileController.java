@@ -123,9 +123,14 @@ public class ProfileController extends HttpServlet {
         String gender = request.getParameter("gender");
 
         User user = userService.findById(userSession.getId());
+        String normalizedPhone = normalizePhone(phone);
+        if (!isValidVietnamesePhone(normalizedPhone)) {
+            response.sendRedirect(DEFAULT_REDIRECT + "?profileError=invalid_phone");
+            return;
+        }
 
         user.setFullName(fullName);
-        user.setPhone(phone);
+        user.setPhone(normalizedPhone);
         user.setEmail(email);
         user.setAddress(address);
 
@@ -148,6 +153,20 @@ public class ProfileController extends HttpServlet {
         session.setAttribute("userlogin", refreshedUser);
 
         response.sendRedirect(DEFAULT_REDIRECT + "?profileUpdated=1");
+    }
+
+    private String normalizePhone(String phone) {
+        if (phone == null) {
+            return "";
+        }
+        return phone.trim().replaceAll("[\\s.-]", "");
+    }
+
+    private boolean isValidVietnamesePhone(String phone) {
+        if (phone.isBlank()) {
+            return true;
+        }
+        return phone.matches("0[35789][0-9]{8}");
     }
 
     private void handleAvatarUpdate(HttpServletRequest request,
