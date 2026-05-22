@@ -121,6 +121,15 @@ public class UserDao extends BaseDao {
                         .execute()
         );
     }
+
+    public void deletePendingUserByEmail(String email) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("DELETE FROM users WHERE email = :email AND is_active = 0")
+                        .bind("email", email)
+                        .execute()
+        );
+    }
+
     public User findUserById(int id) {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("""
