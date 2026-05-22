@@ -56,16 +56,20 @@ public class ProductVariantDao extends BaseDao {
     }
 
     public void decreaseStock(int variantId, int qty) {
-        getJdbi().useHandle(h ->
+        int affectedRows = getJdbi().withHandle(h ->
                 h.createUpdate("""
             UPDATE product_variants
             SET stock = stock - :q
-            WHERE id = :vid
+            WHERE id = :vid AND stock >= :q
         """)
                         .bind("q", qty)
                         .bind("vid", variantId)
                         .execute()
         );
+
+        if (affectedRows == 0) {
+            throw new InsufficientStockException(variantId, qty);
+        }
     }
 
     public void increaseStock(int variantId, int qty) {
@@ -99,6 +103,12 @@ public class ProductVariantDao extends BaseDao {
                         .findOne()
                         .orElse(null)
         );
+    }
+
+    public static class InsufficientStockException extends RuntimeException {
+        public InsufficientStockException(int variantId, int qty) {
+            super("Không đủ tồn kho cho biến thể " + variantId + " với số lượng " + qty);
+        }
     }
 
 }

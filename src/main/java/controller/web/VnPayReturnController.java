@@ -2,23 +2,19 @@ package controller.web;
 
 import dao.user.CartItemDao;
 import dao.user.OrderDao;
-import dao.user.OrderItemDao;
 import dao.user.PaymentTransactionDao;
-import dao.user.ProductVariantDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Order;
-import model.OrderItem;
 import model.constant.OrderStatus;
 import model.constant.PaymentStatus;
 import model.constant.PaymentTransactionStatus;
 import service.VnPayService;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class VnPayReturnController extends HttpServlet {
@@ -27,8 +23,6 @@ public class VnPayReturnController extends HttpServlet {
     private VnPayService vnPayService;
     private PaymentTransactionDao paymentTransactionDao;
     private OrderDao orderDao;
-    private OrderItemDao orderItemDao;
-    private ProductVariantDao productVariantDao;
     private CartItemDao cartItemDao;
 
     @Override
@@ -36,8 +30,6 @@ public class VnPayReturnController extends HttpServlet {
         vnPayService = new VnPayService();
         paymentTransactionDao = new PaymentTransactionDao();
         orderDao = new OrderDao();
-        orderItemDao = new OrderItemDao();
-        productVariantDao = new ProductVariantDao();
         cartItemDao = new CartItemDao();
     }
 
@@ -119,15 +111,6 @@ public class VnPayReturnController extends HttpServlet {
         Integer cartId = (Integer) session.getAttribute("cartId");
         if (cartId == null) {
             cartId = cartItemDao.getCartIdByUserId(order.getUserId());
-        }
-
-        List<OrderItem> orderItems = orderItemDao.getByOrderId(order.getId());
-
-        for (OrderItem orderItem : orderItems) {
-            productVariantDao.decreaseStock(orderItem.getVariantId(), orderItem.getQuantity());
-            if (cartId != null) {
-                cartItemDao.delete(cartId, orderItem.getVariantId());
-            }
         }
 
         if (cartId != null) {

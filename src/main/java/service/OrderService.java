@@ -128,7 +128,9 @@ public class OrderService {
     }
 
     private void restoreStockIfNeeded(Order order) {
-        if (!OrderStatus.PENDING.equals(order.getOrderStatus()) && !OrderStatus.SHIPPING.equals(order.getOrderStatus())) {
+        if (!OrderStatus.PENDING_PAYMENT.equals(order.getOrderStatus())
+                && !OrderStatus.PENDING.equals(order.getOrderStatus())
+                && !OrderStatus.SHIPPING.equals(order.getOrderStatus())) {
             return;
         }
         for (OrderItem item : dao.getItems(order.getId())) {
