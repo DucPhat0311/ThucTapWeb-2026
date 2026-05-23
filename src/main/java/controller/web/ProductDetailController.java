@@ -53,7 +53,6 @@ public class ProductDetailController extends HttpServlet {
 
         int displayStar = (int) Math.round(avgRating);
 
-
         List<ProductImage> listImage = productImageService.getImageByProduct(id);
 
         List<Color> listColor = colorService.getColorByProductId(id);
@@ -82,6 +81,38 @@ public class ProductDetailController extends HttpServlet {
             }
         }
 
+        int count5Star = 0;
+        int count4Star = 0;
+        int count3Star = 0;
+        int count2Star = 0;
+        int count1Star = 0;
+        if (reviews != null) {
+            for (Review rv : reviews) {
+                List<String> imgList = reviewService.getImagesByReviewId(rv.getId());
+                rv.setImages(imgList);
+                switch (rv.getRating()) {
+                    case 5:
+                        count5Star++;
+                        break;
+                    case 4:
+                        count4Star++;
+                        break;
+                    case 3:
+                        count3Star++;
+                        break;
+                    case 2:
+                        count2Star++;
+                        break;
+                    case 1:
+                        count1Star++;
+                        break;
+                }
+            }
+        request.setAttribute("count5Star", count5Star);
+        request.setAttribute("count4Star", count4Star);
+        request.setAttribute("count3Star", count3Star);
+        request.setAttribute("count2Star", count2Star);
+        request.setAttribute("count1Star", count1Star);
         request.setAttribute("breadcrumbs", breadcrumbs);
         request.setAttribute("variants", listVariant);
         request.setAttribute("sizes", listSize);
@@ -95,4 +126,4 @@ public class ProductDetailController extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/detail-product.jsp").forward(request, response);
     }
 
-}
+}}
