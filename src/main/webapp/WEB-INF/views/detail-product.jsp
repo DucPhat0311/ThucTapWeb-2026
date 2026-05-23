@@ -199,42 +199,53 @@
 
 
                 <div class="tab-pane" id="review">
+                    <div class="review-filter-dropdown-container" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <label for="star-filter" style="color: var(--aura-text-bronze); font-weight: 600; font-size: 15px;">Lọc theo:</label>
+                        <select id="star-filter" style="padding: 8px 15px; border: 1px solid #dbdbdb; border-radius: 4px; background-color: #fff; color: #333; font-size: 14px; cursor: pointer; outline: none; min-width: 180px;">
+                            <option value="all">Tất cả đánh giá (${totalReviews != null ? totalReviews : 0})</option>
+                            <option value="5">⭐⭐⭐⭐⭐ 5 Sao (${count5Star})</option>
+                            <option value="4">⭐⭐⭐⭐ 4 Sao (${count4Star})</option>
+                            <option value="3">⭐⭐⭐ 3 Sao (${count3Star})</option>
+                            <option value="2">⭐⭐ 2 Sao (${count2Star})</option>
+                            <option value="1">⭐ 1 Sao (${count1Star})</option>
+                        </select>
+                    </div>
+
                     <div class="review-list">
                         <c:choose>
                             <c:when test="${not empty reviews}">
                                 <c:forEach var="rv" items="${reviews}">
-                                    <div class="review-item">
+                                    <div class="review-item" data-stars="${rv.rating}">
                                         <div class="review-header">
                                             <strong class="review-user-name">Người dùng ẩn danh</strong>
                                             <span class="review-stars">
-                                      <c:forEach begin="1" end="${rv.rating}">
-                                          <i class="fa-solid fa-star"></i>
-                                      </c:forEach>
-                                      <c:forEach begin="1" end="${5 - rv.rating}">
-                                          <i class="fa-regular fa-star"></i>
-                                      </c:forEach>
-                                  </span>
+                           <c:forEach begin="1" end="${rv.rating}"><i class="fa-solid fa-star"></i></c:forEach>
+                           <c:forEach begin="1" end="${5 - rv.rating}"><i class="fa-regular fa-star"></i></c:forEach>
+                       </span>
                                         </div>
                                         <div class="review-content">
                                             <p><c:out value="${rv.comment}" /></p>
                                         </div>
+
+
                                         <c:if test="${not empty rv.images}">
                                             <div class="review-images" style="display: flex; gap: 10px; margin-top: 10px;">
                                                 <c:forEach var="imgUrl" items="${rv.images}">
                                                     <img src="${pageContext.request.contextPath}/${imgUrl}"
-                                                         alt="Ảnh review"
+                                                         alt="Review Image"
                                                          style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer;"
                                                          onclick="window.open(this.src)">
                                                 </c:forEach>
                                             </div>
                                         </c:if>
+
+
                                         <c:if test="${not empty rv.createdAt}">
                                             <small class="review-date">
                                                 <fmt:parseDate value="${rv.createdAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parsedDate" />
                                                 <fmt:formatDate value="${parsedDate}" pattern="HH:mm dd/MM/yyyy" />
                                             </small>
                                         </c:if>
-
                                     </div>
                                 </c:forEach>
                             </c:when>
@@ -244,6 +255,7 @@
                         </c:choose>
                     </div>
                 </div>
+
 
 
                 <div class="tab-pane" id="guide">
@@ -484,6 +496,45 @@
                 }, 150);
             });
         });
+
+        const starFilter = document.getElementById("star-filter");
+        const reviewItems = document.querySelectorAll(".review-item");
+
+
+        if (starFilter) {
+            starFilter.addEventListener("change", function() {
+                const selectedValue = this.value;
+                reviewItems.forEach(item => {
+                    const itemStars = item.getAttribute("data-stars");
+
+                    if (selectedValue === "all") {
+                        item.style.display = "block";
+                    } else {
+                        if (itemStars === selectedValue) {
+                            item.style.display = "block";
+                        } else {
+                            item.style.display = "none";
+                        }
+                    }
+                });
+
+                const listComments = Array.from(reviewItems).filter(item => item.style.display !== "none");
+                let emptyMsg = document.querySelector(".review-filter-empty-text");
+                if (listComments.length === 0) {
+                    if (!emptyMsg) {
+                        emptyMsg = document.createElement("p");
+                        emptyMsg.className = "review-filter-empty-text";
+                        emptyMsg.innerText = "Chưa có đánh giá nào cho mức sao này.";
+                        emptyMsg.style.textAlign = "center";
+                        emptyMsg.style.color = "#999";
+                        emptyMsg.style.padding = "20px 0";
+                        document.querySelector(".review-list").appendChild(emptyMsg);
+                    }
+                } else if (emptyMsg) {
+                    emptyMsg.remove();
+                }
+            });
+        }
     });
 
 </script>
