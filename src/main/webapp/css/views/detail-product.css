@@ -40,24 +40,25 @@ html, body {
 
 
 .breadcrumb {
-    text-align: left;
-    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 18px 22.5px;
     margin-bottom: 20px;
-    font-size: 14px;
-    color: var(--text-muted);
+    border: 1px solid #e5e5e5;
+    font-size: 15px;
+    font-weight: 500;
+    color: #777;
 }
-
 
 .breadcrumb a {
     color: #1c7ed6;
     text-decoration: none;
 }
 
-
 .breadcrumb a:hover {
     color: var(--primary-color);
 }
-
 
 .product-container {
     display: flex;
