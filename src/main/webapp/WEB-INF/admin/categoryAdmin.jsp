@@ -33,15 +33,15 @@
             <section id="category" class="page active">
 
                 <div class="cards">
-                    <div class="card">
+                    <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='categoryAdmin'">
                         Tổng danh mục
                         <span>${totalCategories}</span>
                     </div>
-                    <div class="card">
-                        Đang dùng
+                    <div class="card ${currentStatus == 1 ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='categoryAdmin?status=1'">
+                        Đang hoạt động
                         <span>${activeCategories}</span>
                     </div>
-                    <div class="card">
+                    <div class="card ${currentStatus == 0 ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='categoryAdmin?status=0'">
                         Đã khóa
                         <span>${lockedCategories}</span>
                     </div>
@@ -79,7 +79,7 @@
                                 <td>${parent.id}</td>
                                 <td class="category-name-parent">
                                     <button type="button"
-                                            class="collapse-btn collapsed"
+                                            class="collapse-btn"
                                             data-parent-id="${parent.id}"
                                             title="Thu gọn/Mở rộng danh mục con"
                                             onclick="toggleCategoryChildrenFromButton(this)">
@@ -90,8 +90,8 @@
                                 <td><span class="type-chip parent">Danh mục cha</span></td>
                                 <td>-</td>
                                 <td>
-                                    <span class="status ${parent.status == 1 ? 'active' : 'inactive'}">
-                                        ${parent.status == 1 ? 'Đang dùng' : 'Đã khóa'}
+                                    <span class="status ${parent.status == 1 ? 'active' : 'blocked'}">
+                                        ${parent.status == 1 ? 'Đang hoạt động' : 'Đã khóa'}
                                     </span>
                                 </td>
                                 <td class="action-buttons">
@@ -124,8 +124,8 @@
                                         <td><span class="type-chip child">Danh mục con</span></td>
                                         <td class="parent-name">${parent.name}</td>
                                         <td>
-                                            <span class="status ${child.status == 1 ? 'active' : 'inactive'}">
-                                                ${child.status == 1 ? 'Đang dùng' : 'Đã khóa'}
+                                            <span class="status ${child.status == 1 ? 'active' : 'blocked'}">
+                                                ${child.status == 1 ? 'Đang hoạt động' : 'Đã khóa'}
                                             </span>
                                         </td>
                                         <td class="action-buttons">

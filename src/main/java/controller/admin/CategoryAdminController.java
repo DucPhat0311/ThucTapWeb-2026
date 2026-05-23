@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -61,34 +62,75 @@ public class CategoryAdminController extends HttpServlet {
             return;
         }
 
-        List<Category> categories = categoryAdminDao.findAll();
+        List<Category> allCategories = categoryAdminDao.findAll();
+        List<Category> filteredCategories = allCategories;
+        Integer statusFilter = null;
+
+        String status = req.getParameter("status");
+        if (status != null && !status.trim().isEmpty()) {
+            try {
+                int statusValue = Integer.parseInt(status.trim());
+                if (statusValue == 0 || statusValue == 1) {
+                    statusFilter = statusValue;
+                    filteredCategories = allCategories.stream()
+                            .filter(c -> c.getStatus() == statusValue)
+                            .collect(Collectors.toList());
+                    req.setAttribute("currentStatus", statusValue);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        java.util.Map<Integer, Category> categoryById = allCategories.stream()
+                .collect(Collectors.toMap(Category::getId, c -> c));
+        java.util.Set<Integer> requiredParentIds = filteredCategories.stream()
+                .filter(c -> c.getParentId() != 0)
+                .map(Category::getParentId)
+                .collect(java.util.stream.Collectors.toSet());
+        List<Category> parentCategoriesFromFilter = requiredParentIds.stream()
+                .map(categoryById::get)
+                .filter(java.util.Objects::nonNull)
+                .collect(Collectors.toList());
+
+        List<Category> categoriesForDisplay = allCategories;
+        if (statusFilter != null) {
+            java.util.LinkedHashMap<Integer, Category> merged = new java.util.LinkedHashMap<>();
+            for (Category c : parentCategoriesFromFilter) {
+                merged.put(c.getId(), c);
+            }
+            for (Category c : filteredCategories) {
+                merged.put(c.getId(), c);
+            }
+            categoriesForDisplay = new java.util.ArrayList<>(merged.values());
+        }
 
         List<Category> parentCategoriesList = new java.util.ArrayList<>();
         List<Category> childCategoriesList = new java.util.ArrayList<>();
         java.util.Map<Integer, String> parentNameMap = new java.util.HashMap<>();
 
 
-        for (Category c : categories) {
+        for (Category c : categoriesForDisplay) {
             if (c.getParentId() == 0) {
                 parentCategoriesList.add(c);
                 parentNameMap.put(c.getId(), c.getName());
             }
         }
-        for (Category c : categories) {
+        List<Category> childSource = (statusFilter != null) ? filteredCategories : categoriesForDisplay;
+        for (Category c : childSource) {
             if (c.getParentId() != 0) {
                 childCategoriesList.add(c);
             }
         }
 
-        req.setAttribute("categories", categories);
+        req.setAttribute("categories", categoriesForDisplay);
         req.setAttribute("parentCategoriesList", parentCategoriesList);
         req.setAttribute("childCategoriesList", childCategoriesList);
         req.setAttribute("parentNameMap", parentNameMap);
-        req.setAttribute("totalCategories", categories.size());
+        req.setAttribute("totalCategories", allCategories.size());
         req.setAttribute("activeCategories",
-                categories.stream().filter(c -> c.getStatus() == 1).count());
+            allCategories.stream().filter(c -> c.getStatus() == 1).count());
         req.setAttribute("lockedCategories",
-                categories.stream().filter(c -> c.getStatus() == 0).count());
+            allCategories.stream().filter(c -> c.getStatus() == 0).count());
 
         req.setAttribute("page", "category");
         req.getRequestDispatcher("/WEB-INF/admin/categoryAdmin.jsp").forward(req, resp);
