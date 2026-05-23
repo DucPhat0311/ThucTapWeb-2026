@@ -41,7 +41,7 @@ function toggleCategoryStatus(id, name, status) {
     currentCategoryId = id;
     currentCategoryStatus = status;
     
-    const action = status == 1 ? 'Ẩn' : 'Hiển thị';
+    const action = status == 1 ? 'Khóa' : 'Mở khóa';
     document.getElementById('toggle-status-title').textContent = `${action} danh mục này?`;
     document.getElementById('toggle-status-message').textContent = `Bạn có chắc chắn muốn ${action.toLowerCase()} danh mục "${name}"?`;
     
