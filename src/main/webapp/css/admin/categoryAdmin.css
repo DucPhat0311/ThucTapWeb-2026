@@ -30,7 +30,7 @@
 }
 
 #category .category-child-row {
-    display: none;
+    display: table-row;
 }
 
 #category .category-name-child {

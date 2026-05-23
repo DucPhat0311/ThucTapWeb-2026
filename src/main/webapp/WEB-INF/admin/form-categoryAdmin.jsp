@@ -63,10 +63,10 @@
                     <label>Trạng thái</label>
                     <select name="status">
                         <option value="1" ${category.status == 1 ? 'selected' : ''}>
-                            Đang dùng
+                            Đang hoạt động
                         </option>
                         <option value="0" ${category.status == 0 ? 'selected' : ''}>
-                            Đã khóa
+                            Đã ẩn
                         </option>
                     </select>
                 </div>
