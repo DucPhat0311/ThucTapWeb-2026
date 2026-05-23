@@ -114,6 +114,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Mã Phiếu Xuất</th>
+                                                    <th>Nguồn</th>
                                                     <th>Người Xuất</th>
                                                     <th>Tổng Tiền</th>
                                                     <th>Ngày Xuất</th>
@@ -126,23 +127,43 @@
                                                     <c:if test="${r.type == 'EXPORT'}">
                                                         <tr>
                                                             <td>PX${r.id}</td>
+                                                            <td>
+                                                                <c:choose>
+                                                                    <c:when test="${r.orderId > 0}">
+                                                                        <span class="warehouse-source-badge warehouse-source-order">
+                                                                            <i class="fa-solid fa-cart-shopping"></i>
+                                                                            Đơn #${r.orderId}
+                                                                        </span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span class="warehouse-source-badge warehouse-source-manual">
+                                                                            <i class="fa-solid fa-pen"></i>
+                                                                            Thủ công
+                                                                        </span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </td>
                                                             <td>${r.userName}</td>
                                                             <td>
                                                                 <fmt:formatNumber value="${r.totalAmount}"
                                                                     type="currency" currencySymbol="₫" />
                                                             </td>
                                                             <td>${r.createdAt}</td>
-                                                            <td><span style="color: orange; font-weight: bold;">
-                                                                    <c:choose>
-                                                                        <c:when test="${r.status == 'COMPLETED'}">Hoàn
-                                                                            thành</c:when>
-                                                                        <c:when test="${r.status == 'PENDING'}">Chờ xử
-                                                                            lý</c:when>
-                                                                        <c:when test="${r.status == 'CANCELLED'}">Đã hủy
-                                                                        </c:when>
-                                                                        <c:otherwise>${r.status}</c:otherwise>
-                                                                    </c:choose>
-                                                                </span>
+                                                            <td>
+                                                                <c:choose>
+                                                                    <c:when test="${r.status == 'COMPLETED'}">
+                                                                        <span class="warehouse-status completed">Hoàn thành</span>
+                                                                    </c:when>
+                                                                    <c:when test="${r.status == 'PENDING'}">
+                                                                        <span class="warehouse-status pending">Chờ xử lý</span>
+                                                                    </c:when>
+                                                                    <c:when test="${r.status == 'CANCELLED'}">
+                                                                        <span class="warehouse-status cancelled">Đã hủy</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span class="warehouse-status">${r.status}</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </td>
                                                             <td><a href="?action=view&id=${r.id}"
                                                                     style="color: blue; text-decoration: underline;">Chi
@@ -152,7 +173,7 @@
                                                 </c:forEach>
                                                 <c:if test="${empty receipts}">
                                                     <tr>
-                                                        <td colspan="6" style="text-align: center;">Chưa có phiếu xuất
+                                                        <td colspan="7" style="text-align: center;">Chưa có phiếu xuất
                                                             nào</td>
                                                     </tr>
                                                 </c:if>

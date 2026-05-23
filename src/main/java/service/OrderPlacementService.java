@@ -1,10 +1,16 @@
 package service;
 
+import dao.admin.InventoryReceiptDaoAdmin;
 import dao.core.BaseDao;
 import dao.user.ProductVariantDao;
+import model.OrderItem;
 import org.jdbi.v3.core.Handle;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderPlacementService extends BaseDao {
+
+    private final InventoryReceiptDaoAdmin inventoryReceiptDao = new InventoryReceiptDaoAdmin();
 
     public int placeOrder(int userId,
                           int cartId,
@@ -49,6 +55,17 @@ public class OrderPlacementService extends BaseDao {
                 decreaseStock(handle, item.variantId(), item.quantity());
                 deleteCartItem(handle, cartId, item.variantId());
             }
+
+            // Tạo phiếu xuất kho tự động trong cùng transaction
+            List<OrderItem> exportItems = new ArrayList<>();
+            for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
+                OrderItem oi = new OrderItem();
+                oi.setVariantId(item.variantId());
+                oi.setQuantity(item.quantity());
+                oi.setPrice(item.unitPrice());
+                exportItems.add(oi);
+            }
+            inventoryReceiptDao.createExportReceiptInHandle(handle, orderId, exportItems, userId);
 
             return orderId;
         });

@@ -10,6 +10,7 @@
                 <title>Chi Tiết Phiếu Kho</title>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
             </head>
 
             <body>
@@ -27,6 +28,17 @@
 
                         <main id="page" style="padding: 20px;">
                             <div class="card" style="background: #fff; padding: 20px; border-radius: 8px;">
+                                <c:if test="${not empty receipt and receipt.orderId > 0}">
+                                    <div class="warehouse-order-banner">
+                                        <span class="warehouse-order-icon"><i class="fa-solid fa-cart-shopping"></i></span>
+                                        <div>
+                                            <strong class="warehouse-order-title">Xuất kho tự động theo đơn hàng</strong>
+                                            <span class="warehouse-order-id">Đơn hàng #${receipt.orderId}</span>
+                                            <a href="${pageContext.request.contextPath}/orderAdmin?mode=view&id=${receipt.orderId}"
+                                               class="warehouse-order-link">Xem đơn hàng →</a>
+                                        </div>
+                                    </div>
+                                </c:if>
                                 <table style="width: 100%; border-collapse: collapse; margin-top: 20px;" border="1">
                                     <thead>
                                         <tr style="background-color: #f4f4f4;">

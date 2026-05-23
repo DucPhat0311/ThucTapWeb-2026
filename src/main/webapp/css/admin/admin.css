@@ -242,6 +242,73 @@ body, .admin { height: 100vh; }
 .btn-delete { background: var(--danger-color); color: var(--card-bg); }
 .btn-delete:hover { background: var(--danger-hover); transform: translateY(-2px); }
 
+.warehouse-order-banner {
+    background: #e8f4fd;
+    border-left: 4px solid #1a6fb0;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.warehouse-order-icon {
+    font-size: 20px;
+}
+
+.warehouse-order-title {
+    color: #1a6fb0;
+}
+
+.warehouse-order-id {
+    margin-left: 8px;
+    color: #333;
+}
+
+.warehouse-order-link {
+    margin-left: 12px;
+    color: #1a6fb0;
+    text-decoration: underline;
+    font-size: 13px;
+}
+
+.warehouse-source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.warehouse-source-order {
+    background: #e8f4fd;
+    color: #1a6fb0;
+}
+
+.warehouse-source-manual {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.warehouse-status {
+    font-weight: 700;
+}
+
+.warehouse-status.completed {
+    color: #2f9e44;
+}
+
+.warehouse-status.pending {
+    color: #e67700;
+}
+
+.warehouse-status.cancelled {
+    color: #c92a2a;
+}
+
 .status-badge {
     display: inline-block;
     padding: 5px 12px;
