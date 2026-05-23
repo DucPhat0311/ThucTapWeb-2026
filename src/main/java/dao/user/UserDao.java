@@ -121,6 +121,28 @@ public class UserDao extends BaseDao {
                         .execute()
         );
     }
+
+    public void deletePendingUserByEmail(String email) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("DELETE FROM users WHERE email = :email AND is_active = 0")
+                        .bind("email", email)
+                        .execute()
+        );
+    }
+
+    public int deleteExpiredPendingUsers() {
+        return getJdbi().withHandle(h ->
+                h.createUpdate("""
+                    DELETE FROM users
+                    WHERE is_active = 0
+                      AND status = 'PENDING'
+                      AND otp_expired_at IS NOT NULL
+                      AND otp_expired_at <= NOW()
+                """)
+                        .execute()
+        );
+    }
+
     public User findUserById(int id) {
         return getJdbi().withHandle(handle ->
                 handle.createQuery("""
@@ -172,6 +194,19 @@ public class UserDao extends BaseDao {
 
 
     }
+
+    public void updateAvatar(int userId, String avatarUrl) {
+        getJdbi().withHandle(handle -> handle.createUpdate("""
+                        UPDATE users
+                        SET avatar_url = :avatarUrl
+                        WHERE id = :id
+                        """)
+                .bind("avatarUrl", avatarUrl)
+                .bind("id", userId)
+                .execute()
+        );
+    }
+
     public String getPasswordById(int id) {
         return getJdbi().withHandle(handle -> handle.createQuery("""
                 SELECT password
@@ -202,6 +237,21 @@ public class UserDao extends BaseDao {
                 .bind("exp", expiredAt)
                 .bind("e", email)
                 .execute());
+    }
+
+    public boolean updateOtpForPendingRegistration(String email, String otp, LocalDateTime expiredAt) {
+        return getJdbi().withHandle(h ->
+                h.createUpdate("""
+                    UPDATE users
+                    SET otp_code = :otp,
+                        otp_expired_at = :exp
+                    WHERE email = :email AND is_active = 0
+                """)
+                        .bind("otp", otp)
+                        .bind("exp", expiredAt)
+                        .bind("email", email)
+                        .execute()
+        ) > 0;
     }
 
     public boolean verifyOtp(String email, String otp) {
@@ -245,6 +295,21 @@ public class UserDao extends BaseDao {
                                         .bind("p", password)
                                         .bind("e", email)
                                         .execute()
+        );
+    }
+
+
+
+    public int insert(User user) {
+        return getJdbi().withHandle(handle ->
+                handle.createUpdate("""
+                    INSERT INTO users (username, email, full_name, role, auth_provider, is_active, status, created_at)
+                    VALUES (:username, :email, :fullName, :role, :authProvider, :isActive, :status, :createdAt)
+                    """)
+                        .bindBean(user)
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(int.class)
+                        .one()
         );
     }
 }

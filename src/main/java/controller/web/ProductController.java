@@ -1,107 +1,115 @@
 package controller.web;
 
 import dao.user.CategoryDao;
+import dao.user.ProductDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Category;
+import model.Color;
 import model.Product;
+import model.Size;
+import service.CategoryService;
+import service.ColorService;
 import service.ProductService;
+import service.SizeService;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @WebServlet("/product")
 public class ProductController extends HttpServlet {
     private ProductService productService;
-    private CategoryDao categoryDao;
+    private CategoryService categoryService;
+    private ColorService colorService;
+    private SizeService sizeService;
+
 
     @Override
     public void init() {
         productService = new ProductService();
-        categoryDao = new CategoryDao();
+        categoryService = new CategoryService();
+        colorService = new ColorService();
+        sizeService = new SizeService();
     }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int page = 1;
+        int pageSize = 12;
 
-        String group = request.getParameter("group");
-        String category = request.getParameter("category");
-        String sort = request.getParameter("sort");
+        String pageStr = request.getParameter("page");
+        if (pageStr != null) page = Integer.parseInt(pageStr);
+        int offset = (page - 1) * pageSize;
 
-        List<Product> products;
+        String categoryIdStr = request.getParameter("categoryId");
+        List<Category> displayTags = new ArrayList<>();
+        List<Category> breadcrumbList = new ArrayList<>();
+        Category currentCategory = null;
 
-        Integer categoryId = null;
-        if (category != null && !category.isEmpty()) {
-            try{
-                categoryId = Integer.parseInt(category);
-            } catch (NumberFormatException e){}
-        }
+        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+            int catId = Integer.parseInt(categoryIdStr.split(",")[0]);
+            currentCategory = categoryService.handleGetCategoryById(catId);
+            if (currentCategory != null) {
+                Category temp = currentCategory;
+                while (temp != null) {
+                    breadcrumbList.add(0, temp);
+                    if (temp.getParentId() != 0) {
+                        temp = categoryService.handleGetCategoryById(temp.getParentId());
+                    } else {
+                        temp = null;
+                    }
+                }
 
-        if (categoryId != null){
-            // Lấy cả sản phẩm của danh mục con
-            List<Category> subCategories = categoryDao.getCategoryChild(categoryId);
-            List<Integer> catIds = new ArrayList<>();
-            catIds.add(categoryId);
-            if (subCategories != null) {
-                for (Category sub : subCategories) {
-                    catIds.add(sub.getId());
+                displayTags = categoryService.handleGetSubCategories(catId);
+
+
+                if (displayTags.isEmpty()) {
+                    displayTags = categoryService.handleGetSubCategories(currentCategory.getParentId());
                 }
             }
-            products = productService.getProductsByCategories(catIds);
-            // Lọc theo group
-        } else if ("nam".equals(group)) {
-            products = productService.getProductsByCategories(List.of(1, 2, 3, 9));
-        } else if ("nu".equals(group)) {
-            products = productService.getProductsByCategories(List.of(4, 5, 6, 7, 9));
-        } else if ("phukien".equals(group)) {
-            products = productService.getProductsByCategories(List.of(8,9, 10));
-
         } else {
-            products = productService.getAllProducts();
+            displayTags = categoryService.handleGetParentCategories();
         }
 
+        List<Size> allSizes = sizeService.handleGetAllSizes(); // Lấy từ bảng size trong DB
+        List<Color> allColors = colorService.handleGetAllColors(); // Lấy từ bảng color trong DB
 
-        if ( sort != null && !sort.isEmpty()){
-            switch (sort) {
-                case "new":
-                    products = productService.sortByNewest(products);
-                    break;
+        request.setAttribute("sizes", allSizes);
+        request.setAttribute("colors", allColors);
 
+        String sortType = request.getParameter("sortType");
+        String minPrice = request.getParameter("minPrice");
+        String maxPrice = request.getParameter("maxPrice");
+        String sizes = request.getParameter("sizes");
+        String colors = request.getParameter("colors");
 
-                case "best":
-                    products = productService.sortByBestSeller(products);
-                    break;
+        String categoryIds = categoryService.handleGetCategoryIdsWithChildren(categoryIdStr);
 
-
-                case "sale":
-                    products = productService.sortBySale(products);
-                    break;
-
-
-                case "price_asc":
-                    products = productService.sortByPriceAsc(products);
-                    break;
+        if (sizes == null || sizes.trim().isEmpty()) sizes = null;
+        if (colors == null || colors.trim().isEmpty()) colors = null;
+        if (minPrice == null || minPrice.trim().isEmpty()) minPrice = null;
+        if (maxPrice == null || maxPrice.trim().isEmpty()) maxPrice = null;
+        if (sortType == null || sortType.trim().isEmpty()) sortType = "latest"; // default
 
 
-                case "price_desc":
-                    products = productService.sortByPriceDesc(products);
-                    break;
-            }
+        List<Product> productList = productService.handleFilterProducts(categoryIds, sortType, minPrice, maxPrice, sizes, colors, pageSize, offset);
+        int totalProducts = productService.handleCountProducts(categoryIds, minPrice, maxPrice, sizes, colors);
+        int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
+        request.setAttribute("productList", productList);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", page);
 
-        }
-
-        List<Category> categoryTree = categoryDao.getCategoryTree();
-        request.setAttribute("categories", categoryTree);
-
-        request.setAttribute("list", products);
-
+        request.setAttribute("breadcrumbList", breadcrumbList);
+        request.setAttribute("displayTags", displayTags);
+        request.setAttribute("currentCategory", currentCategory);
         request.getRequestDispatcher("/WEB-INF/views/product.jsp").forward(request, response);
-
     }
 }

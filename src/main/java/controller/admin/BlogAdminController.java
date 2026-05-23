@@ -48,9 +48,25 @@ public class BlogAdminController extends HttpServlet {
         }
 
         List<Blog> allBlog = blogDAO.getAllBlog();
+        int total = allBlog.size();
+        int totalActive = (int) allBlog.stream().filter(n -> n.getStatus() == 1).count();
+        int totalHidden = (int) allBlog.stream().filter(n -> n.getStatus() == 0).count();
+
+        String status = request.getParameter("status");
+        if (status != null && !status.trim().isEmpty()) {
+            try {
+                int statusFilter = Integer.parseInt(status);
+                allBlog = allBlog.stream()
+                        .filter(n -> n.getStatus() == statusFilter)
+                        .collect(java.util.stream.Collectors.toList());
+                request.setAttribute("currentStatus", status);
+            } catch (NumberFormatException ignored) {}
+        }
+
         request.setAttribute("blogList", allBlog);
-        request.setAttribute("total", allBlog.size());
-        request.setAttribute("totalActive", allBlog.stream().filter(n -> n.getStatus() == 1).count());
+        request.setAttribute("total", total);
+        request.setAttribute("totalActive", totalActive);
+        request.setAttribute("totalHidden", totalHidden);
 
         request.setAttribute("page", "blog");
         request.getRequestDispatcher("/WEB-INF/admin/blogAdmin.jsp").forward(request, response);

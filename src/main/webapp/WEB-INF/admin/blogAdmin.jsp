@@ -8,11 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Admin</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/blog.css">
+    <title>Admin Blog</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css"><link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/blog.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
 <body>
@@ -33,8 +31,12 @@
 
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card">Tổng bài viết<br><span>${total}</span></div>
-                    <div class="card">Đang hiển thị<br><span>${totalActive}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin'">
+                        Tổng bài viết<br><span>${total}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin?status=1'">
+                        Đang hiển thị<br><span>${totalActive}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin?status=0'">
+                        Đang ẩn<br><span>${totalHidden}</span></div>
                 </div>
 
                 <div class="toolbar">

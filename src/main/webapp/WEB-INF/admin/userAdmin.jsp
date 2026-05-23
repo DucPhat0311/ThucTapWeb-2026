@@ -29,13 +29,21 @@
         <main id="page">
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card">Tổng người dùng<br><span id="dashboard-total-user">${total}</span></div>
-                    <div class="card">Hoạt động<br><span id="dashboard-total-user-active">${countActive}</span></div>
-                    <div class="card">Bị khóa<br><span id="dashboard-total-user-block">${countBlock}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='userAdmin<c:if test="${not empty currentKeyword}">?keyword=${currentKeyword}</c:if>'">
+                        Tổng người dùng<br><span id="dashboard-total-user">${total}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='userAdmin?status=ACTIVE<c:if test="${not empty currentKeyword}">&keyword=${currentKeyword}</c:if>'">
+                        Hoạt động<br><span id="dashboard-total-user-active">${countActive}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='userAdmin?status=BLOCKED<c:if test="${not empty currentKeyword}">&keyword=${currentKeyword}</c:if>'">
+                        Bị khóa<br><span id="dashboard-total-user-block">${countBlock}</span></div>
                 </div>
 
                 <div class="user-toolbar">
                     <form method="get" action="userAdmin" class="user-toolbar">
+
+                        <c:if test="${not empty currentStatus}">
+                            <input type="hidden" name="status" value="${currentStatus}">
+                        </c:if>
+
                         <input
                                 type="text"
                                 name="keyword"
@@ -135,14 +143,24 @@
                 </div>
 
                 <c:if test="${totalPages > 1}">
+                    
+                    <c:set var="qs" value=""/>
+                    <c:if test="${not empty currentStatus}">
+                        <c:set var="qs" value="${qs}&status=${currentStatus}"/>
+                    </c:if>
+                    <c:if test="${not empty currentKeyword}">
+                        <c:set var="qs" value="${qs}&keyword=${currentKeyword}"/>
+                    </c:if>
+
                     <div class="pagination">
                         <div class="pagination-info">
                             Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize > totalUsers ? totalUsers : currentPage * pageSize} của ${totalUsers} người dùng
                         </div>
+
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
-                                <a href="userAdmin?page=1" class="page-btn">« Đầu</a>
-                                <a href="userAdmin?page=${currentPage - 1}" class="page-btn">‹ Trước</a>
+                                <a href="userAdmin?page=1${qs}" class="page-btn">« Đầu</a>
+                                <a href="userAdmin?page=${currentPage - 1}${qs}" class="page-btn">‹ Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -151,7 +169,7 @@
                                         <span class="page-btn active">${i}</span>
                                     </c:when>
                                     <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="userAdmin?page=${i}" class="page-btn">${i}</a>
+                                        <a href="userAdmin?page=${i}${qs}" class="page-btn">${i}</a>
                                     </c:when>
                                     <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
                                         <span class="page-btn dots">...</span>
@@ -160,8 +178,8 @@
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="userAdmin?page=${currentPage + 1}" class="page-btn">Sau ›</a>
-                                <a href="userAdmin?page=${totalPages}" class="page-btn">Cuối »</a>
+                                <a href="userAdmin?page=${currentPage + 1}${qs}" class="page-btn">Sau ›</a>
+                                <a href="userAdmin?page=${totalPages}${qs}" class="page-btn">Cuối »</a>
                             </c:if>
                         </div>
                     </div>

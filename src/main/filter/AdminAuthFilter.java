@@ -22,7 +22,10 @@ import jakarta.servlet.http.HttpSession;
         "/productAdmin",
         "/orderAdmin",
         "/bannerAdmin",
-        "/bannerAdmin",
+        "/blogAdmin",
+        "/contactAdmin",
+        "/procductImgAdmin",
+        "/productVariantAdmin",
 })
 public class AdminAuthFilter implements Filter {
 

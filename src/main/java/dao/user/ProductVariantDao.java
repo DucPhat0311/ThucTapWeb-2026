@@ -54,11 +54,29 @@ public class ProductVariantDao extends BaseDao {
                         .one()
         );
     }
+
     public void decreaseStock(int variantId, int qty) {
-        getJdbi().useHandle(h ->
+        int affectedRows = getJdbi().withHandle(h ->
                 h.createUpdate("""
             UPDATE product_variants
             SET stock = stock - :q
+            WHERE id = :vid AND stock >= :q
+        """)
+                        .bind("q", qty)
+                        .bind("vid", variantId)
+                        .execute()
+        );
+
+        if (affectedRows == 0) {
+            throw new InsufficientStockException(variantId, qty);
+        }
+    }
+
+    public void increaseStock(int variantId, int qty) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE product_variants
+            SET stock = stock + :q
             WHERE id = :vid
         """)
                         .bind("q", qty)
@@ -66,20 +84,31 @@ public class ProductVariantDao extends BaseDao {
                         .execute()
         );
     }
-    public ProductVariant getFirstVariantByProductId(int productId) {
+
+    public ProductVariant getVariantDetails(int variantId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
-            SELECT *
-            FROM product_variants
-            WHERE product_id = :pid
-            ORDER BY id ASC
-            LIMIT 1
+            SELECT pv.*, 
+                   p.name as productName, 
+                   s.code as sizeName, 
+                   c.name as colorName
+            FROM product_variants pv
+            JOIN products p ON pv.product_id = p.id
+            JOIN sizes s ON pv.size_id = s.id
+            JOIN colors c ON pv.color_id = c.id
+            WHERE pv.id = :vid
         """)
-                        .bind("pid", productId)
+                        .bind("vid", variantId)
                         .mapToBean(ProductVariant.class)
                         .findOne()
                         .orElse(null)
         );
+    }
+
+    public static class InsufficientStockException extends RuntimeException {
+        public InsufficientStockException(int variantId, int qty) {
+            super("Không đủ tồn kho cho biến thể " + variantId + " với số lượng " + qty);
+        }
     }
 
 }

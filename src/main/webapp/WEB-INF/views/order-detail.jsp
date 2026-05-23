@@ -1,163 +1,197 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Chi tiết đơn hàng - AURA Studio</title>
-    <link rel="stylesheet" href="css/views/shared-profile.css">
-    <link rel="stylesheet" href="css/views/order-detail.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<!-- ========== HEADER ========== -->
+<%
+    request.setAttribute("pageCss", "views/order-detail.css");
+    request.setAttribute("pageTitle", "Chi tiết đơn hàng");
+%>
+
 <%@ include file="../include/header.jsp" %>
 
-<!-- ========== CHI TIẾT ĐƠN HÀNG ========== -->
 <section class="profile-container">
-    <!-- ========== SIDEBAR ========== -->
     <div class="profile-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="img/avt.jpg" alt="Avatar">
-                <button type="button" class="change-avatar-btn">Đổi ảnh</button>
+                <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
+                <c:choose>
+                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
+                        <img src="${avatarPath}" alt="Avatar">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
+                    </c:otherwise>
+                </c:choose>
             </div>
-            <h3>Nguyễn Văn A</h3>
-            <p>Thành viên từ: 01/01/2024</p>
         </div>
 
         <nav class="profile-menu">
             <ul>
-                <li><a href="#"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                <li><a href="#"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
-                <li class="active"><a href="#"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
-                <li><a href="#"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
-                <li><a href="#"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
+                <li><a href="profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                <li><a href="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
+                <li class="active"><a href="order-user"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
+                <li><a href="change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+                <li><a href="logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
             </ul>
         </nav>
     </div>
 
-    <!-- ========== NỘI DUNG ========== -->
     <div class="profile-content order-detail-page">
         <div class="detail-header">
             <div>
                 <h2>Chi tiết đơn hàng</h2>
-                <p class="order-code">Mã đơn hàng: <strong>#AURA1025</strong></p>
+                <p class="order-code">Mã đơn hàng: <strong>#${order.id}</strong></p>
             </div>
 
             <div class="detail-status">
-                <span class="status-badge shipping">Đang giao hàng</span>
+                <span class="status-badge ${orderStatusClass}">${orderStatusLabel}</span>
             </div>
         </div>
 
-        <!-- ========== THÔNG TIN CHUNG ========== -->
         <div class="detail-section">
             <h3>Thông tin đơn hàng</h3>
 
             <div class="summary-grid">
                 <div class="summary-item">
                     <span class="label">Ngày đặt hàng</span>
-                    <span class="value">22/03/2026</span>
+                    <span class="value">${order.createdAtFormatted}</span>
                 </div>
-
                 <div class="summary-item">
                     <span class="label">Phương thức thanh toán</span>
-                    <span class="value">Thanh toán khi nhận hàng</span>
+                    <span class="value">${paymentMethodLabel}</span>
                 </div>
-
                 <div class="summary-item">
-                    <span class="label">Hình thức giao hàng</span>
-                    <span class="value">Giao hàng tiêu chuẩn</span>
+                    <span class="label">Trạng thái thanh toán</span>
+                    <span class="value">${paymentStatusLabel}</span>
                 </div>
-
                 <div class="summary-item">
                     <span class="label">Dự kiến giao</span>
-                    <span class="value">25/03/2026</span>
+                    <span class="value">
+                        <c:choose>
+                            <c:when test="${not empty order.ghnExpectedDeliveryTimeFormatted}">
+                                ${order.ghnExpectedDeliveryTimeFormatted}
+                            </c:when>
+                            <c:otherwise>Chưa có thông tin</c:otherwise>
+                        </c:choose>
+                    </span>
                 </div>
             </div>
         </div>
 
-        <!-- ========== DANH SÁCH SẢN PHẨM ========== -->
+        <div class="detail-section">
+            <h3>Theo dõi vận chuyển</h3>
+
+            <c:choose>
+                <c:when test="${empty order.ghnOrderCode}">
+                    <div class="tracking-empty">Đơn hàng chưa có mã vận đơn GHN.</div>
+                </c:when>
+                <c:otherwise>
+                    <div class="tracking-summary">
+                        <div>
+                            <span class="label">Mã vận đơn GHN</span>
+                            <strong>${order.ghnOrderCode}</strong>
+                        </div>
+                        <div>
+                            <span class="label">Trạng thái GHN</span>
+                            <strong>${not empty order.ghnStatusName ? order.ghnStatusName : "Chưa có trạng thái"}</strong>
+                        </div>
+                        <div>
+                            <span class="label">Cập nhật gần nhất</span>
+                            <strong>${not empty order.ghnLastUpdatedAtFormatted ? order.ghnLastUpdatedAtFormatted : "Chưa có thông tin"}</strong>
+                        </div>
+                    </div>
+
+                    <c:if test="${not empty trackingError}">
+                        <div class="tracking-error">${trackingError}</div>
+                    </c:if>
+
+                    <c:choose>
+                        <c:when test="${empty trackingLogs}">
+                            <div class="tracking-empty">Chưa có lịch sử vận chuyển.</div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="tracking-timeline">
+                                <c:forEach var="log" items="${trackingLogs}">
+                                    <div class="tracking-item">
+                                        <div class="tracking-dot"></div>
+                                        <div class="tracking-content">
+                                            <div>
+                                                <h4>${log.statusName}</h4>
+                                                <c:if test="${not empty log.description}">
+                                                    <p>${log.description}</p>
+                                                </c:if>
+                                            </div>
+                                            <span>${log.eventTimeFormatted}</span>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </c:otherwise>
+            </c:choose>
+        </div>
+
         <div class="detail-section">
             <h3>Sản phẩm đã đặt</h3>
 
             <div class="detail-product-list">
-                <div class="detail-product-item">
-                    <div class="product-left">
-                        <img src="img/aox.webp" alt="Áo sơ mi nam">
-                        <div class="product-info">
-                            <h4>Áo sơ mi nam</h4>
-                            <p>Màu sắc: Trắng</p>
-                            <p>Size: L</p>
-                            <p>Số lượng: 1</p>
+                <c:forEach var="item" items="${orderItems}">
+                    <div class="detail-product-item">
+                        <div class="product-left">
+                            <img src="${not empty item.thumbnail ? item.thumbnail : './img/aox.webp'}" alt="${item.productName}">
+                            <div class="product-info">
+                                <h4>${item.productName}</h4>
+                                <p>Màu sắc: ${item.color}</p>
+                                <p>Size: ${item.size}</p>
+                                <p>Số lượng: ${item.quantity}</p>
+                            </div>
+                        </div>
+                        <div class="product-right">
+                            <span class="price"><fmt:formatNumber value="${item.total}" type="number"/>₫</span>
                         </div>
                     </div>
-                    <div class="product-right">
-                        <span class="price">350.000₫</span>
-                    </div>
-                </div>
-
-                <div class="detail-product-item">
-                    <div class="product-left">
-                        <img src="img/aox.webp" alt="Quần jean nam">
-                        <div class="product-info">
-                            <h4>Quần jean nam</h4>
-                            <p>Màu sắc: Xanh</p>
-                            <p>Size: 32</p>
-                            <p>Số lượng: 1</p>
-                        </div>
-                    </div>
-                    <div class="product-right">
-                        <span class="price">420.000₫</span>
-                    </div>
-                </div>
+                </c:forEach>
             </div>
         </div>
 
-        <!-- ========== THÔNG TIN NHẬN HÀNG ========== -->
         <div class="detail-section">
             <h3>Thông tin nhận hàng</h3>
 
             <div class="info-box">
-                <p><strong>Người nhận:</strong> Nguyễn Văn A</p>
-                <p><strong>Số điện thoại:</strong> 0123456789</p>
-                <p><strong>Địa chỉ:</strong> 123 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh</p>
-                <p><strong>Ghi chú:</strong> Giao giờ hành chính</p>
+                <p><strong>Người nhận:</strong> ${order.name}</p>
+                <p><strong>Số điện thoại:</strong> ${order.phone}</p>
+                <p><strong>Địa chỉ:</strong> ${order.shippingAddress}</p>
+                <c:if test="${not empty order.note}">
+                    <p><strong>Ghi chú:</strong> ${order.note}</p>
+                </c:if>
             </div>
         </div>
 
-        <!-- ========== TỔNG THANH TOÁN ========== -->
         <div class="detail-section">
             <h3>Tổng thanh toán</h3>
 
             <div class="payment-summary">
                 <div class="payment-row">
                     <span>Tạm tính</span>
-                    <span>770.000₫</span>
+                    <span><fmt:formatNumber value="${order.totalPrice}" type="number"/>₫</span>
                 </div>
-
                 <div class="payment-row">
                     <span>Phí vận chuyển</span>
-                    <span>Miễn phí</span>
+                    <span><fmt:formatNumber value="${order.shippingFee}" type="number"/>₫</span>
                 </div>
-
                 <div class="payment-row total">
                     <span>Tổng cộng</span>
-                    <span>770.000₫</span>
+                    <span><fmt:formatNumber value="${order.finalAmount}" type="number"/>₫</span>
                 </div>
             </div>
         </div>
 
-        <!-- ========== NÚT CHỨC NĂNG ========== -->
         <div class="detail-actions">
-            <a href="#" class="btn-back">Quay lại đơn hàng</a>
-            <a href="cancelled-order.jsp" class="btn-cancel-order">Hủy đơn</a>
-            <a href="#" class="btn-main">Đã nhận hàng</a>
+            <a href="order-user" class="btn-back">Quay lại đơn hàng</a>
         </div>
     </div>
 </section>
 
-<!-- ========== FOOTER ========== -->
 <%@ include file="../include/footer.jsp" %>
-
-</body>
-</html>

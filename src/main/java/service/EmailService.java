@@ -43,7 +43,13 @@ public class EmailService {
             System.out.println("Gửi email thành công đến: " + to);
 
         } catch (MessagingException e) {
-            e.printStackTrace();
+            throw new EmailDeliveryException("Không thể gửi email đến " + to, e);
+        }
+    }
+
+    public static class EmailDeliveryException extends RuntimeException {
+        public EmailDeliveryException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 }

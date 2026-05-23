@@ -4,12 +4,15 @@ public class Color {
     private int id;
     private String name;
 
+    private String code;
+
     public Color() {
     }
 
-    public Color(int id, String name) {
+    public Color(int id, String name,String code) {
         this.id = id;
         this.name = name;
+        this.code = code;
     }
 
     public int getId() {
@@ -26,5 +29,13 @@ public class Color {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

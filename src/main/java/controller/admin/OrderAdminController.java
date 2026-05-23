@@ -1,14 +1,21 @@
 package controller.admin;
 
-import java.io.IOException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.constant.OrderStatus;
+import model.constant.PaymentMethod;
+import model.constant.PaymentStatus;
 import service.EmailService;
 import service.OrderService;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "OrderAdminController", value = "/orderAdmin")
 public class OrderAdminController extends HttpServlet {
@@ -24,13 +31,18 @@ public class OrderAdminController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        orderService.expirePendingPaymentOrders();
+
+        req.setAttribute("orderStatusLabels", getOrderStatusLabels());
+        req.setAttribute("paymentMethodLabels", getPaymentMethodLabels());
+        req.setAttribute("paymentStatusLabels", getPaymentStatusLabels());
+
         String mode = req.getParameter("mode");
 
         if (mode == null) {
-   
             int page = 1;
-            int pageSize = 5;
-            
+            int pageSize = 6;
+
             String pageParam = req.getParameter("page");
             if (pageParam != null && !pageParam.isEmpty()) {
                 try {
@@ -39,47 +51,79 @@ public class OrderAdminController extends HttpServlet {
                     page = 1;
                 }
             }
-            
+
             var allOrders = orderService.getAllOrders();
             int totalOrders = allOrders.size();
-            int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-            
-            if (page < 1) page = 1;
-            if (page > totalPages && totalPages > 0) page = totalPages;
-            
-            int start = (page - 1) * pageSize;
-            int end = Math.min(start + pageSize, totalOrders);
-            var orders = allOrders.subList(start, end);
 
             long pending = allOrders.stream()
-                    .filter(o -> "PENDING".equals(o.getOrderStatus()))
+                    .filter(o -> OrderStatus.PENDING.equals(o.getOrderStatus()))
+                    .count();
+
+            long pendingPayment = allOrders.stream()
+                    .filter(o -> OrderStatus.PENDING_PAYMENT.equals(o.getOrderStatus()))
                     .count();
 
             long completed = allOrders.stream()
-                    .filter(o -> "COMPLETED".equals(o.getOrderStatus()))
+                    .filter(o -> OrderStatus.COMPLETED.equals(o.getOrderStatus()))
                     .count();
+
+                long shipping = allOrders.stream()
+                    .filter(o -> OrderStatus.SHIPPING.equals(o.getOrderStatus()))
+                    .count();
+
+                long cancelled = allOrders.stream()
+                    .filter(o -> OrderStatus.CANCELLED.equals(o.getOrderStatus()))
+                    .count();
+
+            String status = req.getParameter("status");
+            var filteredOrders = allOrders;
+            if (status != null && !status.trim().isEmpty()) {
+                String normalizedStatus = status.trim();
+                if (getOrderStatusLabels().containsKey(normalizedStatus)) {
+                    filteredOrders = allOrders.stream()
+                            .filter(o -> normalizedStatus.equals(o.getOrderStatus()))
+                            .collect(Collectors.toList());
+                    req.setAttribute("currentStatus", normalizedStatus);
+                }
+            }
+
+            int filteredTotal = filteredOrders.size();
+            int totalPages = (int) Math.ceil((double) filteredTotal / pageSize);
+
+            if (page < 1) {
+                page = 1;
+            }
+            if (page > totalPages && totalPages > 0) {
+                page = totalPages;
+            }
+
+            int start = (page - 1) * pageSize;
+            int end = Math.min(start + pageSize, filteredTotal);
+            var orders = filteredOrders.subList(start, end);
 
             req.setAttribute("orders", orders);
             req.setAttribute("total", totalOrders);
-            req.setAttribute("totalOrders", totalOrders);
+            req.setAttribute("totalOrders", filteredTotal);
             req.setAttribute("countPending", pending);
+            req.setAttribute("countPendingPayment", pendingPayment);
             req.setAttribute("countCompleted", completed);
+            req.setAttribute("countShipping", shipping);
+            req.setAttribute("countCancelled", cancelled);
             req.setAttribute("currentPage", page);
             req.setAttribute("totalPages", totalPages);
             req.setAttribute("pageSize", pageSize);
 
             req.setAttribute("page", "order");
-        req.getRequestDispatcher("/WEB-INF/admin/orderAdmin.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/admin/orderAdmin.jsp").forward(req, resp);
             return;
         }
-
 
         if ("view".equals(mode)) {
             int id = Integer.parseInt(req.getParameter("id"));
             req.setAttribute("order", orderService.findById(id));
             req.setAttribute("items", orderService.getOrderItems(id));
             req.setAttribute("page", "order");
-        req.getRequestDispatcher("/WEB-INF/admin/order-detailAdmin.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/admin/order-detailAdmin.jsp").forward(req, resp);
         }
     }
 
@@ -87,13 +131,21 @@ public class OrderAdminController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
+        orderService.expirePendingPaymentOrders();
+
         String action = req.getParameter("action");
-        if (!"update".equals(action)) return;
+        if ("createGhnOrder".equals(action)) {
+            createGhnOrder(req, resp);
+            return;
+        }
+
+        if (!"update".equals(action)) {
+            return;
+        }
 
         int id = Integer.parseInt(req.getParameter("id"));
         String newStatus = req.getParameter("orderStatus");
 
-  
         var order = orderService.findById(id);
         if (order == null) {
             resp.sendRedirect("orderAdmin");
@@ -101,48 +153,115 @@ public class OrderAdminController extends HttpServlet {
         }
 
         String currentStatus = order.getOrderStatus();
+        String paymentMethod = order.getPaymentMethods();
+        String paymentStatus = order.getPaymentStatuses();
 
-        if ("COMPLETED".equals(currentStatus) || "CANCELLED".equals(currentStatus)) {
+        if (OrderStatus.COMPLETED.equals(currentStatus) || OrderStatus.CANCELLED.equals(currentStatus)) {
             resp.sendRedirect("orderAdmin?mode=view&id=" + id);
             return;
         }
 
-        if ("PENDING".equals(currentStatus) && "COMPLETED".equals(newStatus)) {
+        boolean unpaidOnlineOrder = PaymentMethod.VNPAY.equals(paymentMethod)
+                && !PaymentStatus.PAID.equals(paymentStatus);
+        if (unpaidOnlineOrder && !OrderStatus.CANCELLED.equals(newStatus)) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=unpaid_online_order");
+            return;
+        }
+
+        if (OrderStatus.PENDING.equals(currentStatus) && OrderStatus.COMPLETED.equals(newStatus)) {
             resp.sendRedirect("orderAdmin?mode=view&id=" + id);
             return;
         }
 
+        if (OrderStatus.CANCELLED.equals(newStatus)) {
+            var cancellationCheck = orderService.cancelAdminOrder(id);
+            if (!cancellationCheck.cancellable()) {
+                redirectWithMessage(resp, id, "cancel_not_allowed", cancellationCheck.message());
+                return;
+            }
+        } else {
+            orderService.updateStatus(id, newStatus);
+        }
 
-        orderService.updateStatus(id, newStatus);
         String userEmail = orderService.getUserEmailByOrderId(id);
-        
-        String statusInVietnamese;
-        switch (newStatus) {
-            case "PENDING":
-                statusInVietnamese = "Chờ xử lý";
-                break;
-            case "SHIPPING":
-                statusInVietnamese = "Đang giao";
-                break;
-            case "COMPLETED":
-                statusInVietnamese = "Hoàn thành";
-                break;
-            case "CANCELLED":
-                statusInVietnamese = "Đã hủy";
-                break;
-            default:
-                statusInVietnamese = newStatus;
-        }
-        
 
         EmailService.sendEmail(
                 userEmail,
                 "Cập nhật trạng thái đơn hàng #" + id,
-                "Đơn hàng của bạn đã chuyển sang trạng thái: " + statusInVietnamese
+                "Đơn hàng của bạn đã chuyển sang trạng thái: " + getOrderStatusLabel(newStatus)
         );
 
         resp.sendRedirect("orderAdmin?mode=view&id=" + id);
     }
 
-}
+    private void createGhnOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        var order = orderService.findById(id);
+        if (order == null) {
+            resp.sendRedirect("orderAdmin");
+            return;
+        }
 
+        boolean unpaidOnlineOrder = PaymentMethod.VNPAY.equals(order.getPaymentMethods())
+                && !PaymentStatus.PAID.equals(order.getPaymentStatuses());
+        if (unpaidOnlineOrder) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=unpaid_online_order");
+            return;
+        }
+
+        if (!orderService.canCreateGhnShippingOrder(order)) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=ghn_not_allowed");
+            return;
+        }
+
+        try {
+            orderService.createGhnShippingOrder(id);
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&success=ghn_created");
+        } catch (RuntimeException e) {
+            String message = e.getMessage() == null ? "Lỗi không xác định từ GHN." : e.getMessage();
+            redirectWithMessage(resp, id, "ghn_create_failed", message);
+        }
+    }
+
+    private void redirectWithMessage(HttpServletResponse resp, int id, String error, String message) throws IOException {
+        resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=" + error + "&message=" + URLEncoder.encode(message, StandardCharsets.UTF_8));
+    }
+
+    public static String getOrderStatusLabel(String status) {
+        return getOrderStatusLabels().getOrDefault(status, status);
+    }
+
+    public static String getPaymentMethodLabel(String paymentMethod) {
+        return getPaymentMethodLabels().getOrDefault(paymentMethod, paymentMethod);
+    }
+
+    public static String getPaymentStatusLabel(String paymentStatus) {
+        return getPaymentStatusLabels().getOrDefault(paymentStatus, paymentStatus);
+    }
+
+    public static Map<String, String> getOrderStatusLabels() {
+        return Map.of(
+                OrderStatus.PENDING_PAYMENT, "Chờ thanh toán",
+                OrderStatus.PENDING, "Chờ xử lý",
+                OrderStatus.SHIPPING, "Đang giao",
+                OrderStatus.COMPLETED, "Hoàn thành",
+                OrderStatus.CANCELLED, "Đã hủy"
+        );
+    }
+
+    public static Map<String, String> getPaymentMethodLabels() {
+        return Map.of(
+                PaymentMethod.COD, "Thanh toán khi nhận hàng",
+                PaymentMethod.VNPAY, "VNPay"
+        );
+    }
+
+    public static Map<String, String> getPaymentStatusLabels() {
+        return Map.of(
+                PaymentStatus.UNPAID, "Chưa thanh toán",
+                PaymentStatus.PENDING, "Đang chờ thanh toán",
+                PaymentStatus.PAID, "Đã thanh toán",
+                PaymentStatus.FAILED, "Thanh toán thất bại"
+        );
+    }
+}

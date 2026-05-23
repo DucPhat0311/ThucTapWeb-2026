@@ -30,12 +30,17 @@ public class SendOTPController extends HttpServlet {
         String action = request.getParameter("action");
         if ("resend".equals(action)) {
             String email = request.getParameter("email");
+            String type = request.getParameter("type");
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
             try {
-                userService.sendOtpResetPassword(email);
+                if ("register".equals(type)) {
+                    userService.resendRegistrationOtp(email);
+                } else {
+                    userService.sendOtpResetPassword(email);
+                }
                 response.getWriter().write("{\"success\":true}");
             } catch (RuntimeException e) {
                 response.getWriter().write(
@@ -72,7 +77,10 @@ public class SendOTPController extends HttpServlet {
             }
         } else {
             request.setAttribute("error", "OTP sai hoặc đã hết hạn");
-            request.getRequestDispatcher("/WEB-INF/auth/verify.jsp").forward(request, response);
+            String verifyPage = "register".equals(type)
+                    ? "/WEB-INF/auth/registerOTP.jsp"
+                    : "/WEB-INF/auth/verify.jsp";
+            request.getRequestDispatcher(verifyPage).forward(request, response);
         }
 
     }

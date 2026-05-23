@@ -80,6 +80,10 @@
                     Đăng nhập bằng Google
                 </a>
 
+                <a class="btn-fb" href="${pageContext.request.contextPath}/auth/facebook" >
+                    <i class="fab fa-facebook"></i> Đăng nhập bằng Facebook
+                </a>
+
                 <div class="form-links">
                     <p class="notAccount">Chưa có tài khoản? <a href="register">Đăng ký ngay</a></p>
                 </div>

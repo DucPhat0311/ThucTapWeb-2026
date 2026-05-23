@@ -1,31 +1,61 @@
 package controller.web;
 
-import model.User;
-import service.UserService;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import model.User;
+import service.UserService;
+import util.AvatarStorageUtil;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.Set;
 
 @WebServlet("/profile")
+@MultipartConfig(
+        maxFileSize = 5 * 1024 * 1024,
+        maxRequestSize = 6 * 1024 * 1024
+)
 public class ProfileController extends HttpServlet {
+
+    private static final String DEFAULT_REDIRECT = "profile";
+    private static final String PENDING_EMAIL_CHANGE_ATTR = "pendingProfileEmailChange";
+    private static final String PROFILE_FLASH_ERROR_ATTR = "profileFlashError";
+    private static final long MAX_AVATAR_SIZE = 5 * 1024 * 1024;
+    private static final String AVATAR_MEDIA_PREFIX = AvatarStorageUtil.AVATAR_MEDIA_PREFIX;
+    private static final Set<String> AVATAR_REDIRECT_TARGETS = Set.of(
+            "profile",
+            "address",
+            "order-user",
+            "change-password"
+    );
 
     private UserService userService;
 
     @Override
-    public void init(){
+    public void init() {
         userService = new UserService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if(session == null || session.getAttribute("userlogin") == null){
+        if (session == null || session.getAttribute("userlogin") == null) {
             response.sendRedirect("login");
             return;
         }
@@ -35,6 +65,7 @@ public class ProfileController extends HttpServlet {
         User fullUser = userService.findById(user.getId());
 
         request.setAttribute("user", fullUser);
+        moveFlashMessages(session, request);
 
         if (fullUser.getBirthday() != null) {
             request.setAttribute(
@@ -55,12 +86,11 @@ public class ProfileController extends HttpServlet {
         }
 
 
-        request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request,response);
+        request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession(false);
@@ -71,35 +101,269 @@ public class ProfileController extends HttpServlet {
 
 
         User userSession = (User) session.getAttribute("userlogin");
+        String action = request.getParameter("action");
 
+        if ("updateAvatar".equals(action)) {
+            try {
+                handleAvatarUpdate(request, response, session, userSession);
+            } catch (IOException | ServletException ex) {
+                response.sendRedirect(DEFAULT_REDIRECT + "?avatarError=upload");
+            }
+            return;
+        }
+
+        handleProfileUpdate(request, response, session, userSession);
+    }
+
+    private void handleProfileUpdate(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     HttpSession session,
+                                     User userSession) throws IOException {
         String fullName = request.getParameter("fullname");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
         String birthdayStr = request.getParameter("birthday");
-        String address = request.getParameter("address");
 
         String gender = request.getParameter("gender");
 
         User user = userService.findById(userSession.getId());
-
-        user.setFullName(fullName);
-        user.setPhone(phone);
-        user.setEmail(email);
-        user.setAddress(address);
-
-
-        user.setGender(gender);
-
-        if (birthdayStr != null && !birthdayStr.isEmpty()) {
-            user.setBirthday(java.time.LocalDate.parse(birthdayStr));
+        String normalizedPhone = normalizePhone(phone);
+        if (!isValidVietnamesePhone(normalizedPhone)) {
+            response.sendRedirect(DEFAULT_REDIRECT + "?profileError=invalid_phone");
+            return;
         }
 
+        LocalDate birthday = null;
+        if (birthdayStr == null || birthdayStr.isBlank()) {
+            birthday = null;
+        } else {
+            try {
+                birthday = LocalDate.parse(birthdayStr);
+            } catch (DateTimeParseException ex) {
+                response.sendRedirect(DEFAULT_REDIRECT + "?profileError=invalid_birthday");
+                return;
+            }
+        }
+
+        String normalizedEmail = normalizeEmail(email);
+        if (normalizedEmail.isBlank()) {
+            response.sendRedirect(DEFAULT_REDIRECT + "?profileError=invalid_email");
+            return;
+        }
+
+        if (isEmailChanged(user.getEmail(), normalizedEmail)) {
+            try {
+                var verification = userService.createProfileEmailChangeOldEmailVerification(
+                        user.getId(),
+                        user.getEmail(),
+                        normalizedEmail
+                );
+                session.setAttribute(PENDING_EMAIL_CHANGE_ATTR, new PendingProfileEmailChange(
+                        fullName,
+                        normalizedPhone,
+                        verification.newEmail(),
+                        birthday,
+                        gender,
+                        verification.oldEmailOtp(),
+                        verification.oldEmailOtpExpiredAt(),
+                        null,
+                        null
+                ));
+                response.sendRedirect("profile-email-change");
+            } catch (RuntimeException e) {
+                session.setAttribute(PROFILE_FLASH_ERROR_ATTR, e.getMessage());
+                response.sendRedirect(DEFAULT_REDIRECT + "?profileError=email_change_failed");
+            }
+            return;
+        }
+
+        user.setFullName(fullName);
+        user.setPhone(normalizedPhone);
+        user.setEmail(normalizedEmail);
+        user.setGender(gender);
+        user.setBirthday(birthday);
+
         userService.update(user);
+        User refreshedUser = userService.findById(userSession.getId());
+        session.setAttribute("userlogin", refreshedUser);
 
-        session.setAttribute("userlogin", user);
-
-        response.sendRedirect("profile");
+        response.sendRedirect(DEFAULT_REDIRECT + "?profileUpdated=1");
     }
 
-}
+    private void moveFlashMessages(HttpSession session, HttpServletRequest request) {
+        Object profileFlashError = session.getAttribute(PROFILE_FLASH_ERROR_ATTR);
+        if (profileFlashError != null) {
+            request.setAttribute("profileFlashError", profileFlashError);
+            session.removeAttribute(PROFILE_FLASH_ERROR_ATTR);
+        }
+    }
 
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isEmailChanged(String currentEmail, String submittedEmail) {
+        return !normalizeEmail(currentEmail).equals(submittedEmail);
+    }
+
+    private String normalizePhone(String phone) {
+        if (phone == null) {
+            return "";
+        }
+        return phone.trim().replaceAll("[\\s.-]", "");
+    }
+
+    private boolean isValidVietnamesePhone(String phone) {
+        if (phone.isBlank()) {
+            return true;
+        }
+        return phone.matches("0[35789][0-9]{8}");
+    }
+
+    private void handleAvatarUpdate(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    HttpSession session,
+                                    User userSession) throws ServletException, IOException {
+        String redirectTarget = resolveAvatarRedirectTarget(request);
+        Part avatarPart = request.getPart("avatarFile");
+        if (avatarPart == null || avatarPart.getSize() == 0) {
+            response.sendRedirect(redirectTarget + "?avatarError=empty");
+            return;
+        }
+
+        if (avatarPart.getSize() > MAX_AVATAR_SIZE) {
+            response.sendRedirect(redirectTarget + "?avatarError=size");
+            return;
+        }
+
+        String extension = extractExtension(avatarPart.getSubmittedFileName());
+        if (!isAllowedExtension(extension) || !isImageContentType(avatarPart.getContentType())) {
+            response.sendRedirect(redirectTarget + "?avatarError=type");
+            return;
+        }
+
+        User currentUser = userService.findById(userSession.getId());
+        String oldAvatarUrl = currentUser != null ? currentUser.getAvatarUrl() : null;
+
+        String avatarUrl = saveAvatarFile(userSession.getId(), avatarPart, extension);
+        userService.updateAvatar(userSession.getId(), avatarUrl);
+        deleteManagedAvatar(oldAvatarUrl, avatarUrl);
+
+        User refreshedUser = userService.findById(userSession.getId());
+        session.setAttribute("userlogin", refreshedUser);
+
+        response.sendRedirect(redirectTarget + "?avatarUpdated=1");
+    }
+
+    private String saveAvatarFile(int userId, Part avatarPart, String extension) throws IOException {
+        Path avatarDir = AvatarStorageUtil.getAvatarDirectory();
+
+        String uniqueFileName = "avatar_user_" + userId + "_" + System.currentTimeMillis() + "." + extension;
+        uniqueFileName = uniqueFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
+
+        Path destinationPath = avatarDir.resolve(uniqueFileName).normalize();
+        if (!destinationPath.startsWith(avatarDir)) {
+            throw new IOException("Invalid avatar destination path.");
+        }
+
+        try (InputStream inputStream = avatarPart.getInputStream()) {
+            Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        return AvatarStorageUtil.buildAvatarMediaPath(uniqueFileName);
+    }
+
+    private String extractExtension(String fileName) {
+        if (fileName == null || fileName.isBlank()) {
+            return "";
+        }
+
+        String safeName = new File(fileName).getName();
+        int lastDot = safeName.lastIndexOf('.');
+        if (lastDot < 0 || lastDot == safeName.length() - 1) {
+            return "";
+        }
+
+        return safeName.substring(lastDot + 1).toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isAllowedExtension(String extension) {
+        return "jpg".equals(extension)
+                || "jpeg".equals(extension)
+                || "png".equals(extension)
+                || "webp".equals(extension);
+    }
+
+    private boolean isImageContentType(String contentType) {
+        return contentType != null && contentType.toLowerCase(Locale.ROOT).startsWith("image/");
+    }
+
+    private void deleteManagedAvatar(String oldAvatarUrl, String newAvatarUrl) {
+        if (!isManagedAvatarPath(oldAvatarUrl) || oldAvatarUrl.equals(newAvatarUrl)) {
+            return;
+        }
+
+        String oldFileName = oldAvatarUrl.substring(AVATAR_MEDIA_PREFIX.length());
+        if (oldFileName.isBlank()) {
+            return;
+        }
+
+        try {
+            Path avatarDir = AvatarStorageUtil.getAvatarDirectory();
+            Path oldFilePath = avatarDir.resolve(oldFileName).normalize();
+            if (oldFilePath.startsWith(avatarDir)) {
+                Files.deleteIfExists(oldFilePath);
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    private boolean isManagedAvatarPath(String avatarUrl) {
+        return avatarUrl != null && avatarUrl.startsWith(AVATAR_MEDIA_PREFIX);
+    }
+
+    private String resolveAvatarRedirectTarget(HttpServletRequest request) {
+        String redirectTo = request.getParameter("redirectTo");
+        if (redirectTo == null || redirectTo.isBlank()) {
+            return DEFAULT_REDIRECT;
+        }
+
+        String normalized = redirectTo.trim();
+        if (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+
+        if (AVATAR_REDIRECT_TARGETS.contains(normalized)) {
+            return normalized;
+        }
+
+        return DEFAULT_REDIRECT;
+    }
+
+    public record PendingProfileEmailChange(
+            String fullName,
+            String phone,
+            String newEmail,
+            LocalDate birthday,
+            String gender,
+            String oldEmailOtp,
+            LocalDateTime oldEmailOtpExpiredAt,
+            String newEmailOtp,
+            LocalDateTime newEmailOtpExpiredAt
+    ) implements Serializable {
+        public PendingProfileEmailChange withNewEmailVerification(String newEmailOtp,
+                                                                  LocalDateTime newEmailOtpExpiredAt) {
+            return new PendingProfileEmailChange(
+                    fullName,
+                    phone,
+                    newEmail,
+                    birthday,
+                    gender,
+                    oldEmailOtp,
+                    oldEmailOtpExpiredAt,
+                    newEmailOtp,
+                    newEmailOtpExpiredAt
+            );
+        }
+    }
+}

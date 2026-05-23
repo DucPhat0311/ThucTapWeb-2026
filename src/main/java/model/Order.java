@@ -18,6 +18,11 @@ public class Order {
     private String paymentMethods;
     private String paymentStatuses;
     private String orderStatus;
+    private String ghnOrderCode;
+    private String ghnStatus;
+    private String ghnStatusName;
+    private LocalDateTime ghnExpectedDeliveryTime;
+    private LocalDateTime ghnLastUpdatedAt;
     private LocalDateTime createdAt;
     private List<OrderItem> items;
 
@@ -117,6 +122,46 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
+    public String getGhnOrderCode() {
+        return ghnOrderCode;
+    }
+
+    public void setGhnOrderCode(String ghnOrderCode) {
+        this.ghnOrderCode = ghnOrderCode;
+    }
+
+    public String getGhnStatus() {
+        return ghnStatus;
+    }
+
+    public void setGhnStatus(String ghnStatus) {
+        this.ghnStatus = ghnStatus;
+    }
+
+    public String getGhnStatusName() {
+        return ghnStatusName;
+    }
+
+    public void setGhnStatusName(String ghnStatusName) {
+        this.ghnStatusName = ghnStatusName;
+    }
+
+    public LocalDateTime getGhnExpectedDeliveryTime() {
+        return ghnExpectedDeliveryTime;
+    }
+
+    public void setGhnExpectedDeliveryTime(LocalDateTime ghnExpectedDeliveryTime) {
+        this.ghnExpectedDeliveryTime = ghnExpectedDeliveryTime;
+    }
+
+    public LocalDateTime getGhnLastUpdatedAt() {
+        return ghnLastUpdatedAt;
+    }
+
+    public void setGhnLastUpdatedAt(LocalDateTime ghnLastUpdatedAt) {
+        this.ghnLastUpdatedAt = ghnLastUpdatedAt;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -137,5 +182,15 @@ public class Order {
     public String getCreatedAtFormatted() {
         if (createdAt == null) return "";
         return createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public String getGhnExpectedDeliveryTimeFormatted() {
+        if (ghnExpectedDeliveryTime == null) return "";
+        return ghnExpectedDeliveryTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public String getGhnLastUpdatedAtFormatted() {
+        if (ghnLastUpdatedAt == null) return "";
+        return ghnLastUpdatedAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 }

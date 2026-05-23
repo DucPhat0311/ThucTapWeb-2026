@@ -37,17 +37,17 @@
 }
 
 .status.active {
-    background: #e3f7e9;
-    color: #6F4E37;
+    background: #e0f2fe;
+    color: #1976d2;
 }
 .status.processing {
-    background: greenyellow;
-    color: #6F4E37;
+    background: #ffebee;
+    color: #c62828;
 }
 
 .status.blocked {
-    background: #fdecea;
-    color: #c62828;
+    background: #e8f5e9;
+    color: #2e7d32;
 }
 
 .actions {

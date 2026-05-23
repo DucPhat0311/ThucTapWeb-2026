@@ -16,8 +16,11 @@ public class AddressDao extends BaseDao {
                         name,
                         phone,
                         city,
+                        province_code AS provinceCode,
                         district,
+                        district_code AS districtCode,
                         ward,
+                        ward_code     AS wardCode,
                         detailAddress,
                         is_default     AS isDefault
                     FROM addresses
@@ -39,8 +42,11 @@ public class AddressDao extends BaseDao {
                         name,
                         phone,
                         city,
+                        province_code AS provinceCode,
                         district,
+                        district_code AS districtCode,
                         ward,
+                        ward_code     AS wardCode,
                         detailAddress,
                         is_default     AS isDefault
                     FROM addresses
@@ -48,6 +54,63 @@ public class AddressDao extends BaseDao {
                       AND user_id = :uid
                 """)
                         .bind("id", id)
+                        .bind("uid", userId)
+                        .mapToBean(Address.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public Address findDefaultByUser(int userId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                    SELECT
+                        id,
+                        user_id        AS userId,
+                        name,
+                        phone,
+                        city,
+                        province_code AS provinceCode,
+                        district,
+                        district_code AS districtCode,
+                        ward,
+                        ward_code     AS wardCode,
+                        detailAddress,
+                        is_default     AS isDefault
+                    FROM addresses
+                    WHERE user_id = :uid
+                      AND is_default = 1
+                    ORDER BY id DESC
+                    LIMIT 1
+                """)
+                        .bind("uid", userId)
+                        .mapToBean(Address.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public Address findPrimaryByUser(int userId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                    SELECT
+                        id,
+                        user_id        AS userId,
+                        name,
+                        phone,
+                        city,
+                        province_code AS provinceCode,
+                        district,
+                        district_code AS districtCode,
+                        ward,
+                        ward_code     AS wardCode,
+                        detailAddress,
+                        is_default     AS isDefault
+                    FROM addresses
+                    WHERE user_id = :uid
+                    ORDER BY is_default DESC, id DESC
+                    LIMIT 1
+                """)
                         .bind("uid", userId)
                         .mapToBean(Address.class)
                         .findOne()
@@ -70,18 +133,21 @@ public class AddressDao extends BaseDao {
 
             h.createUpdate("""
                 INSERT INTO addresses
-                (user_id, name, phone, city, district, ward,
-                 detailAddress, is_default)
+                (user_id, name, phone, city, province_code, district,
+                 district_code, ward, ward_code, detailAddress, is_default)
                 VALUES
-                (:uid, :name, :phone, :city, :district, :ward,
-                 :detail, :def)
+                (:uid, :name, :phone, :city, :provinceCode, :district,
+                 :districtCode, :ward, :wardCode, :detail, :def)
             """)
                     .bind("uid", a.getUserId())
                     .bind("name", a.getName())
                     .bind("phone", a.getPhone())
                     .bind("city", a.getCity())
+                    .bind("provinceCode", a.getProvinceCode())
                     .bind("district", a.getDistrict())
+                    .bind("districtCode", a.getDistrictCode())
                     .bind("ward", a.getWard())
+                    .bind("wardCode", a.getWardCode())
                     .bind("detail", a.getDetailAddress())
                     .bind("def", a.getIsDefault() ? 1 : 0)
                     .execute();
@@ -142,8 +208,11 @@ public class AddressDao extends BaseDao {
             SET name = :name,
                 phone = :phone,
                 city = :city,
+                province_code = :provinceCode,
                 district = :district,
+                district_code = :districtCode,
                 ward = :ward,
+                ward_code = :wardCode,
                 detailAddress = :detail,
                 is_default = :def
             WHERE id = :id
@@ -154,8 +223,11 @@ public class AddressDao extends BaseDao {
                     .bind("name", a.getName())
                     .bind("phone", a.getPhone())
                     .bind("city", a.getCity())
+                    .bind("provinceCode", a.getProvinceCode())
                     .bind("district", a.getDistrict())
+                    .bind("districtCode", a.getDistrictCode())
                     .bind("ward", a.getWard())
+                    .bind("wardCode", a.getWardCode())
                     .bind("detail", a.getDetailAddress())
                     .bind("def", a.getIsDefault() ? 1 : 0)
                     .execute();

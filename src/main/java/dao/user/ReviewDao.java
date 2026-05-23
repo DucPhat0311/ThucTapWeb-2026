@@ -23,20 +23,6 @@ public class ReviewDao extends BaseDao {
     }
 
 
-    public void insert(Review review) {
-        getJdbi().useHandle(handle -> handle.createUpdate(
-                                """
-                                        INSERT INTO reviews(product_id, user_id, rating, comment, created_at)
-                                        VALUES (:pid, :cid, :rating, :comment, NOW())
-                                    """
-                        ).bind("pid", review.getProductId())
-                        .bind("cid", review.getUserId())
-                        .bind("rating", review.getRating())
-                        .bind("comment", review.getComment())
-                        .execute()
-        );
-
-    }
 
     public void update(Review review) {
         getJdbi().useHandle(handle ->
@@ -90,5 +76,40 @@ public class ReviewDao extends BaseDao {
                 """).bind("id", id)
                 .mapTo(int.class)
                 .one());
+    }
+
+    public List<String> getImagesByReviewId(int reviewId) {
+        return getJdbi().withHandle(handle -> handle.createQuery(
+                        "SELECT image_url FROM review_images WHERE review_id = :rid")
+                .bind("rid", reviewId)
+                .mapTo(String.class)
+                .list()
+        );
+    }
+
+    // void -> int
+    public int insert(Review review) {
+        return getJdbi().withHandle(handle ->
+                handle.createUpdate("""
+               INSERT INTO reviews(product_id, user_id, rating, comment, created_at)
+               VALUES (:pid, :uid, :rating, :comment, NOW())
+           """)
+                        .bind("pid", review.getProductId())
+                        .bind("uid", review.getUserId())
+                        .bind("rating", review.getRating())
+                        .bind("comment", review.getComment())
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    public void insertReviewImage(int reviewId, String imageUrl) {
+        getJdbi().useHandle(handle -> handle.createUpdate(
+                        "INSERT INTO review_images(review_id, image_url) VALUES (:rid, :img)")
+                .bind("rid", reviewId)
+                .bind("img", imageUrl)
+                .execute()
+        );
     }
 }

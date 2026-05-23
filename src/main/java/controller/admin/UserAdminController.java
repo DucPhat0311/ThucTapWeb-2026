@@ -36,6 +36,12 @@ public class UserAdminController extends HttpServlet {
                 allUsers = userService.searchByUsernameOrEmail(keyword);
             }
 
+            String status = request.getParameter("status");
+            if (status != null && !status.trim().isEmpty()) {
+                allUsers = allUsers.stream()
+                        .filter(u -> status.equalsIgnoreCase(u.getStatus()))
+                        .collect(java.util.stream.Collectors.toList());
+            }
 
             int page = 1;
             int pageSize = 5;
@@ -68,6 +74,14 @@ public class UserAdminController extends HttpServlet {
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("pageSize", pageSize);
             request.setAttribute("page", "user");
+
+            if (status != null) {
+                request.setAttribute("currentStatus", status);
+            }
+            if (keyword != null) {
+                request.setAttribute("currentKeyword", keyword);
+            }
+            
             request.getRequestDispatcher("/WEB-INF/admin/userAdmin.jsp").forward(request,response);
             return;
         }

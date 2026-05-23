@@ -11,13 +11,13 @@
         document.getElementById("lockBannerId").value = id;
         document.getElementById("lockAction").value = action;
         if(action === 'lock') {
-            document.getElementById("lockModalTitle").innerText = "Xác nhận khóa";
-            document.getElementById("lockMessage").innerHTML = 'Bạn có chắc muốn <b>khóa</b> banner "<b>' + title + '</b>" không?';
-            document.getElementById("lockSubmitBtn").innerText = "Khóa";
+            document.getElementById("lockModalTitle").innerText = "Xác nhận ẩn";
+            document.getElementById("lockMessage").innerHTML = 'Bạn có chắc muốn <b>ẩn</b> banner "<b>' + title + '</b>" không?';
+            document.getElementById("lockSubmitBtn").innerText = "Ẩn";
         } else {
-            document.getElementById("lockModalTitle").innerText = "Xác nhận mở khóa";
-            document.getElementById("lockMessage").innerHTML = 'Bạn có chắc muốn <b>mở khóa</b> banner "<b>' + title + '</b>" không?';
-            document.getElementById("lockSubmitBtn").innerText = "Mở khóa";
+            document.getElementById("lockModalTitle").innerText = "Xác nhận hiển thị";
+            document.getElementById("lockMessage").innerHTML = 'Bạn có chắc muốn <b>hiển thị</b> banner "<b>' + title + '</b>" không?';
+            document.getElementById("lockSubmitBtn").innerText = "Hiển thị";
         }
         document.getElementById("lockModal").style.display = "flex";
     }

@@ -28,12 +28,14 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        userService.cleanupExpiredPendingRegistrations();
         request.getRequestDispatcher("/WEB-INF/auth/login.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        userService.cleanupExpiredPendingRegistrations();
 
         String usernameRaw = request.getParameter("username");
         String password = request.getParameter("password");
@@ -92,6 +94,10 @@ public class LoginController extends HttpServlet {
         session.setAttribute("userId", user.getId());
         session.setAttribute("userlogin", user);
 
+        if ("ADMIN".equals(user.getRole())) {
+            session.setAttribute("admin", user);
+        }
+
         Integer cartId = cartDao.findCartIdByUser(user.getId());
         if (cartId == null) {
             cartId = cartDao.createCart(user.getId());
@@ -101,6 +107,7 @@ public class LoginController extends HttpServlet {
         session.setAttribute("cartSize", cartSize);
 
         if ("admin".equalsIgnoreCase(user.getRole())) {
+            session.setAttribute("admin", user);
             response.sendRedirect(request.getContextPath() + "/dashboardAdmin");
         } else {
             response.sendRedirect(request.getContextPath() + "/home");

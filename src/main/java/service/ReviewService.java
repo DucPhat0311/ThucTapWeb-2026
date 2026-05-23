@@ -1,5 +1,6 @@
 package service;
 
+import dao.user.OrderItemDao;
 import dao.user.ReviewDao;
 import model.Review;
 
@@ -8,6 +9,7 @@ import java.util.List;
 public class ReviewService {
 
     private ReviewDao reviewDao = new ReviewDao();
+    private OrderItemDao orderItemDao = new OrderItemDao();
 
     public void addOrUpdateReview(Review review) {
         Review exist = reviewDao.findByProductAndUser(
@@ -22,6 +24,10 @@ public class ReviewService {
         }
     }
 
+    public void markOrderItemReviewed(int orderItemId) {
+        orderItemDao.markReviewed(orderItemId);
+    }
+
 
     public List<Review> getReviewByProductID(int productID){
         return reviewDao.findByProductID(productID);
@@ -33,5 +39,17 @@ public class ReviewService {
 
     public int getTotalReviews(int id) {
         return reviewDao.getTotalReviews(id);
+    }
+
+    public int addReview(Review review) {
+        return reviewDao.insert(review);
+    }
+
+    public void saveReviewImage(int reviewId, String imagePath) {
+        reviewDao.insertReviewImage(reviewId, imagePath);
+    }
+
+    public List<String> getImagesByReviewId(int reviewId) {
+        return reviewDao.getImagesByReviewId(reviewId);
     }
 }

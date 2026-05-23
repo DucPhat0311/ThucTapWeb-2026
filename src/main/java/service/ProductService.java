@@ -1,13 +1,17 @@
 package service;
 
 import dao.user.ProductDao;
+import model.Category;
 import model.Product;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+
 public class ProductService {
     private final ProductDao productDao = new ProductDao();
+
 
     public List<Product> getAllProducts() {
         return productDao.findAll();
@@ -21,11 +25,10 @@ public class ProductService {
     // lấy sản phẩm liên quan
     public List<Product> ralatedProduct(int currentProductId, int limit) {
         Product currentProduct = productDao.findById(currentProductId);
-
         int categoryId = currentProduct.getCategory_id();
-
         return productDao.getRelatedProductByCategory(categoryId, currentProductId, limit);
     }
+
 
     // lấy chi tiết sản phẩm theo id
     public Product getProductById(int id) {
@@ -37,13 +40,11 @@ public class ProductService {
         return productDao.searchByName(keyword);
     }
 
-
     // Mới nhất theo ngày tạo
     public List<Product> sortByNewest(List<Product> products) {
         products.sort(Comparator.comparing(Product::getCreated_at).reversed());
         return products;
     }
-
 
     //Bán chạy
     public List<Product> sortByBestSeller(List<Product> products) {
@@ -64,6 +65,7 @@ public class ProductService {
         return products;
     }
 
+
     public List<Product> sortByPriceDesc(List<Product> products) {
         products.sort(Comparator.comparing((Product::getSale_price))
                 .reversed());
@@ -71,10 +73,11 @@ public class ProductService {
         return products;
     }
 
+
     public List<Product> getBoyProducts(int limit) {
         return productDao.findBoyProducts(limit);
     }
-
+    
     public List<Product> getGirlProducts(int limit) {
         return productDao.findGirlProducts(limit);
     }
@@ -83,8 +86,34 @@ public class ProductService {
         return productDao.findAccessoryProducts(limit);
     }
 
+
     public List<Product> getProductsByCategories(List<Integer> categoryIds) {
         return productDao.findByCategories(categoryIds);
     }
 
+
+//    public List<Product> handleFilterProducts(String groupId, String categoryId, String sortType, String minPrice, String maxPrice,int pageSize, int offset) {
+//        return productDao.filterProducts(groupId,categoryId,sortType, minPrice, maxPrice,pageSize,offset);
+//    }
+public List<Product> handleFilterProducts(String categoryId, String sortType, String minPrice, String maxPrice,String sizes, String colors,int pageSize, int offset) {
+    return productDao.filterProducts(categoryId,sortType, minPrice, maxPrice,sizes, colors,pageSize,offset);
+}
+
+    public int handleCountProducts(String categoryId, String minPrice, String maxPrice,String sizes, String colors){
+        return productDao.countProducts(categoryId, minPrice, maxPrice, sizes, colors);
+    }
+
+    public List<Product> handlePaginateForSearch(String keyword, int pageSize, int offset) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return productDao.searchAndPaginate(keyword.trim(), pageSize, offset);
+    }
+
+    public int countSearchProducts(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return 0;
+        }
+        return productDao.countAndSearch(keyword.trim());
+    }
 }

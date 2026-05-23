@@ -220,6 +220,9 @@ public class User {
                 '}';
     }
     public Date getCreatedAtDate() {
+        if (createdAt == null) {
+            return null;
+        }
         return java.sql.Timestamp.valueOf(createdAt);
     }
 

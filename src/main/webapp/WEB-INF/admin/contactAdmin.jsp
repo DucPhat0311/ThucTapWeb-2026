@@ -36,10 +36,14 @@
             <!-- DASHBROAD -->
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card">Tổng liên hệ<br><span id="dashboard-total-contact">${total}</span></div>
-                    <div class="card">Liên hệ mới<br><span id="dashboard-total-contact-new">${totalNew}</span></div>
-                    <div class="card">Liên hệ đang xử lý<br><span id="dashboard-total-contact-processing">${totalProcessing}</span></div>
-                    <div class="card">Liên hệ đã xử lý<br><span id="dashboard-total-contact-closed">${totalClosed}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='contactAdmin'">
+                        Tổng liên hệ<br><span id="dashboard-total-contact">${total}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='contactAdmin?status=New'">
+                        Liên hệ mới<br><span id="dashboard-total-contact-new">${totalNew}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='contactAdmin?status=Processing'">
+                        Liên hệ đang xử lý<br><span id="dashboard-total-contact-processing">${totalProcessing}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='contactAdmin?status=Closed'">
+                        Liên hệ đã xử lý<br><span id="dashboard-total-contact-closed">${totalClosed}</span></div>
                 </div>
 
 
@@ -84,16 +88,10 @@
                                     </c:choose>
                                 </td>
                                 <td class="actions">
-                                    <!-- XEM -->
-                                    <a href="contactAdmin?mode=view&id=${c.id}"
-                                       class="icon-btn view" title="Xem chi tiết">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-
-                                    <!-- SỬA -->
+                                    <!-- XỬ LÝ (Thay cho Xem / Sửa) -->
                                     <a href="contactAdmin?mode=edit&id=${c.id}"
-                                       class="icon-btn edit" title="Chỉnh sửa">
-                                        <i class="fa fa-pen"></i>
+                                       class="icon-btn view" style="color: green;" title="Xử lý liên hệ">
+                                        <i class="fa-solid fa-envelope-open-text"></i>
                                     </a>
 
                                     <!-- XÓA MỀM -->
@@ -113,14 +111,20 @@
                 </div>
 
                 <c:if test="${totalPages > 1}">
+                    
+                    <c:set var="qs" value=""/>
+                    <c:if test="${not empty currentStatus}">
+                        <c:set var="qs" value="${qs}&status=${currentStatus}"/>
+                    </c:if>
+
                     <div class="pagination">
                         <div class="pagination-info">
                             Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize > totalContacts ? totalContacts : currentPage * pageSize} của ${totalContacts} liên hệ
                         </div>
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
-                                <a href="contactAdmin?page=1" class="page-btn">« Đầu</a>
-                                <a href="contactAdmin?page=${currentPage - 1}" class="page-btn">‹ Trước</a>
+                                <a href="contactAdmin?page=1${qs}" class="page-btn">« Đầu</a>
+                                <a href="contactAdmin?page=${currentPage - 1}${qs}" class="page-btn">‹ Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -129,7 +133,7 @@
                                         <span class="page-btn active">${i}</span>
                                     </c:when>
                                     <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="contactAdmin?page=${i}" class="page-btn">${i}</a>
+                                        <a href="contactAdmin?page=${i}${qs}" class="page-btn">${i}</a>
                                     </c:when>
                                     <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
                                         <span class="page-btn dots">...</span>
@@ -138,8 +142,8 @@
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="contactAdmin?page=${currentPage + 1}" class="page-btn">Sau ›</a>
-                                <a href="contactAdmin?page=${totalPages}" class="page-btn">Cuối »</a>
+                                <a href="contactAdmin?page=${currentPage + 1}${qs}" class="page-btn">Sau ›</a>
+                                <a href="contactAdmin?page=${totalPages}${qs}" class="page-btn">Cuối »</a>
                             </c:if>
                         </div>
                     </div>

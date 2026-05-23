@@ -4,6 +4,7 @@ import dao.user.UserDao;
 import dao.admin.UserDaoAdmin;
 import model.GoogleUserInfo;
 import model.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -14,6 +15,10 @@ public class UserService {
 
     private final UserDao userDao = new UserDao();
     private final UserDaoAdmin userDaoAdmin = new UserDaoAdmin();
+
+    public int cleanupExpiredPendingRegistrations() {
+        return userDao.deleteExpiredPendingUsers();
+    }
 
     private String checkPasswordStrength(String password) {
         if (password == null || password.length() < 8)
@@ -62,11 +67,16 @@ public class UserService {
             throw new RuntimeException("Email đã được đăng ký");
         }
 
-        EmailService.sendEmail(
-                email,
-                "OTP xác nhận đăng ký ",
-                "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
-        );
+        try {
+            EmailService.sendEmail(
+                    email,
+                    "OTP xác nhận đăng ký ",
+                    "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
+            );
+        } catch (EmailService.EmailDeliveryException e) {
+            userDao.deletePendingUserByEmail(email);
+            throw new RuntimeException("Không thể gửi OTP đến email này. Vui lòng kiểm tra email hoặc thử lại sau.", e);
+        }
     }
 
     public User login(String username, String password) {
@@ -145,6 +155,11 @@ public class UserService {
     public void update(User user) {
         userDao.update(user);
     }
+
+    public void updateAvatar(int userId, String avatarUrl) {
+        userDao.updateAvatar(userId, avatarUrl);
+    }
+
     public boolean checkOldPass(int id, String oldPass) {
         String hashPass = userDao.getPasswordById(id);
 
@@ -171,6 +186,102 @@ public class UserService {
         EmailService.sendEmail(
                 email, "OTP đặt lại mật khẩu", "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
         );
+    }
+
+    public void resendRegistrationOtp(String email) {
+        User user = userDao.findByEmail(email);
+        if (user == null || user.getIsActive() != 0) {
+            throw new RuntimeException("Email không có yêu cầu đăng ký cần xác minh");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1_000_000));
+        LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+        EmailService.sendEmail(
+                email,
+                "OTP xác nhận đăng ký",
+                "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
+        );
+
+        boolean updated = userDao.updateOtpForPendingRegistration(email, otp, expiredAt);
+        if (!updated) {
+            throw new RuntimeException("Không thể cập nhật OTP đăng ký");
+        }
+    }
+
+    public EmailChangeOldEmailVerification createProfileEmailChangeOldEmailVerification(int userId,
+                                                                                        String currentEmail,
+                                                                                        String newEmail) {
+        String normalizedNewEmail = normalizeEmail(newEmail);
+        if (normalizedNewEmail.isBlank()) {
+            throw new RuntimeException("Email mới không hợp lệ");
+        }
+
+        User existingUser = userDao.findByEmail(normalizedNewEmail);
+        if (existingUser != null && existingUser.getId() != userId) {
+            throw new RuntimeException("Email mới đã được sử dụng bởi tài khoản khác");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1_000_000));
+        LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+        EmailService.sendEmail(
+                currentEmail,
+                "OTP xác nhận thay đổi email",
+                "<h3>Mã OTP xác nhận email hiện tại của bạn: <b>" + otp + "</b></h3>"
+                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>"
+        );
+
+        return new EmailChangeOldEmailVerification(normalizedNewEmail, otp, expiredAt);
+    }
+
+    public EmailChangeNewEmailVerification createProfileEmailChangeNewEmailVerification(String newEmail) {
+        String normalizedNewEmail = normalizeEmail(newEmail);
+        if (normalizedNewEmail.isBlank()) {
+            throw new RuntimeException("Email mới không hợp lệ");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1_000_000));
+        LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
+
+        EmailService.sendEmail(
+                normalizedNewEmail,
+                "OTP xác nhận email mới",
+                "<h3>Mã OTP xác nhận email mới của bạn: <b>" + otp + "</b></h3>"
+                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>"
+        );
+
+        return new EmailChangeNewEmailVerification(otp, expiredAt);
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase();
+    }
+
+    public User completeProfileEmailChange(int userId,
+                                           String fullName,
+                                           String phone,
+                                           String newEmail,
+                                           LocalDate birthday,
+                                           String gender) {
+        String normalizedNewEmail = normalizeEmail(newEmail);
+        User existingUser = userDao.findByEmail(normalizedNewEmail);
+        if (existingUser != null && existingUser.getId() != userId) {
+            throw new RuntimeException("Email mới đã được sử dụng bởi tài khoản khác");
+        }
+
+        User user = userDao.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("Không tìm thấy tài khoản cần cập nhật");
+        }
+
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setEmail(normalizedNewEmail);
+        user.setBirthday(birthday);
+        user.setGender(gender);
+        userDao.update(user);
+        return userDao.findUserById(userId);
     }
 
     public boolean verifyOtp(String email, String otp) {
@@ -234,5 +345,18 @@ public class UserService {
 
     public void unblockUser(int id) {
         userDaoAdmin.blockUser(id, "ACTIVE");
+    }
+
+    public record EmailChangeOldEmailVerification(
+            String newEmail,
+            String oldEmailOtp,
+            LocalDateTime oldEmailOtpExpiredAt
+    ) {
+    }
+
+    public record EmailChangeNewEmailVerification(
+            String newEmailOtp,
+            LocalDateTime newEmailOtpExpiredAt
+    ) {
     }
 }

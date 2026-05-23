@@ -15,20 +15,17 @@ import service.BlogService;
 @WebServlet("/blog")
 public class BlogController extends HttpServlet {
 
-    private transient BlogService blogService;
-    private transient BlogDao blogDao;
+    private BlogService blogService;
 
     @Override
     public void init() {
         blogService = new BlogService();
-        blogDao = new BlogDao();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParam = request.getParameter("id");
         String search = request.getParameter("search");
-        String pageParam = request.getParameter("page");
 
         if (idParam != null && !idParam.isEmpty()) {
             showDetail(request, response, idParam);
@@ -40,26 +37,26 @@ public class BlogController extends HttpServlet {
             return;
         }
 
-        showList(request, response, pageParam);
+        showList(request, response);
     }
 
-    private void showList(HttpServletRequest request, HttpServletResponse response, String pageParam) throws ServletException, IOException {
+    private void showList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int page = 1;
         int pageSize = 9;
-        int currentPage = 1;
 
-        try {
-            if (pageParam != null) {
-                currentPage = Integer.parseInt(pageParam);
-            }
-        } catch (NumberFormatException ignored) {}
+        String pageStr = request.getParameter("page");
 
-        List<Blog> blogList = blogService.getBlogPage(currentPage, pageSize);
-        int totalRecords = blogDao.getTotalBlogCount();
+        if (pageStr != null) page = Integer.parseInt(pageStr);
+
+        int offset = (page - 1) * pageSize;
+
+        List<Blog> blogList = blogService.getBlogPage(pageSize, offset);
+        int totalRecords = blogService.handleTotalBlogCount();
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
 
         request.setAttribute("blogList", blogList);
-        request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", page);
 
         request.getRequestDispatcher("/WEB-INF/views/blog.jsp").forward(request, response);
     }
@@ -73,7 +70,7 @@ public class BlogController extends HttpServlet {
             return;
         }
 
-        Optional<Blog> opt = blogDao.getBlogById(id);
+        Optional<Blog> opt = blogService.handleGetBlogById(id);
 
         if (opt.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/blog");

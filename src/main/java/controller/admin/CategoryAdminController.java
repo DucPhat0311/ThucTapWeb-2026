@@ -61,7 +61,7 @@ public class CategoryAdminController extends HttpServlet {
             out.print("}");
             return;
         }
-
+      
         List<Category> allCategories = categoryAdminDao.findAll();
         List<Category> filteredCategories = allCategories;
         Integer statusFilter = null;

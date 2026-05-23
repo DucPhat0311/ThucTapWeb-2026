@@ -1,0 +1,175 @@
+@charset "UTF-8";
+
+.product-row {
+    align-items: flex-end;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.product-row.unmatched {
+    background: #fff8e1;
+    border: 1.5px dashed #f0ad4e;
+    border-radius: 8px;
+    padding: 10px 12px 4px;
+}
+
+.unmatched-hint {
+    width: 100%;
+    font-size: 12px;
+    color: #856404;
+    background: #fff3cd;
+    border: 1px solid #ffc10755;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+.col-product {
+    flex: 2;
+    min-width: 160px;
+}
+
+.col-color,
+.col-size {
+    min-width: 120px;
+}
+
+.col-qty {
+    min-width: 110px;
+}
+
+.col-price {
+    min-width: 120px;
+}
+
+.col-action {
+    flex: 0 0 auto;
+    min-width: 60px;
+}
+
+.btn-remove-row {
+    padding: 10px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-remove-row:hover {
+    background: #b02a37;
+}
+
+.btn-action-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    align-items: center;
+}
+
+.btn-add-row,
+.btn-excel-import,
+.btn-excel-template {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    margin: 0;
+    line-height: 1;
+}
+
+.btn-add-row {
+    background: #28a745;
+    color: white;
+    box-shadow: 0 2px 6px rgba(40, 167, 69, 0.25);
+}
+.btn-add-row:hover {
+    background: #1e7e34;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.35);
+}
+
+.btn-excel-import {
+    background: #0d6efd;
+    color: white;
+    box-shadow: 0 2px 6px rgba(13, 110, 253, 0.25);
+    align-self: center;
+    margin: 0;
+}
+.btn-excel-import:hover {
+    background: #0a58ca;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.35);
+}
+
+.btn-excel-template {
+    background: #e8a000;
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 6px rgba(232, 160, 0, 0.3);
+}
+.btn-excel-template:hover {
+    background: #c98a00;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(232, 160, 0, 0.4);
+}
+
+.form-note {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.product-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.product-header label {
+    margin: 0;
+    font-weight: 600;
+    color: #444;
+}
+
+.link-add-new {
+    font-size: 12px;
+    color: #28a745;
+    background-color: rgba(40, 167, 69, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.link-add-new:hover {
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}

@@ -2,6 +2,9 @@ package dao.user;
 
 import dao.core.BaseDao;
 import model.Order;
+import model.constant.OrderStatus;
+import model.constant.PaymentMethod;
+import model.constant.PaymentStatus;
 
 import java.util.List;
 
@@ -12,34 +15,41 @@ public class OrderDao extends BaseDao {
                            String address,
                            String note,
                            String paymentMethod,
-                           double totalPrice) {
+                           String paymentStatus,
+                           String orderStatus,
+                           double totalPrice,
+                           double shippingFee,
+                           double finalAmount) { 
 
         return getJdbi().withHandle(h ->
                 h.createUpdate("""
-            INSERT INTO orders(
-                user_id, name, phone, shipping_address, note,
-                total_price, discount, shipping_fee, final_amount,
-                payment_methods, payment_statuses, order_status, created_at
-            )
-            VALUES(
-                :uid, :name, :phone, :address, :note,
-                :total, 0, 0, :total,
-                :payment, 'UNPAID', 'PENDING', NOW()
-            )
-        """)
+        INSERT INTO orders(
+            user_id, name, phone, shipping_address, note,
+            total_price, discount, shipping_fee, final_amount,
+            payment_methods, payment_statuses, order_status, created_at
+        )
+        VALUES(
+            :uid, :name, :phone, :address, :note,
+            :total, 0, :ship, :final,
+            :payment, :paymentStatus, :orderStatus, NOW()
+        )
+    """)
                         .bind("uid", userId)
                         .bind("name", name)
                         .bind("phone", phone)
                         .bind("address", address)
                         .bind("note", note)
                         .bind("total", totalPrice)
+                        .bind("ship", shippingFee)
+                        .bind("final", finalAmount)
                         .bind("payment", paymentMethod)
+                        .bind("paymentStatus", paymentStatus)
+                        .bind("orderStatus", orderStatus)
                         .executeAndReturnGeneratedKeys("id")
                         .mapTo(int.class)
                         .one()
         );
     }
-
 
     public Order getById(int orderId) {
 
@@ -58,6 +68,11 @@ public class OrderDao extends BaseDao {
             payment_methods,
             payment_statuses,
             order_status,
+            ghn_order_code,
+            ghn_status,
+            ghn_status_name,
+            ghn_expected_delivery_time,
+            ghn_last_updated_at,
             created_at
         FROM orders
         WHERE id = :oid
@@ -81,6 +96,13 @@ public class OrderDao extends BaseDao {
                             o.setPaymentMethods(rs.getString("payment_methods"));
                             o.setPaymentStatuses(rs.getString("payment_statuses"));
                             o.setOrderStatus(rs.getString("order_status"));
+                            o.setGhnOrderCode(rs.getString("ghn_order_code"));
+                            o.setGhnStatus(rs.getString("ghn_status"));
+                            o.setGhnStatusName(rs.getString("ghn_status_name"));
+                            var expectedDeliveryTime = rs.getTimestamp("ghn_expected_delivery_time");
+                            var lastUpdatedAt = rs.getTimestamp("ghn_last_updated_at");
+                            o.setGhnExpectedDeliveryTime(expectedDeliveryTime == null ? null : expectedDeliveryTime.toLocalDateTime());
+                            o.setGhnLastUpdatedAt(lastUpdatedAt == null ? null : lastUpdatedAt.toLocalDateTime());
                             o.setCreatedAt(
                                     rs.getTimestamp("created_at").toLocalDateTime()
                             );
@@ -90,6 +112,167 @@ public class OrderDao extends BaseDao {
                         .orElse(null)
         );
     }
+
+    public void updatePaymentAndOrderStatus(int orderId, String paymentStatus, String orderStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET payment_statuses = :paymentStatus,
+                order_status = :orderStatus
+            WHERE id = :orderId
+        """)
+                        .bind("paymentStatus", paymentStatus)
+                        .bind("orderStatus", orderStatus)
+                        .bind("orderId", orderId)
+                        .execute()
+        );
+    }
+
+    public void updateOrderStatus(int orderId, String orderStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET order_status = :orderStatus
+            WHERE id = :orderId
+        """)
+                        .bind("orderStatus", orderStatus)
+                        .bind("orderId", orderId)
+                        .execute()
+        );
+    }
+
+    public List<Integer> findExpiredPendingVnPayOrderIds(int holdMinutes) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT id
+            FROM orders
+            WHERE payment_methods = :paymentMethod
+              AND order_status = :orderStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                        .bind("paymentMethod", PaymentMethod.VNPAY)
+                        .bind("orderStatus", OrderStatus.PENDING_PAYMENT)
+                        .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                        .bind("holdMinutes", holdMinutes)
+                        .mapTo(Integer.class)
+                        .list()
+        );
+    }
+
+    public List<Integer> findExpiredPendingVnPayOrderIdsByUserId(int userId, int holdMinutes) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT id
+            FROM orders
+            WHERE user_id = :userId
+              AND payment_methods = :paymentMethod
+              AND order_status = :orderStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                        .bind("userId", userId)
+                        .bind("paymentMethod", PaymentMethod.VNPAY)
+                        .bind("orderStatus", OrderStatus.PENDING_PAYMENT)
+                        .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                        .bind("holdMinutes", holdMinutes)
+                        .mapTo(Integer.class)
+                        .list()
+        );
+    }
+
+    public boolean isExpiredPendingVnPayOrder(int orderId, int holdMinutes) {
+        int matchingOrders = getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT COUNT(*)
+            FROM orders
+            WHERE id = :orderId
+              AND payment_methods = :paymentMethod
+              AND order_status = :orderStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                        .bind("orderId", orderId)
+                        .bind("paymentMethod", PaymentMethod.VNPAY)
+                        .bind("orderStatus", OrderStatus.PENDING_PAYMENT)
+                        .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                        .bind("holdMinutes", holdMinutes)
+                        .mapTo(int.class)
+                        .one()
+        );
+        return matchingOrders > 0;
+    }
+
+    public boolean expirePendingVnPayOrderAndRestoreStock(int orderId, int holdMinutes) {
+        return getJdbi().inTransaction(handle -> {
+            int affectedRows = handle.createUpdate("""
+            UPDATE orders
+            SET order_status = :cancelledStatus,
+                payment_statuses = :failedPaymentStatus
+            WHERE id = :orderId
+              AND payment_methods = :paymentMethod
+              AND order_status = :pendingPaymentStatus
+              AND payment_statuses IN (<paymentStatuses>)
+              AND TIMESTAMPDIFF(MINUTE, created_at, NOW()) >= :holdMinutes
+        """)
+                    .bind("cancelledStatus", OrderStatus.CANCELLED)
+                    .bind("failedPaymentStatus", PaymentStatus.FAILED)
+                    .bind("orderId", orderId)
+                    .bind("paymentMethod", PaymentMethod.VNPAY)
+                    .bind("pendingPaymentStatus", OrderStatus.PENDING_PAYMENT)
+                    .bindList("paymentStatuses", PaymentStatus.PENDING, PaymentStatus.FAILED)
+                    .bind("holdMinutes", holdMinutes)
+                    .execute();
+
+            if (affectedRows == 0) {
+                return false;
+            }
+
+            handle.createQuery("""
+            SELECT variant_id, quantity
+            FROM order_items
+            WHERE order_id = :orderId
+        """)
+                    .bind("orderId", orderId)
+                    .map((rs, ctx) -> new int[]{rs.getInt("variant_id"), rs.getInt("quantity")})
+                    .list()
+                    .forEach(item -> handle.createUpdate("""
+            UPDATE product_variants
+            SET stock = stock + :quantity
+            WHERE id = :variantId
+        """)
+                            .bind("quantity", item[1])
+                            .bind("variantId", item[0])
+                            .execute());
+
+            return true;
+        });
+    }
+
+    public void updateGhnTrackingInfo(int orderId,
+                                      String ghnOrderCode,
+                                      String ghnStatus,
+                                      String ghnStatusName,
+                                      java.time.LocalDateTime expectedDeliveryTime) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET ghn_order_code = :ghnOrderCode,
+                ghn_status = :ghnStatus,
+                ghn_status_name = :ghnStatusName,
+                ghn_expected_delivery_time = :expectedDeliveryTime,
+                ghn_last_updated_at = NOW()
+            WHERE id = :orderId
+        """)
+                        .bind("ghnOrderCode", ghnOrderCode)
+                        .bind("ghnStatus", ghnStatus)
+                        .bind("ghnStatusName", ghnStatusName)
+                        .bind("expectedDeliveryTime", expectedDeliveryTime)
+                        .bind("orderId", orderId)
+                        .execute()
+        );
+    }
+
     public List<Order> getByUserId(int userId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
@@ -103,6 +286,7 @@ public class OrderDao extends BaseDao {
                         .list()
         );
     }
+
     public List<Order> getByUserIdAndStatus(int userId, String status) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""

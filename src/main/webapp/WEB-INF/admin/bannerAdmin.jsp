@@ -28,8 +28,12 @@
         <main id="page">
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card">Tổng banner<br><span id="dashboard-total-banner">${total}</span></div>
-                    <div class="card">Đang hoạt động<br><span id="dashboard-total-banner-active">${totalActive}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='bannerAdmin'">
+                        Tổng banner<br><span id="dashboard-total-banner">${total}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='bannerAdmin?status=1'">
+                        Đang hoạt động<br><span id="dashboard-total-banner-active">${totalActive}</span></div>
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='bannerAdmin?status=0'">
+                        Đã ẩn<br><span id="dashboard-total-banner-block">${totalBlocked}</span></div>
                 </div>
 
                 <div class="banner-toolbar">
@@ -66,7 +70,7 @@
                                             <span class="status active">Hoạt động</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="status blocked">Bị khóa</span>
+                                            <span class="status blocked">Đã ẩn</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -82,26 +86,6 @@
                                        class="icon-btn edit" title="Chỉnh sửa">
                                         <i class="fa fa-pen"></i>
                                     </a>
-
-                                    <!-- KHÓA/MỞ KHÓA -->
-                                    <c:choose>
-                                        <c:when test="${b.status}">
-                                            <button type="button"
-                                                    class="icon-btn lock"
-                                                    title="Khóa banner"
-                                                    onclick="openLockModal(${b.id}, '${b.title}', 'lock')">
-                                                <i class="fa fa-lock"></i>
-                                            </button>
-                                        </c:when>
-                                        <c:otherwise>                                 
-                                            <button type="button"
-                                                    class="icon-btn unlock"
-                                                    title="Mở khóa banner"
-                                                    onclick="openLockModal(${b.id}, '${b.title}', 'unlock')">
-                                                <i class="fa fa-unlock"></i>
-                                            </button>
-                                        </c:otherwise>
-                                    </c:choose>
 
                                     <!-- XÓA -->
                                     <button type="button"
@@ -133,22 +117,6 @@
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" onclick="closeDeleteModal()">Hủy</button>
                     <button type="submit" class="btn-danger">Xóa</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    
-    <div id="lockModal" class="modal-overlay" style="display:none;">
-        <div class="modal">
-            <h3 id="lockModalTitle">Xác nhận</h3>
-            <p id="lockMessage">Bạn có chắc muốn thực hiện thao tác này?</p>
-            <form id="lockForm" method="post" action="bannerAdmin">
-                <input type="hidden" name="action" id="lockAction" value="">
-                <input type="hidden" name="id" id="lockBannerId">
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeLockModal()">Hủy</button>
-                    <button type="submit" class="btn-danger" id="lockSubmitBtn">Xác nhận</button>
                 </div>
             </form>
         </div>
