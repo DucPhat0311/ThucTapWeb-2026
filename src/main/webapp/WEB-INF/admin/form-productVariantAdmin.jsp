@@ -7,9 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Form Product Variant</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formProductVariant.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formProductVariant.css?v=<%= System.currentTimeMillis() %>">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
@@ -47,35 +47,31 @@
             <div class="row">
                 <div class="col">
                     <label>Size</label>
-                    <c:choose>
-                        <c:when test="${mode == 'edit'}">
-                            <input type="text" value="${variant.sizeName}" readonly disabled style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #eee;">
-                        </c:when>
-                        <c:otherwise>
-                            <input type="text" name="sizeName" required placeholder="Tự ghi ra size..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                        </c:otherwise>
-                    </c:choose>
+                    <input type="text" name="sizeName" required placeholder="Nhập kích cỡ..." 
+                           value="${mode == 'edit' ? variant.sizeName : ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                 </div>
 
                 <div class="col">
                     <label>Màu sắc</label>
-                    <c:choose>
-                        <c:when test="${mode == 'edit'}">
-                            <input type="text" value="${variant.colorName}" readonly disabled style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #eee;">
-                        </c:when>
-                        <c:otherwise>
-                            <input type="text" name="colorName" required placeholder="Tự ghi ra màu..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                        </c:otherwise>
-                    </c:choose>
+                    <input type="text" name="colorName" required placeholder="Nhập màu..." 
+                           value="${mode == 'edit' ? variant.colorName : ''}"
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                 </div>
             </div>
 
             <div class="row">
-                <div class="col">
-                    <label>Tồn kho</label>
-                    <input type="number" name="stock" min="0" required
-                           value="${mode == 'edit' ? variant.stock : 0}">
-                </div>
+                <c:choose>
+                    <c:when test="${mode == 'edit'}">
+                        <div class="col">
+                            <label>Tồn kho</label>
+                            <input type="number" name="stock" value="${variant.stock}" readonly>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <input type="hidden" name="stock" value="0">
+                    </c:otherwise>
+                </c:choose>
             </div>
 
         </div>

@@ -8,9 +8,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Product Variant</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css?v=<%= System.currentTimeMillis() %>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
 </head>
 
 <body>
@@ -69,10 +69,10 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${v.stock == 0}">
-                                            <span class="status blocked">Hết hàng</span>
+                                            <span class="status blocked">0</span>
                                         </c:when>
                                         <c:when test="${v.stock < 10}">
-                                            <span class="status processing">Sắp hết (${v.stock})</span>
+                                            <span class="status processing">${v.stock}</span>
                                         </c:when>
                                         <c:otherwise>
                                             <span class="status active">${v.stock}</span>

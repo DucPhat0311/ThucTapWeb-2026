@@ -44,7 +44,7 @@ public class DashboardDao extends BaseDao {
 
     public int countProducts() {
         return getJdbi().withHandle(h ->
-                h.createQuery("SELECT COUNT(*) FROM products")
+                h.createQuery("SELECT COUNT(*) FROM products WHERE status <> 'Đã xoá'")
                         .mapTo(int.class)
                         .one()
         );
