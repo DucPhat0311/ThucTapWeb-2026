@@ -213,5 +213,14 @@ public class Product implements Serializable {
         this.totalReviews = totalReviews;
     }
 
+    private int totalStock;
+
+    public int getTotalStock() {
+        return totalStock;
+    }
+
+    public void setTotalStock(int totalStock) {
+        this.totalStock = totalStock;
+    }
 }
 

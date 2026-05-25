@@ -56,6 +56,32 @@ public class ProductAdminController extends HttpServlet {
 
 
         String action = req.getParameter("action");
+        if ("toggle-active".equals(action)) {
+            int id = Integer.parseInt(idParam != null ? idParam : req.getParameter("id"));
+            Product p = productDaoAdmin.findById(id);
+            String newStatus = "Đang hoạt động".equals(p.getStatus()) ? "Đã ẩn" : "Đang hoạt động";
+            p.setStatus(newStatus);
+            productDaoAdmin.update(p);
+            
+            String redirectUrl = req.getContextPath() + "/productAdmin";
+            String pageVal = req.getParameter("page");
+            String statusVal = req.getParameter("status");
+            
+            java.util.StringJoiner query = new java.util.StringJoiner("&");
+            if (pageVal != null && !pageVal.isEmpty()) {
+                query.add("page=" + pageVal);
+            }
+            if (statusVal != null && !statusVal.isEmpty()) {
+                query.add("status=" + java.net.URLEncoder.encode(statusVal, java.nio.charset.StandardCharsets.UTF_8));
+            }
+            if (query.length() > 0) {
+                redirectUrl += "?" + query.toString();
+            }
+            
+            resp.sendRedirect(redirectUrl);
+            return;
+        }
+
         if ("view".equals(action)) {
             int id = Integer.parseInt(idParam);
             Product p = productDaoAdmin.findById(id);
@@ -91,12 +117,10 @@ public class ProductAdminController extends HttpServlet {
         
         List<Product> allProducts = productDaoAdmin.findAll();
         
-        // Thống kê hệ thống (giữ nguyên tổng số không đổi khi lọc)
         long totalProductsCount = allProducts.size();
-        long activeProductsCount = allProducts.stream().filter(p -> "Đang bán".equals(p.getStatus())).count();
-        long inactiveProductsCount = allProducts.stream().filter(p -> !"Đang bán".equals(p.getStatus())).count();
+        long activeProductsCount = allProducts.stream().filter(p -> "Đang hoạt động".equals(p.getStatus())).count();
+        long inactiveProductsCount = allProducts.stream().filter(p -> "Đã ẩn".equals(p.getStatus())).count();
 
-        // Lọc danh sách theo trạng thái
         String status = req.getParameter("status");
         List<Product> filteredProducts = allProducts;
         if (status != null && !status.isEmpty()) {
@@ -166,25 +190,41 @@ public class ProductAdminController extends HttpServlet {
 
                 int productId = productDaoAdmin.findAll().get(0).getId();
 
-                String variantSize = req.getParameter("variant_size");
-                String variantColor = req.getParameter("variant_color");
-                int variantStock = Integer.parseInt(req.getParameter("variant_stock"));
+                String[] sizes = req.getParameterValues("variant_size[]");
+                String[] colors = req.getParameterValues("variant_color[]");
+                String[] stocks = req.getParameterValues("variant_stock[]");
 
-  
-                dao.admin.SizeDaoAdmin sizeDao = new dao.admin.SizeDaoAdmin();
-                dao.admin.ColorDaoAdmin colorDao = new dao.admin.ColorDaoAdmin();
-                int sizeId = sizeDao.findOrCreateSize(variantSize);
-                int colorId = colorDao.findOrCreateColor(variantColor);
+                if (sizes != null && colors != null) {
+                    dao.admin.SizeDaoAdmin sizeDao = new dao.admin.SizeDaoAdmin();
+                    dao.admin.ColorDaoAdmin colorDao = new dao.admin.ColorDaoAdmin();
+                    dao.admin.ProductVariantDaoAdmin variantDao = new dao.admin.ProductVariantDaoAdmin();
 
- 
-                model.ProductVariant variant = new model.ProductVariant();
-                variant.setProductId(productId);
-                variant.setSizeId(sizeId);
-                variant.setColorId(colorId);
-                variant.setStock(variantStock);
+                    for (int i = 0; i < sizes.length; i++) {
+                        String sVal = sizes[i];
+                        String cVal = colors[i];
+                        int stVal = 0;
+                        if (stocks != null && stocks.length > i) {
+                            try {
+                                stVal = Integer.parseInt(stocks[i]);
+                            } catch (NumberFormatException e) {
+                                stVal = 0;
+                            }
+                        }
 
-                dao.admin.ProductVariantDaoAdmin variantDao = new dao.admin.ProductVariantDaoAdmin();
-                variantDao.createVariant(variant);
+                        if (sVal != null && !sVal.trim().isEmpty() && cVal != null && !cVal.trim().isEmpty()) {
+                            int sizeId = sizeDao.findOrCreateSize(sVal.trim());
+                            int colorId = colorDao.findOrCreateColor(cVal.trim());
+
+                            model.ProductVariant variant = new model.ProductVariant();
+                            variant.setProductId(productId);
+                            variant.setSizeId(sizeId);
+                            variant.setColorId(colorId);
+                            variant.setStock(stVal);
+
+                            variantDao.createVariant(variant);
+                        }
+                    }
+                }
             }
             case "update" -> {
                 Product p = new Product();
@@ -216,7 +256,7 @@ public class ProductAdminController extends HttpServlet {
             case "toggle-status" -> {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Product p = productDaoAdmin.findById(id);
-                String newStatus = "Đang bán".equals(p.getStatus()) ? "Hết hàng" : "Đang bán";
+                String newStatus = "Đang hoạt động".equals(p.getStatus()) ? "Đã ẩn" : "Đang hoạt động";
                 p.setStatus(newStatus);
                 productDaoAdmin.update(p);
             }

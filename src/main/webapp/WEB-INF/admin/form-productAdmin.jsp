@@ -7,8 +7,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Form Product Admin</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formUser.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formUser.css?v=<%= System.currentTimeMillis() %>">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
 </head>
 <body>
 
@@ -78,11 +78,11 @@
                 <div class="col">
                     <label>Trạng thái</label>
                     <select name="status" required>
-                        <option value="Đang bán" ${product.status == 'Đang bán' ? 'selected' : ''}>
-                            Đang bán
+                        <option value="Đang hoạt động" ${product.status == 'Đang hoạt động' ? 'selected' : ''}>
+                            Đang hoạt động
                         </option>
-                        <option value="Hết hàng" ${product.status == 'Hết hàng' ? 'selected' : ''}>
-                            Hết hàng
+                        <option value="Đã ẩn" ${product.status == 'Đã ẩn' ? 'selected' : ''}>
+                            Đã ẩn
                         </option>
                     </select>
                 </div>
@@ -127,19 +127,62 @@
 
             <c:if test="${mode == 'add'}">
                 <div style="margin-top: 32px; border-top: 1px dashed #ccc; padding-top: 24px;">
-                    <h3>Thông tin biến thể đầu tiên</h3>
-                    <div class="row">
-                        <div class="col">
-                            <label>Size</label>
-                            <input type="text" name="variant_size" placeholder="Nhập size..." required>
+                    <h3>Thêm biến thể</h3>
+                    <div id="variant-list">
+                        <div class="row variant-row" style="align-items: flex-end; margin-bottom: 15px;">
+                            <div class="col">
+                                <label>Size</label>
+                                <input type="text" name="variant_size[]" placeholder="Nhập kích cỡ..." required>
+                            </div>
+                            <div class="col">
+                                <label>Màu sắc</label>
+                                <input type="text" name="variant_color[]" placeholder="Nhập màu..." required>
+                            </div>
+                            <input type="hidden" name="variant_stock[]" value="0">
+                            <div class="col" style="flex: 0 0 auto; min-width: 60px;">
+                                <button type="button" style="padding: 12px; background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 8px; font-weight: 600; height: 46px; display: inline-flex; align-items: center; justify-content: center;" onclick="removeVariantRow(this)">Xóa</button>
+                            </div>
                         </div>
-                        <div class="col">
-                            <label>Màu sắc</label>
-                            <input type="text" name="variant_color" placeholder="Nhập màu sắc..." required>
-                        </div>
-                        <input type="hidden" name="variant_stock" value="0">
                     </div>
+                    <button type="button" style="margin-top: 10px; padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 8px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;" onclick="addVariantRow()">
+                        <i class="fa fa-plus"></i> Thêm dòng biến thể
+                    </button>
                 </div>
+
+                <script>
+                    function addVariantRow() {
+                        const container = document.getElementById('variant-list');
+                        const row = document.createElement('div');
+                        row.className = 'row variant-row';
+                        row.style.alignItems = 'flex-end';
+                        row.style.marginBottom = '15px';
+                        
+                        row.innerHTML = `
+                            <div class="col">
+                                <label>Size</label>
+                                <input type="text" name="variant_size[]" placeholder="Nhập kích cỡ..." required style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #dcd3cb; background-color: #fcfbf9; font-size: 15px;">
+                            </div>
+                            <div class="col">
+                                <label>Màu sắc</label>
+                                <input type="text" name="variant_color[]" placeholder="Nhập màu..." required style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #dcd3cb; background-color: #fcfbf9; font-size: 15px;">
+                            </div>
+                            <input type="hidden" name="variant_stock[]" value="0">
+                            <div class="col" style="flex: 0 0 auto; min-width: 60px;">
+                                <button type="button" style="padding: 12px; background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 8px; font-weight: 600; height: 46px; display: inline-flex; align-items: center; justify-content: center;" onclick="removeVariantRow(this)">Xóa</button>
+                            </div>
+                        `;
+                        container.appendChild(row);
+                    }
+                    
+                    function removeVariantRow(btn) {
+                        const rows = document.querySelectorAll('.variant-row');
+                        if (rows.length > 1) {
+                            btn.closest('.variant-row').remove();
+                        } else {
+                            alert('Sản phẩm phải có ít nhất 1 biến thể!');
+                        }
+                    }
+                </script>
             </c:if>
         </div>
 

@@ -8,9 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Product</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css?v=<%= System.currentTimeMillis() %>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
 </head>
 <body>
 
@@ -33,12 +33,12 @@
                         Tổng sản phẩm
                         <span>${totalProducts}</span>
                     </div>
-                    <div class="card ${currentStatus == 'Đang bán' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin?status=Đang bán'">
-                        Đang bán
+                    <div class="card ${currentStatus == 'Đang hoạt động' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin?status=Đang hoạt động'">
+                        Đang hoạt động
                         <span>${activeProducts}</span>
                     </div>
-                    <div class="card ${currentStatus == 'Hết hàng' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin?status=Hết hàng'">
-                        Hết hàng
+                    <div class="card ${currentStatus == 'Đã ẩn' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin?status=Đã ẩn'">
+                        Đã ẩn
                         <span>${inactiveProducts}</span>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                             <th>Giá</th>
                             <th>Giá sale</th>
                             <th>Danh mục</th>
-                            <th>Trạng thái</th>
+                            <th>Số lượng</th>
                             <th>Hành động</th>
                         </tr>
                         </thead>
@@ -116,14 +116,28 @@
                                 <td>${p.categoryName}</td>
 
                                 <td>
-                                    <span class="status ${p.status == 'Đang bán' ? 'active' : 'blocked'}">
-                                        ${p.status}
-                                    </span>
+                                    <c:choose>
+                                        <c:when test="${p.totalStock == 0}">
+                                            <span class="status blocked">0</span>
+                                        </c:when>
+                                        <c:when test="${p.totalStock < 10}">
+                                            <span class="status processing">${p.totalStock}</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="status active">${p.totalStock}</span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
 
                                 <td class="actions">
 
                           
+                                    <a href="productAdmin?action=toggle-active&id=${p.id}&page=${currentPage}&status=${currentStatus}" 
+                                       class="custom-switch ${p.status == 'Đang hoạt động' ? 'active' : ''}"
+                                       title="${p.status == 'Đang hoạt động' ? 'Ẩn sản phẩm' : 'Hiển thị sản phẩm'}">
+                                        <span class="switch-slider"></span>
+                                    </a>
+
                                     <a href="productAdmin?mode=view&id=${p.id}" 
                                        class="icon-btn view"
                                        title="Xem chi tiết">
@@ -155,7 +169,7 @@
                
                                     <button class="icon-btn delete"
                                             title="Xoá sản phẩm"
-                                            onclick="openToggleProductModal(${p.id}, '${p.name}', '${p.status}')">
+                                            onclick="openDeleteProductModal(${p.id}, '${fn:escapeXml(p.name)}')">
                                         <i class="fa fa-trash"></i>
                                     </button>
 
@@ -251,8 +265,8 @@
                     <div class="form-group">
                         <label>Trạng thái</label>
                         <select name="status" id="product-status">
-                            <option value="Đang bán">Đang bán</option>
-                            <option value="Hết hàng">Hết hàng</option>
+                            <option value="Đang hoạt động">Đang hoạt động</option>
+                            <option value="Đã ẩn">Đã ẩn</option>
                         </select>
                     </div>
                 </div>
@@ -326,7 +340,7 @@
             <p id="toggle-product-message"></p>
         </div>
         <form method="post" action="${pageContext.request.contextPath}/productAdmin" id="toggle-product-form">
-            <input type="hidden" name="action" value="toggle-status">
+            <input type="hidden" name="action" value="delete">
             <input type="hidden" name="id" id="toggle-product-id">
             <div class="modal-footer">
                 <button type="button" class="btn-cancel" onclick="closeToggleProductModal()">Hủy</button>
