@@ -93,7 +93,7 @@ public class ProductVariantDaoAdmin extends BaseDao {
     public void updateVariant(ProductVariant variant) {
         getJdbi().useHandle(handle -> handle.createUpdate("""
                 UPDATE product_variants
-                SET stock = :stock
+                SET size_id = :sizeId, color_id = :colorId, stock = :stock
                 WHERE id = :id""")
             .bindBean(variant)
             .execute());

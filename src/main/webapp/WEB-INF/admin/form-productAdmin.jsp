@@ -137,11 +137,7 @@
                             <label>Màu sắc</label>
                             <input type="text" name="variant_color" placeholder="Nhập màu sắc..." required>
                         </div>
-                    </div>
-                        <div class="col">
-                            <label>Tồn kho</label>
-                            <input type="number" name="variant_stock" placeholder="Số lượng tồn kho" required>
-                        </div>
+                        <input type="hidden" name="variant_stock" value="0">
                     </div>
                 </div>
             </c:if>
