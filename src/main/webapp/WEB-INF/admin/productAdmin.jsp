@@ -28,18 +28,17 @@
 
         <main id="page">
             <section id="product" class="page active">
-                
                 <div class="cards">
-                    <div class="card">
+                    <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin'">
                         Tổng sản phẩm
                         <span>${totalProducts}</span>
                     </div>
-                    <div class="card">
+                    <div class="card ${currentStatus == 'Đang bán' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin?status=Đang bán'">
                         Đang bán
                         <span>${activeProducts}</span>
                     </div>
-                    <div class="card">
-                        Ngừng bán
+                    <div class="card ${currentStatus == 'Hết hàng' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin?status=Hết hàng'">
+                        Hết hàng
                         <span>${inactiveProducts}</span>
                     </div>
                 </div>
@@ -62,7 +61,7 @@
                     </a>
                 </div>
 
-    
+
                 <div class="user-table-wrapper">
                     <table class="user-table">
                         <thead>
@@ -117,12 +116,12 @@
                                 <td>${p.categoryName}</td>
 
                                 <td>
-                                    <span class="status active">
+                                    <span class="status ${p.status == 'Đang bán' ? 'active' : 'blocked'}">
                                         ${p.status}
                                     </span>
                                 </td>
 
-                                <td class="action-buttons">
+                                <td class="actions">
 
                           
                                     <a href="productAdmin?mode=view&id=${p.id}" 
@@ -170,14 +169,22 @@
 
       
                 <c:if test="${totalPages > 1}">
+                    <c:choose>
+                        <c:when test="${not empty currentStatus}">
+                            <c:set var="statusParam" value="&amp;status=${currentStatus}" />
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="statusParam" value="" />
+                        </c:otherwise>
+                    </c:choose>
                     <div class="pagination">
                         <div class="pagination-info">
-                            Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize > totalProducts ? totalProducts : currentPage * pageSize} của ${totalProducts} sản phẩm
+                            Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize > totalProductsDisplay ? totalProductsDisplay : currentPage * pageSize} của ${totalProductsDisplay} sản phẩm
                         </div>
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
-                                <a href="productAdmin?page=1" class="page-btn">« Đầu</a>
-                                <a href="productAdmin?page=${currentPage - 1}" class="page-btn">‹ Trước</a>
+                                <a href="productAdmin?page=1${statusParam}" class="page-btn">« Đầu</a>
+                                <a href="productAdmin?page=${currentPage - 1}${statusParam}" class="page-btn">‹ Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -186,7 +193,7 @@
                                         <span class="page-btn active">${i}</span>
                                     </c:when>
                                     <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="productAdmin?page=${i}" class="page-btn">${i}</a>
+                                        <a href="productAdmin?page=${i}${statusParam}" class="page-btn">${i}</a>
                                     </c:when>
                                     <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
                                         <span class="page-btn dots">...</span>
@@ -195,8 +202,8 @@
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="productAdmin?page=${currentPage + 1}" class="page-btn">Sau ›</a>
-                                <a href="productAdmin?page=${totalPages}" class="page-btn">Cuối »</a>
+                                <a href="productAdmin?page=${currentPage + 1}${statusParam}" class="page-btn">Sau ›</a>
+                                <a href="productAdmin?page=${totalPages}${statusParam}" class="page-btn">Cuối »</a>
                             </c:if>
                         </div>
                     </div>

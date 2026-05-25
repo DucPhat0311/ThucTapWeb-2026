@@ -90,7 +90,22 @@ public class ProductAdminController extends HttpServlet {
         }
         
         List<Product> allProducts = productDaoAdmin.findAll();
-        int totalProducts = allProducts.size();
+        
+        // Thống kê hệ thống (giữ nguyên tổng số không đổi khi lọc)
+        long totalProductsCount = allProducts.size();
+        long activeProductsCount = allProducts.stream().filter(p -> "Đang bán".equals(p.getStatus())).count();
+        long inactiveProductsCount = allProducts.stream().filter(p -> !"Đang bán".equals(p.getStatus())).count();
+
+        // Lọc danh sách theo trạng thái
+        String status = req.getParameter("status");
+        List<Product> filteredProducts = allProducts;
+        if (status != null && !status.isEmpty()) {
+            filteredProducts = allProducts.stream()
+                    .filter(p -> status.equals(p.getStatus()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        int totalProducts = filteredProducts.size();
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
         
         if (page < 1) page = 1;
@@ -98,17 +113,17 @@ public class ProductAdminController extends HttpServlet {
         
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, totalProducts);
-        List<Product> products = allProducts.subList(start, end);
+        List<Product> products = filteredProducts.subList(start, end);
 
         req.setAttribute("products", products);
-        req.setAttribute("totalProducts", totalProducts);
+        req.setAttribute("totalProducts", totalProductsCount);
+        req.setAttribute("totalProductsDisplay", totalProducts); // Số lượng sau khi lọc
         req.setAttribute("currentPage", page);
         req.setAttribute("totalPages", totalPages);
         req.setAttribute("pageSize", pageSize);
-        req.setAttribute("activeProducts",
-                allProducts.stream().filter(p -> "Đang bán".equals(p.getStatus())).count());
-        req.setAttribute("inactiveProducts",
-                allProducts.stream().filter(p -> !"Đang bán".equals(p.getStatus())).count());
+        req.setAttribute("activeProducts", activeProductsCount);
+        req.setAttribute("inactiveProducts", inactiveProductsCount);
+        req.setAttribute("currentStatus", status);
 
         req.setAttribute("page", "product");
         req.getRequestDispatcher("/WEB-INF/admin/productAdmin.jsp").forward(req, resp);
