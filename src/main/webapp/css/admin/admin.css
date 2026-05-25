@@ -242,6 +242,101 @@ body, .admin { height: 100vh; }
 .btn-delete { background: var(--danger-color); color: var(--card-bg); }
 .btn-delete:hover { background: var(--danger-hover); transform: translateY(-2px); }
 
+.warehouse-order-banner {
+    background: #e8f4fd;
+    border-left: 4px solid #1a6fb0;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.warehouse-order-icon {
+    font-size: 20px;
+}
+
+.warehouse-order-title {
+    color: #1a6fb0;
+}
+
+.warehouse-order-id {
+    margin-left: 8px;
+    color: #333;
+}
+
+.warehouse-order-link {
+    margin-left: 12px;
+    color: #1a6fb0;
+    text-decoration: underline;
+    font-size: 13px;
+}
+
+.warehouse-source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.warehouse-source-order {
+    background: #e8f4fd;
+    color: #1a6fb0;
+}
+
+.warehouse-source-manual {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: #f5f0eb;
+    color: #8F6641;
+    border: 1px solid #e0d5c9;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-back:hover {
+    background: #ede5dc;
+    color: #7a5535;
+    text-decoration: none;
+    transform: translateX(-2px);
+}
+
+
+.warehouse-status {
+    font-weight: 700;
+    display: inline !important;
+    font-size: inherit !important;
+    margin-top: 0 !important;
+    letter-spacing: 0 !important;
+}
+
+.warehouse-status.completed {
+    color: #2f9e44 !important;
+}
+
+.warehouse-status.pending {
+    color: #e67700 !important;
+}
+
+.warehouse-status.cancelled {
+    color: #c92a2a !important;
+}
+
 .status-badge {
     display: inline-block;
     padding: 5px 12px;

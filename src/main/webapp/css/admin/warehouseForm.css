@@ -103,8 +103,6 @@
 }
 .btn-add-row:hover {
     background: #1e7e34;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.35);
 }
 
 .btn-excel-import {
@@ -116,8 +114,6 @@
 }
 .btn-excel-import:hover {
     background: #0a58ca;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.35);
 }
 
 .btn-excel-template {
@@ -128,8 +124,6 @@
 }
 .btn-excel-template:hover {
     background: #c98a00;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(232, 160, 0, 0.4);
 }
 
 .form-note {
@@ -170,6 +164,4 @@
     background-color: #28a745;
     color: white;
     text-decoration: none;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
 }

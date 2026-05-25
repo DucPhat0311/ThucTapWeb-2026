@@ -13,15 +13,16 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
         return getJdbi().inTransaction(handle -> {
             try {
 
-                int receiptId = handle.createUpdate("INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, supplier) " +
-                                "VALUES (:userId, :type, :note, :totalAmount, :createdAt, :status, :supplier)")
+                int receiptId = handle.createUpdate("INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, supplier, order_id) " +
+                                "VALUES (:userId, :type, :note, :totalAmount, :createdAt, :status, :supplier, :orderId)")
                         .bind("userId", receipt.getUserId())
                         .bind("type", receipt.getType())
                         .bind("note", receipt.getNote())
                         .bind("totalAmount", receipt.getTotalAmount())
                         .bind("createdAt", LocalDateTime.now())
-                        .bind("status", "COMPLETED") 
+                        .bind("status", "COMPLETED")
                         .bind("supplier", receipt.getSupplier())
+                        .bind("orderId", receipt.getOrderId())
                         .executeAndReturnGeneratedKeys()
                         .mapTo(Integer.class)
                         .one();
@@ -90,7 +91,7 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
 
     public List<InventoryReceiptDetail> getReceiptDetails(int receiptId) {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT d.*, p.name as product_name, c.name as color_name, s.name as size_name " +
+                handle.createQuery("SELECT d.*, p.name as product_name, c.name as color_name, s.code as size_name " +
                                 "FROM inventory_receipt_details d " +
                                 "JOIN product_variants pv ON d.product_variant_id = pv.id " +
                                 "JOIN products p ON pv.product_id = p.id " +
@@ -101,5 +102,41 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
                         .mapToBean(InventoryReceiptDetail.class)
                         .list()
         );
+    }
+
+//Tạo phiếu xuất kho tự động trong một Handle (transaction) bên ngoài.
+//Được gọi từ OrderPlacementService trong cùng transaction đặt hàng.
+
+    public void createExportReceiptInHandle(
+            org.jdbi.v3.core.Handle handle,
+            int orderId,
+            java.util.List<model.OrderItem> items,
+            int userId) {
+
+        double totalAmount = items.stream()
+                .mapToDouble(i -> i.getPrice() * i.getQuantity())
+                .sum();
+
+        int receiptId = handle.createUpdate(
+                "INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, order_id) " +
+                "VALUES (:userId, 'EXPORT', :note, :totalAmount, NOW(), 'COMPLETED', :orderId)")
+                .bind("userId", userId)
+                .bind("note", "Xuất kho tự động theo đơn hàng #" + orderId)
+                .bind("totalAmount", totalAmount)
+                .bind("orderId", orderId)
+                .executeAndReturnGeneratedKeys()
+                .mapTo(Integer.class)
+                .one();
+
+        for (model.OrderItem item : items) {
+            handle.createUpdate(
+                    "INSERT INTO inventory_receipt_details (receipt_id, product_variant_id, quantity, price) " +
+                    "VALUES (:receiptId, :variantId, :quantity, :price)")
+                    .bind("receiptId", receiptId)
+                    .bind("variantId", item.getVariantId())
+                    .bind("quantity", item.getQuantity())
+                    .bind("price", item.getPrice())
+                    .execute();
+        }
     }
 }
