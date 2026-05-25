@@ -91,7 +91,7 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
 
     public List<InventoryReceiptDetail> getReceiptDetails(int receiptId) {
         return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT d.*, p.name as product_name, c.name as color_name, s.name as size_name " +
+                handle.createQuery("SELECT d.*, p.name as product_name, c.name as color_name, s.code as size_name " +
                                 "FROM inventory_receipt_details d " +
                                 "JOIN product_variants pv ON d.product_variant_id = pv.id " +
                                 "JOIN products p ON pv.product_id = p.id " +

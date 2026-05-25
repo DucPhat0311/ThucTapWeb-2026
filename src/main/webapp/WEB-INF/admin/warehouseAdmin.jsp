@@ -71,7 +71,7 @@
                                                             <td>${r.userName}</td>
                                                             <td>
                                                                 <fmt:formatNumber value="${r.totalAmount}"
-                                                                    type="currency" currencySymbol="₫" />
+                                                                    type="number" maxFractionDigits="0" /> ₫
                                                             </td>
                                                             <td>${r.createdAt}</td>
                                                             <td><span style="color: green; font-weight: bold;">
@@ -86,9 +86,7 @@
                                                                     </c:choose>
                                                                 </span>
                                                             </td>
-                                                            <td><a href="?action=view&id=${r.id}"
-                                                                    style="color: blue; text-decoration: underline;">Chi
-                                                                    tiết</a></td>
+                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view" title="Xem chi tiết"><i class="fa fa-eye"></i></a></td>
                                                         </tr>
                                                     </c:if>
                                                 </c:forEach>
@@ -146,7 +144,7 @@
                                                             <td>${r.userName}</td>
                                                             <td>
                                                                 <fmt:formatNumber value="${r.totalAmount}"
-                                                                    type="currency" currencySymbol="₫" />
+                                                                    type="number" maxFractionDigits="0" /> ₫
                                                             </td>
                                                             <td>${r.createdAt}</td>
                                                             <td>
@@ -165,9 +163,7 @@
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </td>
-                                                            <td><a href="?action=view&id=${r.id}"
-                                                                    style="color: blue; text-decoration: underline;">Chi
-                                                                    tiết</a></td>
+                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view" title="Xem chi tiết"><i class="fa fa-eye"></i></a></td>
                                                         </tr>
                                                     </c:if>
                                                 </c:forEach>

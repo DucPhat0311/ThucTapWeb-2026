@@ -293,20 +293,48 @@ body, .admin { height: 100vh; }
     color: #666;
 }
 
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: #f5f0eb;
+    color: #8F6641;
+    border: 1px solid #e0d5c9;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-back:hover {
+    background: #ede5dc;
+    color: #7a5535;
+    text-decoration: none;
+    transform: translateX(-2px);
+}
+
+
 .warehouse-status {
     font-weight: 700;
+    display: inline !important;
+    font-size: inherit !important;
+    margin-top: 0 !important;
+    letter-spacing: 0 !important;
 }
 
 .warehouse-status.completed {
-    color: #2f9e44;
+    color: #2f9e44 !important;
 }
 
 .warehouse-status.pending {
-    color: #e67700;
+    color: #e67700 !important;
 }
 
 .warehouse-status.cancelled {
-    color: #c92a2a;
+    color: #c92a2a !important;
 }
 
 .status-badge {

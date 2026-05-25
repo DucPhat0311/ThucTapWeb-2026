@@ -21,8 +21,9 @@
                         <header class="topbar">
                             <h1>Chi Tiết Phiếu Kho</h1>
                             <div class="actions">
-                                <a href="${pageContext.request.contextPath}/warehouseAdmin" class="btn-back">Quay
-                                    Lại</a>
+                                <a href="${pageContext.request.contextPath}/warehouseAdmin" class="btn-back">
+                                    <i class="fa fa-arrow-left"></i> Quay Lại
+                                </a>
                             </div>
                         </header>
 
@@ -53,21 +54,15 @@
                                     </thead>
                                     <tbody>
                                         <c:forEach var="detail" items="${receiptDetails}">
-                                            <tr>
+                                            <tr style="cursor: default;">
                                                 <td style="padding: 10px; text-align: center;">
                                                     ${detail.productVariantId}</td>
                                                 <td style="padding: 10px;">${detail.productName}</td>
                                                 <td style="padding: 10px; text-align: center;">${detail.colorName}</td>
                                                 <td style="padding: 10px; text-align: center;">${detail.sizeName}</td>
                                                 <td style="padding: 10px; text-align: center;">${detail.quantity}</td>
-                                                <td style="padding: 10px; text-align: right;">
-                                                    <fmt:formatNumber value="${detail.price}" type="currency"
-                                                        currencySymbol="₫" />
-                                                </td>
-                                                <td style="padding: 10px; text-align: right;">
-                                                    <fmt:formatNumber value="${detail.price * detail.quantity}"
-                                                        type="currency" currencySymbol="₫" />
-                                                </td>
+                                                <td style="padding: 10px; text-align: right; white-space: nowrap;"><fmt:formatNumber value="${detail.price}" type="number" maxFractionDigits="0" /> ₫</td>
+                                                <td style="padding: 10px; text-align: right; white-space: nowrap;"><fmt:formatNumber value="${detail.price * detail.quantity}" type="number" maxFractionDigits="0" /> ₫</td>
                                             </tr>
                                         </c:forEach>
                                         <c:if test="${empty receiptDetails}">
