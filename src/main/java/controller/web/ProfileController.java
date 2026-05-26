@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import model.User;
 import service.UserService;
-import util.AvatarStorageUtil;
+import util.CloudinaryUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,6 @@ public class ProfileController extends HttpServlet {
     private static final String PENDING_EMAIL_CHANGE_ATTR = "pendingProfileEmailChange";
     private static final String PROFILE_FLASH_ERROR_ATTR = "profileFlashError";
     private static final long MAX_AVATAR_SIZE = 5 * 1024 * 1024;
-    private static final String AVATAR_MEDIA_PREFIX = AvatarStorageUtil.AVATAR_MEDIA_PREFIX;
     private static final Set<String> AVATAR_REDIRECT_TARGETS = Set.of(
             "profile",
             "address",
@@ -245,9 +244,11 @@ public class ProfileController extends HttpServlet {
         User currentUser = userService.findById(userSession.getId());
         String oldAvatarUrl = currentUser != null ? currentUser.getAvatarUrl() : null;
 
-        String avatarUrl = saveAvatarFile(userSession.getId(), avatarPart, extension);
-        userService.updateAvatar(userSession.getId(), avatarUrl);
-        deleteManagedAvatar(oldAvatarUrl, avatarUrl);
+        String avatarUrl = CloudinaryUtil.uploadImage(avatarPart, "avatars");
+        if (avatarUrl != null) {
+            userService.updateAvatar(userSession.getId(), avatarUrl);
+            deleteManagedAvatar(oldAvatarUrl, avatarUrl);
+        }
 
         User refreshedUser = userService.findById(userSession.getId());
         session.setAttribute("userlogin", refreshedUser);
@@ -255,23 +256,6 @@ public class ProfileController extends HttpServlet {
         response.sendRedirect(redirectTarget + "?avatarUpdated=1");
     }
 
-    private String saveAvatarFile(int userId, Part avatarPart, String extension) throws IOException {
-        Path avatarDir = AvatarStorageUtil.getAvatarDirectory();
-
-        String uniqueFileName = "avatar_user_" + userId + "_" + System.currentTimeMillis() + "." + extension;
-        uniqueFileName = uniqueFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
-
-        Path destinationPath = avatarDir.resolve(uniqueFileName).normalize();
-        if (!destinationPath.startsWith(avatarDir)) {
-            throw new IOException("Invalid avatar destination path.");
-        }
-
-        try (InputStream inputStream = avatarPart.getInputStream()) {
-            Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-        }
-
-        return AvatarStorageUtil.buildAvatarMediaPath(uniqueFileName);
-    }
 
     private String extractExtension(String fileName) {
         if (fileName == null || fileName.isBlank()) {
@@ -303,23 +287,27 @@ public class ProfileController extends HttpServlet {
             return;
         }
 
-        String oldFileName = oldAvatarUrl.substring(AVATAR_MEDIA_PREFIX.length());
-        if (oldFileName.isBlank()) {
-            return;
-        }
-
+        // Cloudinary url structure: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/public_id.ext
+        // We need to extract 'folder/public_id'
         try {
-            Path avatarDir = AvatarStorageUtil.getAvatarDirectory();
-            Path oldFilePath = avatarDir.resolve(oldFileName).normalize();
-            if (oldFilePath.startsWith(avatarDir)) {
-                Files.deleteIfExists(oldFilePath);
+            int uploadIndex = oldAvatarUrl.indexOf("/upload/");
+            if (uploadIndex != -1) {
+                String pathAfterUpload = oldAvatarUrl.substring(uploadIndex + 8);
+                // Remove version (e.g. v1234567890/)
+                int versionSlashIndex = pathAfterUpload.indexOf('/');
+                if (versionSlashIndex != -1) {
+                    String publicIdWithExt = pathAfterUpload.substring(versionSlashIndex + 1);
+                    int lastDotIndex = publicIdWithExt.lastIndexOf('.');
+                    String publicId = lastDotIndex != -1 ? publicIdWithExt.substring(0, lastDotIndex) : publicIdWithExt;
+                    CloudinaryUtil.deleteImage(publicId);
+                }
             }
         } catch (IOException ignored) {
         }
     }
 
     private boolean isManagedAvatarPath(String avatarUrl) {
-        return avatarUrl != null && avatarUrl.startsWith(AVATAR_MEDIA_PREFIX);
+        return avatarUrl != null && avatarUrl.contains("cloudinary.com");
     }
 
     private String resolveAvatarRedirectTarget(HttpServletRequest request) {

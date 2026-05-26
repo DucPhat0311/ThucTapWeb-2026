@@ -1,6 +1,7 @@
     <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+    <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
     <%
         request.setAttribute("pageCss", "views/checkout.css");
@@ -100,7 +101,7 @@
                         <c:set var="total" value="0"/>
                         <c:forEach var="item" items="${checkoutItems}">
                             <div class="order-item">
-                                <img src="img/products${item.product.thumbnail}">
+                                <img src="${fn:startsWith(item.product.thumbnail, 'http') ? item.product.thumbnail : pageContext.request.contextPath.concat('/img/products').concat(item.product.thumbnail)}">
                                 <div class="info">
                                     <p class="name">${item.product.name}</p>
                                     <p class="variant">Size ${item.size} · ${item.color}</p>

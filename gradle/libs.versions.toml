@@ -32,3 +32,4 @@ org-jdbi-jdbi3-core = { module = "org.jdbi:jdbi3-core", version.ref = "org-jdbi-
 org-junit-jupiter-junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "org-junit-jupiter-junit-jupiter-api" }
 org-junit-jupiter-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "org-junit-jupiter-junit-jupiter-engine" }
 org-mindrot-jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "org-mindrot-jbcrypt" }
+com-cloudinary-cloudinary-http45 = { module = "com.cloudinary:cloudinary-http45", version = "1.39.0" }

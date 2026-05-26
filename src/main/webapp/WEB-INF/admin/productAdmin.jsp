@@ -1,356 +1,377 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+            <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Product</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css?v=<%= System.currentTimeMillis() %>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
-</head>
-<body>
+                <!DOCTYPE html>
+                <html lang="vi">
 
-<div class="admin">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Admin Product</title>
+                    <link rel="stylesheet"
+                        href="${pageContext.request.contextPath}/css/admin/admin.css?v=<%= System.currentTimeMillis() %>">
+                    <link rel="stylesheet"
+                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+                    <link rel="stylesheet"
+                        href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
+                </head>
 
-    <jsp:include page="include/sidebarAdmin.jsp" />
+                <body>
 
-    <section class="content">
-        <header class="topbar">
-            <h1 id="pageTitle">Quản Lý Sản Phẩm</h1>
-            <div class="actions">
-                <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
-            </div>
-        </header>
+                    <div class="admin">
 
-        <main id="page">
-            <section id="product" class="page active">
-                <div class="cards">
-                    <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin'">
-                        Tổng sản phẩm
-                        <span>${totalProducts}</span>
+                        <jsp:include page="include/sidebarAdmin.jsp" />
+
+                        <section class="content">
+                            <header class="topbar">
+                                <h1 id="pageTitle">Quản Lý Sản Phẩm</h1>
+                                <div class="actions">
+                                    <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
+                                </div>
+                            </header>
+
+                            <main id="page">
+                                <section id="product" class="page active">
+                                    <div class="cards">
+                                        <div class="card ${empty currentStatus ? 'active' : ''}"
+                                            style="cursor: pointer;" onclick="window.location.href='productAdmin'">
+                                            Tổng sản phẩm
+                                            <span>${totalProducts}</span>
+                                        </div>
+                                        <div class="card ${currentStatus == 'Đang hoạt động' ? 'active' : ''}"
+                                            style="cursor: pointer;"
+                                            onclick="window.location.href='productAdmin?status=Đang hoạt động'">
+                                            Đang hoạt động
+                                            <span>${activeProducts}</span>
+                                        </div>
+                                        <div class="card ${currentStatus == 'Đã ẩn' ? 'active' : ''}"
+                                            style="cursor: pointer;"
+                                            onclick="window.location.href='productAdmin?status=Đã ẩn'">
+                                            Đã ẩn
+                                            <span>${inactiveProducts}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="user-toolbar">
+                                        <form method="post" action="${pageContext.request.contextPath}/productAdmin"
+                                            class="user-toolbar">
+                                            <input type="hidden" name="action" value="search">
+                                            <input type="text" name="keyword" value="${param.keyword}"
+                                                placeholder="Tìm theo tên sản phẩm...">
+                                            <button type="submit" class="btn-search">
+                                                <i class="fa fa-search"></i> Tìm
+                                            </button>
+                                        </form>
+
+                                        <a href="productAdmin?mode=add" class="btn-add">
+                                            <i class="fa fa-plus"></i> Thêm sản phẩm
+                                        </a>
+                                    </div>
+
+
+                                    <div class="user-table-wrapper">
+                                        <table class="user-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Ảnh</th>
+                                                    <th>Tên sản phẩm</th>
+                                                    <th>Giá</th>
+                                                    <th>Giá sale</th>
+                                                    <th>Danh mục</th>
+                                                    <th>Số lượng</th>
+                                                    <th>Hành động</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <c:forEach var="p" items="${products}">
+                                                    <tr>
+                                                        <td>${p.id}</td>
+
+                                                        <td>
+                                                            <img src="${fn:startsWith(p.thumbnail, 'http') ? p.thumbnail : pageContext.request.contextPath.concat('/img/products').concat(p.thumbnail)}" alt="${p.name}"
+                                                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                        </td>
+
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${fn:length(p.name) > 50}">
+                                                                    ${fn:substring(p.name, 0, 50)}...
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    ${p.name}
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+
+
+                                                        <td>
+                                                            <fmt:formatNumber value="${p.price}" type="number" /> đ
+                                                        </td>
+
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when
+                                                                    test="${p.sale_price > 0 && p.sale_price < p.price}">
+                                                                    <fmt:formatNumber value="${p.sale_price}"
+                                                                        type="number" /> đ
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    Không có
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+
+                                                        <td>${p.categoryName}</td>
+
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${p.totalStock == 0}">
+                                                                    <span class="status blocked">0</span>
+                                                                </c:when>
+                                                                <c:when test="${p.totalStock < 10}">
+                                                                    <span
+                                                                        class="status processing">${p.totalStock}</span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="status active">${p.totalStock}</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+
+                                                        <td class="actions">
+
+
+                                                            <a href="productAdmin?action=toggle-active&id=${p.id}&page=${currentPage}&status=${currentStatus}"
+                                                                class="custom-switch ${p.status == 'Đang hoạt động' ? 'active' : ''}"
+                                                                title="${p.status == 'Đang hoạt động' ? 'Ẩn sản phẩm' : 'Hiển thị sản phẩm'}">
+                                                                <span class="switch-slider"></span>
+                                                            </a>
+
+                                                            <a href="productAdmin?mode=view&id=${p.id}"
+                                                                class="icon-btn view" title="Xem chi tiết">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+
+
+
+                                                            <a href="productAdmin?mode=edit&id=${p.id}"
+                                                                class="icon-btn edit" title="Chỉnh sửa">
+                                                                <i class="fa fa-pen"></i>
+                                                            </a>
+
+
+                                                            <a href="productVariantAdmin?productId=${p.id}"
+                                                                class="icon-btn variant" title="Quản lý biến thể">
+                                                                <i class="fa fa-layer-group"></i>
+                                                            </a>
+
+
+                                                            <a href="productImgAdmin?productId=${p.id}"
+                                                                class="icon-btn image" title="Quản lý ảnh">
+                                                                <i class="fa fa-images"></i>
+                                                            </a>
+
+
+                                                            <button class="icon-btn delete" title="Xoá sản phẩm"
+                                                                onclick="openDeleteProductModal(${p.id}, '${fn:escapeXml(p.name)}')">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+
+                                                        </td>
+
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                    <c:if test="${totalPages > 1}">
+                                        <c:choose>
+                                            <c:when test="${not empty currentStatus}">
+                                                <c:set var="statusParam" value="&amp;status=${currentStatus}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:set var="statusParam" value="" />
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <div class="pagination">
+                                            <div class="pagination-info">
+                                                Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize
+                                                > totalProductsDisplay ? totalProductsDisplay : currentPage * pageSize}
+                                                của ${totalProductsDisplay} sản phẩm
+                                            </div>
+                                            <div class="pagination-controls">
+                                                <c:if test="${currentPage > 1}">
+                                                    <a href="productAdmin?page=1${statusParam}" class="page-btn">«
+                                                        Đầu</a>
+                                                    <a href="productAdmin?page=${currentPage - 1}${statusParam}"
+                                                        class="page-btn">‹ Trước</a>
+                                                </c:if>
+
+                                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                                    <c:choose>
+                                                        <c:when test="${i == currentPage}">
+                                                            <span class="page-btn active">${i}</span>
+                                                        </c:when>
+                                                        <c:when
+                                                            test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
+                                                            <a href="productAdmin?page=${i}${statusParam}"
+                                                                class="page-btn">${i}</a>
+                                                        </c:when>
+                                                        <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
+                                                            <span class="page-btn dots">...</span>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </c:forEach>
+
+                                                <c:if test="${currentPage < totalPages}">
+                                                    <a href="productAdmin?page=${currentPage + 1}${statusParam}"
+                                                        class="page-btn">Sau ›</a>
+                                                    <a href="productAdmin?page=${totalPages}${statusParam}"
+                                                        class="page-btn">Cuối »</a>
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                    </c:if>
+
+
+                                </section>
+
+                            </main>
+                        </section>
                     </div>
-                    <div class="card ${currentStatus == 'Đang hoạt động' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin?status=Đang hoạt động'">
-                        Đang hoạt động
-                        <span>${activeProducts}</span>
-                    </div>
-                    <div class="card ${currentStatus == 'Đã ẩn' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='productAdmin?status=Đã ẩn'">
-                        Đã ẩn
-                        <span>${inactiveProducts}</span>
-                    </div>
-                </div>
 
 
-                <div class="user-toolbar">
-                    <form method="post"
-                          action="${pageContext.request.contextPath}/productAdmin"
-                          class="user-toolbar">
-                        <input type="hidden" name="action" value="search">
-                        <input type="text" name="keyword" value="${param.keyword}"
-                               placeholder="Tìm theo tên sản phẩm...">
-                        <button type="submit" class="btn-search">
-                            <i class="fa fa-search"></i> Tìm
-                        </button>
-                    </form>
+                    <div class="modal-overlay" id="product-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 id="product-modal-title">Thêm sản phẩm</h2>
+                                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+                            </div>
+                            <form method="post" action="${pageContext.request.contextPath}/productAdmin"
+                                id="product-form">
+                                <input type="hidden" name="action" id="product-action" value="add">
+                                <input type="hidden" name="id" id="product-id">
 
-                    <a href="productAdmin?mode=add" class="btn-add">
-                        <i class="fa fa-plus"></i> Thêm sản phẩm
-                    </a>
-                </div>
+                                <div class="form-section">
+                                    <h3>● Thông tin sản phẩm</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Tên sản phẩm</label>
+                                            <input type="text" name="name" id="product-name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Giá</label>
+                                            <input type="number" name="price" id="product-price" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Danh mục</label>
+                                            <select name="category_id" id="product-category">
+                                                <c:forEach var="c" items="${categories}">
+                                                    <option value="${c.id}">${c.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Trạng thái</label>
+                                            <select name="status" id="product-status">
+                                                <option value="Đang hoạt động">Đang hoạt động</option>
+                                                <option value="Đã ẩn">Đã ẩn</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>URL Ảnh</label>
+                                        <input type="text" name="thumbnail" id="product-thumbnail">
+                                    </div>
+                                </div>
 
-
-                <div class="user-table-wrapper">
-                    <table class="user-table">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Ảnh</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Giá</th>
-                            <th>Giá sale</th>
-                            <th>Danh mục</th>
-                            <th>Số lượng</th>
-                            <th>Hành động</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <c:forEach var="p" items="${products}">
-                            <tr>
-                                <td>${p.id}</td>
-
-                                <td>
-                                    <img src="${p.thumbnail}" alt="${p.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                                </td>
-
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${fn:length(p.name) > 50}">
-                                            ${fn:substring(p.name, 0, 50)}...
-                                        </c:when>
-                                        <c:otherwise>
-                                            ${p.name}
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-
-
-                                <td>
-                                    <fmt:formatNumber value="${p.price}" type="number"/> đ
-                                </td>
-
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${p.sale_price > 0 && p.sale_price < p.price}">
-                                            <fmt:formatNumber value="${p.sale_price}" type="number"/> đ
-                                        </c:when>
-                                        <c:otherwise>
-                                            Không có
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-
-                                <td>${p.categoryName}</td>
-
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${p.totalStock == 0}">
-                                            <span class="status blocked">0</span>
-                                        </c:when>
-                                        <c:when test="${p.totalStock < 10}">
-                                            <span class="status processing">${p.totalStock}</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="status active">${p.totalStock}</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-
-                                <td class="actions">
-
-                          
-                                    <a href="productAdmin?action=toggle-active&id=${p.id}&page=${currentPage}&status=${currentStatus}" 
-                                       class="custom-switch ${p.status == 'Đang hoạt động' ? 'active' : ''}"
-                                       title="${p.status == 'Đang hoạt động' ? 'Ẩn sản phẩm' : 'Hiển thị sản phẩm'}">
-                                        <span class="switch-slider"></span>
-                                    </a>
-
-                                    <a href="productAdmin?mode=view&id=${p.id}" 
-                                       class="icon-btn view"
-                                       title="Xem chi tiết">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-
-
-                         
-                                    <a href="productAdmin?mode=edit&id=${p.id}"
-                                       class="icon-btn edit"
-                                       title="Chỉnh sửa">
-                                        <i class="fa fa-pen"></i>
-                                    </a>
-
-
-                                    <a href="productVariantAdmin?productId=${p.id}"
-                                       class="icon-btn variant"
-                                       title="Quản lý biến thể">
-                                        <i class="fa fa-layer-group"></i>
-                                    </a>
-
-        
-                                    <a href="productImgAdmin?productId=${p.id}"
-                                       class="icon-btn image"
-                                       title="Quản lý ảnh">
-                                        <i class="fa fa-images"></i>
-                                    </a>
-
-               
-                                    <button class="icon-btn delete"
-                                            title="Xoá sản phẩm"
-                                            onclick="openDeleteProductModal(${p.id}, '${fn:escapeXml(p.name)}')">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-
-                                </td>
-
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-
-      
-                <c:if test="${totalPages > 1}">
-                    <c:choose>
-                        <c:when test="${not empty currentStatus}">
-                            <c:set var="statusParam" value="&amp;status=${currentStatus}" />
-                        </c:when>
-                        <c:otherwise>
-                            <c:set var="statusParam" value="" />
-                        </c:otherwise>
-                    </c:choose>
-                    <div class="pagination">
-                        <div class="pagination-info">
-                            Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize > totalProductsDisplay ? totalProductsDisplay : currentPage * pageSize} của ${totalProductsDisplay} sản phẩm
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn-save">Lưu</button>
+                                    <button type="button" class="btn-cancel" onclick="closeProductModal()">Hủy</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="pagination-controls">
-                            <c:if test="${currentPage > 1}">
-                                <a href="productAdmin?page=1${statusParam}" class="page-btn">« Đầu</a>
-                                <a href="productAdmin?page=${currentPage - 1}${statusParam}" class="page-btn">‹ Trước</a>
-                            </c:if>
+                    </div>
 
-                            <c:forEach begin="1" end="${totalPages}" var="i">
-                                <c:choose>
-                                    <c:when test="${i == currentPage}">
-                                        <span class="page-btn active">${i}</span>
-                                    </c:when>
-                                    <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="productAdmin?page=${i}${statusParam}" class="page-btn">${i}</a>
-                                    </c:when>
-                                    <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
-                                        <span class="page-btn dots">...</span>
-                                    </c:when>
-                                </c:choose>
-                            </c:forEach>
 
-                            <c:if test="${currentPage < totalPages}">
-                                <a href="productAdmin?page=${currentPage + 1}${statusParam}" class="page-btn">Sau ›</a>
-                                <a href="productAdmin?page=${totalPages}${statusParam}" class="page-btn">Cuối »</a>
-                            </c:if>
+                    <div class="modal-overlay" id="view-product-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Xem chi tiết sản phẩm</h2>
+                                <button class="modal-close" onclick="closeViewProductModal()">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-section">
+                                    <h3>● Thông tin sản phẩm</h3>
+                                    <div class="info-row">
+                                        <label>ID:</label>
+                                        <span id="view-product-id"></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <label>Tên sản phẩm:</label>
+                                        <span id="view-product-name"></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <label>Giá gốc:</label>
+                                        <span id="view-product-price"></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <label>Giá sale (nếu có):</label>
+                                        <span id="view-product-sale-price"></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <label>Danh mục:</label>
+                                        <span id="view-product-category"></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <label>Trạng thái:</label>
+                                        <span id="view-product-status"></span>
+                                    </div>
+                                    <div class="info-row">
+                                        <label>Ảnh:</label>
+                                        <img id="view-product-image"
+                                            style="max-width: 200px; border-radius: 8px; margin-top: 10px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn-cancel" onclick="closeViewProductModal()">Đóng</button>
+                            </div>
                         </div>
                     </div>
-                </c:if>
-    
-
-            </section>
-
-        </main>
-    </section>
-</div>
 
 
-<div class="modal-overlay" id="product-modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="product-modal-title">Thêm sản phẩm</h2>
-            <button class="modal-close" onclick="closeProductModal()">&times;</button>
-        </div>
-        <form method="post" action="${pageContext.request.contextPath}/productAdmin" id="product-form">
-            <input type="hidden" name="action" id="product-action" value="add">
-            <input type="hidden" name="id" id="product-id">
-
-            <div class="form-section">
-                <h3>● Thông tin sản phẩm</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tên sản phẩm</label>
-                        <input type="text" name="name" id="product-name" required>
+                    <div class="modal-overlay" id="toggle-product-modal">
+                        <div class="modal-content modal-small">
+                            <div class="modal-header">
+                                <h2>Xác nhận</h2>
+                            </div>
+                            <div class="modal-body">
+                                <p id="toggle-product-message"></p>
+                            </div>
+                            <form method="post" action="${pageContext.request.contextPath}/productAdmin"
+                                id="toggle-product-form">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" id="toggle-product-id">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn-cancel"
+                                        onclick="closeToggleProductModal()">Hủy</button>
+                                    <button type="submit" class="btn-delete">Xác nhận</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Giá</label>
-                        <input type="number" name="price" id="product-price" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Danh mục</label>
-                        <select name="category_id" id="product-category">
-                            <c:forEach var="c" items="${categories}">
-                                <option value="${c.id}">${c.name}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Trạng thái</label>
-                        <select name="status" id="product-status">
-                            <option value="Đang hoạt động">Đang hoạt động</option>
-                            <option value="Đã ẩn">Đã ẩn</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>URL Ảnh</label>
-                    <input type="text" name="thumbnail" id="product-thumbnail">
-                </div>
-            </div>
 
-            <div class="modal-footer">
-                <button type="submit" class="btn-save">Lưu</button>
-                <button type="button" class="btn-cancel" onclick="closeProductModal()">Hủy</button>
-            </div>
-        </form>
-    </div>
-</div>
+                    <script src="${pageContext.request.contextPath}/js/admin/adminProduct.js"></script>
 
+                </body>
 
-<div class="modal-overlay" id="view-product-modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Xem chi tiết sản phẩm</h2>
-            <button class="modal-close" onclick="closeViewProductModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-section">
-                <h3>● Thông tin sản phẩm</h3>
-                <div class="info-row">
-                    <label>ID:</label>
-                    <span id="view-product-id"></span>
-                </div>
-                <div class="info-row">
-                    <label>Tên sản phẩm:</label>
-                    <span id="view-product-name"></span>
-                </div>
-                <div class="info-row">
-                    <label>Giá gốc:</label>
-                    <span id="view-product-price"></span>
-                </div>
-                <div class="info-row">
-                    <label>Giá sale (nếu có):</label>
-                    <span id="view-product-sale-price"></span>
-                </div>
-                <div class="info-row">
-                    <label>Danh mục:</label>
-                    <span id="view-product-category"></span>
-                </div>
-                <div class="info-row">
-                    <label>Trạng thái:</label>
-                    <span id="view-product-status"></span>
-                </div>
-                <div class="info-row">
-                    <label>Ảnh:</label>
-                    <img id="view-product-image" style="max-width: 200px; border-radius: 8px; margin-top: 10px;">
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn-cancel" onclick="closeViewProductModal()">Đóng</button>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal-overlay" id="toggle-product-modal">
-    <div class="modal-content modal-small">
-        <div class="modal-header">
-            <h2>Xác nhận</h2>
-        </div>
-        <div class="modal-body">
-            <p id="toggle-product-message"></p>
-        </div>
-        <form method="post" action="${pageContext.request.contextPath}/productAdmin" id="toggle-product-form">
-            <input type="hidden" name="action" value="delete">
-            <input type="hidden" name="id" id="toggle-product-id">
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeToggleProductModal()">Hủy</button>
-                <button type="submit" class="btn-delete">Xác nhận</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script src="${pageContext.request.contextPath}/js/admin/adminProduct.js"></script>
-
-</body>
-</html>
+                </html>

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
 <c:set var="p" value="${requestScope.product_item}" />
@@ -16,11 +17,11 @@
         </button>
 
 
-        <img class="img-default" src="${pageContext.request.contextPath}/img/products${p.thumbnail}" alt="${p.name}">
+        <img class="img-default" src="${fn:startsWith(p.thumbnail, 'http') ? p.thumbnail : pageContext.request.contextPath.concat('/img/products').concat(p.thumbnail)}" alt="${p.name}">
 
 
         <c:if test="${not empty p.hoverImage}">
-            <img class="img-hover" src="${pageContext.request.contextPath}/img/products${p.hoverImage}" alt="${p.name}">
+            <img class="img-hover" src="${fn:startsWith(p.hoverImage, 'http') ? p.hoverImage : pageContext.request.contextPath.concat('/img/products').concat(p.hoverImage)}" alt="${p.name}">
         </c:if>
     </div>
 
