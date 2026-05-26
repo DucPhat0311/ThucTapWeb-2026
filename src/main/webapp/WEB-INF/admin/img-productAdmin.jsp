@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -71,7 +72,7 @@
                                     <td>${status.index + 1}</td>
                                     <td>${img.id}</td>
                                     <td>
-                                        <img src="${pageContext.request.contextPath}/${img.imageUrl}"
+                                        <img src="${fn:startsWith(img.imageUrl, 'http') ? img.imageUrl : pageContext.request.contextPath.concat('/img/products').concat(img.imageUrl)}"
                                             alt="Product Image"
                                             class="product-thumbnail">
                                     </td>

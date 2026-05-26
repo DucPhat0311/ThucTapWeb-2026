@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
@@ -113,7 +114,7 @@
                     <div id="product-image-preview-container" style="margin-top: 10px;">
                         <c:if test="${not empty product.thumbnail}">
                             <label>Xem trước ảnh</label>
-                            <img id="product-image-preview" src="${product.thumbnail}" 
+                            <img id="product-image-preview" src="${fn:startsWith(product.thumbnail, 'http') ? product.thumbnail : pageContext.request.contextPath.concat('/img/products').concat(product.thumbnail)}" 
                                  alt="Product image"
                                  style="max-width: 300px; max-height: 300px; border-radius: 8px; border: 1px solid #ddd; display: block; margin-top: 10px;">
                         </c:if>

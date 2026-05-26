@@ -1,168 +1,186 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+    <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+        <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Chi tiết đơn hàng</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formUser.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
-</head>
-<body>
+            <!DOCTYPE html>
+            <html lang="vi">
 
-<div class="container">
+            <head>
+                <meta charset="UTF-8">
+                <title>Chi tiết đơn hàng</title>
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formUser.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+            </head>
 
-    <c:set var="unpaidOnlineOrder" value="${order.paymentMethods == 'VNPAY' && order.paymentStatuses != 'PAID'}"/>
+            <body>
 
-    <div class="form-header">
-        <a href="orderAdmin" class="btn-back">← Quay lại danh sách</a>
-        <h2>Chi tiết đơn hàng #${order.id}</h2>
-    </div>
+                <div class="container">
 
-    <c:if test="${param.error == 'unpaid_online_order'}">
-        <div class="card" style="border-left: 4px solid #dc3545;">
-            <p>Đơn hàng thanh toán online chưa hoàn tất. Admin chỉ nên hủy đơn hoặc chờ khách thanh toán thành công.</p>
-        </div>
-    </c:if>
+                    <c:set var="unpaidOnlineOrder"
+                        value="${order.paymentMethods == 'VNPAY' && order.paymentStatuses != 'PAID'}" />
 
-    <c:if test="${param.error == 'ghn_not_allowed'}">
-        <div class="card" style="border-left: 4px solid #dc3545;">
-            <p>Đơn hàng này không thể tạo vận đơn GHN hoặc đã có mã vận đơn.</p>
-        </div>
-    </c:if>
+                    <div class="form-header">
+                        <a href="orderAdmin" class="btn-back">← Quay lại danh sách</a>
+                        <h2>Chi tiết đơn hàng #${order.id}</h2>
+                    </div>
 
-    <c:if test="${param.error == 'ghn_create_failed'}">
-        <div class="card" style="border-left: 4px solid #dc3545;">
-            <p>Không thể tạo vận đơn GHN. ${param.message}</p>
-        </div>
-    </c:if>
+                    <c:if test="${param.error == 'unpaid_online_order'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Đơn hàng thanh toán online chưa hoàn tất. Admin chỉ nên hủy đơn hoặc chờ khách thanh toán
+                                thành công.</p>
+                        </div>
+                    </c:if>
 
-    <c:if test="${param.error == 'cancel_not_allowed'}">
-        <div class="card" style="border-left: 4px solid #dc3545;">
-            <p>Không thể hủy đơn hàng. ${param.message}</p>
-        </div>
-    </c:if>
+                    <c:if test="${param.error == 'ghn_not_allowed'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Đơn hàng này không thể tạo vận đơn GHN hoặc đã có mã vận đơn.</p>
+                        </div>
+                    </c:if>
 
-    <c:if test="${param.success == 'ghn_created'}">
-        <div class="card" style="border-left: 4px solid #28a745;">
-            <p>Tạo vận đơn GHN thành công.</p>
-        </div>
-    </c:if>
+                    <c:if test="${param.error == 'ghn_create_failed'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Không thể tạo vận đơn GHN. ${param.message}</p>
+                        </div>
+                    </c:if>
 
-    <div class="card">
-        <h3>Thông tin người nhận</h3>
-        <p><b>Người nhận:</b> ${order.name}</p>
-        <p><b>SĐT:</b> ${order.phone}</p>
-        <p><b>Địa chỉ:</b> ${order.shippingAddress}</p>
-        <c:if test="${not empty order.note}">
-            <p><b>Ghi chú:</b> ${order.note}</p>
-        </c:if>
-    </div>
+                    <c:if test="${param.error == 'cancel_not_allowed'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Không thể hủy đơn hàng. ${param.message}</p>
+                        </div>
+                    </c:if>
 
-    <div class="card">
-        <h3>Thông tin thanh toán</h3>
-        <p><b>Phương thức:</b> ${paymentMethodLabels[order.paymentMethods]}</p>
-        <p><b>Trạng thái thanh toán:</b> ${paymentStatusLabels[order.paymentStatuses]}</p>
-        <p><b>Trạng thái đơn hàng:</b> ${orderStatusLabels[order.orderStatus]}</p>
-        <p><b>Ngày tạo:</b> ${order.createdAtFormatted}</p>
-        <p><b>Tổng thanh toán:</b> <fmt:formatNumber value="${order.finalAmount}" type="number"/> đ</p>
-    </div>
+                    <c:if test="${param.success == 'ghn_created'}">
+                        <div class="card" style="border-left: 4px solid #28a745;">
+                            <p>Tạo vận đơn GHN thành công.</p>
+                        </div>
+                    </c:if>
 
-    <div class="card">
-        <h3>Vận chuyển GHN</h3>
-        <c:choose>
-            <c:when test="${not empty order.ghnOrderCode}">
-                <p><b>Mã vận đơn:</b> ${order.ghnOrderCode}</p>
-                <p><b>Trạng thái GHN:</b> ${not empty order.ghnStatusName ? order.ghnStatusName : 'Chưa có trạng thái'}</p>
-                <c:if test="${not empty order.ghnExpectedDeliveryTimeFormatted}">
-                    <p><b>Dự kiến giao:</b> ${order.ghnExpectedDeliveryTimeFormatted}</p>
-                </c:if>
-                <c:if test="${not empty order.ghnLastUpdatedAtFormatted}">
-                    <p><b>Cập nhật lúc:</b> ${order.ghnLastUpdatedAtFormatted}</p>
-                </c:if>
-            </c:when>
-            <c:otherwise>
-                <p>Đơn hàng chưa có mã vận đơn GHN.</p>
-                <form method="post" action="orderAdmin" class="status-form">
-                    <input type="hidden" name="action" value="createGhnOrder">
-                    <input type="hidden" name="id" value="${order.id}">
-                    <button class="btn-primary">Tạo vận đơn GHN</button>
-                </form>
-            </c:otherwise>
-        </c:choose>
-    </div>
-
-    <div class="card">
-        <h3>Cập nhật trạng thái đơn hàng</h3>
-
-        <form method="post" action="orderAdmin" class="status-form">
-            <input type="hidden" name="action" value="update">
-            <input type="hidden" name="id" value="${order.id}">
-
-            <label for="orderStatus">Trạng thái</label>
-            <select id="orderStatus" name="orderStatus">
-                <c:choose>
-                    <c:when test="${unpaidOnlineOrder}">
-                        <option value="PENDING_PAYMENT" ${order.orderStatus == 'PENDING_PAYMENT' ? 'selected' : ''}>Chờ thanh toán</option>
-                        <option value="CANCELLED" ${order.orderStatus == 'CANCELLED' ? 'selected' : ''}>Đã hủy</option>
-                    </c:when>
-                    <c:otherwise>
-                        <c:if test="${order.orderStatus == 'PENDING_PAYMENT'}">
-                            <option value="PENDING_PAYMENT" selected>Chờ thanh toán</option>
+                    <div class="card">
+                        <h3>Thông tin người nhận</h3>
+                        <p><b>Người nhận:</b> ${order.name}</p>
+                        <p><b>SĐT:</b> ${order.phone}</p>
+                        <p><b>Địa chỉ:</b> ${order.shippingAddress}</p>
+                        <c:if test="${not empty order.note}">
+                            <p><b>Ghi chú:</b> ${order.note}</p>
                         </c:if>
-                        <option value="PENDING" ${order.orderStatus == 'PENDING' ? 'selected' : ''}>Chờ xử lý</option>
-                        <option value="SHIPPING" ${order.orderStatus == 'SHIPPING' ? 'selected' : ''}>Đang giao</option>
-                        <option value="COMPLETED" ${order.orderStatus == 'COMPLETED' ? 'selected' : ''}>Hoàn thành</option>
-                        <option value="CANCELLED" ${order.orderStatus == 'CANCELLED' ? 'selected' : ''}>Đã hủy</option>
-                    </c:otherwise>
-                </c:choose>
-            </select>
+                    </div>
 
-            <c:if test="${unpaidOnlineOrder}">
-                <p style="margin-top: 10px; color: #dc3545;">
-                    Đơn VNPay chưa thanh toán thành công nên không thể chuyển sang trạng thái xử lý hoặc giao hàng.
-                </p>
-            </c:if>
+                    <div class="card">
+                        <h3>Thông tin thanh toán</h3>
+                        <p><b>Phương thức:</b> ${paymentMethodLabels[order.paymentMethods]}</p>
+                        <p><b>Trạng thái thanh toán:</b> ${paymentStatusLabels[order.paymentStatuses]}</p>
+                        <p><b>Trạng thái đơn hàng:</b> ${orderStatusLabels[order.orderStatus]}</p>
+                        <p><b>Ngày tạo:</b> ${order.createdAtFormatted}</p>
+                        <p><b>Tổng thanh toán:</b>
+                            <fmt:formatNumber value="${order.finalAmount}" type="number" /> đ
+                        </p>
+                    </div>
 
-            <button class="btn-primary">Cập nhật</button>
-        </form>
-    </div>
+                    <div class="card">
+                        <h3>Vận chuyển GHN</h3>
+                        <c:choose>
+                            <c:when test="${not empty order.ghnOrderCode}">
+                                <p><b>Mã vận đơn:</b> ${order.ghnOrderCode}</p>
+                                <p><b>Trạng thái GHN:</b> ${not empty order.ghnStatusName ? order.ghnStatusName : 'Chưa
+                                    có trạng thái'}</p>
+                                <c:if test="${not empty order.ghnExpectedDeliveryTimeFormatted}">
+                                    <p><b>Dự kiến giao:</b> ${order.ghnExpectedDeliveryTimeFormatted}</p>
+                                </c:if>
+                                <c:if test="${not empty order.ghnLastUpdatedAtFormatted}">
+                                    <p><b>Cập nhật lúc:</b> ${order.ghnLastUpdatedAtFormatted}</p>
+                                </c:if>
+                            </c:when>
+                            <c:otherwise>
+                                <p>Đơn hàng chưa có mã vận đơn GHN.</p>
+                                <form method="post" action="orderAdmin" class="status-form">
+                                    <input type="hidden" name="action" value="createGhnOrder">
+                                    <input type="hidden" name="id" value="${order.id}">
+                                    <button class="btn-primary">Tạo vận đơn GHN</button>
+                                </form>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
 
-    <div class="card">
-        <h3>Sản phẩm</h3>
+                    <div class="card">
+                        <h3>Cập nhật trạng thái đơn hàng</h3>
 
-        <table class="order-table">
-            <thead>
-            <tr>
-                <th>Ảnh</th>
-                <th>Sản phẩm</th>
-                <th>Size</th>
-                <th>Màu</th>
-                <th>SL</th>
-                <th>Giá</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach items="${items}" var="i">
-                <tr>
-                    <td>
-                        <img src="${i.thumbnail}" class="product-thumb"
-                             onerror="this.onerror=null; this.style.display='none';">
-                    </td>
-                    <td>${i.productName}</td>
-                    <td>${i.size}</td>
-                    <td>${i.color}</td>
-                    <td>${i.quantity}</td>
-                    <td><fmt:formatNumber value="${i.price}" type="number"/> đ</td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
+                        <form method="post" action="orderAdmin" class="status-form">
+                            <input type="hidden" name="action" value="update">
+                            <input type="hidden" name="id" value="${order.id}">
 
-</div>
+                            <label for="orderStatus">Trạng thái</label>
+                            <select id="orderStatus" name="orderStatus">
+                                <c:choose>
+                                    <c:when test="${unpaidOnlineOrder}">
+                                        <option value="PENDING_PAYMENT" ${order.orderStatus=='PENDING_PAYMENT'
+                                            ? 'selected' : '' }>Chờ thanh toán</option>
+                                        <option value="CANCELLED" ${order.orderStatus=='CANCELLED' ? 'selected' : '' }>
+                                            Đã hủy</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:if test="${order.orderStatus == 'PENDING_PAYMENT'}">
+                                            <option value="PENDING_PAYMENT" selected>Chờ thanh toán</option>
+                                        </c:if>
+                                        <option value="PENDING" ${order.orderStatus=='PENDING' ? 'selected' : '' }>Chờ
+                                            xử lý</option>
+                                        <option value="SHIPPING" ${order.orderStatus=='SHIPPING' ? 'selected' : '' }>
+                                            Đang giao</option>
+                                        <option value="COMPLETED" ${order.orderStatus=='COMPLETED' ? 'selected' : '' }>
+                                            Hoàn thành</option>
+                                        <option value="CANCELLED" ${order.orderStatus=='CANCELLED' ? 'selected' : '' }>
+                                            Đã hủy</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </select>
 
-</body>
-</html>
+                            <c:if test="${unpaidOnlineOrder}">
+                                <p style="margin-top: 10px; color: #dc3545;">
+                                    Đơn VNPay chưa thanh toán thành công nên không thể chuyển sang trạng thái xử lý hoặc
+                                    giao hàng.
+                                </p>
+                            </c:if>
+
+                            <button class="btn-primary">Cập nhật</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h3>Sản phẩm</h3>
+
+                        <table class="order-table">
+                            <thead>
+                                <tr>
+                                    <th>Ảnh</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Size</th>
+                                    <th>Màu</th>
+                                    <th>SL</th>
+                                    <th>Giá</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${items}" var="i">
+                                    <tr>
+                                        <td>
+                                            <img src="${fn:startsWith(i.thumbnail, 'http') ? i.thumbnail : pageContext.request.contextPath.concat('/img/products').concat(i.thumbnail)}" class="product-thumb"
+                                                onerror="this.onerror=null; this.style.display='none';">
+                                        </td>
+                                        <td>${i.productName}</td>
+                                        <td>${i.size}</td>
+                                        <td>${i.color}</td>
+                                        <td>${i.quantity}</td>
+                                        <td>
+                                            <fmt:formatNumber value="${i.price}" type="number" /> đ
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </body>
+
+            </html>
