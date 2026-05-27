@@ -92,6 +92,9 @@ public class OrderReturnAdminController extends HttpServlet {
         } else if ("completeReturn".equals(action)) {
             updated = orderReturnDao.completeReturnAndRestoreStock(id, adminNote);
             result = "returned";
+        } else if ("confirmRefund".equals(action)) {
+            updated = orderReturnDao.confirmRefund(id, adminNote);
+            result = "refunded";
         } else {
             redirectDetail(response, request, id, "error=invalid_action");
             return;

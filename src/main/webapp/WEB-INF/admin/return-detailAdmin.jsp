@@ -38,7 +38,10 @@
         <div class="notice success">Đã chuyển yêu cầu sang trạng thái đang hoàn hàng.</div>
     </c:if>
     <c:if test="${param.success == 'returned'}">
-        <div class="notice success">Đã xác nhận nhận lại sản phẩm và cộng lại số lượng vào kho.</div>
+        <div class="notice success">Đã xác nhận nhận lại sản phẩm và cộng lại số lượng vào kho. Nếu đơn đã thanh toán, yêu cầu được chuyển sang chờ hoàn tiền.</div>
+    </c:if>
+    <c:if test="${param.success == 'refunded'}">
+        <div class="notice success">Đã ghi nhận hoàn tiền thành công cho khách hàng.</div>
     </c:if>
     <c:if test="${param.error == 'reject_note_required'}">
         <div class="notice error">Vui lòng nhập lý do từ chối để khách hàng biết kết quả xử lý.</div>
@@ -56,6 +59,9 @@
             <c:if test="${orderReturn.returnStatus == 'RETURNED'}">
                 <div class="detail-line"><span>Ngày shop nhận lại</span><strong>${orderReturn.returnedAtFormatted}</strong></div>
                 <div class="detail-line"><span>Tồn kho</span><strong>${orderReturn.stockRestored ? 'Đã cộng lại kho' : 'Chưa cập nhật'}</strong></div>
+                <c:if test="${orderReturn.refundStatus == 'REFUNDED'}">
+                    <div class="detail-line"><span>Ngày hoàn tiền</span><strong>${orderReturn.refundedAtFormatted}</strong></div>
+                </c:if>
             </c:if>
             <div class="detail-content">
                 <span>Mô tả của khách hàng</span>
@@ -130,7 +136,31 @@
             </section>
         </c:when>
         <c:when test="${orderReturn.returnStatus == 'RETURNED'}">
-            <div class="notice info">Shop đã nhận lại sản phẩm và cập nhật tồn kho. Việc hoàn tiền, nếu có, được xử lý ở bước nghiệp vụ tiếp theo.</div>
+            <c:choose>
+                <c:when test="${orderReturn.refundStatus == 'PENDING'}">
+                    <section class="card action-card">
+                        <h3>Xử lý hoàn tiền</h3>
+                        <p class="action-description">
+                            Đơn hàng đã thanh toán và đã được nhận lại. Sau khi thực hiện hoàn tiền
+                            cho khách qua phương thức phù hợp, hãy xác nhận kết quả tại đây.
+                        </p>
+                        <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="returning-form">
+                            <input type="hidden" name="id" value="${orderReturn.id}">
+                            <input type="hidden" name="action" value="confirmRefund">
+                            <label for="refundNote">Ghi chú hoàn tiền (không bắt buộc)</label>
+                            <textarea id="refundNote" name="adminNote" maxlength="1000"
+                                      placeholder="Ví dụ: Đã hoàn tiền theo giao dịch VNPay hoặc chuyển khoản cho khách."></textarea>
+                            <button type="submit" class="btn-primary"><i class="fa-solid fa-money-check-dollar"></i> Xác nhận đã hoàn tiền</button>
+                        </form>
+                    </section>
+                </c:when>
+                <c:when test="${orderReturn.refundStatus == 'REFUNDED'}">
+                    <div class="notice info">Shop đã nhận lại sản phẩm, cập nhật tồn kho và hoàn tiền cho khách hàng.</div>
+                </c:when>
+                <c:otherwise>
+                    <div class="notice info">Shop đã nhận lại sản phẩm và cập nhật tồn kho. Đơn hàng không phát sinh khoản tiền cần hoàn.</div>
+                </c:otherwise>
+            </c:choose>
         </c:when>
     </c:choose>
 

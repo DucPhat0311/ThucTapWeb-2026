@@ -3,6 +3,7 @@ package dao.admin;
 import dao.core.BaseDao;
 import model.OrderReturn;
 import model.constant.OrderReturnStatus;
+import model.constant.PaymentStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,20 +58,24 @@ public class OrderReturnDaoAdmin extends BaseDao {
 
     public boolean completeReturnAndRestoreStock(int id, String adminNote) {
         return getJdbi().inTransaction(h -> {
-            Integer orderId = h.createQuery("""
-                    SELECT order_id
-                    FROM order_returns
-                    WHERE id = :id
-                      AND return_status = :currentStatus
-                      AND stock_restored = 0
+            ReturnedOrder returnedOrder = h.createQuery("""
+                    SELECT r.order_id, o.payment_statuses
+                    FROM order_returns r
+                    JOIN orders o ON o.id = r.order_id
+                    WHERE r.id = :id
+                      AND r.return_status = :currentStatus
+                      AND r.stock_restored = 0
                     FOR UPDATE
                 """)
                     .bind("id", id)
                     .bind("currentStatus", OrderReturnStatus.RETURNING)
-                    .mapTo(Integer.class)
+                    .map((rs, ctx) -> new ReturnedOrder(
+                            rs.getInt("order_id"),
+                            rs.getString("payment_statuses")
+                    ))
                     .findOne()
                     .orElse(null);
-            if (orderId == null) {
+            if (returnedOrder == null) {
                 return false;
             }
 
@@ -81,7 +86,7 @@ public class OrderReturnDaoAdmin extends BaseDao {
                     GROUP BY variant_id
                     ORDER BY variant_id
                 """)
-                    .bind("orderId", orderId)
+                    .bind("orderId", returnedOrder.orderId())
                     .map((rs, ctx) -> new ReturnedItem(
                             rs.getInt("variant_id"),
                             rs.getInt("quantity")
@@ -108,6 +113,7 @@ public class OrderReturnDaoAdmin extends BaseDao {
             int affectedRows = h.createUpdate("""
                     UPDATE order_returns
                     SET return_status = :newStatus,
+                        refund_status = :refundStatus,
                         admin_note = CASE
                             WHEN :adminNote IS NULL OR :adminNote = '' THEN admin_note
                             ELSE :adminNote
@@ -119,6 +125,9 @@ public class OrderReturnDaoAdmin extends BaseDao {
                       AND stock_restored = 0
                 """)
                     .bind("newStatus", OrderReturnStatus.RETURNED)
+                    .bind("refundStatus", PaymentStatus.PAID.equals(returnedOrder.paymentStatus())
+                            ? OrderReturnStatus.REFUND_PENDING
+                            : OrderReturnStatus.REFUND_NOT_REQUIRED)
                     .bind("adminNote", normalizeNote(adminNote))
                     .bind("id", id)
                     .bind("currentStatus", OrderReturnStatus.RETURNING)
@@ -128,6 +137,29 @@ public class OrderReturnDaoAdmin extends BaseDao {
             }
             return true;
         });
+    }
+
+    public boolean confirmRefund(int id, String adminNote) {
+        return getJdbi().withHandle(h ->
+                h.createUpdate("""
+                    UPDATE order_returns
+                    SET refund_status = :newStatus,
+                        admin_note = CASE
+                            WHEN :adminNote IS NULL OR :adminNote = '' THEN admin_note
+                            ELSE :adminNote
+                        END,
+                        refunded_at = NOW()
+                    WHERE id = :id
+                      AND return_status = :returnStatus
+                      AND refund_status = :currentStatus
+                """)
+                        .bind("newStatus", OrderReturnStatus.REFUNDED)
+                        .bind("adminNote", normalizeNote(adminNote))
+                        .bind("id", id)
+                        .bind("returnStatus", OrderReturnStatus.RETURNED)
+                        .bind("currentStatus", OrderReturnStatus.REFUND_PENDING)
+                        .execute() > 0
+        );
     }
 
     private boolean updateRequestedStatus(int id, String newStatus, String adminNote) {
@@ -181,5 +213,8 @@ public class OrderReturnDaoAdmin extends BaseDao {
     }
 
     private record ReturnedItem(int variantId, int quantity) {
+    }
+
+    private record ReturnedOrder(int orderId, String paymentStatus) {
     }
 }

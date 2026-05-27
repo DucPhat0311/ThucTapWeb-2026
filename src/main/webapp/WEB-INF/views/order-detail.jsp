@@ -264,6 +264,9 @@
                                                             <p><strong>Phản hồi từ shop:</strong> <c:out value="${orderReturn.adminNote}" /></p>
                                                         </c:if>
                                                         <p><strong>Hoàn tiền:</strong> ${refundStatusLabel}</p>
+                                                        <c:if test="${orderReturn.refundStatus == 'REFUNDED'}">
+                                                            <p><strong>Thời gian hoàn tiền:</strong> ${orderReturn.refundedAtFormatted}</p>
+                                                        </c:if>
                                                     </div>
                                                 </div>
 

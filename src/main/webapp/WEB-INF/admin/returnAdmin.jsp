@@ -60,13 +60,14 @@
                         <th>Lý do</th>
                         <th>Ngày gửi</th>
                         <th>Trạng thái</th>
+                        <th>Hoàn tiền</th>
                         <th>Thao tác</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:if test="${empty returns}">
                         <tr>
-                            <td colspan="7" class="empty-row">Chưa có yêu cầu trả hàng phù hợp.</td>
+                            <td colspan="8" class="empty-row">Chưa có yêu cầu trả hàng phù hợp.</td>
                         </tr>
                     </c:if>
                     <c:forEach items="${returns}" var="returnRequest">
@@ -81,6 +82,7 @@
                                     <c:out value="${returnRequest.returnStatusLabel}"/>
                                 </span>
                             </td>
+                            <td><c:out value="${returnRequest.refundStatusLabel}"/></td>
                             <td>
                                 <a href="${pageContext.request.contextPath}/returnAdmin?mode=view&amp;id=${returnRequest.id}"
                                    class="icon-btn view" title="Xem và xử lý yêu cầu" aria-label="Xem và xử lý yêu cầu">
