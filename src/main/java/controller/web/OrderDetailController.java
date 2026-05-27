@@ -2,6 +2,7 @@ package controller.web;
 
 import dao.user.OrderDao;
 import dao.user.OrderItemDao;
+import dao.user.OrderReturnDao;
 import dao.user.OrderTrackingLogDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,17 +15,20 @@ import model.User;
 import model.constant.OrderStatus;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
+import model.constant.OrderReturnReason;
 import service.GhnOrderTrackingService;
 import service.OrderService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet("/order-detail")
 public class OrderDetailController extends HttpServlet {
     private OrderDao orderDao;
     private OrderItemDao orderItemDao;
     private OrderTrackingLogDao trackingLogDao;
+    private OrderReturnDao orderReturnDao;
     private GhnOrderTrackingService ghnOrderTrackingService;
     private OrderService orderService;
 
@@ -33,6 +37,7 @@ public class OrderDetailController extends HttpServlet {
         orderDao = new OrderDao();
         orderItemDao = new OrderItemDao();
         trackingLogDao = new OrderTrackingLogDao();
+        orderReturnDao = new OrderReturnDao();
         ghnOrderTrackingService = new GhnOrderTrackingService();
         orderService = new OrderService();
     }
@@ -72,9 +77,27 @@ public class OrderDetailController extends HttpServlet {
         request.setAttribute("orderStatusClass", getOrderStatusClass(order.getOrderStatus()));
         request.setAttribute("paymentMethodLabel", getPaymentMethodLabel(order.getPaymentMethods()));
         request.setAttribute("paymentStatusLabel", getPaymentStatusLabel(order.getPaymentStatuses()));
+        setReturnRequestAttributes(request, order);
 
         request.getRequestDispatcher("/WEB-INF/views/order-detail.jsp")
                 .forward(request, response);
+    }
+
+    private void setReturnRequestAttributes(HttpServletRequest request, Order order) {
+        boolean existingRequest = orderReturnDao.existsByOrderId(order.getId());
+        LocalDateTime deliveredAt = trackingLogDao.findDeliveredAt(order.getId()).orElse(null);
+        LocalDateTime returnDeadline = deliveredAt == null ? null : deliveredAt.plusDays(7);
+        boolean eligible = OrderStatus.COMPLETED.equals(order.getOrderStatus())
+                && !existingRequest
+                && returnDeadline != null
+                && !LocalDateTime.now().isAfter(returnDeadline);
+
+        request.setAttribute("returnRequestExists", existingRequest);
+        request.setAttribute("returnRequestEligible", eligible);
+        request.setAttribute("returnReasons", OrderReturnReason.getCustomerReasons());
+        request.setAttribute("returnDeadline", returnDeadline == null
+                ? ""
+                : returnDeadline.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
     }
 
     private void syncGhnTracking(Order order, HttpServletRequest request) {

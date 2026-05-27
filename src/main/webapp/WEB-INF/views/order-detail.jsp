@@ -225,6 +225,71 @@
                                     </div>
                                 </div>
 
+                                <c:if test="${order.orderStatus == 'COMPLETED'}">
+                                    <div class="detail-section return-request-section">
+                                        <h3>Đổi trả và hoàn hàng</h3>
+
+                                        <c:if test="${param.returnRequest == 'success'}">
+                                            <div class="return-message success">
+                                                Yêu cầu trả hàng đã được gửi. AURA Studio sẽ kiểm tra và phản hồi trong thời gian sớm nhất.
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${param.returnError == 'duplicate'}">
+                                            <div class="return-message error">Đơn hàng này đã có yêu cầu trả hàng.</div>
+                                        </c:if>
+                                        <c:if test="${param.returnError == 'expired'}">
+                                            <div class="return-message error">Đơn hàng đã quá thời hạn yêu cầu trả hàng 07 ngày.</div>
+                                        </c:if>
+                                        <c:if test="${param.returnError == 'invalid'}">
+                                            <div class="return-message error">Vui lòng chọn lý do và nhập mô tả hợp lệ.</div>
+                                        </c:if>
+
+                                        <c:choose>
+                                            <c:when test="${returnRequestExists}">
+                                                <div class="return-existing">
+                                                    <i class="fa-regular fa-circle-check"></i>
+                                                    <div>
+                                                        <strong>Yêu cầu trả hàng đã được ghi nhận</strong>
+                                                        <p>Bạn có thể theo dõi tiến trình xử lý tại chi tiết đơn hàng.</p>
+                                                    </div>
+                                                </div>
+                                            </c:when>
+                                            <c:when test="${returnRequestEligible}">
+                                                <p class="return-intro">
+                                                    Bạn có thể gửi yêu cầu trả hàng đến <strong>${returnDeadline}</strong>
+                                                    theo chính sách 07 ngày của AURA Studio.
+                                                </p>
+                                                <form method="post" action="${pageContext.request.contextPath}/order-return"
+                                                      class="return-request-form">
+                                                    <input type="hidden" name="orderId" value="${order.id}">
+
+                                                    <label for="reasonCode">Lý do trả hàng</label>
+                                                    <select id="reasonCode" name="reasonCode" required>
+                                                        <option value="">Chọn lý do</option>
+                                                        <c:forEach var="reason" items="${returnReasons}">
+                                                            <option value="${reason.key}">${reason.value}</option>
+                                                        </c:forEach>
+                                                    </select>
+
+                                                    <label for="returnDescription">Mô tả chi tiết</label>
+                                                    <textarea id="returnDescription" name="description" maxlength="1000" rows="4"
+                                                              placeholder="Mô tả tình trạng sản phẩm hoặc lý do bạn muốn trả hàng..."
+                                                              required></textarea>
+
+                                                    <button type="submit" class="btn-return-request">
+                                                        Gửi yêu cầu trả hàng
+                                                    </button>
+                                                </form>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="return-unavailable">
+                                                    Thời hạn gửi yêu cầu trả hàng cho đơn này đã kết thúc hoặc chưa có xác nhận giao thành công.
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </c:if>
+
                                 <div class="detail-actions">
                                     <a href="order-user" class="btn-back">Quay lại đơn hàng</a>
                                 </div>
