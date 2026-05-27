@@ -48,6 +48,22 @@ public class OrderService {
         return trackingLogDao.getByOrderId(orderId);
     }
 
+    public String getLatestDemoTrackingLocation(List<OrderTrackingLog> trackingLogs) {
+        for (OrderTrackingLog log : trackingLogs) {
+            if (!"DEMO".equals(log.getProvider())) {
+                continue;
+            }
+            String description = trimToEmpty(log.getDescription());
+            String prefix = trimToEmpty(log.getStatusName()) + " tại ";
+            if (!description.startsWith(prefix)) {
+                return "";
+            }
+            String location = description.substring(prefix.length());
+            return location.endsWith(".") ? location.substring(0, location.length() - 1) : location;
+        }
+        return "";
+    }
+
     public void updateStatus(int id, String status) {
         dao.updateStatus(id, status);
     }

@@ -121,11 +121,13 @@ public class OrderAdminController extends HttpServlet {
         if ("view".equals(mode)) {
             int id = Integer.parseInt(req.getParameter("id"));
             var order = orderService.findById(id);
+            var trackingLogs = orderService.getTrackingLogs(id);
             req.setAttribute("order", order);
             req.setAttribute("items", orderService.getOrderItems(id));
-            req.setAttribute("trackingLogs", orderService.getTrackingLogs(id));
+            req.setAttribute("trackingLogs", trackingLogs);
             req.setAttribute("demoTrackingStatuses", orderService.getDemoTrackingStatusLabels());
             req.setAttribute("demoTracking", order != null && orderService.isDemoTrackingCode(order.getGhnOrderCode()));
+            req.setAttribute("demoTrackingLocation", orderService.getLatestDemoTrackingLocation(trackingLogs));
             req.setAttribute("page", "order");
             req.getRequestDispatcher("/WEB-INF/admin/order-detailAdmin.jsp").forward(req, resp);
         }

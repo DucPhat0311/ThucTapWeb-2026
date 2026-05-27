@@ -144,13 +144,14 @@
                                         <label for="trackingStatus">Chặng vận chuyển</label>
                                         <select id="trackingStatus" name="trackingStatus" required>
                                             <c:forEach var="status" items="${demoTrackingStatuses}">
-                                                <option value="${status.key}">${status.value}</option>
+                                                <option value="${status.key}" ${status.key == order.ghnStatus ? 'selected' : ''}>${status.value}</option>
                                             </c:forEach>
                                         </select>
 
                                         <label for="trackingLocation">Vị trí hiện tại hoặc ghi chú</label>
                                         <input type="text" id="trackingLocation" name="trackingLocation"
                                                placeholder="Ví dụ: Kho phân loại Thủ Đức, TP.HCM"
+                                               value="<c:out value='${demoTrackingLocation}'/>"
                                                maxlength="255">
 
                                         <button class="btn-primary">Lưu chặng vận chuyển</button>
