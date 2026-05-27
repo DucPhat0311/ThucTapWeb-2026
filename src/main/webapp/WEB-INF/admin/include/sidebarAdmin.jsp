@@ -14,6 +14,8 @@
             <i class="fas fa-box"></i> Sản Phẩm</a>
         <a href="orderAdmin" class="nav-item ${page == 'order' ? 'active' : ''}">
             <i class="fas fa-shopping-cart"></i> Đơn Hàng</a>
+        <a href="returnAdmin" class="nav-item ${page == 'return' ? 'active' : ''}">
+            <i class="fas fa-rotate-left"></i> Trả Hàng</a>
         <a href="bannerAdmin" class="nav-item ${page == 'banner' ? 'active' : ''}">
             <i class="fas fa-image"></i> Banner</a>
         <a href="blogAdmin" class="nav-item ${page == 'blog' ? 'active' : ''}">

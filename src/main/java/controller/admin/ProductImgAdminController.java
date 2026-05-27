@@ -1,6 +1,5 @@
 package controller.admin;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;
@@ -12,12 +11,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import service.ProductImageService;
 import model.ProductImage;
+import util.CloudinaryUtil;
 
 @WebServlet(name = "ProductImgAdminController", value = "/productImgAdmin")
-@MultipartConfig(
-        maxFileSize = 10 * 1024 * 1024,      
-        maxRequestSize = 50 * 1024 * 1024   
-)
+@MultipartConfig(maxFileSize = 10 * 1024 * 1024, maxRequestSize = 50 * 1024 * 1024)
 public class ProductImgAdminController extends HttpServlet {
     private ProductImageService productImageService;
 
@@ -39,7 +36,6 @@ public class ProductImgAdminController extends HttpServlet {
         int productId = Integer.parseInt(productIdParam);
         String mode = request.getParameter("mode");
 
-
         if (mode == null) {
             List<ProductImage> images = productImageService.getImageByProduct(productId);
 
@@ -52,7 +48,6 @@ public class ProductImgAdminController extends HttpServlet {
             return;
         }
 
-
         if ("add".equals(mode)) {
             request.setAttribute("mode", "add");
             request.setAttribute("productId", productId);
@@ -60,7 +55,6 @@ public class ProductImgAdminController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/admin/form-productImgAdmin.jsp").forward(request, response);
             return;
         }
-
 
         if ("edit".equals(mode)) {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -73,7 +67,6 @@ public class ProductImgAdminController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/admin/form-productImgAdmin.jsp").forward(request, response);
             return;
         }
-
 
         if ("view".equals(mode)) {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -137,7 +130,6 @@ public class ProductImgAdminController extends HttpServlet {
         ProductImage image = productImageService.getImageById(id);
         image.setMain(isMainParam != null && isMainParam.equals("true"));
 
-   
         String newImage = handleFileUpload(request, "imageFile");
         if (newImage != null && !newImage.isEmpty()) {
             image.setImageUrl(newImage);
@@ -168,27 +160,6 @@ public class ProductImgAdminController extends HttpServlet {
             return null;
         }
 
-        String extension = "";
-        int lastDotIndex = fileName.lastIndexOf(".");
-        if (lastDotIndex > 0) {
-            extension = fileName.substring(lastDotIndex);
-        }
-
-        String uniqueFileName = "product_img_" + System.currentTimeMillis() + extension;
-        uniqueFileName = uniqueFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
-
-
-        String uploadPath = getServletContext().getRealPath("/img");
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-
-        String filePath = uploadPath + File.separator + uniqueFileName;
-        filePart.write(filePath);
-
-        return "img/" + uniqueFileName;
+        return CloudinaryUtil.uploadImage(filePart, "products");
     }
 }
-
-

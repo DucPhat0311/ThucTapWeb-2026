@@ -1,6 +1,5 @@
 package controller.admin;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -15,13 +14,12 @@ import dao.admin.CategoryAdminDao;
 import dao.admin.ProductDaoAdmin;
 import model.Category;
 import model.Product;
+import util.CloudinaryUtil;
 
 @WebServlet("/productAdmin")
 @MultipartConfig(
 
-        maxFileSize = 10 * 1024 * 1024,    
-        maxRequestSize = 20 * 1024 * 1024  
-)
+        maxFileSize = 10 * 1024 * 1024, maxRequestSize = 20 * 1024 * 1024)
 public class ProductAdminController extends HttpServlet {
 
     private final ProductDaoAdmin productDaoAdmin = new ProductDaoAdmin();
@@ -33,7 +31,6 @@ public class ProductAdminController extends HttpServlet {
 
         String mode = req.getParameter("mode");
         String idParam = req.getParameter("id");
-
 
         if (mode != null) {
             List<Category> categories = categoryDaoAdmin.findAll();
@@ -54,8 +51,33 @@ public class ProductAdminController extends HttpServlet {
             }
         }
 
-
         String action = req.getParameter("action");
+        if ("toggle-active".equals(action)) {
+            int id = Integer.parseInt(idParam != null ? idParam : req.getParameter("id"));
+            Product p = productDaoAdmin.findById(id);
+            String newStatus = "Đang hoạt động".equals(p.getStatus()) ? "Đã ẩn" : "Đang hoạt động";
+            p.setStatus(newStatus);
+            productDaoAdmin.update(p);
+
+            String redirectUrl = req.getContextPath() + "/productAdmin";
+            String pageVal = req.getParameter("page");
+            String statusVal = req.getParameter("status");
+
+            java.util.StringJoiner query = new java.util.StringJoiner("&");
+            if (pageVal != null && !pageVal.isEmpty()) {
+                query.add("page=" + pageVal);
+            }
+            if (statusVal != null && !statusVal.isEmpty()) {
+                query.add("status=" + java.net.URLEncoder.encode(statusVal, java.nio.charset.StandardCharsets.UTF_8));
+            }
+            if (query.length() > 0) {
+                redirectUrl += "?" + query.toString();
+            }
+
+            resp.sendRedirect(redirectUrl);
+            return;
+        }
+
         if ("view".equals(action)) {
             int id = Integer.parseInt(idParam);
             Product p = productDaoAdmin.findById(id);
@@ -75,11 +97,10 @@ public class ProductAdminController extends HttpServlet {
             return;
         }
 
-
-// Phân trang
+        // Phân trang
         int page = 1;
         int pageSize = 5;
-        
+
         String pageParam = req.getParameter("page");
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
@@ -88,27 +109,42 @@ public class ProductAdminController extends HttpServlet {
                 page = 1;
             }
         }
-        
+
         List<Product> allProducts = productDaoAdmin.findAll();
-        int totalProducts = allProducts.size();
+
+        long totalProductsCount = allProducts.size();
+        long activeProductsCount = allProducts.stream().filter(p -> "Đang hoạt động".equals(p.getStatus())).count();
+        long inactiveProductsCount = allProducts.stream().filter(p -> "Đã ẩn".equals(p.getStatus())).count();
+
+        String status = req.getParameter("status");
+        List<Product> filteredProducts = allProducts;
+        if (status != null && !status.isEmpty()) {
+            filteredProducts = allProducts.stream()
+                    .filter(p -> status.equals(p.getStatus()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        int totalProducts = filteredProducts.size();
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
-        
-        if (page < 1) page = 1;
-        if (page > totalPages && totalPages > 0) page = totalPages;
-        
+
+        if (page < 1)
+            page = 1;
+        if (page > totalPages && totalPages > 0)
+            page = totalPages;
+
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, totalProducts);
-        List<Product> products = allProducts.subList(start, end);
+        List<Product> products = filteredProducts.subList(start, end);
 
         req.setAttribute("products", products);
-        req.setAttribute("totalProducts", totalProducts);
+        req.setAttribute("totalProducts", totalProductsCount);
+        req.setAttribute("totalProductsDisplay", totalProducts); // Số lượng sau khi lọc
         req.setAttribute("currentPage", page);
         req.setAttribute("totalPages", totalPages);
         req.setAttribute("pageSize", pageSize);
-        req.setAttribute("activeProducts",
-                allProducts.stream().filter(p -> "Đang bán".equals(p.getStatus())).count());
-        req.setAttribute("inactiveProducts",
-                allProducts.stream().filter(p -> !"Đang bán".equals(p.getStatus())).count());
+        req.setAttribute("activeProducts", activeProductsCount);
+        req.setAttribute("inactiveProducts", inactiveProductsCount);
+        req.setAttribute("currentStatus", status);
 
         req.setAttribute("page", "product");
         req.getRequestDispatcher("/WEB-INF/admin/productAdmin.jsp").forward(req, resp);
@@ -147,29 +183,44 @@ public class ProductAdminController extends HttpServlet {
                 p.setStatus(req.getParameter("status"));
                 p.setDescription(req.getParameter("description"));
                 productDaoAdmin.insert(p);
-                
 
                 int productId = productDaoAdmin.findAll().get(0).getId();
 
-                String variantSize = req.getParameter("variant_size");
-                String variantColor = req.getParameter("variant_color");
-                int variantStock = Integer.parseInt(req.getParameter("variant_stock"));
+                String[] sizes = req.getParameterValues("variant_size[]");
+                String[] colors = req.getParameterValues("variant_color[]");
+                String[] stocks = req.getParameterValues("variant_stock[]");
 
-  
-                dao.admin.SizeDaoAdmin sizeDao = new dao.admin.SizeDaoAdmin();
-                dao.admin.ColorDaoAdmin colorDao = new dao.admin.ColorDaoAdmin();
-                int sizeId = sizeDao.findOrCreateSize(variantSize);
-                int colorId = colorDao.findOrCreateColor(variantColor);
+                if (sizes != null && colors != null) {
+                    dao.admin.SizeDaoAdmin sizeDao = new dao.admin.SizeDaoAdmin();
+                    dao.admin.ColorDaoAdmin colorDao = new dao.admin.ColorDaoAdmin();
+                    dao.admin.ProductVariantDaoAdmin variantDao = new dao.admin.ProductVariantDaoAdmin();
 
- 
-                model.ProductVariant variant = new model.ProductVariant();
-                variant.setProductId(productId);
-                variant.setSizeId(sizeId);
-                variant.setColorId(colorId);
-                variant.setStock(variantStock);
+                    for (int i = 0; i < sizes.length; i++) {
+                        String sVal = sizes[i];
+                        String cVal = colors[i];
+                        int stVal = 0;
+                        if (stocks != null && stocks.length > i) {
+                            try {
+                                stVal = Integer.parseInt(stocks[i]);
+                            } catch (NumberFormatException e) {
+                                stVal = 0;
+                            }
+                        }
 
-                dao.admin.ProductVariantDaoAdmin variantDao = new dao.admin.ProductVariantDaoAdmin();
-                variantDao.createVariant(variant);
+                        if (sVal != null && !sVal.trim().isEmpty() && cVal != null && !cVal.trim().isEmpty()) {
+                            int sizeId = sizeDao.findOrCreateSize(sVal.trim());
+                            int colorId = colorDao.findOrCreateColor(cVal.trim());
+
+                            model.ProductVariant variant = new model.ProductVariant();
+                            variant.setProductId(productId);
+                            variant.setSizeId(sizeId);
+                            variant.setColorId(colorId);
+                            variant.setStock(stVal);
+
+                            variantDao.createVariant(variant);
+                        }
+                    }
+                }
             }
             case "update" -> {
                 Product p = new Product();
@@ -197,20 +248,20 @@ public class ProductAdminController extends HttpServlet {
                 p.setStatus(req.getParameter("status"));
                 productDaoAdmin.update(p);
             }
-            
+
             case "toggle-status" -> {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Product p = productDaoAdmin.findById(id);
-                String newStatus = "Đang bán".equals(p.getStatus()) ? "Hết hàng" : "Đang bán";
+                String newStatus = "Đang hoạt động".equals(p.getStatus()) ? "Đã ẩn" : "Đang hoạt động";
                 p.setStatus(newStatus);
                 productDaoAdmin.update(p);
             }
 
             case "delete" -> {
 
-               productDaoAdmin.softDelete(
+                productDaoAdmin.softDelete(
 
-                    Integer.parseInt(req.getParameter("id")));
+                        Integer.parseInt(req.getParameter("id")));
             }
         }
 
@@ -230,27 +281,7 @@ public class ProductAdminController extends HttpServlet {
             return null;
         }
 
-
-        String extension = "";
-        int lastDotIndex = fileName.lastIndexOf(".");
-        if (lastDotIndex > 0) {
-            extension = fileName.substring(lastDotIndex);
-        }
-
-        String uniqueFileName = "product_" + System.currentTimeMillis() + extension;
-        uniqueFileName = uniqueFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
-
-
-        String uploadPath = req.getServletContext().getRealPath("") + File.separator + "img";
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-
-        String filePath = uploadPath + File.separator + uniqueFileName;
-        filePart.write(filePath);
-
-        return "img/" + uniqueFileName;
+        return CloudinaryUtil.uploadImage(filePart, "products");
     }
 
     private String escape(String s) {

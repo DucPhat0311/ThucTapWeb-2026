@@ -26,6 +26,7 @@ dependencies {
     implementation libs.ch.qos.logback.logback.classic
     implementation libs.org.mindrot.jbcrypt
     implementation libs.com.restfb.restfb
+    implementation 'com.cloudinary:cloudinary-http45:1.39.0'
 
     // Tomcat đã có sẵn Servlet/JSP API nên chỉ compile, không đóng gói vào WAR
     compileOnly libs.jakarta.servlet.jakarta.servlet.api

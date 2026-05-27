@@ -1,0 +1,381 @@
+@charset "UTF-8";
+
+.policy-page {
+    color: #3f352e;
+    background-color: #ffffff;
+}
+
+.policy-header {
+    background-color: #f7f2e9;
+    border-bottom: 1px solid #e8decc;
+}
+
+.policy-header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 54px 32px 50px;
+}
+
+.policy-label {
+    margin: 0 0 14px;
+    color: #a67b5b;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.policy-header h1 {
+    margin: 0 0 16px;
+    color: #49372b;
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.policy-intro {
+    max-width: 700px;
+    margin: 0;
+    color: #6f5949;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.policy-layout {
+    display: grid;
+    grid-template-columns: 244px minmax(0, 760px);
+    gap: 58px;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 48px 32px 72px;
+}
+
+.policy-nav {
+    position: sticky;
+    top: 154px;
+    align-self: start;
+    border-left: 2px solid #e8decc;
+    padding-left: 22px;
+}
+
+.policy-nav p {
+    margin: 0 0 17px;
+    color: #49372b;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.policy-nav a {
+    display: block;
+    margin-bottom: 15px;
+    color: #695547;
+    font-size: 15px;
+    line-height: 1.45;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.policy-nav a:hover {
+    color: #a67b5b;
+}
+
+.policy-content {
+    min-width: 0;
+}
+
+.policy-section {
+    padding-bottom: 38px;
+    margin-bottom: 38px;
+    border-bottom: 1px solid #eee6d9;
+    scroll-margin-top: 154px;
+}
+
+.policy-section h2,
+.policy-support h2 {
+    position: relative;
+    margin: 0 0 20px;
+    padding-left: 17px;
+    color: #49372b;
+    font-size: 24px;
+    line-height: 1.35;
+}
+
+.policy-section h2::before,
+.policy-support h2::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 5px;
+    height: 25px;
+    border-radius: 3px;
+    background-color: #a67b5b;
+}
+
+.policy-section p,
+.policy-support p {
+    margin: 0 0 18px;
+    color: #5e4d42;
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.policy-section strong {
+    color: #49372b;
+}
+
+.policy-highlight {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 26px;
+    padding: 19px 22px;
+    background-color: #f7f2e9;
+    border-left: 3px solid #a67b5b;
+}
+
+.policy-highlight i {
+    flex: none;
+    color: #a67b5b;
+    font-size: 25px;
+}
+
+.policy-highlight strong,
+.policy-highlight span {
+    display: block;
+}
+
+.policy-highlight span {
+    margin-top: 5px;
+    color: #625145;
+    line-height: 1.5;
+}
+
+.policy-check-list,
+.policy-deny-list {
+    list-style: none;
+    margin: 22px 0 0;
+    padding: 0;
+}
+
+.policy-check-list li,
+.policy-deny-list li {
+    position: relative;
+    margin-bottom: 15px;
+    padding-left: 33px;
+    color: #5e4d42;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+.policy-check-list li::before,
+.policy-deny-list li::before {
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 13px;
+    line-height: 22px;
+    text-align: center;
+    font-family: "Font Awesome 7 Free";
+    font-weight: 900;
+}
+
+.policy-check-list li::before {
+    content: "\f00c";
+    color: #347548;
+    background-color: #e6f0e8;
+}
+
+.policy-deny-list li::before {
+    content: "\f00d";
+    color: #9e473f;
+    background-color: #f6e7e4;
+}
+
+.policy-note {
+    margin-top: 24px !important;
+    padding: 16px 20px;
+    border: 1px solid #e8decc;
+    background-color: #fffdf9;
+}
+
+.policy-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.policy-steps li {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 20px;
+    padding: 0 0 24px;
+}
+
+.policy-steps li:last-child {
+    padding-bottom: 0;
+}
+
+.policy-steps span {
+    width: 42px;
+    height: 42px;
+    background-color: #f2e5d5;
+    color: #6f4e37;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 42px;
+    text-align: center;
+}
+
+.policy-steps strong {
+    display: block;
+    margin: 7px 0 5px;
+    font-size: 17px;
+}
+
+.policy-steps p {
+    margin: 0;
+}
+
+.refund-methods {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px;
+}
+
+.refund-methods div {
+    border: 1px solid #e8decc;
+    padding: 24px 22px 18px;
+}
+
+.refund-methods i {
+    color: #a67b5b;
+    font-size: 23px;
+}
+
+.refund-methods h3 {
+    margin: 16px 0 10px;
+    color: #49372b;
+    font-size: 18px;
+}
+
+.refund-methods p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.policy-support {
+    padding: 30px;
+    background-color: #f7f2e9;
+}
+
+.policy-support p {
+    max-width: 620px;
+}
+
+.policy-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 26px;
+}
+
+.policy-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 22px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.policy-btn-primary {
+    color: #ffffff;
+    background-color: #6f4e37;
+    border: 1px solid #6f4e37;
+}
+
+.policy-btn-primary:hover {
+    background-color: #a67b5b;
+    border-color: #a67b5b;
+}
+
+.policy-btn-secondary {
+    color: #6f4e37;
+    background-color: #ffffff;
+    border: 1px solid #a67b5b;
+}
+
+.policy-btn-secondary:hover {
+    background-color: #eee2d1;
+}
+
+@media (max-width: 860px) {
+    .policy-header-inner {
+        padding: 38px 22px;
+    }
+
+    .policy-header h1 {
+        font-size: 30px;
+    }
+
+    .policy-layout {
+        display: block;
+        padding: 34px 22px 56px;
+    }
+
+    .policy-nav {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        margin-bottom: 38px;
+        padding-left: 16px;
+    }
+
+    .policy-nav p {
+        flex-basis: 100%;
+        margin-bottom: 8px;
+    }
+
+    .policy-nav a {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 620px) {
+    .policy-header h1 {
+        font-size: 27px;
+    }
+
+    .policy-intro,
+    .policy-section p,
+    .policy-check-list li,
+    .policy-deny-list li {
+        font-size: 15px;
+    }
+
+    .policy-section h2,
+    .policy-support h2 {
+        font-size: 21px;
+    }
+
+    .refund-methods {
+        grid-template-columns: 1fr;
+    }
+
+    .policy-support {
+        padding: 25px 20px;
+    }
+
+    .policy-actions a {
+        width: 100%;
+    }
+}

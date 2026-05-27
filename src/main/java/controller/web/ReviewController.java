@@ -11,25 +11,22 @@ import java.io.IOException;
 import java.util.Collection;
 
 @WebServlet("/review")
-@MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-        maxFileSize = 1024 * 1024 * 20,      // 20MB
-        maxRequestSize = 1024 * 1024 * 100    // 100MB
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 20, // 20MB
+        maxRequestSize = 1024 * 1024 * 100 // 100MB
 )
 public class ReviewController extends HttpServlet {
 
     private ReviewService reviewService;
 
     @Override
-    public void init(){
+    public void init() {
         reviewService = new ReviewService();
     }
 
-
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
     }
 
@@ -38,7 +35,6 @@ public class ReviewController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         User user = (User) request.getSession().getAttribute("userlogin");
-
 
         if (user == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -60,18 +56,14 @@ public class ReviewController extends HttpServlet {
             // lấy id
             int reviewId = reviewService.addReview(review);
 
-            // upload nhiều ảnh
-            String uploadPath = getServletContext().getRealPath("/") + "img/reviews";
-            java.io.File uploadDir = new java.io.File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
-
             Collection<Part> parts = request.getParts();
             for (Part part : parts) {
                 if (part.getName().equals("reviewImages") && part.getSize() > 0) {
-                    String fileName = System.currentTimeMillis() + "_" + part.getSubmittedFileName();
-                    part.write(uploadPath + java.io.File.separator + fileName);
-                    // lưu
-                    reviewService.saveReviewImage(reviewId, "img/reviews/" + fileName);
+
+                    String imageUrl = util.CloudinaryUtil.uploadImage(part, "reviews");
+                    if (imageUrl != null) {
+                        reviewService.saveReviewImage(reviewId, imageUrl);
+                    }
                 }
             }
 
@@ -85,4 +77,3 @@ public class ReviewController extends HttpServlet {
         }
     }
 }
-

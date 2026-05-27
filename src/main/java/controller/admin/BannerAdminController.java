@@ -5,30 +5,29 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import service.BannerService;
 import model.Banner;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
+import util.CloudinaryUtil;
 
 @WebServlet(name = "BannerAdminController", value = "/bannerAdmin")
-@MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-        maxFileSize = 1024 * 1024 * 25,      // 25MB 
-        maxRequestSize = 1024 * 1024 * 50    // 50MB 
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 25, // 25MB
+        maxRequestSize = 1024 * 1024 * 50 // 50MB
 )
 public class BannerAdminController extends HttpServlet {
     private BannerService bannerService;
 
     @Override
-    public void init(){
+    public void init() {
         bannerService = new BannerService();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String mode = request.getParameter("mode");
 
-        if (mode == null){
+        if (mode == null) {
             List<Banner> banners = bannerService.getAllBanner();
 
             int total = banners.size();
@@ -51,11 +50,11 @@ public class BannerAdminController extends HttpServlet {
             request.setAttribute("totalBlocked", totalBlocked);
 
             request.setAttribute("page", "banner");
-        request.getRequestDispatcher("/WEB-INF/admin/bannerAdmin.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/admin/bannerAdmin.jsp").forward(request, response);
             return;
         }
 
-        if ("edit".equals(mode) || "view".equals(mode)){
+        if ("edit".equals(mode) || "view".equals(mode)) {
             int id = Integer.parseInt(request.getParameter("id"));
             Banner banner = bannerService.getBannerById(id);
 
@@ -63,20 +62,21 @@ public class BannerAdminController extends HttpServlet {
             request.setAttribute("mode", mode);
 
             request.setAttribute("page", "banner");
-        request.getRequestDispatcher("/WEB-INF/admin/form-bannerAdmin.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/admin/form-bannerAdmin.jsp").forward(request, response);
             return;
         }
 
-        if ("add".equals(mode)){
+        if ("add".equals(mode)) {
             request.setAttribute("mode", mode);
 
             request.setAttribute("page", "banner");
-        request.getRequestDispatcher("/WEB-INF/admin/form-bannerAdmin.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/admin/form-bannerAdmin.jsp").forward(request, response);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
@@ -88,36 +88,25 @@ public class BannerAdminController extends HttpServlet {
             return;
         }
 
-
         if ("lock".equals(action) || "unlock".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
-            boolean status = "unlock".equals(action); 
+            boolean status = "unlock".equals(action);
             bannerService.lockOrUnlockBanner(id, status);
             response.sendRedirect("bannerAdmin");
             return;
-        }
-
-
-
-        String uploadDir = getServletContext().getRealPath("/img/");
-        File dir = new File(uploadDir);
-        if (!dir.exists()){
-            dir.mkdirs();
         }
 
         Part filePart = request.getPart("imageFile");
         String fileName = "";
 
         if (filePart != null && filePart.getSubmittedFileName() != null) {
-            fileName = Path.of(filePart.getSubmittedFileName())
-                    .getFileName().toString();
+            fileName = filePart.getSubmittedFileName();
         }
 
-        if ("create".equals(action)){
+        if ("create".equals(action)) {
             String imageUrl = null;
             if (!fileName.isEmpty()) {
-                filePart.write(uploadDir + fileName);
-                imageUrl = "./img/" + fileName;
+                imageUrl = CloudinaryUtil.uploadImage(filePart, "banners");
             }
 
             Banner banner = new Banner();
@@ -136,15 +125,14 @@ public class BannerAdminController extends HttpServlet {
             return;
         }
 
-        if ("update".equals(action)){
+        if ("update".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
 
             Banner oldBanner = bannerService.getBannerById(id);
             String imageUrl = oldBanner.getImageUrl();
 
             if (!fileName.isEmpty()) {
-                filePart.write(uploadDir + fileName);
-                imageUrl = "./img/" + fileName;
+                imageUrl = CloudinaryUtil.uploadImage(filePart, "banners");
             }
 
             Banner banner = new Banner();
@@ -164,8 +152,5 @@ public class BannerAdminController extends HttpServlet {
             return;
         }
 
-
     }
 }
-
-

@@ -31,7 +31,7 @@
             <a href="#">Trung tâm trợ giúp</a>
             <a href="#">Hướng dẫn mua sắm</a>
             <a href="#">Chính sách thanh toán</a>
-            <a href="#">Chính sách đổi trả</a>
+            <a href="${pageContext.request.contextPath}/return-refund-policy">Chính sách đổi trả và hoàn hàng</a>
             <a href="#">Câu hỏi thường gặp</a>
         </div>
 

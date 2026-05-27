@@ -32,7 +32,7 @@ public class ProductDao extends BaseDao {
                                         "(SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) AS avgRating, " +
                                         "(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews " +
                                         "FROM products p " +
-                                        "WHERE p.status = 'Đang bán' " +
+                                        "WHERE p.status = 'Đang hoạt động' " +
                                         "ORDER BY p.created_at DESC LIMIT :limit"
                         )
                         .bind("limit", limit)
@@ -53,7 +53,7 @@ public class ProductDao extends BaseDao {
                 "(SELECT COALESCE(ROUND(AVG(rating), 1), 5.0) FROM reviews WHERE product_id = p.id) AS avgRating, " +
                 "(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews " +
                 "FROM products p " +
-                "WHERE p.category_id IN (<ids>) AND p.status = 'Đang bán' " +
+                "WHERE p.category_id IN (<ids>) AND p.status = 'Đang hoạt động' " +
                 "ORDER BY p.created_at DESC LIMIT :limit";
 
 
@@ -98,7 +98,7 @@ public class ProductDao extends BaseDao {
                               FROM products
                               WHERE category_id = :categoryId
                               AND id <> :currentProductId
-                              AND status = 'Đang bán'
+                              AND status = 'Đang hoạt động'
                               ORDER BY created_at DESC
                               LIMIT :limit
                               """
@@ -147,7 +147,7 @@ public class ProductDao extends BaseDao {
                 handle.createQuery("""
           SELECT * FROM products
           WHERE category_id IN (1,2,3)
-            AND status = 'Đang bán'
+            AND status = 'Đang hoạt động'
           ORDER BY created_at DESC
           LIMIT :limit
       """)
@@ -161,7 +161,7 @@ public class ProductDao extends BaseDao {
                 handle.createQuery("""
           SELECT * FROM products
           WHERE category_id IN (4,5,6,7)
-            AND status = 'Đang bán'
+            AND status = 'Đang hoạt động'
           ORDER BY created_at DESC
           LIMIT :limit
       """)
@@ -179,7 +179,7 @@ public class ProductDao extends BaseDao {
                 handle.createQuery("""
           SELECT * FROM products
           WHERE category_id IN (8,9,10)
-            AND status = 'Đang bán'
+            AND status = 'Đang hoạt động'
           ORDER BY created_at DESC
           LIMIT :limit
       """)
@@ -197,7 +197,7 @@ public class ProductDao extends BaseDao {
             return List.of();
         }
         String sql = "SELECT * FROM products " +
-                "WHERE category_id IN (<ids>) AND status = 'Đang bán'";
+                "WHERE category_id IN (<ids>) AND status = 'Đang hoạt động'";
         return getJdbi().withHandle(handle ->
                 handle.createQuery(sql)
                         .bindList("ids", categoryIds)
@@ -215,7 +215,7 @@ public class ProductDao extends BaseDao {
                               WHERE sale_price IS NOT NULL
                                   AND sale_price < price
                                   AND sale_price > 0
-                                  AND status = 'Đang bán'
+                                  AND status = 'Đang hoạt động'
                               ORDER BY created_at DESC
                       """)
                         .mapToBean(Product.class)
@@ -237,7 +237,7 @@ public class ProductDao extends BaseDao {
             sql.append(" JOIN colors c_v ON pv.color_id = c_v.id ");
             sql.append(" JOIN sizes s_v ON pv.size_id = s_v.id ");
         }
-        sql.append(" WHERE p.status = 'Đang bán' ");
+        sql.append(" WHERE p.status = 'Đang hoạt động' ");
         List<Integer> catIdList = new ArrayList<>();
         if (categoryIds != null && !categoryIds.isEmpty()) {
             for (String id : categoryIds.split(",")) {
@@ -286,7 +286,7 @@ public class ProductDao extends BaseDao {
             sql.append(" JOIN colors c_v ON pv.color_id = c_v.id ");
             sql.append(" JOIN sizes s_v ON pv.size_id = s_v.id ");
         }
-        sql.append(" WHERE p.status = 'Đang bán' ");
+        sql.append(" WHERE p.status = 'Đang hoạt động' ");
         List<Integer> catIds = new ArrayList<>();
         if (categoryIds != null && !categoryIds.isEmpty()) {
             for (String id : categoryIds.split(",")) {
@@ -339,7 +339,7 @@ public class ProductDao extends BaseDao {
               (SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) AS avgRating,
               (SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews
            FROM products p
-           WHERE p.status = 'Đang bán'
+           WHERE p.status = 'Đang hoạt động'
        """);
 
         String[] words = keyword.trim().replaceAll("\\s+", " ").split(" ");
@@ -366,7 +366,7 @@ public class ProductDao extends BaseDao {
         StringBuilder sql = new StringBuilder("""
            SELECT COUNT(*)
            FROM products p
-           WHERE p.status = 'Đang bán'
+           WHERE p.status = 'Đang hoạt động'
        """);
 
         String[] words = keyword.trim().replaceAll("\\s+", " ").split(" ");

@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import util.CloudinaryUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +19,8 @@ public class BlogAdminController extends HttpServlet {
     private final BlogAdminDao blogDAO = new BlogAdminDao();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -32,18 +34,16 @@ public class BlogAdminController extends HttpServlet {
         if ("add".equals(mode)) {
             request.setAttribute("mode", "add");
             request.setAttribute("page", "blog");
-        request.getRequestDispatcher("/WEB-INF/admin/form-blogAdmin.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/admin/form-blogAdmin.jsp").forward(request, response);
             return;
         }
 
         if ("edit".equals(mode) || "view".equals(mode)) {
             int id = Integer.parseInt(request.getParameter("id"));
-            blogDAO.getBlogById(id).ifPresent(n ->
-                    request.setAttribute("blog", n)
-            );
+            blogDAO.getBlogById(id).ifPresent(n -> request.setAttribute("blog", n));
             request.setAttribute("mode", mode);
             request.setAttribute("page", "blog");
-        request.getRequestDispatcher("/WEB-INF/admin/form-blogAdmin.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/admin/form-blogAdmin.jsp").forward(request, response);
             return;
         }
 
@@ -60,7 +60,8 @@ public class BlogAdminController extends HttpServlet {
                         .filter(n -> n.getStatus() == statusFilter)
                         .collect(java.util.stream.Collectors.toList());
                 request.setAttribute("currentStatus", status);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         request.setAttribute("blogList", allBlog);
@@ -72,10 +73,9 @@ public class BlogAdminController extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/admin/blogAdmin.jsp").forward(request, response);
     }
 
-
-
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         String action = request.getParameter("action");
         String title = request.getParameter("title");
@@ -88,23 +88,10 @@ public class BlogAdminController extends HttpServlet {
         try {
             jakarta.servlet.http.Part filePart = request.getPart("imageFile");
             if (filePart != null && filePart.getSize() > 0) {
-                String fileName = filePart.getSubmittedFileName();
-                String extension = "";
-                int lastDotIndex = fileName.lastIndexOf(".");
-                if (lastDotIndex > 0) {
-                    extension = fileName.substring(lastDotIndex);
-                }
-                String uniqueFileName = "blog_img_" + System.currentTimeMillis() + extension;
-                uniqueFileName = uniqueFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
-                String uploadPath = getServletContext().getRealPath("/img");
-                java.io.File uploadDir = new java.io.File(uploadPath);
-                if (!uploadDir.exists()) uploadDir.mkdirs();
-                String filePath = uploadPath + java.io.File.separator + uniqueFileName;
-                filePart.write(filePath);
-                imgPath = "img/" + uniqueFileName;
+                imgPath = CloudinaryUtil.uploadImage(filePart, "blogs");
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         if ("create".equals(action)) {
@@ -114,7 +101,8 @@ public class BlogAdminController extends HttpServlet {
             blog.setContent(content);
             blog.setStatus(status);
             blog.setAuthorId(1);
-            if (imgPath != null) blog.setImg(imgPath);
+            if (imgPath != null)
+                blog.setImg(imgPath);
             blogDAO.createBlog(blog);
         }
 
@@ -151,5 +139,3 @@ public class BlogAdminController extends HttpServlet {
         response.sendRedirect("blogAdmin");
     }
 }
-
-
