@@ -78,7 +78,7 @@ public class OrderDetailController extends HttpServlet {
 
     private void syncGhnTracking(Order order, HttpServletRequest request) {
         String orderCode = trimToEmpty(order.getGhnOrderCode());
-        if (orderCode.isBlank()) {
+        if (orderCode.isBlank() || orderService.isDemoTrackingCode(orderCode)) {
             return;
         }
 

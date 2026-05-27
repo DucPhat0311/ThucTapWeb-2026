@@ -134,6 +134,11 @@ public class OrderAdminController extends HttpServlet {
         orderService.expirePendingPaymentOrders();
 
         String action = req.getParameter("action");
+        if ("createDemoTracking".equals(action)) {
+            createDemoTracking(req, resp);
+            return;
+        }
+
         if ("createGhnOrder".equals(action)) {
             createGhnOrder(req, resp);
             return;
@@ -192,6 +197,35 @@ public class OrderAdminController extends HttpServlet {
         );
 
         resp.sendRedirect("orderAdmin?mode=view&id=" + id);
+    }
+
+    private void createDemoTracking(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        var order = orderService.findById(id);
+        if (order == null) {
+            resp.sendRedirect("orderAdmin");
+            return;
+        }
+
+        boolean unpaidOnlineOrder = PaymentMethod.VNPAY.equals(order.getPaymentMethods())
+                && !PaymentStatus.PAID.equals(order.getPaymentStatuses());
+        if (unpaidOnlineOrder) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=unpaid_online_order");
+            return;
+        }
+
+        if (!orderService.canCreateGhnShippingOrder(order)) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=demo_not_allowed");
+            return;
+        }
+
+        try {
+            orderService.createDemoTracking(id);
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&success=demo_created");
+        } catch (RuntimeException e) {
+            String message = e.getMessage() == null ? "Không thể tạo hành trình mô phỏng." : e.getMessage();
+            redirectWithMessage(resp, id, "demo_create_failed", message);
+        }
     }
 
     private void createGhnOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {

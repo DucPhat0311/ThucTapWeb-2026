@@ -7,10 +7,16 @@ import dao.user.OrderTrackingLogDao;
 import model.*;
 import model.constant.OrderStatus;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class OrderService {
     private static final int PENDING_PAYMENT_HOLD_MINUTES = 30;
+    private static final String DEMO_TRACKING_PREFIX = "DEMO-ORD-";
+    private static final String DEMO_INITIAL_STATUS = "RECEIVED";
+    private static final String DEMO_INITIAL_STATUS_NAME = "Đã tiếp nhận đơn hàng";
+    private static final DateTimeFormatter DEMO_CODE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     
     private OrderDaoAdmin dao = new OrderDaoAdmin();
     private OrderDao orderDao = new OrderDao();
@@ -149,6 +155,27 @@ public class OrderService {
         return result;
     }
 
+    public String createDemoTracking(int orderId) {
+        Order order = dao.findById(orderId);
+        if (!canCreateGhnShippingOrder(order)) {
+            throw new IllegalStateException("Đơn hàng không thể tạo hành trình mô phỏng hoặc đã có mã theo dõi.");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        String trackingCode = DEMO_TRACKING_PREFIX + orderId + "-" + now.format(DEMO_CODE_TIME_FORMAT);
+        dao.updateDemoTrackingCreated(orderId, trackingCode, DEMO_INITIAL_STATUS, DEMO_INITIAL_STATUS_NAME);
+        trackingLogDao.insertIfStatusChanged(
+                orderId,
+                "DEMO",
+                trackingCode,
+                DEMO_INITIAL_STATUS,
+                DEMO_INITIAL_STATUS_NAME,
+                "Đơn hàng đã được tiếp nhận tại AURA Studio.",
+                now
+        );
+        return trackingCode;
+    }
+
     public boolean canCreateGhnShippingOrder(Order order) {
         if (order == null) {
             return false;
@@ -167,7 +194,14 @@ public class OrderService {
         if (order == null || order.getGhnOrderCode() == null || order.getGhnOrderCode().isBlank()) {
             return;
         }
+        if (isDemoTrackingCode(order.getGhnOrderCode())) {
+            return;
+        }
         ghnOrderCancellationService.cancelOrder(order.getGhnOrderCode());
+    }
+
+    public boolean isDemoTrackingCode(String trackingCode) {
+        return trackingCode != null && trackingCode.startsWith(DEMO_TRACKING_PREFIX);
     }
 
     private void restoreStockIfNeeded(Order order) {
