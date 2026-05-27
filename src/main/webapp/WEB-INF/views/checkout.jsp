@@ -120,6 +120,7 @@
 
                     <div class="order-summary">
                         <input type="hidden" name="shippingFee" id="shipping-fee-input" value="0">
+                        <input type="hidden" name="expectedDeliveryEpochSeconds" id="expected-delivery-epoch-seconds" value="">
 
 
                         <input type="hidden" id="cart-total" value="${total}">
@@ -250,6 +251,9 @@
             const toDistrictInput = document.getElementById('ghn-district-id');
             const toWardInput = document.getElementById('ghn-ward-code');
             const leadTimeDisplay = document.getElementById('lead-time-display');
+            const expectedDeliveryInput = document.getElementById('expected-delivery-epoch-seconds');
+
+            if (expectedDeliveryInput) expectedDeliveryInput.value = "";
 
             if (!toDistrictInput || !toDistrictInput.value || toDistrictInput.value.trim() === '') {
                 return;
@@ -318,6 +322,7 @@
                             year: 'numeric'
                         });
                         if (leadTimeDisplay) leadTimeDisplay.innerText = formattedDate;
+                        if (expectedDeliveryInput) expectedDeliveryInput.value = result.data.leadtime;
                     } else {
                         // return 0
                         if (leadTimeDisplay) leadTimeDisplay.innerText = "Giao hàng trong ngày";

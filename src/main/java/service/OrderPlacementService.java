@@ -5,6 +5,7 @@ import dao.core.BaseDao;
 import dao.user.ProductVariantDao;
 import model.OrderItem;
 import org.jdbi.v3.core.Handle;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,8 @@ public class OrderPlacementService extends BaseDao {
                           CheckoutService.OrderPlacement orderPlacement,
                           String note,
                           double shippingFee,
-                          double finalAmount) {
+                          double finalAmount,
+                          LocalDateTime expectedDeliveryTime) {
         return getJdbi().inTransaction(handle -> {
             int orderId = createOrder(
                     handle,
@@ -32,7 +34,8 @@ public class OrderPlacementService extends BaseDao {
                     orderPlacement.orderStatus(),
                     preparedCheckout.totalPrice(),
                     shippingFee,
-                    finalAmount
+                    finalAmount,
+                    expectedDeliveryTime
             );
 
             for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
@@ -82,17 +85,18 @@ public class OrderPlacementService extends BaseDao {
                             String orderStatus,
                             double totalPrice,
                             double shippingFee,
-                            double finalAmount) {
+                            double finalAmount,
+                            LocalDateTime expectedDeliveryTime) {
         return handle.createUpdate("""
             INSERT INTO orders(
                 user_id, name, phone, shipping_address, note,
                 total_price, discount, shipping_fee, final_amount,
-                payment_methods, payment_statuses, order_status, created_at
+                payment_methods, payment_statuses, order_status, ghn_expected_delivery_time, created_at
             )
             VALUES(
                 :uid, :name, :phone, :address, :note,
                 :total, 0, :ship, :final,
-                :payment, :paymentStatus, :orderStatus, NOW()
+                :payment, :paymentStatus, :orderStatus, :expectedDeliveryTime, NOW()
             )
         """)
                 .bind("uid", userId)
@@ -106,6 +110,7 @@ public class OrderPlacementService extends BaseDao {
                 .bind("payment", paymentMethod)
                 .bind("paymentStatus", paymentStatus)
                 .bind("orderStatus", orderStatus)
+                .bind("expectedDeliveryTime", expectedDeliveryTime)
                 .executeAndReturnGeneratedKeys("id")
                 .mapTo(int.class)
                 .one();
