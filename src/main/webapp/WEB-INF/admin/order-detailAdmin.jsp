@@ -55,6 +55,11 @@
                             <p>Tạo vận đơn GHN thành công.</p>
                         </div>
                     </c:if>
+                    <c:if test="${param.error == 'ghn_disabled'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Chế độ kiểm thử chỉ tạo hành trình mô phỏng, không tạo vận đơn thật trên GHN.</p>
+                        </div>
+                    </c:if>
 
                     <c:if test="${param.error == 'demo_not_allowed'}">
                         <div class="card" style="border-left: 4px solid #dc3545;">

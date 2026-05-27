@@ -158,7 +158,14 @@
                                                         <fmt:formatNumber value="${o.finalAmount}" type="number" />₫
                                                     </p>
                                                     <c:if test="${not empty o.ghnOrderCode}">
-                                                        <p class="tracking-inline">GHN: ${o.ghnOrderCode}</p>
+                                                        <p class="tracking-inline">
+                                                            <c:choose>
+                                                                <c:when test="${fn:startsWith(o.ghnOrderCode, 'DEMO-')}">
+                                                                    Mô phỏng: ${o.ghnOrderCode}
+                                                                </c:when>
+                                                                <c:otherwise>GHN: ${o.ghnOrderCode}</c:otherwise>
+                                                            </c:choose>
+                                                        </p>
                                                     </c:if>
                                                 </div>
                                             </div>
@@ -174,7 +181,15 @@
                                                 <c:if test="${not empty o.ghnOrderCode}">
                                                     <span class="tracking-chip">
                                                         <i class="fa-solid fa-truck-fast"></i>
-                                                        ${not empty o.ghnStatusName ? o.ghnStatusName : "Đang chờ GHN"}
+                                                        <c:choose>
+                                                            <c:when test="${not empty o.ghnStatusName}">
+                                                                ${o.ghnStatusName}
+                                                            </c:when>
+                                                            <c:when test="${fn:startsWith(o.ghnOrderCode, 'DEMO-')}">
+                                                                Đã tạo hành trình
+                                                            </c:when>
+                                                            <c:otherwise>Đang chờ GHN</c:otherwise>
+                                                        </c:choose>
                                                     </span>
                                                 </c:if>
                                                 <a href="order-detail?id=${o.id}"

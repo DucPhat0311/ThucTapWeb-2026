@@ -283,6 +283,20 @@ public class OrderService {
     }
 
     private void updateCancelledOrder(Order order) {
+        if (isDemoTrackingCode(order.getGhnOrderCode())) {
+            String statusName = "Đã hủy vận chuyển";
+            dao.updateGhnOrderCancelled(order.getId(), order.getGhnOrderCode(), "CANCELLED", statusName, order.getGhnExpectedDeliveryTime());
+            trackingLogDao.insert(
+                    order.getId(),
+                    "DEMO",
+                    order.getGhnOrderCode(),
+                    "CANCELLED",
+                    statusName,
+                    "Hành trình mô phỏng đã được hủy.",
+                    LocalDateTime.now()
+            );
+            return;
+        }
         String statusName = ghnOrderTrackingService.resolveStatusName("cancel");
         if (order.getGhnOrderCode() != null && !order.getGhnOrderCode().isBlank()) {
             dao.updateGhnOrderCancelled(order.getId(), order.getGhnOrderCode(), "cancel", statusName, order.getGhnExpectedDeliveryTime());

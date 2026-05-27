@@ -87,25 +87,48 @@
 
                                     <c:choose>
                                         <c:when test="${empty order.ghnOrderCode}">
-                                            <div class="tracking-empty">Đơn hàng chưa có mã vận đơn GHN.</div>
+                                            <div class="tracking-empty">Đơn hàng chưa có thông tin theo dõi vận chuyển.</div>
                                         </c:when>
                                         <c:otherwise>
                                             <div class="tracking-summary">
-                                                <div>
-                                                    <span class="label">Mã vận đơn GHN</span>
-                                                    <strong>${order.ghnOrderCode}</strong>
-                                                </div>
-                                                <div>
-                                                    <span class="label">Trạng thái GHN</span>
-                                                    <strong>${not empty order.ghnStatusName ? order.ghnStatusName :
-                                                        "Chưa có trạng thái"}</strong>
-                                                </div>
+                                                <c:choose>
+                                                    <c:when test="${demoTracking}">
+                                                        <div>
+                                                            <span class="label">Hình thức theo dõi</span>
+                                                            <strong>Mô phỏng kiểm thử</strong>
+                                                        </div>
+                                                        <div>
+                                                            <span class="label">Mã theo dõi</span>
+                                                            <strong>${order.ghnOrderCode}</strong>
+                                                        </div>
+                                                        <div>
+                                                            <span class="label">Trạng thái hiện tại</span>
+                                                            <strong>${not empty order.ghnStatusName ? order.ghnStatusName :
+                                                                "Chưa có trạng thái"}</strong>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div>
+                                                            <span class="label">Mã vận đơn GHN</span>
+                                                            <strong>${order.ghnOrderCode}</strong>
+                                                        </div>
+                                                        <div>
+                                                            <span class="label">Trạng thái GHN</span>
+                                                            <strong>${not empty order.ghnStatusName ? order.ghnStatusName :
+                                                                "Chưa có trạng thái"}</strong>
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 <div>
                                                     <span class="label">Cập nhật gần nhất</span>
                                                     <strong>${not empty order.ghnLastUpdatedAtFormatted ?
                                                         order.ghnLastUpdatedAtFormatted : "Chưa có thông tin"}</strong>
                                                 </div>
                                             </div>
+
+                                            <c:if test="${demoTracking}">
+                                                <div class="tracking-empty">Hành trình này được mô phỏng phục vụ kiểm thử.</div>
+                                            </c:if>
 
                                             <c:if test="${not empty trackingError}">
                                                 <div class="tracking-error">${trackingError}</div>
