@@ -6,6 +6,8 @@ import dao.user.ProductVariantDao;
 import dao.user.OrderTrackingLogDao;
 import model.*;
 import model.constant.OrderStatus;
+import model.constant.PaymentMethod;
+import model.constant.PaymentStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -216,10 +218,14 @@ public class OrderService {
         }
 
         String newOrderStatus = "DELIVERED".equals(normalizedStatus) ? OrderStatus.COMPLETED : OrderStatus.SHIPPING;
+        String newPaymentStatus = "DELIVERED".equals(normalizedStatus)
+                && PaymentMethod.COD.equals(order.getPaymentMethods())
+                ? PaymentStatus.PAID
+                : order.getPaymentStatuses();
         String description = buildDemoTrackingDescription(statusName, location);
         LocalDateTime now = LocalDateTime.now();
 
-        dao.updateDemoTrackingStatus(orderId, normalizedStatus, statusName, newOrderStatus);
+        dao.updateDemoTrackingStatus(orderId, normalizedStatus, statusName, newOrderStatus, newPaymentStatus);
         trackingLogDao.insert(
                 orderId,
                 "DEMO",
