@@ -1,5 +1,8 @@
 package model;
 
+import model.constant.OrderReturnReason;
+import model.constant.OrderReturnStatus;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,6 +22,11 @@ public class OrderReturn {
     private LocalDateTime returnedAt;
     private LocalDateTime refundedAt;
     private boolean stockRestored;
+    private String customerName;
+    private String customerPhone;
+    private double orderAmount;
+    private String paymentMethod;
+    private String paymentStatus;
 
     public int getId() {
         return id;
@@ -138,6 +146,58 @@ public class OrderReturn {
 
     public void setStockRestored(boolean stockRestored) {
         this.stockRestored = stockRestored;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerPhone() {
+        return customerPhone;
+    }
+
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
+    }
+
+    public double getOrderAmount() {
+        return orderAmount;
+    }
+
+    public void setOrderAmount(double orderAmount) {
+        this.orderAmount = orderAmount;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getReasonLabel() {
+        return OrderReturnReason.getLabel(reasonCode);
+    }
+
+    public String getReturnStatusLabel() {
+        return OrderReturnStatus.getReturnLabel(returnStatus);
+    }
+
+    public String getRefundStatusLabel() {
+        return OrderReturnStatus.getRefundLabel(refundStatus);
     }
 
     public String getRequestedAtFormatted() {
