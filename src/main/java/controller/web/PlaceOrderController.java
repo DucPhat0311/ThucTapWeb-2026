@@ -17,6 +17,10 @@ import service.OrderPlacementService;
 import service.VnPayService;
 
 import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @WebServlet(name = "PlaceOrderController", value = "/place-order")
 public class PlaceOrderController extends HttpServlet {
@@ -73,6 +77,9 @@ public class PlaceOrderController extends HttpServlet {
         double shippingFee = 0;
         shippingFee = Double.parseDouble(shippingFeeStr);
         double finalAmount = preparedCheckout.totalPrice() + shippingFee;
+        LocalDateTime expectedDeliveryTime = parseExpectedDeliveryTime(
+                request.getParameter("expectedDeliveryEpochSeconds")
+        );
 
         int cartId = cartIdObj;
         int orderId;
@@ -84,7 +91,8 @@ public class PlaceOrderController extends HttpServlet {
                     orderPlacement,
                     note,
                     shippingFee,
-                    finalAmount
+                    finalAmount,
+                    expectedDeliveryTime
             );
         } catch (ProductVariantDao.InsufficientStockException e) {
             response.sendRedirect("checkout?error=out_of_stock");
@@ -147,5 +155,19 @@ public class PlaceOrderController extends HttpServlet {
 
     private String trimToEmpty(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private LocalDateTime parseExpectedDeliveryTime(String epochSeconds) {
+        String normalizedEpochSeconds = trimToEmpty(epochSeconds);
+        if (normalizedEpochSeconds.isBlank()) {
+            return null;
+        }
+        try {
+            return Instant.ofEpochSecond(Long.parseLong(normalizedEpochSeconds))
+                    .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+                    .toLocalDateTime();
+        } catch (NumberFormatException | DateTimeException e) {
+            return null;
+        }
     }
 }
