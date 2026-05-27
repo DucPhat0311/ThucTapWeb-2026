@@ -34,4 +34,25 @@ public class WishlistDao extends BaseDao {
         ) > 0;
     }
 
+
+    public List<Product> getWishlistProductsByUserId(int userId) {
+        String sql = "SELECT p.*, " +
+                "(SELECT image_url FROM product_images WHERE product_id = p.id AND is_main = 0 ORDER BY id ASC LIMIT 1) AS hoverImage, " +
+                "(SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, " +
+                "(SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount, " +
+                "(SELECT COALESCE(ROUND(AVG(rating), 1), 5.0) FROM reviews WHERE product_id = p.id) AS avgRating, " +
+                "(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews " +
+                "FROM products p " +
+                "JOIN wishlists w ON p.id = w.product_id " +
+                "WHERE w.user_id = :userId " +
+                "ORDER BY w.id DESC";
+
+        return getJdbi().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("userId", userId)
+                        .mapToBean(Product.class)
+                        .list()
+        );
+    }
+
 }
