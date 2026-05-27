@@ -184,6 +184,12 @@
     gap: 12px;
 }
 
+.action-description {
+    color: #62574e;
+    line-height: 1.6;
+    margin: 0 0 18px;
+}
+
 .decision-form textarea,
 .returning-form textarea {
     min-height: 92px;

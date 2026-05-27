@@ -55,6 +55,81 @@ public class OrderReturnDaoAdmin extends BaseDao {
         );
     }
 
+    public boolean completeReturnAndRestoreStock(int id, String adminNote) {
+        return getJdbi().inTransaction(h -> {
+            Integer orderId = h.createQuery("""
+                    SELECT order_id
+                    FROM order_returns
+                    WHERE id = :id
+                      AND return_status = :currentStatus
+                      AND stock_restored = 0
+                    FOR UPDATE
+                """)
+                    .bind("id", id)
+                    .bind("currentStatus", OrderReturnStatus.RETURNING)
+                    .mapTo(Integer.class)
+                    .findOne()
+                    .orElse(null);
+            if (orderId == null) {
+                return false;
+            }
+
+            List<ReturnedItem> returnedItems = h.createQuery("""
+                    SELECT variant_id, SUM(quantity) AS quantity
+                    FROM order_items
+                    WHERE order_id = :orderId
+                    GROUP BY variant_id
+                    ORDER BY variant_id
+                """)
+                    .bind("orderId", orderId)
+                    .map((rs, ctx) -> new ReturnedItem(
+                            rs.getInt("variant_id"),
+                            rs.getInt("quantity")
+                    ))
+                    .list();
+            if (returnedItems.isEmpty()) {
+                throw new IllegalStateException("Đơn hàng không có sản phẩm để hoàn lại tồn kho.");
+            }
+
+            for (ReturnedItem item : returnedItems) {
+                int affectedRows = h.createUpdate("""
+                        UPDATE product_variants
+                        SET stock = stock + :quantity
+                        WHERE id = :variantId
+                    """)
+                        .bind("quantity", item.quantity())
+                        .bind("variantId", item.variantId())
+                        .execute();
+                if (affectedRows == 0) {
+                    throw new IllegalStateException("Không tìm thấy biến thể sản phẩm khi hoàn tồn kho.");
+                }
+            }
+
+            int affectedRows = h.createUpdate("""
+                    UPDATE order_returns
+                    SET return_status = :newStatus,
+                        admin_note = CASE
+                            WHEN :adminNote IS NULL OR :adminNote = '' THEN admin_note
+                            ELSE :adminNote
+                        END,
+                        returned_at = NOW(),
+                        stock_restored = 1
+                    WHERE id = :id
+                      AND return_status = :currentStatus
+                      AND stock_restored = 0
+                """)
+                    .bind("newStatus", OrderReturnStatus.RETURNED)
+                    .bind("adminNote", normalizeNote(adminNote))
+                    .bind("id", id)
+                    .bind("currentStatus", OrderReturnStatus.RETURNING)
+                    .execute();
+            if (affectedRows == 0) {
+                throw new IllegalStateException("Không thể hoàn tất yêu cầu trả hàng sau khi cập nhật tồn kho.");
+            }
+            return true;
+        });
+    }
+
     private boolean updateRequestedStatus(int id, String newStatus, String adminNote) {
         return getJdbi().withHandle(h ->
                 h.createUpdate("""
@@ -103,5 +178,8 @@ public class OrderReturnDaoAdmin extends BaseDao {
 
     private String normalizeNote(String note) {
         return note == null ? "" : note.trim();
+    }
+
+    private record ReturnedItem(int variantId, int quantity) {
     }
 }

@@ -37,6 +37,9 @@
     <c:if test="${param.success == 'returning'}">
         <div class="notice success">Đã chuyển yêu cầu sang trạng thái đang hoàn hàng.</div>
     </c:if>
+    <c:if test="${param.success == 'returned'}">
+        <div class="notice success">Đã xác nhận nhận lại sản phẩm và cộng lại số lượng vào kho.</div>
+    </c:if>
     <c:if test="${param.error == 'reject_note_required'}">
         <div class="notice error">Vui lòng nhập lý do từ chối để khách hàng biết kết quả xử lý.</div>
     </c:if>
@@ -50,6 +53,10 @@
             <div class="detail-line"><span>Ngày gửi</span><strong>${orderReturn.requestedAtFormatted}</strong></div>
             <div class="detail-line"><span>Lý do</span><strong><c:out value="${orderReturn.reasonLabel}"/></strong></div>
             <div class="detail-line"><span>Hoàn tiền</span><strong><c:out value="${orderReturn.refundStatusLabel}"/></strong></div>
+            <c:if test="${orderReturn.returnStatus == 'RETURNED'}">
+                <div class="detail-line"><span>Ngày shop nhận lại</span><strong>${orderReturn.returnedAtFormatted}</strong></div>
+                <div class="detail-line"><span>Tồn kho</span><strong>${orderReturn.stockRestored ? 'Đã cộng lại kho' : 'Chưa cập nhật'}</strong></div>
+            </c:if>
             <div class="detail-content">
                 <span>Mô tả của khách hàng</span>
                 <p><c:out value="${orderReturn.description}"/></p>
@@ -110,7 +117,20 @@
             </section>
         </c:when>
         <c:when test="${orderReturn.returnStatus == 'RETURNING'}">
-            <div class="notice info">Sản phẩm đang được hoàn về shop. Bước xác nhận đã nhận hàng, hoàn kho và hoàn tiền sẽ được xử lý ở bước nghiệp vụ tiếp theo.</div>
+            <section class="card action-card">
+                <h3>Xác nhận nhận lại sản phẩm</h3>
+                <p class="action-description">Chỉ xác nhận sau khi shop đã kiểm tra và nhận lại đầy đủ sản phẩm. Thao tác này sẽ cộng số lượng sản phẩm trở lại kho và không thể thực hiện lần hai.</p>
+                <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="returning-form">
+                    <input type="hidden" name="id" value="${orderReturn.id}">
+                    <input type="hidden" name="action" value="completeReturn">
+                    <label for="returnedNote">Ghi chú nhận hàng (không bắt buộc)</label>
+                    <textarea id="returnedNote" name="adminNote" maxlength="1000" placeholder="Ví dụ: Shop đã nhận đủ sản phẩm, tình trạng nguyên vẹn."></textarea>
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-box-open"></i> Xác nhận đã nhận và hoàn kho</button>
+                </form>
+            </section>
+        </c:when>
+        <c:when test="${orderReturn.returnStatus == 'RETURNED'}">
+            <div class="notice info">Shop đã nhận lại sản phẩm và cập nhật tồn kho. Việc hoàn tiền, nếu có, được xử lý ở bước nghiệp vụ tiếp theo.</div>
         </c:when>
     </c:choose>
 
