@@ -168,6 +168,53 @@ public class OrderDaoAdmin extends BaseDao {
         );
     }
 
+    public void updateDemoTrackingCreated(int id,
+                                          String trackingCode,
+                                          String trackingStatus,
+                                          String trackingStatusName) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET ghn_order_code = :trackingCode,
+                ghn_status = :trackingStatus,
+                ghn_status_name = :trackingStatusName,
+                ghn_last_updated_at = NOW(),
+                order_status = :orderStatus
+            WHERE id = :id
+        """)
+                        .bind("trackingCode", trackingCode)
+                        .bind("trackingStatus", trackingStatus)
+                        .bind("trackingStatusName", trackingStatusName)
+                        .bind("orderStatus", model.constant.OrderStatus.SHIPPING)
+                        .bind("id", id)
+                        .execute()
+        );
+    }
+
+    public void updateDemoTrackingStatus(int id,
+                                         String trackingStatus,
+                                         String trackingStatusName,
+                                         String orderStatus,
+                                         String paymentStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET ghn_status = :trackingStatus,
+                ghn_status_name = :trackingStatusName,
+                ghn_last_updated_at = NOW(),
+                order_status = :orderStatus,
+                payment_statuses = :paymentStatus
+            WHERE id = :id
+        """)
+                        .bind("trackingStatus", trackingStatus)
+                        .bind("trackingStatusName", trackingStatusName)
+                        .bind("orderStatus", orderStatus)
+                        .bind("paymentStatus", paymentStatus)
+                        .bind("id", id)
+                        .execute()
+        );
+    }
+
     public void updateGhnOrderCancelled(int id,
                                         String ghnOrderCode,
                                         String ghnStatus,

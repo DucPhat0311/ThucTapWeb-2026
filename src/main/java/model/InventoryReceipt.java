@@ -19,7 +19,10 @@ public class InventoryReceipt implements Serializable {
     @ColumnName("created_at")
     private LocalDateTime createdAt;
     
-    private String status; 
+    private String status;
+
+    @ColumnName("order_id")
+    private int orderId;
 
     private String supplier;
 
@@ -98,5 +101,13 @@ public class InventoryReceipt implements Serializable {
 
     public void setSupplier(String supplier) {
         this.supplier = supplier;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }

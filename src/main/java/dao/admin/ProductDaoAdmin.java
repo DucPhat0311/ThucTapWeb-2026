@@ -9,9 +9,11 @@ public class ProductDaoAdmin extends BaseDao {
 
     public List<Product> findAll() {
         String sql = """
-        SELECT p.*, c.name AS categoryName
+        SELECT p.*, c.name AS categoryName,
+               COALESCE((SELECT SUM(stock) FROM product_variants WHERE product_id = p.id), 0) AS totalStock
         FROM products p
         JOIN categories c ON p.category_id = c.id
+        WHERE p.status <> 'Đã xoá'
         ORDER BY p.id DESC
     """;
 
@@ -25,7 +27,8 @@ public class ProductDaoAdmin extends BaseDao {
     public Product findById(int id) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
-                SELECT p.*, c.name AS categoryName
+                SELECT p.*, c.name AS categoryName,
+                       COALESCE((SELECT SUM(stock) FROM product_variants WHERE product_id = p.id), 0) AS totalStock
                 FROM products p
                 JOIN categories c ON p.category_id = c.id
                 WHERE p.id = :id
@@ -39,10 +42,11 @@ public class ProductDaoAdmin extends BaseDao {
 
     public List<Product> searchByName(String keyword) {
         String sql = """
-        SELECT p.*, c.name AS categoryName
+        SELECT p.*, c.name AS categoryName,
+               COALESCE((SELECT SUM(stock) FROM product_variants WHERE product_id = p.id), 0) AS totalStock
         FROM products p
         JOIN categories c ON p.category_id = c.id
-        WHERE p.name LIKE :kw
+        WHERE p.name LIKE :kw AND p.status <> 'Đã xoá'
     """;        
         return getJdbi().withHandle(h ->
                 h.createQuery(sql)

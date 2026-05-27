@@ -21,6 +21,12 @@ public class WarehouseAdminController extends HttpServlet {
         
         if ("view".equals(action)) {
             int id = Integer.parseInt(req.getParameter("id"));
+            List<model.InventoryReceipt> allReceipts = inventoryService.getAllReceipts();
+            model.InventoryReceipt receipt = allReceipts.stream()
+                    .filter(r -> r.getId() == id)
+                    .findFirst()
+                    .orElse(null);
+            req.setAttribute("receipt", receipt);
             req.setAttribute("receiptDetails", inventoryService.getReceiptDetails(id));
             req.setAttribute("page", "warehouse");
             req.getRequestDispatcher("/WEB-INF/admin/warehouseDetail.jsp").forward(req, resp);

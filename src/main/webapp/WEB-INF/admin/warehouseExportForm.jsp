@@ -54,7 +54,6 @@
                                         placeholder="Đơn giá">
                                 </div>
                                 <div class="col col-action">
-                                    <label>&nbsp;</label>
                                     <button type="button" class="btn-remove-row"
                                         onclick="this.closest('.product-row').remove()">Xóa</button>
                                 </div>
@@ -102,7 +101,7 @@
 
                     const colBtn = document.createElement('div');
                     colBtn.className = 'col col-action';
-                    colBtn.innerHTML = '<label>&nbsp;</label><button type="button" class="btn-remove-row" onclick="this.closest(\'.product-row\').remove()">Xóa</button>';
+                    colBtn.innerHTML = '<button type="button" class="btn-remove-row" onclick="this.closest(\'.product-row\').remove()">Xóa</button>';
 
                     row.appendChild(colProduct);
                     row.appendChild(colQty);

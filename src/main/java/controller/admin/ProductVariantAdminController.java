@@ -130,6 +130,17 @@ public class ProductVariantAdminController extends HttpServlet {
             variant.setId(Integer.parseInt(request.getParameter("id")));
             variant.setProductId(Integer.parseInt(request.getParameter("productId")));
             
+            String sizeNameParam = request.getParameter("sizeName");
+            String colorNameParam = request.getParameter("colorName");
+
+            service.SizeService sizeService = new service.SizeService();
+            int sizeId = sizeService.findOrCreateSize(sizeNameParam);
+            variant.setSizeId(sizeId);
+
+            service.ColorService colorService = new service.ColorService();
+            int colorId = colorService.findOrCreateColor(colorNameParam);
+            variant.setColorId(colorId);
+
             String stockParam = request.getParameter("stock");
             variant.setStock(stockParam != null && !stockParam.isEmpty() 
                 ? Integer.parseInt(stockParam) : 0);
