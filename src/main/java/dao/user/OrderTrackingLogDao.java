@@ -5,6 +5,7 @@ import model.OrderTrackingLog;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class OrderTrackingLogDao extends BaseDao {
     public void insert(int orderId,
@@ -80,6 +81,22 @@ public class OrderTrackingLogDao extends BaseDao {
                         .bind("orderId", orderId)
                         .mapToBean(OrderTrackingLog.class)
                         .list()
+        );
+    }
+
+    public Optional<LocalDateTime> findDeliveredAt(int orderId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                    SELECT COALESCE(event_time, created_at)
+                    FROM order_tracking_logs
+                    WHERE order_id = :orderId
+                      AND UPPER(status_code) = 'DELIVERED'
+                    ORDER BY COALESCE(event_time, created_at) DESC, id DESC
+                    LIMIT 1
+                """)
+                        .bind("orderId", orderId)
+                        .mapTo(LocalDateTime.class)
+                        .findOne()
         );
     }
 
