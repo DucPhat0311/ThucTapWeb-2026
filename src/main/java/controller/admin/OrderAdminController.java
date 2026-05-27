@@ -120,8 +120,12 @@ public class OrderAdminController extends HttpServlet {
 
         if ("view".equals(mode)) {
             int id = Integer.parseInt(req.getParameter("id"));
-            req.setAttribute("order", orderService.findById(id));
+            var order = orderService.findById(id);
+            req.setAttribute("order", order);
             req.setAttribute("items", orderService.getOrderItems(id));
+            req.setAttribute("trackingLogs", orderService.getTrackingLogs(id));
+            req.setAttribute("demoTrackingStatuses", orderService.getDemoTrackingStatusLabels());
+            req.setAttribute("demoTracking", order != null && orderService.isDemoTrackingCode(order.getGhnOrderCode()));
             req.setAttribute("page", "order");
             req.getRequestDispatcher("/WEB-INF/admin/order-detailAdmin.jsp").forward(req, resp);
         }
@@ -136,6 +140,11 @@ public class OrderAdminController extends HttpServlet {
         String action = req.getParameter("action");
         if ("createDemoTracking".equals(action)) {
             createDemoTracking(req, resp);
+            return;
+        }
+
+        if ("updateDemoTracking".equals(action)) {
+            updateDemoTracking(req, resp);
             return;
         }
 
@@ -225,6 +234,20 @@ public class OrderAdminController extends HttpServlet {
         } catch (RuntimeException e) {
             String message = e.getMessage() == null ? "Không thể tạo hành trình mô phỏng." : e.getMessage();
             redirectWithMessage(resp, id, "demo_create_failed", message);
+        }
+    }
+
+    private void updateDemoTracking(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        String trackingStatus = req.getParameter("trackingStatus");
+        String location = req.getParameter("trackingLocation");
+
+        try {
+            orderService.updateDemoTracking(id, trackingStatus, location);
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&success=demo_updated");
+        } catch (RuntimeException e) {
+            String message = e.getMessage() == null ? "Không thể cập nhật hành trình mô phỏng." : e.getMessage();
+            redirectWithMessage(resp, id, "demo_update_failed", message);
         }
     }
 

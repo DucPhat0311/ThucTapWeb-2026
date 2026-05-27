@@ -9,7 +9,10 @@ import model.constant.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrderService {
     private static final int PENDING_PAYMENT_HOLD_MINUTES = 30;
@@ -17,6 +20,7 @@ public class OrderService {
     private static final String DEMO_INITIAL_STATUS = "RECEIVED";
     private static final String DEMO_INITIAL_STATUS_NAME = "Đã tiếp nhận đơn hàng";
     private static final DateTimeFormatter DEMO_CODE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private static final Map<String, String> DEMO_TRACKING_STATUS_LABELS = createDemoTrackingStatusLabels();
     
     private OrderDaoAdmin dao = new OrderDaoAdmin();
     private OrderDao orderDao = new OrderDao();
@@ -38,6 +42,10 @@ public class OrderService {
 
     public List<OrderItem> getOrderItems(int orderId) {
         return dao.getItems(orderId);
+    }
+
+    public List<OrderTrackingLog> getTrackingLogs(int orderId) {
+        return trackingLogDao.getByOrderId(orderId);
     }
 
     public void updateStatus(int id, String status) {
@@ -176,6 +184,41 @@ public class OrderService {
         return trackingCode;
     }
 
+    public void updateDemoTracking(int orderId, String trackingStatus, String location) {
+        Order order = dao.findById(orderId);
+        if (order == null || !isDemoTrackingCode(order.getGhnOrderCode())) {
+            throw new IllegalStateException("Đơn hàng chưa có hành trình mô phỏng.");
+        }
+        if (OrderStatus.COMPLETED.equals(order.getOrderStatus()) || OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
+            throw new IllegalStateException("Hành trình của đơn hàng đã kết thúc, không thể cập nhật thêm.");
+        }
+
+        String normalizedStatus = trimToEmpty(trackingStatus);
+        String statusName = DEMO_TRACKING_STATUS_LABELS.get(normalizedStatus);
+        if (statusName == null) {
+            throw new IllegalArgumentException("Trạng thái vận chuyển mô phỏng không hợp lệ.");
+        }
+
+        String newOrderStatus = "DELIVERED".equals(normalizedStatus) ? OrderStatus.COMPLETED : OrderStatus.SHIPPING;
+        String description = buildDemoTrackingDescription(statusName, location);
+        LocalDateTime now = LocalDateTime.now();
+
+        dao.updateDemoTrackingStatus(orderId, normalizedStatus, statusName, newOrderStatus);
+        trackingLogDao.insert(
+                orderId,
+                "DEMO",
+                order.getGhnOrderCode(),
+                normalizedStatus,
+                statusName,
+                description,
+                now
+        );
+    }
+
+    public Map<String, String> getDemoTrackingStatusLabels() {
+        return DEMO_TRACKING_STATUS_LABELS;
+    }
+
     public boolean canCreateGhnShippingOrder(Order order) {
         if (order == null) {
             return false;
@@ -202,6 +245,30 @@ public class OrderService {
 
     public boolean isDemoTrackingCode(String trackingCode) {
         return trackingCode != null && trackingCode.startsWith(DEMO_TRACKING_PREFIX);
+    }
+
+    private String buildDemoTrackingDescription(String statusName, String location) {
+        String normalizedLocation = trimToEmpty(location);
+        if (normalizedLocation.isBlank()) {
+            return statusName + ".";
+        }
+        return statusName + " tại " + normalizedLocation + ".";
+    }
+
+    private static Map<String, String> createDemoTrackingStatusLabels() {
+        Map<String, String> statuses = new LinkedHashMap<>();
+        statuses.put("PACKED", "Đã đóng gói");
+        statuses.put("HANDED_OVER", "Đã bàn giao vận chuyển");
+        statuses.put("SORTING", "Đang ở kho phân loại");
+        statuses.put("IN_TRANSIT", "Đang vận chuyển");
+        statuses.put("OUT_FOR_DELIVERY", "Đang giao hàng");
+        statuses.put("DELIVERY_FAILED", "Giao hàng thất bại");
+        statuses.put("DELIVERED", "Đã giao thành công");
+        return Collections.unmodifiableMap(statuses);
+    }
+
+    private String trimToEmpty(String value) {
+        return value == null ? "" : value.trim();
     }
 
     private void restoreStockIfNeeded(Order order) {

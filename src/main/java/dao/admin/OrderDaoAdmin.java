@@ -192,6 +192,27 @@ public class OrderDaoAdmin extends BaseDao {
         );
     }
 
+    public void updateDemoTrackingStatus(int id,
+                                         String trackingStatus,
+                                         String trackingStatusName,
+                                         String orderStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET ghn_status = :trackingStatus,
+                ghn_status_name = :trackingStatusName,
+                ghn_last_updated_at = NOW(),
+                order_status = :orderStatus
+            WHERE id = :id
+        """)
+                        .bind("trackingStatus", trackingStatus)
+                        .bind("trackingStatusName", trackingStatusName)
+                        .bind("orderStatus", orderStatus)
+                        .bind("id", id)
+                        .execute()
+        );
+    }
+
     public void updateGhnOrderCancelled(int id,
                                         String ghnOrderCode,
                                         String ghnStatus,
