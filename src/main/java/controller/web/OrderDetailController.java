@@ -11,7 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Order;
+import model.OrderReturn;
 import model.User;
+import model.constant.OrderReturnStatus;
 import model.constant.OrderStatus;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
@@ -84,7 +86,8 @@ public class OrderDetailController extends HttpServlet {
     }
 
     private void setReturnRequestAttributes(HttpServletRequest request, Order order) {
-        boolean existingRequest = orderReturnDao.existsByOrderId(order.getId());
+        OrderReturn orderReturn = orderReturnDao.findByOrderId(order.getId()).orElse(null);
+        boolean existingRequest = orderReturn != null;
         LocalDateTime deliveredAt = trackingLogDao.findDeliveredAt(order.getId()).orElse(null);
         LocalDateTime returnDeadline = deliveredAt == null ? null : deliveredAt.plusDays(7);
         boolean eligible = OrderStatus.COMPLETED.equals(order.getOrderStatus())
@@ -95,6 +98,12 @@ public class OrderDetailController extends HttpServlet {
         request.setAttribute("returnRequestExists", existingRequest);
         request.setAttribute("returnRequestEligible", eligible);
         request.setAttribute("returnReasons", OrderReturnReason.getCustomerReasons());
+        request.setAttribute("orderReturn", orderReturn);
+        if (orderReturn != null) {
+            request.setAttribute("returnReasonLabel", OrderReturnReason.getLabel(orderReturn.getReasonCode()));
+            request.setAttribute("returnStatusLabel", OrderReturnStatus.getReturnLabel(orderReturn.getReturnStatus()));
+            request.setAttribute("refundStatusLabel", OrderReturnStatus.getRefundLabel(orderReturn.getRefundStatus()));
+        }
         request.setAttribute("returnDeadline", returnDeadline == null
                 ? ""
                 : returnDeadline.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));

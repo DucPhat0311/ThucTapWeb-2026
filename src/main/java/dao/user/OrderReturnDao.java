@@ -1,7 +1,10 @@
 package dao.user;
 
 import dao.core.BaseDao;
+import model.OrderReturn;
 import model.constant.OrderReturnStatus;
+
+import java.util.Optional;
 
 public class OrderReturnDao extends BaseDao {
 
@@ -50,6 +53,35 @@ public class OrderReturnDao extends BaseDao {
                         .bind("returnStatus", OrderReturnStatus.REQUESTED)
                         .bind("refundStatus", OrderReturnStatus.REFUND_NOT_REQUIRED)
                         .execute()
+        );
+    }
+
+    public Optional<OrderReturn> findByOrderId(int orderId) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                    SELECT
+                        id,
+                        order_id AS orderId,
+                        user_id AS userId,
+                        request_source AS requestSource,
+                        reason_code AS reasonCode,
+                        description,
+                        return_status AS returnStatus,
+                        refund_status AS refundStatus,
+                        admin_note AS adminNote,
+                        requested_at AS requestedAt,
+                        processed_at AS processedAt,
+                        returning_at AS returningAt,
+                        returned_at AS returnedAt,
+                        refunded_at AS refundedAt,
+                        stock_restored AS stockRestored
+                    FROM order_returns
+                    WHERE order_id = :orderId
+                    LIMIT 1
+                """)
+                        .bind("orderId", orderId)
+                        .mapToBean(OrderReturn.class)
+                        .findOne()
         );
     }
 }

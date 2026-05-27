@@ -24,6 +24,10 @@ public final class OrderReturnReason {
         return CUSTOMER_REASONS;
     }
 
+    public static String getLabel(String reasonCode) {
+        return CUSTOMER_REASONS.getOrDefault(reasonCode, reasonCode);
+    }
+
     private static Map<String, String> createCustomerReasons() {
         Map<String, String> reasons = new LinkedHashMap<>();
         reasons.put(DEFECTIVE_PRODUCT, "Sản phẩm bị lỗi");

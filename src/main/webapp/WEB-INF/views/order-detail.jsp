@@ -246,11 +246,55 @@
 
                                         <c:choose>
                                             <c:when test="${returnRequestExists}">
-                                                <div class="return-existing">
-                                                    <i class="fa-regular fa-circle-check"></i>
-                                                    <div>
-                                                        <strong>Yêu cầu trả hàng đã được ghi nhận</strong>
-                                                        <p>Bạn có thể theo dõi tiến trình xử lý tại chi tiết đơn hàng.</p>
+                                                <div class="return-overview">
+                                                    <div class="return-overview-head">
+                                                        <div>
+                                                            <span class="return-caption">Trạng thái yêu cầu</span>
+                                                            <strong class="return-status ${orderReturn.returnStatus}">${returnStatusLabel}</strong>
+                                                        </div>
+                                                        <div>
+                                                            <span class="return-caption">Ngày gửi</span>
+                                                            <strong>${orderReturn.requestedAtFormatted}</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="return-request-details">
+                                                        <p><strong>Lý do:</strong> ${returnReasonLabel}</p>
+                                                        <p><strong>Mô tả:</strong> <c:out value="${orderReturn.description}" /></p>
+                                                        <c:if test="${not empty orderReturn.adminNote}">
+                                                            <p><strong>Phản hồi từ shop:</strong> <c:out value="${orderReturn.adminNote}" /></p>
+                                                        </c:if>
+                                                        <p><strong>Hoàn tiền:</strong> ${refundStatusLabel}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="return-progress">
+                                                    <div class="return-progress-item active">
+                                                        <span><i class="fa-solid fa-check"></i></span>
+                                                        <div>
+                                                            <strong>Đã gửi yêu cầu</strong>
+                                                            <small>${orderReturn.requestedAtFormatted}</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="return-progress-item ${orderReturn.returnStatus == 'APPROVED' || orderReturn.returnStatus == 'RETURNING' || orderReturn.returnStatus == 'RETURNED' ? 'active' : ''} ${orderReturn.returnStatus == 'REJECTED' ? 'rejected' : ''}">
+                                                        <span><i class="fa-solid ${orderReturn.returnStatus == 'REJECTED' ? 'fa-xmark' : 'fa-check'}"></i></span>
+                                                        <div>
+                                                            <strong>${orderReturn.returnStatus == 'REJECTED' ? 'Đã từ chối' : 'Đã chấp nhận'}</strong>
+                                                            <small>${orderReturn.processedAtFormatted}</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="return-progress-item ${orderReturn.returnStatus == 'RETURNING' || orderReturn.returnStatus == 'RETURNED' ? 'active' : ''}">
+                                                        <span><i class="fa-solid fa-box"></i></span>
+                                                        <div>
+                                                            <strong>Đang hoàn hàng</strong>
+                                                            <small>${orderReturn.returningAtFormatted}</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="return-progress-item ${orderReturn.returnStatus == 'RETURNED' ? 'active' : ''}">
+                                                        <span><i class="fa-solid fa-warehouse"></i></span>
+                                                        <div>
+                                                            <strong>Shop đã nhận hàng</strong>
+                                                            <small>${orderReturn.returnedAtFormatted}</small>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </c:when>
