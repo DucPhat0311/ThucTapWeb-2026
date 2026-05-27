@@ -65,6 +65,7 @@ public class OrderDetailController extends HttpServlet {
         syncGhnTracking(order, request);
 
         request.setAttribute("order", order);
+        request.setAttribute("demoTracking", orderService.isDemoTrackingCode(order.getGhnOrderCode()));
         request.setAttribute("orderItems", orderItemDao.getByOrderId(orderId));
         request.setAttribute("trackingLogs", trackingLogDao.getByOrderId(orderId));
         request.setAttribute("orderStatusLabel", getOrderStatusLabel(order.getOrderStatus()));
@@ -78,7 +79,7 @@ public class OrderDetailController extends HttpServlet {
 
     private void syncGhnTracking(Order order, HttpServletRequest request) {
         String orderCode = trimToEmpty(order.getGhnOrderCode());
-        if (orderCode.isBlank()) {
+        if (orderCode.isBlank() || orderService.isDemoTrackingCode(orderCode)) {
             return;
         }
 

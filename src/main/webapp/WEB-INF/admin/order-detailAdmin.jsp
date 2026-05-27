@@ -55,6 +55,41 @@
                             <p>Tạo vận đơn GHN thành công.</p>
                         </div>
                     </c:if>
+                    <c:if test="${param.error == 'ghn_disabled'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Chế độ kiểm thử chỉ tạo hành trình mô phỏng, không tạo vận đơn thật trên GHN.</p>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${param.error == 'demo_not_allowed'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Đơn hàng này không thể tạo hành trình mô phỏng hoặc đã có mã theo dõi.</p>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${param.error == 'demo_create_failed'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Không thể tạo hành trình mô phỏng. ${param.message}</p>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${param.success == 'demo_created'}">
+                        <div class="card" style="border-left: 4px solid #28a745;">
+                            <p>Đã tạo hành trình mô phỏng. Thao tác này không tạo vận đơn GHN thật.</p>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${param.error == 'demo_update_failed'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Không thể cập nhật hành trình mô phỏng. ${param.message}</p>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${param.success == 'demo_updated'}">
+                        <div class="card" style="border-left: 4px solid #28a745;">
+                            <p>Cập nhật hành trình mô phỏng thành công.</p>
+                        </div>
+                    </c:if>
 
                     <div class="card">
                         <h3>Thông tin người nhận</h3>
@@ -78,29 +113,93 @@
                     </div>
 
                     <div class="card">
-                        <h3>Vận chuyển GHN</h3>
+                        <h3>Theo dõi vận chuyển</h3>
                         <c:choose>
                             <c:when test="${not empty order.ghnOrderCode}">
-                                <p><b>Mã vận đơn:</b> ${order.ghnOrderCode}</p>
-                                <p><b>Trạng thái GHN:</b> ${not empty order.ghnStatusName ? order.ghnStatusName : 'Chưa
-                                    có trạng thái'}</p>
+                                <c:choose>
+                                    <c:when test="${fn:startsWith(order.ghnOrderCode, 'DEMO-')}">
+                                        <p><b>Loại theo dõi:</b> Mô phỏng kiểm thử</p>
+                                        <p><b>Mã theo dõi:</b> ${order.ghnOrderCode}</p>
+                                        <p><b>Trạng thái:</b> ${not empty order.ghnStatusName ? order.ghnStatusName : 'Chưa có trạng thái'}</p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p><b>Mã vận đơn GHN:</b> ${order.ghnOrderCode}</p>
+                                        <p><b>Trạng thái GHN:</b> ${not empty order.ghnStatusName ? order.ghnStatusName : 'Chưa có trạng thái'}</p>
+                                    </c:otherwise>
+                                </c:choose>
                                 <c:if test="${not empty order.ghnExpectedDeliveryTimeFormatted}">
                                     <p><b>Dự kiến giao:</b> ${order.ghnExpectedDeliveryTimeFormatted}</p>
                                 </c:if>
                                 <c:if test="${not empty order.ghnLastUpdatedAtFormatted}">
                                     <p><b>Cập nhật lúc:</b> ${order.ghnLastUpdatedAtFormatted}</p>
                                 </c:if>
+
+                                <c:if test="${demoTracking && order.orderStatus != 'COMPLETED' && order.orderStatus != 'CANCELLED'}">
+                                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                                    <h3>Cập nhật chặng mô phỏng</h3>
+                                    <form method="post" action="orderAdmin" class="status-form">
+                                        <input type="hidden" name="action" value="updateDemoTracking">
+                                        <input type="hidden" name="id" value="${order.id}">
+
+                                        <label for="trackingStatus">Chặng vận chuyển</label>
+                                        <select id="trackingStatus" name="trackingStatus" required>
+                                            <c:forEach var="status" items="${demoTrackingStatuses}">
+                                                <option value="${status.key}" ${status.key == order.ghnStatus ? 'selected' : ''}>${status.value}</option>
+                                            </c:forEach>
+                                        </select>
+
+                                        <label for="trackingLocation">Vị trí hiện tại hoặc ghi chú</label>
+                                        <input type="text" id="trackingLocation" name="trackingLocation"
+                                               placeholder="Ví dụ: Kho phân loại Thủ Đức, TP.HCM"
+                                               value="<c:out value='${demoTrackingLocation}'/>"
+                                               maxlength="255">
+
+                                        <button class="btn-primary">Lưu chặng vận chuyển</button>
+                                    </form>
+                                </c:if>
                             </c:when>
                             <c:otherwise>
-                                <p>Đơn hàng chưa có mã vận đơn GHN.</p>
+                                <p>Đơn hàng chưa có hành trình theo dõi.</p>
+                                <p>Chế độ mô phỏng phục vụ kiểm thử, không gửi yêu cầu tạo vận đơn đến GHN.</p>
                                 <form method="post" action="orderAdmin" class="status-form">
-                                    <input type="hidden" name="action" value="createGhnOrder">
+                                    <input type="hidden" name="action" value="createDemoTracking">
                                     <input type="hidden" name="id" value="${order.id}">
-                                    <button class="btn-primary">Tạo vận đơn GHN</button>
+                                    <button class="btn-primary">Tạo hành trình mô phỏng</button>
                                 </form>
                             </c:otherwise>
                         </c:choose>
                     </div>
+
+                    <c:if test="${demoTracking}">
+                        <div class="card">
+                            <h3>Lịch sử hành trình mô phỏng</h3>
+                            <c:choose>
+                                <c:when test="${empty trackingLogs}">
+                                    <p>Chưa có lịch sử vận chuyển.</p>
+                                </c:when>
+                                <c:otherwise>
+                                    <table class="order-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Thời gian</th>
+                                                <th>Trạng thái</th>
+                                                <th>Mô tả</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach var="log" items="${trackingLogs}">
+                                                <tr>
+                                                    <td>${log.eventTimeFormatted}</td>
+                                                    <td>${log.statusName}</td>
+                                                    <td>${log.description}</td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:if>
 
                     <div class="card">
                         <h3>Cập nhật trạng thái đơn hàng</h3>
