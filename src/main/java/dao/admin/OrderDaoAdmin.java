@@ -178,7 +178,6 @@ public class OrderDaoAdmin extends BaseDao {
             SET ghn_order_code = :trackingCode,
                 ghn_status = :trackingStatus,
                 ghn_status_name = :trackingStatusName,
-                ghn_expected_delivery_time = NULL,
                 ghn_last_updated_at = NOW(),
                 order_status = :orderStatus
             WHERE id = :id
