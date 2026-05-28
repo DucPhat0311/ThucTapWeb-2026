@@ -26,10 +26,20 @@ public class ProfileDaoAdmin extends BaseDao {
                     phone = :phone,
                     birthday = :birthday,
                     gender = :gender,
-                    address = :address
+                    address = :address,
+                    avatar_url = :avatarUrl
                 WHERE id = :id
             """)
                         .bindBean(admin)
+                        .execute()
+        );
+    }
+
+    public void updateAvatarOnly(int adminId, String avatarUrl) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE users SET avatar_url = :avatarUrl WHERE id = :id")
+                        .bind("avatarUrl", avatarUrl)
+                        .bind("id", adminId)
                         .execute()
         );
     }

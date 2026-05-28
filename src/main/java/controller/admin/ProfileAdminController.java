@@ -13,10 +13,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 @WebServlet("/profileAdmin")
+@jakarta.servlet.annotation.MultipartConfig
 public class ProfileAdminController extends HttpServlet {
     private final ProfileAdminService profileAdminService = ProfileAdminService.getInstance();
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
         User admin = (User) session.getAttribute("admin");
 
@@ -38,7 +40,8 @@ public class ProfileAdminController extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/admin/profileAdmin.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
         User admin = (User) session.getAttribute("admin");
@@ -52,12 +55,33 @@ public class ProfileAdminController extends HttpServlet {
             updateProfile(request, response, admin);
         } else if ("changePassword".equals(action)) {
             changePassword(request, response, admin);
+        } else if ("updateAvatar".equals(action)) {
+            updateAvatar(request, response, admin);
         }
 
         response.sendRedirect(request.getContextPath() + "/profileAdmin");
     }
 
-    private void updateProfile(HttpServletRequest request, HttpServletResponse response, User admin) throws IOException {
+    private void updateAvatar(HttpServletRequest request, HttpServletResponse response, User admin) throws IOException {
+        try {
+            jakarta.servlet.http.Part avatarPart = request.getPart("avatarFile");
+            if (avatarPart != null && avatarPart.getSize() > 0) {
+                String avatarUrl = util.CloudinaryUtil.uploadImage(avatarPart, "avatars");
+                if (avatarUrl != null) {
+                    admin.setAvatarUrl(avatarUrl);
+                    profileAdminService.updateAvatarOnly(admin.getId(), avatarUrl);
+                    request.getSession().setAttribute("admin", admin);
+                    request.getSession().setAttribute("success", "Cập nhật ảnh đại diện thành công!");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("error", "Cập nhật ảnh thất bại!");
+        }
+    }
+
+    private void updateProfile(HttpServletRequest request, HttpServletResponse response, User admin)
+            throws IOException {
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
@@ -74,6 +98,11 @@ public class ProfileAdminController extends HttpServlet {
         }
         admin.setGender(gender);
 
+        User currentFromDb = profileAdminService.getAdminById(admin.getId());
+        if (currentFromDb != null && currentFromDb.getAvatarUrl() != null) {
+            admin.setAvatarUrl(currentFromDb.getAvatarUrl());
+        }
+
         try {
             profileAdminService.updateAdmin(admin);
             request.getSession().setAttribute("admin", admin);
@@ -84,16 +113,19 @@ public class ProfileAdminController extends HttpServlet {
         }
     }
 
-    private void changePassword(HttpServletRequest request, HttpServletResponse response, User admin) throws IOException {
+    private void changePassword(HttpServletRequest request, HttpServletResponse response, User admin)
+            throws IOException {
         String currentPassword = request.getParameter("currentPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        boolean success = profileAdminService.changePassword(admin.getId(), currentPassword, newPassword, confirmPassword);
+        boolean success = profileAdminService.changePassword(admin.getId(), currentPassword, newPassword,
+                confirmPassword);
         if (success) {
             request.getSession().setAttribute("success", "Đổi mật khẩu thành công!");
         } else {
-            request.getSession().setAttribute("error", "Đổi mật khẩu thất bại! Vui lòng kiểm tra lại mật khẩu hiện tại và mật khẩu mới.");
+            request.getSession().setAttribute("error",
+                    "Đổi mật khẩu thất bại! Vui lòng kiểm tra lại mật khẩu hiện tại và mật khẩu mới.");
         }
     }
 }
