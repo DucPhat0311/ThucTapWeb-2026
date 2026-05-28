@@ -9,11 +9,30 @@ import java.util.List;
 
 public class InventoryReceiptDaoAdmin extends BaseDao {
 
+    public InventoryReceiptDaoAdmin() {
+        super();
+        try {
+            getJdbi().useHandle(handle -> {
+                try {
+                    handle.execute(
+                            "ALTER TABLE inventory_receipt_details ADD COLUMN remaining_quantity INT NOT NULL DEFAULT 0");
+                    handle.execute(
+                            "UPDATE inventory_receipt_details SET remaining_quantity = quantity WHERE remaining_quantity = 0");
+                } catch (Exception e) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean addReceiptAndUpdateStock(InventoryReceipt receipt, List<InventoryReceiptDetail> details) {
         return getJdbi().inTransaction(handle -> {
             try {
 
-                int receiptId = handle.createUpdate("INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, supplier, order_id) " +
+                int receiptId = handle.createUpdate(
+                        "INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, supplier, order_id) "
+                                +
                                 "VALUES (:userId, :type, :note, :totalAmount, :createdAt, :status, :supplier, :orderId)")
                         .bind("userId", receipt.getUserId())
                         .bind("type", receipt.getType())
@@ -29,15 +48,17 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
 
                 for (InventoryReceiptDetail detail : details) {
                     if ("IMPORT".equalsIgnoreCase(receipt.getType()) && detail.getProductVariantId() == 0) {
-                        Integer variantId = handle.createQuery("SELECT id FROM product_variants WHERE product_id = :pId AND color_id = :cId AND size_id = :sId LIMIT 1")
+                        Integer variantId = handle.createQuery(
+                                "SELECT id FROM product_variants WHERE product_id = :pId AND color_id = :cId AND size_id = :sId LIMIT 1")
                                 .bind("pId", detail.getProductId())
                                 .bind("cId", detail.getColorId())
                                 .bind("sId", detail.getSizeId())
                                 .mapTo(Integer.class)
                                 .findOne().orElse(null);
-                        
+
                         if (variantId == null) {
-                            variantId = handle.createUpdate("INSERT INTO product_variants (product_id, color_id, size_id, stock) VALUES (:pId, :cId, :sId, 0)")
+                            variantId = handle.createUpdate(
+                                    "INSERT INTO product_variants (product_id, color_id, size_id, stock) VALUES (:pId, :cId, :sId, 0)")
                                     .bind("pId", detail.getProductId())
                                     .bind("cId", detail.getColorId())
                                     .bind("sId", detail.getSizeId())
@@ -47,33 +68,39 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
                         }
                         detail.setProductVariantId(variantId);
                     }
-                    handle.createUpdate("INSERT INTO inventory_receipt_details (receipt_id, product_variant_id, quantity, price) " +
-                                    "VALUES (:receiptId, :productVariantId, :quantity, :price)")
+                    handle.createUpdate(
+                            "INSERT INTO inventory_receipt_details (receipt_id, product_variant_id, quantity, price, remaining_quantity) "
+                                    +
+                                    "VALUES (:receiptId, :productVariantId, :quantity, :price, :remainingQuantity)")
                             .bind("receiptId", receiptId)
                             .bind("productVariantId", detail.getProductVariantId())
                             .bind("quantity", detail.getQuantity())
                             .bind("price", detail.getPrice())
+                            .bind("remainingQuantity",
+                                    "EXPORT".equalsIgnoreCase(receipt.getType()) ? 0 : detail.getQuantity())
                             .execute();
 
-
                     if ("IMPORT".equalsIgnoreCase(receipt.getType()) || "RETURN".equalsIgnoreCase(receipt.getType())) {
-                        handle.createUpdate("UPDATE product_variants SET stock = stock + :quantity WHERE id = :productVariantId")
+                        handle.createUpdate(
+                                "UPDATE product_variants SET stock = stock + :quantity WHERE id = :productVariantId")
                                 .bind("quantity", detail.getQuantity())
                                 .bind("productVariantId", detail.getProductVariantId())
                                 .execute();
                     } else if ("EXPORT".equalsIgnoreCase(receipt.getType())) {
-                        int affectedRows = handle.createUpdate("UPDATE product_variants SET stock = stock - :quantity WHERE id = :productVariantId AND stock >= :quantity")
+                        int affectedRows = handle.createUpdate(
+                                "UPDATE product_variants SET stock = stock - :quantity WHERE id = :productVariantId AND stock >= :quantity")
                                 .bind("quantity", detail.getQuantity())
                                 .bind("productVariantId", detail.getProductVariantId())
                                 .execute();
                         if (affectedRows == 0) {
-                            throw new RuntimeException("Không đủ tồn kho để xuất cho mã biến thể: " + detail.getProductVariantId());
+                            throw new RuntimeException(
+                                    "Không đủ tồn kho để xuất cho mã biến thể: " + detail.getProductVariantId());
                         }
                     }
                 }
                 return true;
             } catch (Exception e) {
-                handle.rollback(); 
+                handle.rollback();
                 e.printStackTrace();
                 return false;
             }
@@ -81,53 +108,62 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
     }
 
     public List<InventoryReceipt> getAllReceipts() {
-        return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT r.*, u.full_name as user_name FROM inventory_receipts r " +
-                                "LEFT JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC")
-                        .mapToBean(InventoryReceipt.class)
-                        .list()
-        );
+        return getJdbi().withHandle(handle -> handle
+                .createQuery("SELECT r.*, u.full_name as user_name FROM inventory_receipts r " +
+                        "LEFT JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC")
+                .mapToBean(InventoryReceipt.class)
+                .list());
     }
 
     public List<InventoryReceiptDetail> getReceiptDetails(int receiptId) {
-        return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT d.*, p.name as product_name, c.name as color_name, s.code as size_name " +
-                                "FROM inventory_receipt_details d " +
-                                "JOIN product_variants pv ON d.product_variant_id = pv.id " +
-                                "JOIN products p ON pv.product_id = p.id " +
-                                "JOIN colors c ON pv.color_id = c.id " +
-                                "JOIN sizes s ON pv.size_id = s.id " +
-                                "WHERE d.receipt_id = :receiptId")
-                        .bind("receiptId", receiptId)
-                        .mapToBean(InventoryReceiptDetail.class)
-                        .list()
-        );
+        return getJdbi().withHandle(handle -> handle
+                .createQuery("SELECT d.*, p.name as product_name, c.name as color_name, s.code as size_name " +
+                        "FROM inventory_receipt_details d " +
+                        "JOIN product_variants pv ON d.product_variant_id = pv.id " +
+                        "JOIN products p ON pv.product_id = p.id " +
+                        "JOIN colors c ON pv.color_id = c.id " +
+                        "JOIN sizes s ON pv.size_id = s.id " +
+                        "WHERE d.receipt_id = :receiptId")
+                .bind("receiptId", receiptId)
+                .mapToBean(InventoryReceiptDetail.class)
+                .list());
     }
 
     public List<model.WarehouseStockDto> getWarehouseStockReport() {
-        return getJdbi().withHandle(handle ->
-                handle.createQuery("SELECT pv.id AS id, pv.stock AS stock, " +
-                                "p.name AS productName, s.code AS sizeName, c.name AS colorName, " +
-                                "(SELECT d.price FROM inventory_receipt_details d " +
-                                " JOIN inventory_receipts r ON d.receipt_id = r.id " +
-                                " WHERE d.product_variant_id = pv.id AND r.type = 'IMPORT' " +
-                                " ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS lastImportPrice, " +
-                                "(SELECT r.created_at FROM inventory_receipt_details d " +
-                                " JOIN inventory_receipts r ON d.receipt_id = r.id " +
-                                " WHERE d.product_variant_id = pv.id AND r.type = 'IMPORT' " +
-                                " ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS lastImportDate " +
-                                "FROM product_variants pv " +
-                                "JOIN products p ON pv.product_id = p.id " +
-                                "LEFT JOIN sizes s ON pv.size_id = s.id " +
-                                "LEFT JOIN colors c ON pv.color_id = c.id " +
-                                "ORDER BY p.name, c.name, s.sort_order")
-                        .mapToBean(model.WarehouseStockDto.class)
-                        .list()
-        );
+        return getJdbi().withHandle(handle -> handle.createQuery("SELECT pv.id AS id, pv.stock AS stock, " +
+                "p.name AS productName, s.code AS sizeName, c.name AS colorName, " +
+                "(SELECT d.price FROM inventory_receipt_details d " +
+                " JOIN inventory_receipts r ON d.receipt_id = r.id " +
+                " WHERE d.product_variant_id = pv.id AND r.type = 'IMPORT' " +
+                " ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS lastImportPrice, " +
+                "(SELECT r.created_at FROM inventory_receipt_details d " +
+                " JOIN inventory_receipts r ON d.receipt_id = r.id " +
+                " WHERE d.product_variant_id = pv.id AND r.type = 'IMPORT' " +
+                " ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS lastImportDate " +
+                "FROM product_variants pv " +
+                "JOIN products p ON pv.product_id = p.id " +
+                "LEFT JOIN sizes s ON pv.size_id = s.id " +
+                "LEFT JOIN colors c ON pv.color_id = c.id " +
+                "ORDER BY p.name, c.name, s.sort_order")
+                .mapToBean(model.WarehouseStockDto.class)
+                .list());
     }
 
-//Tạo phiếu xuất kho tự động trong một Handle (transaction) bên ngoài.
-//Được gọi từ OrderPlacementService trong cùng transaction đặt hàng.
+    public List<model.WarehouseStockBatchDto> getVariantImportBatches(int variantId) {
+        return getJdbi().withHandle(handle -> handle.createQuery("SELECT r.id AS id, " +
+                "DATE_FORMAT(r.created_at, '%d/%m/%Y %H:%i') AS createdAtFormatted, " +
+                "d.quantity AS quantity, d.price AS price, d.remaining_quantity AS remainingQuantity " +
+                "FROM inventory_receipt_details d " +
+                "JOIN inventory_receipts r ON d.receipt_id = r.id " +
+                "WHERE d.product_variant_id = :variantId AND r.type = 'IMPORT' " +
+                "ORDER BY r.created_at DESC, r.id DESC")
+                .bind("variantId", variantId)
+                .mapToBean(model.WarehouseStockBatchDto.class)
+                .list());
+    }
+
+    // Tạo phiếu xuất kho tự động trong một Handle (transaction) bên ngoài.
+    // Được gọi từ OrderPlacementService trong cùng transaction đặt hàng.
 
     public void createExportReceiptInHandle(
             org.jdbi.v3.core.Handle handle,
@@ -141,7 +177,7 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
 
         int receiptId = handle.createUpdate(
                 "INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, order_id) " +
-                "VALUES (:userId, 'EXPORT', :note, :totalAmount, NOW(), 'COMPLETED', :orderId)")
+                        "VALUES (:userId, 'EXPORT', :note, :totalAmount, NOW(), 'COMPLETED', :orderId)")
                 .bind("userId", userId)
                 .bind("note", "Xuất kho tự động theo đơn hàng #" + orderId)
                 .bind("totalAmount", totalAmount)
@@ -153,7 +189,7 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
         for (model.OrderItem item : items) {
             handle.createUpdate(
                     "INSERT INTO inventory_receipt_details (receipt_id, product_variant_id, quantity, price) " +
-                    "VALUES (:receiptId, :variantId, :quantity, :price)")
+                            "VALUES (:receiptId, :variantId, :quantity, :price)")
                     .bind("receiptId", receiptId)
                     .bind("variantId", item.getVariantId())
                     .bind("quantity", item.getQuantity())

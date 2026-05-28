@@ -285,10 +285,9 @@
                                                     <th>Sản Phẩm</th>
                                                     <th style="text-align: center;">Màu Sắc</th>
                                                     <th style="text-align: center;">Kích Cỡ</th>
-                                                    <th style="text-align: center;">Tồn Kho</th>
-                                                    <th style="text-align: right;">Giá Nhập Gần Nhất</th>
-                                                    <th>Ngày Nhập Gần Nhất</th>
+                                                    <th style="text-align: center;">Tổng Tồn Kho</th>
                                                     <th style="text-align: center;">Trạng Thái</th>
+                                                    <th style="text-align: center;">Hành Động</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -299,26 +298,6 @@
                                                         <td style="text-align: center;"><span class="badge" style="background: #f0f8ff; color: #1e90ff; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid #e1f0ff;">${s.sizeName}</span></td>
                                                         <td style="text-align: center;">
                                                             <strong style="font-size: 15px;">${s.stock}</strong>
-                                                        </td>
-                                                        <td style="text-align: right; font-weight: 600; color: var(--primary-color);">
-                                                            <c:choose>
-                                                                <c:when test="${not empty s.lastImportPrice && s.lastImportPrice > 0}">
-                                                                    <fmt:formatNumber value="${s.lastImportPrice}" type="number" maxFractionDigits="0" /> ₫
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <span style="color: #bbb; font-weight: normal; font-style: italic;">Chưa có giá</span>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </td>
-                                                        <td>
-                                                            <c:choose>
-                                                                <c:when test="${not empty s.lastImportDate}">
-                                                                    ${s.lastImportDate}
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <span style="color: #bbb; font-style: italic;">Chưa nhập kho</span>
-                                                                </c:otherwise>
-                                                            </c:choose>
                                                         </td>
                                                         <td style="text-align: center;">
                                                             <c:choose>
@@ -333,11 +312,18 @@
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </td>
+                                                        <td style="text-align: center;">
+                                                            <button type="button" class="icon-btn view" 
+                                                                onclick="showStockDetails(${s.id}, '${fn:escapeXml(s.productName)} - Màu: ${s.colorName} - Size: ${s.sizeName}')" 
+                                                                title="Xem chi tiết các đợt nhập kho">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 </c:forEach>
                                                 <c:if test="${empty stocks}">
                                                     <tr>
-                                                        <td colspan="7" style="text-align: center; padding: 20px; color: #8c7060;">Không tìm thấy sản phẩm nào trong kho</td>
+                                                        <td colspan="6" style="text-align: center; padding: 20px; color: #8c7060;">Không tìm thấy sản phẩm nào trong kho</td>
                                                     </tr>
                                                 </c:if>
                                             </tbody>
@@ -347,6 +333,38 @@
                             </main>
                         </section>
                     </div>
+
+                    <!-- MODAL CHI TIẾT ĐỢT NHẬP KHO -->
+                    <div id="stockDetailModal" class="modal-overlay">
+                        <div class="modal" style="max-width: 700px; width: 90%;">
+                            <div class="modal-header">
+                                <h2 id="modalStockTitle" style="margin: 0; font-size: 18px; color: #8F6641;">Chi tiết đợt nhập kho</h2>
+                                <button class="modal-close" onclick="closeStockModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #8c7060;">&times;</button>
+                            </div>
+                            <div class="modal-body" style="padding: 20px; overflow-y: auto; max-height: 60vh;">
+                                <div class="user-table-wrapper" style="margin-top: 0; box-shadow: none; border: 1px solid #f0e6db;">
+                                    <table class="user-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã Đợt Nhập</th>
+                                                <th>Ngày Nhập</th>
+                                                <th style="text-align: center;">Số Lượng Nhập</th>
+                                                <th style="text-align: right;">Giá Nhập</th>
+                                                <th style="text-align: center;">Còn Lại</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="stockBatchTableBody">
+                                            <!-- JS will dynamically populate here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="padding: 15px 25px; border-top: 2px solid #f0f0f0; display: flex; justify-content: flex-end; background: #faf8f5;">
+                                <button type="button" class="btn-back" onclick="closeStockModal()" style="padding: 9px 20px; font-weight: 600; cursor: pointer; border-radius: 8px; font-size: 13px; transform: none; min-width: 90px; text-align: center;">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <script>
                         function openTab(evt, tabName) {
                             var i, tabcontent, tablinks;
@@ -376,6 +394,48 @@
                                     trs[i].style.display = "none";
                                 }
                             }
+                        }
+
+                        function showStockDetails(variantId, variantLabel) {
+                            document.getElementById("modalStockTitle").innerText = "Chi tiết đợt nhập: " + variantLabel;
+                            const tableBody = document.getElementById("stockBatchTableBody");
+                            tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #8c7060;"><i class="fa fa-spinner fa-spin" style="font-size: 20px; color: #8F6641; margin-right: 8px;"></i> Đang tải dữ liệu...</td></tr>';
+                            
+                            document.getElementById("stockDetailModal").style.display = "flex";
+
+                            fetch('${pageContext.request.contextPath}/admin/warehouseStockBatch?variantId=' + variantId)
+                                .then(response => response.json())
+                                .then(data => {
+                                    tableBody.innerHTML = "";
+                                    if (!data || data.length === 0) {
+                                        tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #8c7060; font-style: italic;">Chưa có lịch sử nhập kho của sản phẩm này.</td></tr>';
+                                        return;
+                                    }
+                                    data.forEach(batch => {
+                                        const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(batch.price);
+                                        const row = document.createElement("tr");
+                                        
+                                        const badgeStyle = batch.remainingQuantity > 0 
+                                            ? 'background: rgba(47, 158, 68, 0.12); color: #2f9e44; border: 1px solid rgba(47, 158, 68, 0.2);' 
+                                            : 'background: rgba(220, 53, 69, 0.12); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.2);';
+                                        
+                                        row.innerHTML = 
+                                            '<td style="font-weight: 600;">PN' + batch.id + '</td>' +
+                                            '<td>' + batch.createdAtFormatted + '</td>' +
+                                            '<td style="text-align: center;"><strong>' + batch.quantity + '</strong></td>' +
+                                            '<td style="text-align: right; font-weight: 600; color: #8F6641;">' + formattedPrice + '</td>' +
+                                            '<td style="text-align: center;"><span class="badge" style="padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; ' + badgeStyle + '">' + batch.remainingQuantity + '</span></td>';
+                                        tableBody.appendChild(row);
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error("Error loading batches:", error);
+                                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #dc3545; font-weight: 600;">Có lỗi xảy ra khi tải dữ liệu! Vui lòng thử lại sau.</td></tr>';
+                                });
+                        }
+
+                        function closeStockModal() {
+                            document.getElementById("stockDetailModal").style.display = "none";
                         }
                     </script>
                 </body>
