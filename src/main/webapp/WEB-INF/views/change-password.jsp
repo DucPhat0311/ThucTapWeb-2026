@@ -36,16 +36,8 @@
                     <button type="button" class="change-avatar-btn js-avatar-trigger">Đổi ảnh</button>
                 </form>
             </div>
-            <h3>${sessionScope.userlogin.fullName}</h3>
-            <p>
-                Thành viên từ:
-                <c:choose>
-                    <c:when test="${not empty sessionScope.userlogin.createdAtDate}">
-                        <fmt:formatDate value="${sessionScope.userlogin.createdAtDate}" pattern="dd/MM/yyyy"/>
-                    </c:when>
-                    <c:otherwise>Chưa xác định</c:otherwise>
-                </c:choose>
-            </p>
+            <h3>${empty sessionScope.userlogin.fullName ? sessionScope.userlogin.username : sessionScope.userlogin.fullName}</h3>
+            <p>${sessionScope.userlogin.email}</p>
         </div>
 
         <nav class="profile-menu">
@@ -60,7 +52,9 @@
     </div>
 
     <div class="profile-content" >
-        <h2>Đổi mật khẩu</h2>
+        <div class="profile-heading">
+            <h2>Đổi mật khẩu</h2>
+        </div>
 
         <form class="profile-form" method="post" action="change-password">
             <div class="form-row">

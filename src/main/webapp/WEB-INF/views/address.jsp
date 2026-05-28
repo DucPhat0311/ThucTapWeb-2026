@@ -35,6 +35,8 @@
                     <button type="button" class="change-avatar-btn js-avatar-trigger">Đổi ảnh</button>
                 </form>
             </div>
+            <h3>${empty sessionScope.userlogin.fullName ? sessionScope.userlogin.username : sessionScope.userlogin.fullName}</h3>
+            <p>${sessionScope.userlogin.email}</p>
         </div>
 
         <nav class="profile-menu">
