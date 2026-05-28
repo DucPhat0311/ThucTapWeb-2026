@@ -66,6 +66,7 @@ public class CheckoutController extends HttpServlet {
             return;
         }
 
+
         session.setAttribute(CHECKOUT_SELECTED_IDS, selectedIds);
         session.removeAttribute("buyNowItem");
 
@@ -112,6 +113,35 @@ public class CheckoutController extends HttpServlet {
             resp.sendRedirect("my-cart");
             return;
         }
+
+        int totalWeight = 0;
+        int totalLength = 0;
+        int totalWidth = 0;
+        int totalHeight = 0;
+
+        for (CartItem item : checkoutItems) {
+            int qty = item.getQuantity();
+
+            int itemWeight = item.getProduct().getWeight();
+            int itemLength = item.getProduct().getLength();
+            int itemWidth = item.getProduct().getWidth();
+            int itemHeight = item.getProduct().getHeight();
+
+            totalWeight += (itemWeight * qty);
+
+            if (itemLength > totalLength) {
+                totalLength = itemLength;
+            }
+            if (itemWidth > totalWidth) {
+                totalWidth = itemWidth;
+            }
+            totalHeight += (itemHeight * qty);
+        }
+
+        req.setAttribute("totalWeight", totalWeight);
+        req.setAttribute("totalLength", totalLength);
+        req.setAttribute("totalWidth", totalWidth);
+        req.setAttribute("totalHeight", totalHeight);
 
         Address selectedAddress = addressService.getPrimaryByUser(user.getId());
         moveFlashMessageToRequest(session, req);

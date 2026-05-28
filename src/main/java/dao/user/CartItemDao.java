@@ -93,22 +93,27 @@ public class CartItemDao extends BaseDao {
 
     public List<CartItem> getItemsByCartId(int cartId) {
         String sql = """
-        SELECT
-            ci.variant_id,
-            ci.quantity,
-            ci.price,
-            p.id   AS pid,
-            p.name,
-            p.thumbnail,
-            s.code AS size,
-            c.name AS color
-        FROM cart_items ci
-        JOIN product_variants v ON ci.variant_id = v.id
-        JOIN products p ON v.product_id = p.id
-        JOIN sizes s ON v.size_id = s.id
-        JOIN colors c ON v.color_id = c.id
-        WHERE ci.cart_id = :cid
-    """;
+       SELECT
+           ci.variant_id,
+           ci.quantity,
+           ci.price,
+           p.id   AS pid,
+           p.name,
+           p.thumbnail,
+           p.weight,
+           p.length,
+           p.width,
+           p.height,
+           s.code AS size,
+           c.name AS color
+       FROM cart_items ci
+       JOIN product_variants v ON ci.variant_id = v.id
+       JOIN products p ON v.product_id = p.id
+       JOIN sizes s ON v.size_id = s.id
+       JOIN colors c ON v.color_id = c.id
+       WHERE ci.cart_id = :cid
+   """;
+
 
         return getJdbi().withHandle(h ->
                 h.createQuery(sql)
@@ -121,10 +126,18 @@ public class CartItemDao extends BaseDao {
                             item.setSize(rs.getString("size"));
                             item.setColor(rs.getString("color"));
 
+
                             Product p = new Product();
                             p.setId(rs.getInt("pid"));
                             p.setName(rs.getString("name"));
                             p.setThumbnail(rs.getString("thumbnail"));
+
+
+                            p.setWeight(rs.getInt("weight"));
+                            p.setLength(rs.getInt("length"));
+                            p.setWidth(rs.getInt("width"));
+                            p.setHeight(rs.getInt("height"));
+
 
                             item.setProduct(p);
                             return item;
@@ -132,6 +145,7 @@ public class CartItemDao extends BaseDao {
                         .list()
         );
     }
+
     public void clearCart(int cartId) {
         getJdbi().useHandle(h ->
                 h.createUpdate("DELETE FROM cart_items WHERE cart_id = :cid")
