@@ -11,8 +11,8 @@
 <%@ include file="../include/header.jsp" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/address.css">
 
-<div class="address-container">
-    <div class="address-sidebar">
+<div class="profile-container address-container">
+    <div class="profile-sidebar address-sidebar">
         <div class="user-info">
             <div class="avatar">
                 <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
@@ -70,7 +70,7 @@
         </nav>
     </div>
 
-    <div class="address-content">
+    <div class="profile-content address-content">
         <div class="profile-heading address-page-heading">
             <h2>Địa chỉ của tôi</h2>
             <button class="btn-add-address" id="btnOpenModal">

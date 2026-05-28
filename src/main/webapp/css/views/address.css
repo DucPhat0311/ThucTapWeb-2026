@@ -5,7 +5,11 @@
 /* ========== ADDRESS HEADER ========== */
 
 .address-page-heading {
-    margin-bottom: 28px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
 }
 
 .address-page-heading .btn-add-address {

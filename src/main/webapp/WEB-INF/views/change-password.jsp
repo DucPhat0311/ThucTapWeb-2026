@@ -51,12 +51,12 @@
         </nav>
     </div>
 
-    <div class="profile-content" >
+    <div class="profile-content change-password-content">
         <div class="profile-heading">
             <h2>Đổi mật khẩu</h2>
         </div>
 
-        <form class="profile-form" method="post" action="change-password">
+        <form class="profile-form change-password-form" method="post" action="change-password">
             <div class="form-row">
                 <div class="form-group">
                     <label for="oldpass">Mật khẩu hiện tại</label>
@@ -99,7 +99,7 @@
         </form>
 
         <c:if test="${not empty error}">
-            <p style="color:red">${error}</p>
+            <p class="profile-alert error">${error}</p>
         </c:if>
 
     </div>
