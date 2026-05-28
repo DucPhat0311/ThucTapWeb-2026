@@ -37,6 +37,8 @@
                                                     ảnh</button>
                                             </form>
                                         </div>
+                                        <h3>${empty sessionScope.userlogin.fullName ? sessionScope.userlogin.username : sessionScope.userlogin.fullName}</h3>
+                                        <p>${sessionScope.userlogin.email}</p>
                                     </div>
 
                                     <nav class="profile-menu">
@@ -54,7 +56,9 @@
                                 </div>
 
                                 <div class="profile-content">
-                                    <h2>Đơn hàng của tôi</h2>
+                                    <div class="profile-heading">
+                                        <h2>Đơn hàng của tôi</h2>
+                                    </div>
 
                                     <c:if test="${param.cancel == 'success'}">
                                         <div class="order-alert order-alert-success">Hủy đơn hàng thành công.</div>
@@ -95,7 +99,7 @@
                                     </div>
 
                                     <c:if test="${empty orders}">
-                                        <p style="text-align:center; padding:30px; color:#888">
+                                        <p class="empty-msg">
                                             Bạn chưa có đơn hàng nào.
                                         </p>
                                     </c:if>

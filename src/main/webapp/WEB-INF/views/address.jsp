@@ -11,8 +11,8 @@
 <%@ include file="../include/header.jsp" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/address.css">
 
-<div class="address-container">
-    <div class="address-sidebar">
+<div class="profile-container address-container">
+    <div class="profile-sidebar address-sidebar">
         <div class="user-info">
             <div class="avatar">
                 <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
@@ -35,6 +35,8 @@
                     <button type="button" class="change-avatar-btn js-avatar-trigger">Đổi ảnh</button>
                 </form>
             </div>
+            <h3>${empty sessionScope.userlogin.fullName ? sessionScope.userlogin.username : sessionScope.userlogin.fullName}</h3>
+            <p>${sessionScope.userlogin.email}</p>
         </div>
 
         <nav class="profile-menu">
@@ -68,8 +70,8 @@
         </nav>
     </div>
 
-    <div class="address-content">
-        <div class="address-header">
+    <div class="profile-content address-content">
+        <div class="profile-heading address-page-heading">
             <h2>Địa chỉ của tôi</h2>
             <button class="btn-add-address" id="btnOpenModal">
                 <i class="fas fa-plus"></i> Thêm địa chỉ mới
@@ -84,12 +86,12 @@
 
         <div class="address-list">
             <c:if test="${empty addressList}">
-                <p>Bạn chưa có địa chỉ nào.</p>
+                <p class="empty-msg">Bạn chưa có địa chỉ nào.</p>
             </c:if>
 
             <c:forEach var="a" items="${addressList}">
                 <div class="address-card">
-                    <div class="address-header">
+                    <div class="address-card-header">
                         <strong>${a.name}</strong>
                         <span>${a.phone}</span>
 
