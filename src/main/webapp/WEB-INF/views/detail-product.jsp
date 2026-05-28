@@ -375,7 +375,7 @@
             sizeId: ${v.sizeId},
             stock: ${v.stock},
             price: ${v.price},
-            salePrice: ${v.salePrice}
+            salePrice: ${v.salePrice},
         }<c:if test="${!st.last}">,</c:if>
         </c:forEach>
     ];
