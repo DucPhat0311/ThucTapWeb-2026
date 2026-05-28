@@ -27,6 +27,10 @@ public class ProfileAdminService {
         profileAdminDAO.updateAdmin(admin);
     }
 
+    public void updateAvatarOnly(int adminId, String avatarUrl) {
+        profileAdminDAO.updateAvatarOnly(adminId, avatarUrl);
+    }
+
     public boolean changePassword(int adminId, String currentPassword, String newPassword, String confirmPassword) {
         User admin = profileAdminDAO.getAdminById(adminId);
         if (admin != null && PassUtil.checkOldPass(currentPassword, admin.getPassword()) && newPassword.equals(confirmPassword)) {
