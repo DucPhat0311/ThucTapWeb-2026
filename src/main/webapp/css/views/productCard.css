@@ -279,3 +279,9 @@
     box-shadow: 0 5px 15px rgba(111, 78, 55, 0.2);
 }
 
+
+.product-card img,
+.product-card .image-box img {
+    object-fit: cover;
+    object-position: center;
+}
