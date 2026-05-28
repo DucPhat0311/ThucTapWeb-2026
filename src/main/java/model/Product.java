@@ -23,6 +23,12 @@ public class Product implements Serializable {
     private double avgRating;
     private int totalReviews;
 
+    private int weight;
+    private int length;
+    private int width;
+    private int height;
+
+
     public Product(int id, int categoryId, String name, String description, double price, double
             sale_price, String thumbnail, LocalDateTime created_at, int views, String status) {
         this.id = id;
@@ -222,5 +228,21 @@ public class Product implements Serializable {
     public void setTotalStock(int totalStock) {
         this.totalStock = totalStock;
     }
+
+    public int getWeight() { return weight; }
+    public void setWeight(int weight) { this.weight = weight; }
+
+
+    public int getLength() { return length; }
+    public void setLength(int length) { this.length = length; }
+
+
+    public int getWidth() { return width; }
+    public void setWidth(int width) { this.width = width; }
+
+
+    public int getHeight() { return height; }
+    public void setHeight(int height) { this.height = height; }
+
 }
 
