@@ -50,14 +50,21 @@ public class HomeController extends HttpServlet {
             if (parent.getSubCategories() != null) {
                 for (Category sub : parent.getSubCategories()) {
                     cateIds.add(sub.getId());
+
+                    if (sub.getSubCategories() != null) {
+                        for (Category subChild : sub.getSubCategories()) {
+                            cateIds.add(subChild.getId());
+                        }
+                    }
                 }
             }
             parent.setProducts(productDao.findLatestByCategories(cateIds, 8));
         }
-        req.setAttribute("allCategories", allCategories);
+
+            req.setAttribute("allCategories", allCategories);
 
 
-        req.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(req, resp);
+        }
     }
-}
 
