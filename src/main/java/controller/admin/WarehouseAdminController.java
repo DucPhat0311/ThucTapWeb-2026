@@ -34,7 +34,9 @@ public class WarehouseAdminController extends HttpServlet {
         }
 
         List<InventoryReceipt> receipts = inventoryService.getAllReceipts();
+        List<model.WarehouseStockDto> stocks = inventoryService.getWarehouseStockReport();
         req.setAttribute("receipts", receipts);
+        req.setAttribute("stocks", stocks);
         req.setAttribute("page", "warehouse");
         req.getRequestDispatcher("/WEB-INF/admin/warehouseAdmin.jsp").forward(req, resp);
     }

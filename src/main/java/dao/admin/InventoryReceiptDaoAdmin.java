@@ -104,6 +104,28 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
         );
     }
 
+    public List<model.WarehouseStockDto> getWarehouseStockReport() {
+        return getJdbi().withHandle(handle ->
+                handle.createQuery("SELECT pv.id AS id, pv.stock AS stock, " +
+                                "p.name AS productName, s.code AS sizeName, c.name AS colorName, " +
+                                "(SELECT d.price FROM inventory_receipt_details d " +
+                                " JOIN inventory_receipts r ON d.receipt_id = r.id " +
+                                " WHERE d.product_variant_id = pv.id AND r.type = 'IMPORT' " +
+                                " ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS lastImportPrice, " +
+                                "(SELECT r.created_at FROM inventory_receipt_details d " +
+                                " JOIN inventory_receipts r ON d.receipt_id = r.id " +
+                                " WHERE d.product_variant_id = pv.id AND r.type = 'IMPORT' " +
+                                " ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS lastImportDate " +
+                                "FROM product_variants pv " +
+                                "JOIN products p ON pv.product_id = p.id " +
+                                "LEFT JOIN sizes s ON pv.size_id = s.id " +
+                                "LEFT JOIN colors c ON pv.color_id = c.id " +
+                                "ORDER BY p.name, c.name, s.sort_order")
+                        .mapToBean(model.WarehouseStockDto.class)
+                        .list()
+        );
+    }
+
 //Tạo phiếu xuất kho tự động trong một Handle (transaction) bên ngoài.
 //Được gọi từ OrderPlacementService trong cùng transaction đặt hàng.
 

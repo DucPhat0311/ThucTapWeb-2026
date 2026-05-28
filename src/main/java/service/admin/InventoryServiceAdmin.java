@@ -37,4 +37,8 @@ public class InventoryServiceAdmin {
         }
         return inventoryDao.getReceiptDetails(receiptId);
     }
+
+    public List<model.WarehouseStockDto> getWarehouseStockReport() {
+        return inventoryDao.getWarehouseStockReport();
+    }
 }
