@@ -55,6 +55,19 @@
 
         <div class="actions">
 
+            <c:choose>
+                <c:when test="${not empty sessionScope.userlogin}">
+                    <a href="my-wishlist" class="iconWishlist">
+                        <i class="fa-regular fa-heart"></i>
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <a href="login" class="iconWishlist">
+                        <i class="fa-regular fa-heart"></i>
+                    </a>
+                </c:otherwise>
+            </c:choose>
+
 
             <c:choose>
                 <c:when test="${not empty sessionScope.userlogin}">
