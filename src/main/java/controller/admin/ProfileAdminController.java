@@ -119,13 +119,20 @@ public class ProfileAdminController extends HttpServlet {
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
-        boolean success = profileAdminService.changePassword(admin.getId(), currentPassword, newPassword,
-                confirmPassword);
-        if (success) {
-            request.getSession().setAttribute("success", "Đổi mật khẩu thành công!");
-        } else {
-            request.getSession().setAttribute("error",
-                    "Đổi mật khẩu thất bại! Vui lòng kiểm tra lại mật khẩu hiện tại và mật khẩu mới.");
+        try {
+            boolean success = profileAdminService.changePassword(admin.getId(), currentPassword, newPassword,
+                    confirmPassword);
+            if (success) {
+                request.getSession().setAttribute("success", "Đổi mật khẩu thành công!");
+            } else {
+                request.getSession().setAttribute("error",
+                        "Đổi mật khẩu thất bại! Vui lòng kiểm tra lại mật khẩu hiện tại và mật khẩu mới.");
+            }
+        } catch (IllegalArgumentException e) {
+            request.getSession().setAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("error", "Đổi mật khẩu thất bại! Đã xảy ra lỗi hệ thống.");
         }
     }
 }

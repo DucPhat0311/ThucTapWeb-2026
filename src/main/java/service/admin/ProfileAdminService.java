@@ -33,11 +33,24 @@ public class ProfileAdminService {
 
     public boolean changePassword(int adminId, String currentPassword, String newPassword, String confirmPassword) {
         User admin = profileAdminDAO.getAdminById(adminId);
-        if (admin != null && PassUtil.checkOldPass(currentPassword, admin.getPassword()) && newPassword.equals(confirmPassword)) {
-            String hashedPassword = PassUtil.hash(newPassword);
-            profileAdminDAO.changePassword(adminId, hashedPassword);
-            return true;
+        if (admin == null) {
+            throw new IllegalArgumentException("Tài khoản không tồn tại!");
         }
-        return false;
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            throw new IllegalArgumentException("Mật khẩu mới không được để trống!");
+        }
+        if (!PassUtil.checkOldPass(currentPassword, admin.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu hiện tại không chính xác!");
+        }
+        if (PassUtil.checkOldPass(newPassword, admin.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu mới không được trùng với mật khẩu hiện tại!");
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            throw new IllegalArgumentException("Mật khẩu xác nhận không khớp!");
+        }
+
+        String hashedPassword = PassUtil.hash(newPassword);
+        profileAdminDAO.changePassword(adminId, hashedPassword);
+        return true;
     }
 }
