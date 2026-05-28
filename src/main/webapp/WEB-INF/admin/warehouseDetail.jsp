@@ -32,7 +32,7 @@
 
                         <main id="page" style="padding: 20px;">
                             <div class="cardHouse" style="background: #fff; padding: 24px; border-radius: 12px;">
-                                <c:if test="${not empty receipt and receipt.orderId > 0}">
+                                <c:if test="${not empty receipt and receipt.orderId > 0 and receipt.type == 'EXPORT'}">
                                     <div class="warehouse-order-banner">
                                         <span class="warehouse-order-icon"><i
                                                 class="fa-solid fa-cart-shopping"></i></span>
@@ -43,6 +43,22 @@
                                                 class="warehouse-order-link"><i
                                                     class="fa-solid fa-arrow-up-right-from-square"
                                                     style="font-size:10px;"></i> Xem đơn hàng</a>
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty receipt and receipt.orderId > 0 and receipt.type == 'RETURN'}">
+                                    <div class="warehouse-order-banner"
+                                        style="background: rgba(47, 158, 68, 0.08); border-color: rgba(47, 158, 68, 0.15);">
+                                        <span class="warehouse-order-icon"
+                                            style="background: #2f9e44; color: #fff; display: flex; align-items: center; justify-content: center;"><i
+                                                class="fa-solid fa-rotate-left"></i></span>
+                                        <div>
+                                            <span class="warehouse-order-label" style="color: #2f9e44;">Hoàn kho từ Đơn
+                                                trả hàng #${receipt.orderId}</span>
+                                            <a href="${pageContext.request.contextPath}/returnAdmin?mode=view&id=${receipt.orderId}"
+                                                class="warehouse-order-link" style="color: #2f9e44;"><i
+                                                    class="fa-solid fa-arrow-up-right-from-square"
+                                                    style="font-size:10px;"></i> Xem đơn trả hàng</a>
                                         </div>
                                     </div>
                                 </c:if>

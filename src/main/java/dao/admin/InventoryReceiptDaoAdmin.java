@@ -56,7 +56,7 @@ public class InventoryReceiptDaoAdmin extends BaseDao {
                             .execute();
 
 
-                    if ("IMPORT".equalsIgnoreCase(receipt.getType())) {
+                    if ("IMPORT".equalsIgnoreCase(receipt.getType()) || "RETURN".equalsIgnoreCase(receipt.getType())) {
                         handle.createUpdate("UPDATE product_variants SET stock = stock + :quantity WHERE id = :productVariantId")
                                 .bind("quantity", detail.getQuantity())
                                 .bind("productVariantId", detail.getProductVariantId())

@@ -38,6 +38,9 @@
                                     <div class="tab-link" onclick="openTab(event, 'export')">
                                         Xuất Kho
                                     </div>
+                                    <div class="tab-link" onclick="openTab(event, 'return')">
+                                        Hoàn Kho
+                                    </div>
                                 </div>
 
                                 <div id="import" class="tab-content active">
@@ -175,6 +178,85 @@
                                                     <tr>
                                                         <td colspan="7" style="text-align: center;">Chưa có phiếu xuất
                                                             nào</td>
+                                                    </tr>
+                                                </c:if>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div id="return" class="tab-content">
+                                    <div class="tab-header">
+                                        <h3>Lịch sử hoàn kho</h3>
+                                        <a href="${pageContext.request.contextPath}/admin/warehouseReturnForm"
+                                            class="btn-add">Thêm phiếu hoàn kho</a>
+                                    </div>
+                                    <div class="user-table-wrapper">
+                                        <table class="user-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Mã Phiếu Hoàn</th>
+                                                    <th>Nguồn</th>
+                                                    <th>Người Hoàn</th>
+                                                    <th>Tổng Tiền</th>
+                                                    <th>Ngày Hoàn Kho</th>
+                                                    <th>Trạng Thái</th>
+                                                    <th>Hành Động</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:set var="hasReturn" value="false" />
+                                                <c:forEach var="r" items="${receipts}">
+                                                    <c:if test="${r.type == 'RETURN'}">
+                                                        <c:set var="hasReturn" value="true" />
+                                                        <tr>
+                                                            <td>PH${r.id}</td>
+                                                            <td>
+                                                                <c:choose>
+                                                                    <c:when test="${r.orderId > 0}">
+                                                                        <span class="warehouse-source-badge warehouse-source-return">
+                                                                            <i class="fa-solid fa-rotate-left"></i>
+                                                                            Đơn trả #${r.orderId}
+                                                                        </span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span class="warehouse-source-badge warehouse-source-manual">
+                                                                            <i class="fa-solid fa-pen"></i>
+                                                                            Thủ công
+                                                                        </span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </td>
+                                                            <td>${r.userName}</td>
+                                                            <td>
+                                                                <fmt:formatNumber value="${r.totalAmount}"
+                                                                    type="number" maxFractionDigits="0" /> ₫
+                                                            </td>
+                                                            <td>${r.createdAt}</td>
+                                                            <td>
+                                                                <c:choose>
+                                                                    <c:when test="${r.status == 'COMPLETED'}">
+                                                                        <span class="warehouse-status completed">Hoàn thành</span>
+                                                                    </c:when>
+                                                                    <c:when test="${r.status == 'PENDING'}">
+                                                                        <span class="warehouse-status pending">Chờ xử lý</span>
+                                                                    </c:when>
+                                                                    <c:when test="${r.status == 'CANCELLED'}">
+                                                                        <span class="warehouse-status cancelled">Đã hủy</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span class="warehouse-status">${r.status}</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </td>
+                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view" title="Xem chi tiết"><i class="fa fa-eye"></i></a></td>
+                                                        </tr>
+                                                    </c:if>
+                                                </c:forEach>
+                                                <c:if test="${!hasReturn}">
+                                                    <tr>
+                                                        <td colspan="7" style="text-align: center;">Chưa có phiếu hoàn
+                                                            kho nào</td>
                                                     </tr>
                                                 </c:if>
                                             </tbody>
