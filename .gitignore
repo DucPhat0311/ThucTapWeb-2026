@@ -47,3 +47,4 @@ gradle.properties
 .gradle/
 build/
 target/
+bin/
