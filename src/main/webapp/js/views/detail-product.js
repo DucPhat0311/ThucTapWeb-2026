@@ -10,14 +10,45 @@ document.addEventListener("DOMContentLoaded", () => {
     const ratingInput = document.getElementById("rating-value");
     const buyNowBtn = document.querySelector(".btn-buy-now");
 
+    const priceDisplayContainer = document.getElementById("variant-price-display");
 
     let selectedColorId = null;
     let selectedSizeId = null;
     let selectedRating = 0;
     let currentStock = 0;
 
+    function checkAndRenderVariant() {
+        if (!selectedColorId || !selectedSizeId) return;
 
+        const matchedVariant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
 
+        if (matchedVariant) {
+            if (priceDisplayContainer) {
+                let htmlPrice = "";
+                if (matchedVariant.salePrice > 0 && matchedVariant.salePrice < matchedVariant.price) {
+                    htmlPrice = `
+                        <span class="current-price" style="font-weight:bold; color: red">
+                            ${new Intl.NumberFormat('vi-VN').format(matchedVariant.salePrice)}₫
+                        </span>
+                        <span class="old-price" style="text-decoration: line-through; color: #999; font-size: 0.9em; margin-left: 8px;">
+                            ${new Intl.NumberFormat('vi-VN').format(matchedVariant.price)}₫
+                        </span>
+                    `;
+                } else {
+                    htmlPrice = `
+                        <span class="current-price" style="font-weight:bold">
+                            ${new Intl.NumberFormat('vi-VN').format(matchedVariant.price)}₫
+                        </span>
+                    `;
+                }
+                priceDisplayContainer.innerHTML = htmlPrice;
+            }
+        } else {
+            if (priceDisplayContainer) {
+                priceDisplayContainer.innerHTML = `<span style="color: #999; font-style: italic;">Tạm hết hàng</span>`;
+            }
+        }
+    }
 
     function showToast(message, isError = false) {
         const toast = document.getElementById("toast");
@@ -29,9 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3000);
     }
 
-
-
-
     function updateCartBadge(quantity) {
         const badge = document.querySelector(".cart-count");
         if (badge) {
@@ -40,16 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
-
-
     function updateSizeAvailability() {
         sizeButtons.forEach(btn => {
             const sizeId = Number(btn.dataset.sizeId);
             const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === sizeId);
-
-
-
 
             if (!variant || variant.stock <= 0) {
                 btn.disabled = true;
@@ -60,62 +82,42 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-
-
-
         selectedSizeId = null;
         currentStock = 0;
         if (quantityInput) quantityInput.value = 1;
         sizeButtons.forEach(b => b.classList.remove("active"));
+
     }
 
-
-
-
-    // chon Mau
+    // chọn Màu
     colorBtns.forEach(btn => {
         btn.addEventListener("click", () => {
             colorBtns.forEach(t => t.classList.remove("active"));
             btn.classList.add("active");
             selectedColorId = Number(btn.dataset.colorId);
 
-
-
-
             updateSizeAvailability();
+            checkAndRenderVariant();
         });
     });
 
-
-
-
-    // chon Size
+    // chọn Size
     sizeButtons.forEach(btn => {
         btn.addEventListener("click", () => {
             if (btn.disabled) return;
 
-
-
-
             sizeButtons.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
 
-
-
-
             selectedSizeId = Number(btn.dataset.sizeId);
-
-
-
 
             const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
             currentStock = variant ? variant.stock : 0;
             if (quantityInput) quantityInput.value = 1;
+
+            checkAndRenderVariant();
         });
     });
-
-
-
 
     // + Tang - giam so luong
     if (decreaseBtn && increaseBtn && quantityInput) {
@@ -127,9 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let val = parseInt(quantityInput.value);
             if (val > 1) quantityInput.value = val - 1;
         });
-
-
-
 
         increaseBtn.addEventListener("click", () => {
             if (!selectedColorId || !selectedSizeId) {
@@ -145,17 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
-
-
     // danh gia sao
     stars.forEach(star => {
         star.addEventListener("click", () => {
             selectedRating = parseInt(star.dataset.value);
             if (ratingInput) ratingInput.value = selectedRating;
-
-
-
 
             stars.forEach(s => s.classList.remove("active"));
             for (let i = 0; i < selectedRating; i++) {
@@ -163,9 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-
-
-
 
     if (submitBtn) {
         submitBtn.addEventListener("click", (e) => {
@@ -176,10 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
-
-
-    // handle nút add
+    // handle nút Thêm vào giỏ hàng
     if (btnAddCart) {
         btnAddCart.addEventListener("click", () => {
             if (!selectedColorId || !selectedSizeId) {
@@ -187,14 +174,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-
-
-
             const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
             const quantity = parseInt(quantityInput.value);
-
-
-
 
             fetch("add-cart", {
                 method: "POST",
@@ -235,7 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
-
             const foundVariant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
 
             if (!foundVariant) {
@@ -262,7 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 productId: currentProductId
             };
 
-
             for (const key in fields) {
                 const input = document.createElement("input");
                 input.type = "hidden";
@@ -271,15 +250,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 form.appendChild(input);
             }
 
-
             document.body.appendChild(form);
             form.submit();
         });
     }
-
-
 });
-
 
 // handle nút back trogn chrome khi thêm giỏ hàng
 window.addEventListener("pageshow", function (event) {
@@ -287,6 +262,3 @@ window.addEventListener("pageshow", function (event) {
         window.location.reload();
     }
 });
-
-
-
