@@ -116,8 +116,23 @@
                                                         <c:otherwise>
                                                             <c:forEach var="i" items="${o.items}">
                                                                 <div class="single-product">
-                                                                    <img src="${(not empty i.thumbnail and fn:startsWith(i.thumbnail, 'http')) ? '' : pageContext.request.contextPath.concat('/')}${empty i.thumbnail ? 'img/aox.webp' : i.thumbnail}"
-                                                                        alt="${i.productName}">
+                                                                    <c:set var="itemThumb"
+                                                                        value="${empty i.thumbnail ? 'img/aox.webp' : i.thumbnail}" />
+                                                                    <c:choose>
+                                                                        <c:when
+                                                                            test="${fn:startsWith(itemThumb, 'http://') or fn:startsWith(itemThumb, 'https://')}">
+                                                                            <img src="${itemThumb}" alt="${i.productName}">
+                                                                        </c:when>
+                                                                        <c:when
+                                                                            test="${fn:startsWith(itemThumb, 'img/') or fn:startsWith(itemThumb, '/img/')}">
+                                                                            <img src="${pageContext.request.contextPath}${fn:startsWith(itemThumb, '/') ? itemThumb : '/'.concat(itemThumb)}"
+                                                                                alt="${i.productName}">
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <img src="${pageContext.request.contextPath}/img/products${fn:startsWith(itemThumb, '/') ? itemThumb : '/'.concat(itemThumb)}"
+                                                                                alt="${i.productName}">
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                     <div class="order-info">
                                                                         <a href="detail-product?id=${i.productId}">
                                                                             <h3>${i.productName}</h3>

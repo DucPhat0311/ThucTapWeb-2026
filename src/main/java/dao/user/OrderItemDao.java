@@ -50,8 +50,7 @@ public class OrderItemDao extends BaseDao {
                    p.thumbnail,
                    p.name AS productName
             FROM order_items oi
-            LEFT JOIN product_variants pv ON oi.variant_id = pv.id
-            LEFT JOIN products p ON pv.product_id = p.id
+            LEFT JOIN products p ON oi.product_id = p.id
             WHERE oi.order_id = :oid
         """)
                         .bind("oid", orderId)
