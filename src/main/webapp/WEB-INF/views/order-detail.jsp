@@ -40,9 +40,10 @@
                                 </nav>
                             </div>
 
-                            <div class="profile-content order-detail-page">
+                            <div class="profile-content order-detail-page order-status-${orderStatusClass}">
                                 <div class="detail-header">
                                     <div>
+                                        <span class="detail-eyebrow">Theo dõi đơn hàng</span>
                                         <h2>Chi tiết đơn hàng</h2>
                                         <p class="order-code">Mã đơn hàng: <strong>#${order.id}</strong></p>
                                     </div>
@@ -52,23 +53,58 @@
                                     </div>
                                 </div>
 
+                                <div class="order-progress-card">
+                                    <div class="order-progress-step ${order.orderStatus == 'PENDING' || order.orderStatus == 'PENDING_PAYMENT' || order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
+                                        <span><i class="fa-solid fa-receipt"></i></span>
+                                        <div>
+                                            <strong>Đặt hàng</strong>
+                                            <small>${order.createdAtFormatted}</small>
+                                        </div>
+                                    </div>
+                                    <div class="order-progress-step ${order.orderStatus == 'PENDING_PAYMENT' || order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
+                                        <span><i class="fa-solid fa-credit-card"></i></span>
+                                        <div>
+                                            <strong>Thanh toán</strong>
+                                            <small>${paymentStatusLabel}</small>
+                                        </div>
+                                    </div>
+                                    <div class="order-progress-step ${order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
+                                        <span><i class="fa-solid fa-truck-fast"></i></span>
+                                        <div>
+                                            <strong>Vận chuyển</strong>
+                                            <small>${not empty order.ghnStatusName ? order.ghnStatusName : orderStatusLabel}</small>
+                                        </div>
+                                    </div>
+                                    <div class="order-progress-step ${order.orderStatus == 'COMPLETED' ? 'active' : ''} ${order.orderStatus == 'CANCELLED' ? 'cancelled' : ''}">
+                                        <span><i class="fa-solid ${order.orderStatus == 'CANCELLED' ? 'fa-xmark' : 'fa-check'}"></i></span>
+                                        <div>
+                                            <strong>${order.orderStatus == 'CANCELLED' ? 'Đã hủy' : 'Hoàn tất'}</strong>
+                                            <small>${order.orderStatus == 'COMPLETED' ? 'Đơn hàng hoàn thành' : orderStatusLabel}</small>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="detail-section">
                                     <h3>Thông tin đơn hàng</h3>
 
                                     <div class="summary-grid">
                                         <div class="summary-item">
+                                            <i class="fa-regular fa-calendar"></i>
                                             <span class="label">Ngày đặt hàng</span>
                                             <span class="value">${order.createdAtFormatted}</span>
                                         </div>
                                         <div class="summary-item">
+                                            <i class="fa-regular fa-credit-card"></i>
                                             <span class="label">Phương thức thanh toán</span>
                                             <span class="value">${paymentMethodLabel}</span>
                                         </div>
-                                        <div class="summary-item">
+                                        <div class="summary-item payment-state payment-${fn:toLowerCase(order.paymentStatuses)}">
+                                            <i class="fa-solid fa-wallet"></i>
                                             <span class="label">Trạng thái thanh toán</span>
                                             <span class="value">${paymentStatusLabel}</span>
                                         </div>
                                         <div class="summary-item">
+                                            <i class="fa-solid fa-calendar-check"></i>
                                             <span class="label">Dự kiến giao</span>
                                             <span class="value">
                                                 <c:choose>
@@ -82,7 +118,7 @@
                                     </div>
                                 </div>
 
-                                <div class="detail-section">
+                                <div class="detail-section tracking-section">
                                     <h3>Theo dõi vận chuyển</h3>
 
                                     <c:choose>
@@ -93,33 +129,39 @@
                                             <div class="tracking-summary">
                                                 <c:choose>
                                                     <c:when test="${demoTracking}">
-                                                        <div>
+                                                        <div class="tracking-summary-card">
+                                                            <i class="fa-solid fa-route"></i>
                                                             <span class="label">Hình thức theo dõi</span>
                                                             <strong>Mô phỏng kiểm thử</strong>
                                                         </div>
-                                                        <div>
+                                                        <div class="tracking-summary-card">
+                                                            <i class="fa-solid fa-barcode"></i>
                                                             <span class="label">Mã theo dõi</span>
                                                             <strong>${order.ghnOrderCode}</strong>
                                                         </div>
-                                                        <div>
+                                                        <div class="tracking-summary-card tracking-current">
+                                                            <i class="fa-solid fa-truck-fast"></i>
                                                             <span class="label">Trạng thái hiện tại</span>
                                                             <strong>${not empty order.ghnStatusName ? order.ghnStatusName :
                                                                 "Chưa có trạng thái"}</strong>
                                                         </div>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <div>
+                                                        <div class="tracking-summary-card">
+                                                            <i class="fa-solid fa-barcode"></i>
                                                             <span class="label">Mã vận đơn GHN</span>
                                                             <strong>${order.ghnOrderCode}</strong>
                                                         </div>
-                                                        <div>
+                                                        <div class="tracking-summary-card tracking-current">
+                                                            <i class="fa-solid fa-truck-fast"></i>
                                                             <span class="label">Trạng thái GHN</span>
                                                             <strong>${not empty order.ghnStatusName ? order.ghnStatusName :
                                                                 "Chưa có trạng thái"}</strong>
                                                         </div>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <div>
+                                                <div class="tracking-summary-card">
+                                                    <i class="fa-regular fa-clock"></i>
                                                     <span class="label">Cập nhật gần nhất</span>
                                                     <strong>${not empty order.ghnLastUpdatedAtFormatted ?
                                                         order.ghnLastUpdatedAtFormatted : "Chưa có thông tin"}</strong>

@@ -183,6 +183,9 @@ public class OrderDetailController extends HttpServlet {
     }
 
     private String getOrderStatusClass(String status) {
+        if (OrderStatus.PENDING_PAYMENT.equals(status)) {
+            return "pending-payment";
+        }
         if (OrderStatus.SHIPPING.equals(status)) {
             return "shipping";
         }
