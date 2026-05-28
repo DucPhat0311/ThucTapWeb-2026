@@ -32,8 +32,12 @@
 
                             <main id="page">
                                 <div class="tab-container">
-                                    <div class="tab-link active" onclick="openTab(event, 'import')">Nhập Kho</div>
-                                    <div class="tab-link" onclick="openTab(event, 'export')">Xuất Kho</div>
+                                    <div class="tab-link active" onclick="openTab(event, 'import')">
+                                        Nhập Kho
+                                    </div>
+                                    <div class="tab-link" onclick="openTab(event, 'export')">
+                                        Xuất Kho
+                                    </div>
                                 </div>
 
                                 <div id="import" class="tab-content active">
