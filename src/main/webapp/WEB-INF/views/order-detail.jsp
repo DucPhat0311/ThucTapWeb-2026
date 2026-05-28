@@ -210,8 +210,23 @@
                                         <c:forEach var="item" items="${orderItems}">
                                             <div class="detail-product-item">
                                                 <div class="product-left">
-                                                    <img src="${(not empty item.thumbnail and fn:startsWith(item.thumbnail, 'http')) ? '' : pageContext.request.contextPath.concat('/')}${empty item.thumbnail ? 'img/aox.webp' : item.thumbnail}"
-                                                        alt="${item.productName}">
+                                                    <c:set var="itemThumb"
+                                                        value="${empty item.thumbnail ? 'img/aox.webp' : item.thumbnail}" />
+                                                    <c:choose>
+                                                        <c:when
+                                                            test="${fn:startsWith(itemThumb, 'http://') or fn:startsWith(itemThumb, 'https://')}">
+                                                            <img src="${itemThumb}" alt="${item.productName}">
+                                                        </c:when>
+                                                        <c:when
+                                                            test="${fn:startsWith(itemThumb, 'img/') or fn:startsWith(itemThumb, '/img/')}">
+                                                            <img src="${pageContext.request.contextPath}${fn:startsWith(itemThumb, '/') ? itemThumb : '/'.concat(itemThumb)}"
+                                                                alt="${item.productName}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <img src="${pageContext.request.contextPath}/img/products${fn:startsWith(itemThumb, '/') ? itemThumb : '/'.concat(itemThumb)}"
+                                                                alt="${item.productName}">
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                     <div class="product-info">
                                                         <h4>${item.productName}</h4>
                                                         <p>Màu sắc: ${item.color}</p>
