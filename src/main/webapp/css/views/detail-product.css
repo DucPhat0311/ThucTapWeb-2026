@@ -528,11 +528,16 @@ html, body {
 
 
 .suggested-list {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
 }
+
+
+.suggested-list p {
+    grid-column: 1 / -1; text-align: center; padding: 30px 0;
+}
+
 
 
 .product-mini {

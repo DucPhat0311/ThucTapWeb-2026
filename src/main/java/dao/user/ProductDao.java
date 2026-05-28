@@ -91,22 +91,30 @@ public class ProductDao extends BaseDao {
 
 
     // lấy các sp liên quan dựa theo category id
-    public List<Product> getRelatedProductByCategory(int categoryId, int currentProductId, int limit){
+    public List<Product> getRelatedProductByCategory(int categoryId, int currentProductId, int limit) {
+        String sql = """
+            SELECT p.*, 
+                   (SELECT image_url FROM product_images WHERE product_id = p.id AND is_main = 0 ORDER BY id ASC LIMIT 1) AS hoverImage, 
+                   (SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, 
+                   (SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount, 
+                   (SELECT COALESCE(ROUND(AVG(rating), 1), 5.0) FROM reviews WHERE product_id = p.id) AS avgRating, 
+                   (SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews 
+            FROM products p 
+            WHERE p.category_id = :categoryId 
+              AND p.id <> :currentProductId 
+              AND p.status = 'Đang hoạt động' 
+            ORDER BY p.created_at DESC 
+            LIMIT :limit
+            """;
+
         return getJdbi().withHandle(handle ->
-                handle.createQuery("""
-                              SELECT *
-                              FROM products
-                              WHERE category_id = :categoryId
-                              AND id <> :currentProductId
-                              AND status = 'Đang hoạt động'
-                              ORDER BY created_at DESC
-                              LIMIT :limit
-                              """
-                        ).bind("categoryId", categoryId)
-                        .bind("currentProductId",currentProductId)
-                        .bind("limit", limit).
-                        mapToBean(Product.class)
-                        .list());
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .bind("currentProductId", currentProductId)
+                        .bind("limit", limit)
+                        .mapToBean(Product.class)
+                        .list()
+        );
     }
 
 
