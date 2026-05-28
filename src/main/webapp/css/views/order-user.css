@@ -40,6 +40,66 @@
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
+.order-tabs .tab-pending {
+    background: #fff7e6;
+    color: #8a5a00;
+    border-color: #f0d19a;
+}
+
+.order-tabs .tab-pending_payment {
+    background: #f4efff;
+    color: #6941a5;
+    border-color: #d9c7f5;
+}
+
+.order-tabs .tab-shipping {
+    background: #edf6ff;
+    color: #2563a8;
+    border-color: #bddcf7;
+}
+
+.order-tabs .tab-completed {
+    background: #edf8f0;
+    color: #2f7a42;
+    border-color: #bfe3c8;
+}
+
+.order-tabs .tab-cancelled {
+    background: #fff1f1;
+    color: #b42318;
+    border-color: #f1b8b5;
+}
+
+.order-tabs .tab-pending.active {
+    background: #b7791f;
+    color: #fff;
+    border-color: #b7791f;
+}
+
+.order-tabs .tab-pending_payment.active {
+    background: #6f42c1;
+    color: #fff;
+    border-color: #6f42c1;
+}
+
+.order-tabs .tab-shipping.active {
+    background: #2b6cb0;
+    color: #fff;
+    border-color: #2b6cb0;
+}
+
+.order-tabs .tab-completed.active {
+    background: #2f7a42;
+    color: #fff;
+    border-color: #2f7a42;
+}
+
+.order-tabs .tab-cancelled.active {
+    background: #c62828;
+    color: #fff;
+    border-color: #c62828;
+}
+
 .order-alert {
     margin-bottom: 18px;
     padding: 14px 18px;
@@ -152,6 +212,7 @@
     padding: 9px 18px;
     background: #fff6ea;
     color: #8a6238;
+    border: 1px solid #ecd1a6;
     font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
@@ -178,6 +239,41 @@
 .tracking-inline {
     color: #a67c52;
     font-weight: 600;
+}
+
+.order-right .status-pending,
+.tracking-chip.status-pending {
+    background: #fff7e6;
+    color: #8a5a00;
+    border-color: #f0d19a;
+}
+
+.order-right .status-pending_payment,
+.tracking-chip.status-pending_payment {
+    background: #f4efff;
+    color: #6941a5;
+    border-color: #d9c7f5;
+}
+
+.order-right .status-shipping,
+.tracking-chip.status-shipping {
+    background: #edf6ff;
+    color: #2563a8;
+    border-color: #bddcf7;
+}
+
+.order-right .status-completed,
+.tracking-chip.status-completed {
+    background: #edf8f0;
+    color: #2f7a42;
+    border-color: #bfe3c8;
+}
+
+.order-right .status-cancelled,
+.tracking-chip.status-cancelled {
+    background: #fff1f1;
+    color: #b42318;
+    border-color: #f1b8b5;
 }
 
 .tracking-chip {

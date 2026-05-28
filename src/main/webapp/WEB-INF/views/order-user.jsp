@@ -73,27 +73,27 @@
 
                                     <div class="order-tabs">
                                         <a href="order-user?status=all"
-                                            class="tab-item ${currentStatus == 'all' || empty currentStatus ? 'active' : ''}">
+                                            class="tab-item tab-all ${currentStatus == 'all' || empty currentStatus ? 'active' : ''}">
                                             Tất cả
                                         </a>
                                         <a href="order-user?status=PENDING"
-                                            class="tab-item ${currentStatus == 'PENDING' ? 'active' : ''}">
+                                            class="tab-item tab-pending ${currentStatus == 'PENDING' ? 'active' : ''}">
                                             Chờ xác nhận
                                         </a>
                                         <a href="order-user?status=PENDING_PAYMENT"
-                                            class="tab-item ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}">
+                                            class="tab-item tab-pending_payment ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}">
                                             Chờ thanh toán
                                         </a>
                                         <a href="order-user?status=SHIPPING"
-                                            class="tab-item ${currentStatus == 'SHIPPING' ? 'active' : ''}">
+                                            class="tab-item tab-shipping ${currentStatus == 'SHIPPING' ? 'active' : ''}">
                                             Đang giao hàng
                                         </a>
                                         <a href="order-user?status=COMPLETED"
-                                            class="tab-item ${currentStatus == 'COMPLETED' ? 'active' : ''}">
+                                            class="tab-item tab-completed ${currentStatus == 'COMPLETED' ? 'active' : ''}">
                                             Đã hoàn thành
                                         </a>
                                         <a href="order-user?status=CANCELLED"
-                                            class="tab-item ${currentStatus == 'CANCELLED' ? 'active' : ''}">
+                                            class="tab-item tab-cancelled ${currentStatus == 'CANCELLED' ? 'active' : ''}">
                                             Đã hủy
                                         </a>
                                     </div>
@@ -154,7 +154,7 @@
                                                 </div>
 
                                                 <div class="order-right">
-                                                    <span class="status">
+                                                    <span class="status status-${fn:toLowerCase(o.orderStatus)}">
                                                         <%= MyOrderController.getOrderStatusLabel(((model.Order)
                                                             pageContext.getAttribute("o")).getOrderStatus()) %>
                                                     </span>
@@ -183,7 +183,7 @@
                                                     </form>
                                                 </c:if>
                                                 <c:if test="${not empty o.ghnOrderCode}">
-                                                    <span class="tracking-chip">
+                                                    <span class="tracking-chip status-${fn:toLowerCase(o.orderStatus)}">
                                                         <i class="fa-solid fa-truck-fast"></i>
                                                         <c:choose>
                                                             <c:when test="${not empty o.ghnStatusName}">
