@@ -71,7 +71,7 @@
     </div>
 
     <div class="address-content">
-        <div class="address-header">
+        <div class="profile-heading address-page-heading">
             <h2>Địa chỉ của tôi</h2>
             <button class="btn-add-address" id="btnOpenModal">
                 <i class="fas fa-plus"></i> Thêm địa chỉ mới
@@ -86,12 +86,12 @@
 
         <div class="address-list">
             <c:if test="${empty addressList}">
-                <p>Bạn chưa có địa chỉ nào.</p>
+                <p class="empty-msg">Bạn chưa có địa chỉ nào.</p>
             </c:if>
 
             <c:forEach var="a" items="${addressList}">
                 <div class="address-card">
-                    <div class="address-header">
+                    <div class="address-card-header">
                         <strong>${a.name}</strong>
                         <span>${a.phone}</span>
 

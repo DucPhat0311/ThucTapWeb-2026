@@ -99,7 +99,7 @@
                                     </div>
 
                                     <c:if test="${empty orders}">
-                                        <p style="text-align:center; padding:30px; color:#888">
+                                        <p class="empty-msg">
                                             Bạn chưa có đơn hàng nào.
                                         </p>
                                     </c:if>
