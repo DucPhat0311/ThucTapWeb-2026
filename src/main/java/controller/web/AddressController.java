@@ -41,8 +41,15 @@ public class AddressController extends HttpServlet {
         List<Address> addressList = addressService.getByUser(user.getId());
         moveFlashMessageToRequest(session, req);
 
+        String redirectTo = resolveRedirectTo(firstNonBlank(
+                req.getParameter("returnUrl"),
+                req.getParameter("redirectTo")
+        ));
+        boolean returnToCheckout = "checkout".equals(redirectTo);
 
         req.setAttribute("addressList", addressList);
+        req.setAttribute("addressRedirectTo", returnToCheckout ? "checkout" : "");
+        req.setAttribute("returnToCheckout", returnToCheckout);
         req.getRequestDispatcher("/WEB-INF/views/address.jsp").forward(req, res);
     }
 
@@ -159,6 +166,14 @@ public class AddressController extends HttpServlet {
             return "checkout";
         }
         return "address";
+    }
+
+
+    private String firstNonBlank(String first, String second) {
+        if (first != null && !first.isBlank()) {
+            return first;
+        }
+        return second;
     }
 }
 

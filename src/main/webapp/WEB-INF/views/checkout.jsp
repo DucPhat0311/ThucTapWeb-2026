@@ -33,7 +33,7 @@
                         <div class="selected-address">
                             <div class="selected-address-header">
                                 <h3>Địa chỉ giao hàng</h3>
-                                <a href="${pageContext.request.contextPath}/address">Quản lý địa chỉ</a>
+                                <a href="${pageContext.request.contextPath}/address?returnUrl=checkout">Quản lý địa chỉ</a>
                             </div>
                             <div class="selected-address-body">
                                 <p class="receiver-line">
