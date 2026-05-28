@@ -73,9 +73,16 @@
     <div class="profile-content address-content">
         <div class="profile-heading address-page-heading">
             <h2>Địa chỉ của tôi</h2>
-            <button class="btn-add-address" id="btnOpenModal">
-                <i class="fas fa-plus"></i> Thêm địa chỉ mới
-            </button>
+            <div class="address-heading-actions">
+                <c:if test="${returnToCheckout}">
+                    <a href="${pageContext.request.contextPath}/checkout" class="btn-return-checkout">
+                        <i class="fas fa-arrow-left"></i> Quay lại thanh toán
+                    </a>
+                </c:if>
+                <button class="btn-add-address" id="btnOpenModal">
+                    <i class="fas fa-plus"></i> Thêm địa chỉ mới
+                </button>
+            </div>
         </div>
 
         <c:if test="${not empty addressError}">
@@ -109,6 +116,9 @@
                             <form method="post" action="address" style="display:inline">
                                 <input type="hidden" name="action" value="setDefault">
                                 <input type="hidden" name="id" value="${a.id}">
+                                <c:if test="${returnToCheckout}">
+                                    <input type="hidden" name="redirectTo" value="checkout">
+                                </c:if>
                                 <button type="submit" class="btn-default">
                                     Đặt làm mặc định
                                 </button>
@@ -135,6 +145,9 @@
                         <form method="post" action="address" style="display:inline">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="${a.id}">
+                            <c:if test="${returnToCheckout}">
+                                <input type="hidden" name="redirectTo" value="checkout">
+                            </c:if>
                             <button type="submit" class="btn-delete">
                                 Xóa
                             </button>
@@ -148,6 +161,7 @@
 
 <jsp:include page="address-modal.jsp">
     <jsp:param name="formAction" value="address" />
+    <jsp:param name="redirectTo" value="${addressRedirectTo}" />
 </jsp:include>
 
 <script>
