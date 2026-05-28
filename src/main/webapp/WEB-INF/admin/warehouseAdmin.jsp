@@ -41,6 +41,9 @@
                                     <div class="tab-link" onclick="openTab(event, 'return')">
                                         Hoàn Kho
                                     </div>
+                                    <div class="tab-link" onclick="openTab(event, 'stock')">
+                                        Tồn Kho
+                                    </div>
                                 </div>
 
                                 <div id="import" class="tab-content active">
@@ -263,6 +266,84 @@
                                         </table>
                                     </div>
                                 </div>
+
+                                <div id="stock" class="tab-content">
+                                    <div class="tab-header" style="margin-bottom: 15px;">
+                                        <h3>Tồn kho sản phẩm</h3>
+                                        <div style="position: relative; width: 300px;">
+                                            <input type="text" id="stockSearchInput" onkeyup="filterStockTable()" 
+                                                placeholder="Tìm kiếm sản phẩm, size, màu..." 
+                                                style="width: 100%; padding: 8px 12px 8px 35px; border: 1px solid #e0d0c1; border-radius: 8px; font-size: 13px; background: #fff;">
+                                            <i class="fa fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #8c7060; font-size: 13px;"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="user-table-wrapper">
+                                        <table class="user-table" id="stockTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sản Phẩm</th>
+                                                    <th style="text-align: center;">Màu Sắc</th>
+                                                    <th style="text-align: center;">Kích Cỡ</th>
+                                                    <th style="text-align: center;">Tồn Kho</th>
+                                                    <th style="text-align: right;">Giá Nhập Gần Nhất</th>
+                                                    <th>Ngày Nhập Gần Nhất</th>
+                                                    <th style="text-align: center;">Trạng Thái</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="s" items="${stocks}">
+                                                    <tr>
+                                                        <td style="font-weight: 600;">${s.productName}</td>
+                                                        <td style="text-align: center;"><span class="badge" style="background: #fdf6e2; color: #8c7060; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid #f3e5d8;">${s.colorName}</span></td>
+                                                        <td style="text-align: center;"><span class="badge" style="background: #f0f8ff; color: #1e90ff; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid #e1f0ff;">${s.sizeName}</span></td>
+                                                        <td style="text-align: center;">
+                                                            <strong style="font-size: 15px;">${s.stock}</strong>
+                                                        </td>
+                                                        <td style="text-align: right; font-weight: 600; color: var(--primary-color);">
+                                                            <c:choose>
+                                                                <c:when test="${not empty s.lastImportPrice && s.lastImportPrice > 0}">
+                                                                    <fmt:formatNumber value="${s.lastImportPrice}" type="number" maxFractionDigits="0" /> ₫
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span style="color: #bbb; font-weight: normal; font-style: italic;">Chưa có giá</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${not empty s.lastImportDate}">
+                                                                    ${s.lastImportDate}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span style="color: #bbb; font-style: italic;">Chưa nhập kho</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <c:choose>
+                                                                <c:when test="${s.stock == 0}">
+                                                                    <span class="status-badge out-of-stock" style="padding: 4px 10px; font-size: 11px;">Hết hàng</span>
+                                                                </c:when>
+                                                                <c:when test="${s.stock <= 5}">
+                                                                    <span class="status-badge status-pending" style="padding: 4px 10px; font-size: 11px;">Sắp hết</span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="status-badge status-active" style="padding: 4px 10px; font-size: 11px; background: rgba(47, 158, 68, 0.12); color: #2f9e44;">Còn hàng</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                                <c:if test="${empty stocks}">
+                                                    <tr>
+                                                        <td colspan="7" style="text-align: center; padding: 20px; color: #8c7060;">Không tìm thấy sản phẩm nào trong kho</td>
+                                                    </tr>
+                                                </c:if>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </main>
                         </section>
                     </div>
@@ -279,6 +360,22 @@
                             }
                             document.getElementById(tabName).style.display = "block";
                             evt.currentTarget.className += " active";
+                        }
+
+                        function filterStockTable() {
+                            const input = document.getElementById("stockSearchInput");
+                            const filter = input.value.toLowerCase();
+                            const table = document.getElementById("stockTable");
+                            const trs = table.getElementsByTagName("tr");
+
+                            for (let i = 1; i < trs.length; i++) {
+                                let rowText = trs[i].textContent || trs[i].innerText;
+                                if (rowText.toLowerCase().indexOf(filter) > -1) {
+                                    trs[i].style.display = "";
+                                } else {
+                                    trs[i].style.display = "none";
+                                }
+                            }
                         }
                     </script>
                 </body>
