@@ -114,6 +114,16 @@
                 }
             }
 
+            Category productCategory = categoryService.handleGetCategoryById(product.getCategoryId());
+            String sizeChartImg = "";
+
+
+            if (productCategory != null && productCategory.getSizeImage() != null && !productCategory.getSizeImage().trim().isEmpty()) {
+                sizeChartImg = productCategory.getSizeImage();
+            }
+            request.setAttribute("sizeChartImg", sizeChartImg);
+
+
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("userlogin");
             boolean isWishlisted = false;
