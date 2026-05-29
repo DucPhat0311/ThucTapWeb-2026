@@ -160,7 +160,8 @@ public class UserDao extends BaseDao {
                        gender,
                        phone,
                        address,
-                       status
+                       status,
+                       role_id
                 FROM users
                 WHERE id = :id
             """)

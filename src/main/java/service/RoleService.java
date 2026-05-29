@@ -78,6 +78,7 @@ public class RoleService {
         if (existing == null || existing.getIsSystem() == 1) {
             return false;
         }
+        roleDao.resetUsersRole(id);
         roleDao.deleteRole(id);
         return true;
     }

@@ -114,4 +114,12 @@ public class RoleDaoAdmin extends BaseDao {
                 .findOne()
                 .orElse(0) == 1);
     }
+
+    public void resetUsersRole(int roleId) {
+        getJdbi().withHandle(handle ->
+                handle.createUpdate("UPDATE users SET role = 'USER', role_id = NULL WHERE role_id = :roleId")
+                        .bind("roleId", roleId)
+                        .execute()
+        );
+    }
 }

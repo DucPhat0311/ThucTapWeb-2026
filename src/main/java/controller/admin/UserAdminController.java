@@ -92,6 +92,7 @@ public class UserAdminController extends HttpServlet {
 
             request.setAttribute("user", user);
             request.setAttribute("mode", mode);
+            request.setAttribute("roles", new service.RoleService().getAllRoles());
 
             request.setAttribute("page", "user");
             request.getRequestDispatcher("/WEB-INF/admin/form-userAdmin.jsp").forward(request,response);
@@ -102,6 +103,7 @@ public class UserAdminController extends HttpServlet {
         if("add".equals(mode)){
             request.setAttribute("mode", "add");
             request.setAttribute("page", "user");
+            request.setAttribute("roles", new service.RoleService().getAllRoles());
             request.getRequestDispatcher("/WEB-INF/admin/form-userAdmin.jsp").forward(request, response);
         }
     }
@@ -122,6 +124,16 @@ public class UserAdminController extends HttpServlet {
             user.setPhone(request.getParameter("phone"));
             user.setGender(request.getParameter("gander"));
 
+            String roleIdStr = request.getParameter("roleId");
+            if ("admin".equals(user.getRole())) {
+                if (roleIdStr != null && !roleIdStr.isEmpty()) {
+                    user.setRoleId(Integer.parseInt(roleIdStr));
+                } else {
+                    user.setRoleId(1); // Default to Admin
+                }
+            } else {
+                user.setRoleId(null);
+            }
 
             String birthdayStr = request.getParameter("birthday");
 
@@ -152,6 +164,16 @@ public class UserAdminController extends HttpServlet {
             user.setPhone(request.getParameter("phone"));
             user.setGender(request.getParameter("gender"));
 
+            String roleIdStr = request.getParameter("roleId");
+            if ("admin".equals(user.getRole())) {
+                if (roleIdStr != null && !roleIdStr.isEmpty()) {
+                    user.setRoleId(Integer.parseInt(roleIdStr));
+                } else {
+                    user.setRoleId(1); // Default to Admin
+                }
+            } else {
+                user.setRoleId(null);
+            }
 
             String birthdayStr = request.getParameter("birthday");
 

@@ -90,3 +90,7 @@ INSERT INTO `role_permissions` (`role_id`, `module`, `action`, `allowed`) VALUES
 (1, 'role', 'add', 1),
 (1, 'role', 'edit', 1),
 (1, 'role', 'delete', 1);
+
+-- Cập nhật bảng users: thêm cột role_id liên kết với bảng roles
+ALTER TABLE `users` ADD COLUMN `role_id` INT NULL;
+ALTER TABLE `users` ADD CONSTRAINT `fk_users_role` FOREIGN KEY (`role_id`) REFERENCES `roles`(`id`) ON DELETE SET NULL;
