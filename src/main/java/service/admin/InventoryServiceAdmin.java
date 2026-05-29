@@ -41,4 +41,11 @@ public class InventoryServiceAdmin {
     public List<model.WarehouseStockDto> getWarehouseStockReport() {
         return inventoryDao.getWarehouseStockReport();
     }
+
+    public List<model.WarehouseStockBatchDto> getVariantImportBatches(int variantId) {
+        if (variantId <= 0) {
+            return null;
+        }
+        return inventoryDao.getVariantImportBatches(variantId);
+    }
 }

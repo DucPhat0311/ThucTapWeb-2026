@@ -165,3 +165,70 @@
     color: white;
     text-decoration: none;
 }
+
+/* --- Decoupled utility classes for forms --- */
+
+.col-flex-1 {
+    flex: 1;
+}
+
+.col-flex-2 {
+    flex: 2;
+}
+
+.col-flex-3 {
+    flex: 3;
+}
+
+.col-flex-0-3 {
+    flex: 0.3;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.card-margin-bottom {
+    margin-bottom: 20px;
+}
+
+.h3-margin-bottom {
+    margin-bottom: 15px;
+}
+
+.row-align-end-margin {
+    align-items: flex-end;
+    margin-bottom: 10px;
+}
+
+.select-full-padding {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-danger-custom {
+    padding: 10px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.btn-success-custom {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.footer-margin-top {
+    margin-top: 20px;
+}

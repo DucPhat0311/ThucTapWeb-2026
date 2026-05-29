@@ -75,7 +75,7 @@
                                 <i class="fas fa-plus"></i> Thêm dòng sản phẩm
                             </button>
                             <label class="btn-excel-import">
-                                <input type="file" id="excelUpload" accept=".xlsx, .xls" style="display: none;" onchange="importExcel(event)">
+                                <input type="file" id="excelUpload" accept=".xlsx, .xls" class="d-none" onchange="importExcel(event)">
                                 <i class="fas fa-file-import"></i> Nhập từ Excel
                             </label>
                             <button type="button" class="btn-excel-template" onclick="downloadExcelTemplate()">
@@ -92,7 +92,7 @@
                 </form>
             </div>
 
-            <select id="variantTemplate" style="display:none;">
+            <select id="variantTemplate" class="d-none">
                 <option value="">-- Chọn sản phẩm --</option>
                 <c:forEach var="v" items="${variants}">
                     <option value="${v.id}">${v.productName} - Màu: ${v.colorName} - Size: ${v.sizeName} (Tồn:

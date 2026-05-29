@@ -23,11 +23,11 @@
                     <div class="card">
                         <h3>Thông tin phiếu</h3>
                         <div class="row">
-                            <div class="col" style="flex: 1;">
+                            <div class="col col-flex-1">
                                 <label for="orderId">Mã đơn trả hàng (nếu có)</label>
                                 <input type="number" id="orderId" name="orderId" placeholder="Nhập mã đơn trả hàng để đối soát..." min="1">
                             </div>
-                            <div class="col" style="flex: 2;">
+                            <div class="col col-flex-2">
                                 <label for="note">Ghi chú</label>
                                 <input type="text" id="note" name="note" placeholder="Ví dụ: Hoàn kho hàng lỗi từ đơn hàng, hoàn kho sản phẩm dùng thử..." required>
                             </div>
@@ -74,7 +74,7 @@
                 </form>
             </div>
 
-            <select id="variantTemplate" style="display:none;">
+            <select id="variantTemplate" class="d-none">
                 <option value="">-- Chọn sản phẩm --</option>
                 <c:forEach var="v" items="${variants}">
                     <option value="${v.id}">${v.productName} - Màu: ${v.colorName} - Size: ${v.sizeName} (Tồn:

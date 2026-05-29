@@ -53,11 +53,11 @@
                                             class="btn-add">Thêm phiếu nhập</a>
                                     </div>
                                     <c:if test="${not empty message}">
-                                        <div style="color: green; margin-bottom: 10px;">${message}</div>
+                                        <div class="alert-success">${message}</div>
                                         <c:remove var="message" scope="session" />
                                     </c:if>
                                     <c:if test="${not empty error}">
-                                        <div style="color: red; margin-bottom: 10px;">${error}</div>
+                                        <div class="alert-error">${error}</div>
                                         <c:remove var="error" scope="session" />
                                     </c:if>
 
@@ -80,30 +80,39 @@
                                                             <td>PN${r.id}</td>
                                                             <td>${r.userName}</td>
                                                             <td>
-                                                                <fmt:formatNumber value="${r.totalAmount}"
-                                                                    type="number" maxFractionDigits="0" /> ₫
+                                                                <fmt:formatNumber value="${r.totalAmount}" type="number"
+                                                                    maxFractionDigits="0" /> ₫
                                                             </td>
                                                             <td>${r.createdAt}</td>
-                                                            <td><span style="color: green; font-weight: bold;">
-                                                                    <c:choose>
-                                                                        <c:when test="${r.status == 'COMPLETED'}">Hoàn
-                                                                            thành</c:when>
-                                                                        <c:when test="${r.status == 'PENDING'}">Chờ xử
-                                                                            lý</c:when>
-                                                                        <c:when test="${r.status == 'CANCELLED'}">Đã hủy
-                                                                        </c:when>
-                                                                        <c:otherwise>${r.status}</c:otherwise>
-                                                                    </c:choose>
-                                                                </span>
+                                                            <td>
+                                                                <c:choose>
+                                                                    <c:when test="${r.status == 'COMPLETED'}">
+                                                                        <span class="warehouse-status completed">Hoàn
+                                                                            thành</span>
+                                                                    </c:when>
+                                                                    <c:when test="${r.status == 'PENDING'}">
+                                                                        <span class="warehouse-status pending">Chờ xử
+                                                                            lý</span>
+                                                                    </c:when>
+                                                                    <c:when test="${r.status == 'CANCELLED'}">
+                                                                        <span class="warehouse-status cancelled">Đã
+                                                                            hủy</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span
+                                                                            class="warehouse-status">${r.status}</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </td>
-                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view" title="Xem chi tiết"><i class="fa fa-eye"></i></a></td>
+                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view"
+                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                                            </td>
                                                         </tr>
                                                     </c:if>
                                                 </c:forEach>
                                                 <c:if test="${empty receipts}">
                                                     <tr>
-                                                        <td colspan="6" style="text-align: center;">Chưa có phiếu nhập
-                                                            nào</td>
+                                                        <td colspan="6" class="text-center">Chưa có phiếu nhập nào</td>
                                                     </tr>
                                                 </c:if>
                                             </tbody>
@@ -138,13 +147,15 @@
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.orderId > 0}">
-                                                                        <span class="warehouse-source-badge warehouse-source-order">
+                                                                        <span
+                                                                            class="warehouse-source-badge warehouse-source-order">
                                                                             <i class="fa-solid fa-cart-shopping"></i>
                                                                             Đơn #${r.orderId}
                                                                         </span>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <span class="warehouse-source-badge warehouse-source-manual">
+                                                                        <span
+                                                                            class="warehouse-source-badge warehouse-source-manual">
                                                                             <i class="fa-solid fa-pen"></i>
                                                                             Thủ công
                                                                         </span>
@@ -153,33 +164,39 @@
                                                             </td>
                                                             <td>${r.userName}</td>
                                                             <td>
-                                                                <fmt:formatNumber value="${r.totalAmount}"
-                                                                    type="number" maxFractionDigits="0" /> ₫
+                                                                <fmt:formatNumber value="${r.totalAmount}" type="number"
+                                                                    maxFractionDigits="0" /> ₫
                                                             </td>
                                                             <td>${r.createdAt}</td>
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.status == 'COMPLETED'}">
-                                                                        <span class="warehouse-status completed">Hoàn thành</span>
+                                                                        <span class="warehouse-status completed">Hoàn
+                                                                            thành</span>
                                                                     </c:when>
                                                                     <c:when test="${r.status == 'PENDING'}">
-                                                                        <span class="warehouse-status pending">Chờ xử lý</span>
+                                                                        <span class="warehouse-status pending">Chờ xử
+                                                                            lý</span>
                                                                     </c:when>
                                                                     <c:when test="${r.status == 'CANCELLED'}">
-                                                                        <span class="warehouse-status cancelled">Đã hủy</span>
+                                                                        <span class="warehouse-status cancelled">Đã
+                                                                            hủy</span>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <span class="warehouse-status">${r.status}</span>
+                                                                        <span
+                                                                            class="warehouse-status">${r.status}</span>
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </td>
-                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view" title="Xem chi tiết"><i class="fa fa-eye"></i></a></td>
+                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view"
+                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                                            </td>
                                                         </tr>
                                                     </c:if>
                                                 </c:forEach>
                                                 <c:if test="${empty receipts}">
                                                     <tr>
-                                                        <td colspan="7" style="text-align: center;">Chưa có phiếu xuất
+                                                        <td colspan="7" class="text-center">Chưa có phiếu xuất
                                                             nào</td>
                                                     </tr>
                                                 </c:if>
@@ -217,13 +234,15 @@
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.orderId > 0}">
-                                                                        <span class="warehouse-source-badge warehouse-source-return">
+                                                                        <span
+                                                                            class="warehouse-source-badge warehouse-source-return">
                                                                             <i class="fa-solid fa-rotate-left"></i>
                                                                             Đơn trả #${r.orderId}
                                                                         </span>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <span class="warehouse-source-badge warehouse-source-manual">
+                                                                        <span
+                                                                            class="warehouse-source-badge warehouse-source-manual">
                                                                             <i class="fa-solid fa-pen"></i>
                                                                             Thủ công
                                                                         </span>
@@ -232,33 +251,39 @@
                                                             </td>
                                                             <td>${r.userName}</td>
                                                             <td>
-                                                                <fmt:formatNumber value="${r.totalAmount}"
-                                                                    type="number" maxFractionDigits="0" /> ₫
+                                                                <fmt:formatNumber value="${r.totalAmount}" type="number"
+                                                                    maxFractionDigits="0" /> ₫
                                                             </td>
                                                             <td>${r.createdAt}</td>
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.status == 'COMPLETED'}">
-                                                                        <span class="warehouse-status completed">Hoàn thành</span>
+                                                                        <span class="warehouse-status completed">Hoàn
+                                                                            thành</span>
                                                                     </c:when>
                                                                     <c:when test="${r.status == 'PENDING'}">
-                                                                        <span class="warehouse-status pending">Chờ xử lý</span>
+                                                                        <span class="warehouse-status pending">Chờ xử
+                                                                            lý</span>
                                                                     </c:when>
                                                                     <c:when test="${r.status == 'CANCELLED'}">
-                                                                        <span class="warehouse-status cancelled">Đã hủy</span>
+                                                                        <span class="warehouse-status cancelled">Đã
+                                                                            hủy</span>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <span class="warehouse-status">${r.status}</span>
+                                                                        <span
+                                                                            class="warehouse-status">${r.status}</span>
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </td>
-                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view" title="Xem chi tiết"><i class="fa fa-eye"></i></a></td>
+                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view"
+                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                                            </td>
                                                         </tr>
                                                     </c:if>
                                                 </c:forEach>
                                                 <c:if test="${!hasReturn}">
                                                     <tr>
-                                                        <td colspan="7" style="text-align: center;">Chưa có phiếu hoàn
+                                                        <td colspan="7" class="text-center">Chưa có phiếu hoàn
                                                             kho nào</td>
                                                     </tr>
                                                 </c:if>
@@ -270,11 +295,11 @@
                                 <div id="stock" class="tab-content">
                                     <div class="tab-header" style="margin-bottom: 15px;">
                                         <h3>Tồn kho sản phẩm</h3>
-                                        <div style="position: relative; width: 300px;">
-                                            <input type="text" id="stockSearchInput" onkeyup="filterStockTable()" 
-                                                placeholder="Tìm kiếm sản phẩm, size, màu..." 
-                                                style="width: 100%; padding: 8px 12px 8px 35px; border: 1px solid #e0d0c1; border-radius: 8px; font-size: 13px; background: #fff;">
-                                            <i class="fa fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #8c7060; font-size: 13px;"></i>
+                                        <div class="stock-search-wrapper">
+                                            <input type="text" id="stockSearchInput" onkeyup="filterStockTable()"
+                                                placeholder="Tìm kiếm sản phẩm, size, màu..."
+                                                class="stock-search-input">
+                                            <i class="fa fa-search stock-search-icon"></i>
                                         </div>
                                     </div>
 
@@ -283,61 +308,53 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sản Phẩm</th>
-                                                    <th style="text-align: center;">Màu Sắc</th>
-                                                    <th style="text-align: center;">Kích Cỡ</th>
-                                                    <th style="text-align: center;">Tồn Kho</th>
-                                                    <th style="text-align: right;">Giá Nhập Gần Nhất</th>
-                                                    <th>Ngày Nhập Gần Nhất</th>
-                                                    <th style="text-align: center;">Trạng Thái</th>
+                                                    <th class="text-center">Màu Sắc</th>
+                                                    <th class="text-center">Kích Cỡ</th>
+                                                    <th class="text-center">Tổng Tồn Kho</th>
+                                                    <th class="text-center">Trạng Thái</th>
+                                                    <th class="text-center">Hành Động</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <c:forEach var="s" items="${stocks}">
                                                     <tr>
-                                                        <td style="font-weight: 600;">${s.productName}</td>
-                                                        <td style="text-align: center;"><span class="badge" style="background: #fdf6e2; color: #8c7060; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid #f3e5d8;">${s.colorName}</span></td>
-                                                        <td style="text-align: center;"><span class="badge" style="background: #f0f8ff; color: #1e90ff; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid #e1f0ff;">${s.sizeName}</span></td>
-                                                        <td style="text-align: center;">
-                                                            <strong style="font-size: 15px;">${s.stock}</strong>
+                                                        <td class="font-weight-semibold">${s.productName}</td>
+                                                        <td class="text-center"><span
+                                                                class="badge badge-color">${s.colorName}</span>
                                                         </td>
-                                                        <td style="text-align: right; font-weight: 600; color: var(--primary-color);">
-                                                            <c:choose>
-                                                                <c:when test="${not empty s.lastImportPrice && s.lastImportPrice > 0}">
-                                                                    <fmt:formatNumber value="${s.lastImportPrice}" type="number" maxFractionDigits="0" /> ₫
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <span style="color: #bbb; font-weight: normal; font-style: italic;">Chưa có giá</span>
-                                                                </c:otherwise>
-                                                            </c:choose>
+                                                        <td class="text-center"><span
+                                                                class="badge badge-size">${s.sizeName}</span>
                                                         </td>
-                                                        <td>
-                                                            <c:choose>
-                                                                <c:when test="${not empty s.lastImportDate}">
-                                                                    ${s.lastImportDate}
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <span style="color: #bbb; font-style: italic;">Chưa nhập kho</span>
-                                                                </c:otherwise>
-                                                            </c:choose>
+                                                        <td class="text-center">
+                                                            <strong class="stock-qty">${s.stock}</strong>
                                                         </td>
-                                                        <td style="text-align: center;">
+                                                        <td class="text-center">
                                                             <c:choose>
                                                                 <c:when test="${s.stock == 0}">
-                                                                    <span class="status-badge out-of-stock" style="padding: 4px 10px; font-size: 11px;">Hết hàng</span>
+                                                                    <span class="stock-status out-of-stock">Hết
+                                                                        hàng</span>
                                                                 </c:when>
                                                                 <c:when test="${s.stock <= 5}">
-                                                                    <span class="status-badge status-pending" style="padding: 4px 10px; font-size: 11px;">Sắp hết</span>
+                                                                    <span class="stock-status low-stock">Sắp hết</span>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <span class="status-badge status-active" style="padding: 4px 10px; font-size: 11px; background: rgba(47, 158, 68, 0.12); color: #2f9e44;">Còn hàng</span>
+                                                                    <span class="stock-status in-stock">Còn hàng</span>
                                                                 </c:otherwise>
                                                             </c:choose>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button type="button" class="icon-btn view"
+                                                                onclick="showStockDetails(${s.id}, '${fn:escapeXml(s.productName)} - Màu: ${s.colorName} - Size: ${s.sizeName}')"
+                                                                title="Xem chi tiết các đợt nhập kho">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
                                                 <c:if test="${empty stocks}">
                                                     <tr>
-                                                        <td colspan="7" style="text-align: center; padding: 20px; color: #8c7060;">Không tìm thấy sản phẩm nào trong kho</td>
+                                                        <td colspan="6" class="text-center stock-loading-container">
+                                                            Không tìm thấy sản phẩm nào trong kho</td>
                                                     </tr>
                                                 </c:if>
                                             </tbody>
@@ -347,6 +364,40 @@
                             </main>
                         </section>
                     </div>
+
+                    <!-- MODAL CHI TIẾT ĐỢT NHẬP KHO -->
+                    <div id="stockDetailModal" class="modal-overlay">
+                        <div class="modal stock-modal">
+                            <div class="modal-header">
+                                <h2 id="modalStockTitle" class="stock-modal-title">Chi tiết
+                                    đợt nhập kho</h2>
+                                <button class="modal-close stock-modal-close-btn"
+                                    onclick="closeStockModal()">&times;</button>
+                            </div>
+                            <div class="modal-body stock-modal-body">
+                                <div class="user-table-wrapper stock-modal-table-wrapper">
+                                    <table class="user-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã Đợt Nhập</th>
+                                                <th>Ngày Nhập</th>
+                                                <th class="text-center">Số Lượng Nhập</th>
+                                                <th class="text-right">Giá Nhập</th>
+                                                <th class="text-center">Còn Lại</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="stockBatchTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer stock-modal-footer">
+                                <button type="button" class="btn-back stock-modal-btn-close"
+                                    onclick="closeStockModal()">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <script>
                         function openTab(evt, tabName) {
                             var i, tabcontent, tablinks;
@@ -376,6 +427,48 @@
                                     trs[i].style.display = "none";
                                 }
                             }
+                        }
+
+                        function showStockDetails(variantId, variantLabel) {
+                            document.getElementById("modalStockTitle").innerText = "Chi tiết đợt nhập: " + variantLabel;
+                            const tableBody = document.getElementById("stockBatchTableBody");
+                            tableBody.innerHTML = '<tr><td colspan="5" class="stock-loading-container"><i class="fa fa-spinner fa-spin stock-loading-icon"></i> Đang tải dữ liệu...</td></tr>';
+
+                            document.getElementById("stockDetailModal").style.display = "flex";
+
+                            fetch('${pageContext.request.contextPath}/admin/warehouseStockBatch?variantId=' + variantId)
+                                .then(response => response.json())
+                                .then(data => {
+                                    tableBody.innerHTML = "";
+                                    if (!data || data.length === 0) {
+                                        tableBody.innerHTML = '<tr><td colspan="5" class="stock-modal-empty">Chưa có lịch sử nhập kho của sản phẩm này.</td></tr>';
+                                        return;
+                                    }
+                                    data.forEach(batch => {
+                                        const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(batch.price);
+                                        const row = document.createElement("tr");
+
+                                        const badgeClass = batch.remainingQuantity > 0
+                                            ? 'batch-badge-active'
+                                            : 'batch-badge-empty';
+
+                                        row.innerHTML =
+                                            '<td class="font-weight-semibold">PN' + batch.id + '</td>' +
+                                            '<td>' + batch.createdAtFormatted + '</td>' +
+                                            '<td class="text-center"><strong>' + batch.quantity + '</strong></td>' +
+                                            '<td class="text-right stock-price-highlight">' + formattedPrice + '</td>' +
+                                            '<td class="text-center"><span class="badge batch-badge ' + badgeClass + '">' + batch.remainingQuantity + '</span></td>';
+                                        tableBody.appendChild(row);
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error("Error loading batches:", error);
+                                    tableBody.innerHTML = '<tr><td colspan="5" class="stock-modal-error">Có lỗi xảy ra khi tải dữ liệu! Vui lòng thử lại sau.</td></tr>';
+                                });
+                        }
+
+                        function closeStockModal() {
+                            document.getElementById("stockDetailModal").style.display = "none";
                         }
                     </script>
                 </body>

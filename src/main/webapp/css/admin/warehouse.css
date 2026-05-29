@@ -59,6 +59,349 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stock-modal {
+    max-width: 700px;
+    width: 90%;
+}
+
+.stock-modal-body {
+    padding: 25px;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.stock-modal-table-wrapper {
+    margin-top: 0;
+    box-shadow: none;
+    border: 1px solid #f0e6db;
+}
+
+.stock-modal-footer {
+    padding: 15px 25px;
+    border-top: 2px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+    background: #faf8f5;
+}
+
+.stock-modal-btn-close {
+    padding: 9px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 13px;
+    transform: none;
+    min-width: 90px;
+    text-align: center;
+}
+
+.stock-search-wrapper {
+    position: relative;
+    width: 300px;
+}
+
+.stock-search-input {
+    width: 100%;
+    padding: 8px 12px 8px 35px;
+    border: 1px solid #e0d0c1;
+    border-radius: 8px;
+    font-size: 13px;
+    background: #fff;
+}
+
+.stock-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8c7060;
+    font-size: 13px;
+}
+
+.stock-loading-container {
+    text-align: center;
+    padding: 20px;
+    color: #8c7060;
+}
+
+.stock-loading-icon {
+    font-size: 20px;
+    color: #8F6641;
+    margin-right: 8px;
+}
+
+.stock-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8F6641;
+}
+
+.stock-empty-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: #d8c2af;
+    display: block;
+}
+
+.stock-empty-title {
+    font-size: 15px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+    color: #8F6641;
+}
+
+.stock-empty-desc {
+    font-size: 13px;
+    color: #a08875;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.font-weight-semibold {
+    font-weight: 600;
+}
+
+.stock-price-highlight {
+    font-weight: 600;
+    color: #8F6641;
+}
+
+.batch-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.batch-badge-active {
+    background: rgba(47, 158, 68, 0.12);
+    color: #2f9e44;
+    border: 1px solid rgba(47, 158, 68, 0.2);
+}
+
+.batch-badge-empty {
+    background: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+/* --- decoupled styles from JSP templates --- */
+
+.alert-success {
+    color: #2f9e44;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.alert-error {
+    color: #dc3545;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.warehouse-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.warehouse-status.completed {
+    background: rgba(47, 158, 68, 0.12);
+    color: #2f9e44;
+    border: 1px solid rgba(47, 158, 68, 0.2);
+}
+
+.warehouse-status.pending {
+    background: rgba(240, 140, 0, 0.12);
+    color: #f08c00;
+    border: 1px solid rgba(240, 140, 0, 0.2);
+}
+
+.warehouse-status.cancelled {
+    background: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.badge-color {
+    background: #fdf6e2;
+    color: #8c7060;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #f3e5d8;
+}
+
+.badge-size {
+    background: #f0f8ff;
+    color: #1e90ff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #e1f0ff;
+}
+
+.stock-qty {
+    font-size: 15px;
+}
+
+.stock-status {
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.stock-status.in-stock {
+    background: rgba(47, 158, 68, 0.12);
+    color: #2f9e44;
+    border: 1px solid rgba(47, 158, 68, 0.2);
+}
+
+.stock-status.low-stock {
+    background: #fff3e0;
+    color: #e65100;
+    border: 1px solid rgba(230, 81, 0, 0.2);
+}
+
+.stock-status.out-of-stock {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid rgba(198, 40, 40, 0.2);
+}
+
+.stock-modal-title {
+    margin: 0;
+    font-size: 18px;
+    color: #8F6641;
+}
+
+.stock-modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #8c7060;
+    line-height: 1;
+}
+
+.stock-modal-empty {
+    text-align: center;
+    padding: 20px;
+    color: #8c7060;
+    font-style: italic;
+}
+
+.stock-modal-error {
+    text-align: center;
+    padding: 20px;
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.warehouse-order-banner.warehouse-return-banner {
+    background: rgba(47, 158, 68, 0.08);
+    border-color: rgba(47, 158, 68, 0.15) rgba(47, 158, 68, 0.15) rgba(47, 158, 68, 0.15) rgba(47, 158, 68, 0.3);
+    border-left-width: 3px;
+}
+
+.warehouse-order-icon.warehouse-return-icon {
+    background: #2f9e44;
+    color: #fff;
+}
+
+.warehouse-order-label.label-return {
+    color: #2f9e44;
+}
+
+.warehouse-order-link.link-return {
+    color: #2f9e44;
+}
+
+.icon-small {
+    font-size: 10px;
+}
+
+.topbar-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.topbar-title {
+    margin: 0;
+}
+
+.page-main-padding {
+    padding: 20px;
+}
+
+.warehouse-card {
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.detail-table-container {
+    margin-top: 4px;
+}
+
+.detail-total-price {
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.detail-empty-state {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+}
+
+.detail-empty-icon {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.stock-modal .modal-header {
+    background: #f7f2ed !important;
+    background-image: none !important;
+    border-bottom: 1px solid #e2d2c1 !important;
+}
+
+.stock-modal .stock-modal-title {
+    color: #8F6641 !important;
+    font-weight: 700;
+}
+
+.stock-modal .stock-modal-close-btn {
+    color: #8c7060 !important;
 }
