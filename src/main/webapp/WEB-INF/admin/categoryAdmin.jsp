@@ -47,37 +47,46 @@
                     </div>
                 </div>
 
-                <div class="user-toolbar">
-                    <a href="${pageContext.request.contextPath}/categoryAdmin?mode=add" class="btn-add">
-                        <i class="fa fa-plus"></i> Thêm danh mục
-                    </a>
+                <div class="category-header-row">
+                    <h3>Danh sách danh mục</h3>
+                    <div class="category-actions-wrap">
+                        <div class="stock-search-wrapper">
+                            <input type="text" id="categorySearchInput" onkeyup="filterCategoryTable()"
+                                   placeholder="Tìm kiếm danh mục..."
+                                   class="stock-search-input">
+                            <i class="fa fa-search stock-search-icon"></i>
+                        </div>
+                        <a href="${pageContext.request.contextPath}/categoryAdmin?mode=add" class="btn-add">
+                            <i class="fa fa-plus"></i> Thêm danh mục
+                        </a>
+                    </div>
                 </div>
 
 
-                <div class="user-table-wrapper" style="margin-top: 20px;">
+                <div class="user-table-wrapper" style="margin-top: 10px;">
                     <table class="user-table">
                         <thead>
                         <tr>
-                            <th>ID</th>
+                            <th class="text-center" style="width: 80px;">ID</th>
                             <th>Tên danh mục</th>
-                            <th>Loại</th>
-                            <th>Thuộc danh mục cha</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
+                            <th class="text-center">Loại</th>
+                            <th class="text-center">Thuộc danh mục cha</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center" style="width: 150px;">Hành động</th>
                         </tr>
                         </thead>
 
                         <tbody>
                         <c:if test="${empty parentCategoriesList and empty childCategoriesList}">
                             <tr>
-                                <td colspan="6" style="text-align:center">Không có danh mục nào.</td>
+                                <td colspan="6" class="text-center" style="padding: 20px;">Không có danh mục nào.</td>
                             </tr>
                         </c:if>
 
                         <c:forEach var="parent" items="${parentCategoriesList}">
                             <tr class="category-parent-row" data-parent-row-id="${parent.id}">
-                                <td>${parent.id}</td>
-                                <td class="category-name-parent">
+                                <td class="text-center font-weight-semibold">${parent.id}</td>
+                                <td class="category-name-parent font-weight-semibold">
                                     <button type="button"
                                             class="collapse-btn"
                                             data-parent-id="${parent.id}"
@@ -87,14 +96,14 @@
                                     </button>
                                     ${parent.name}
                                 </td>
-                                <td><span class="type-chip parent">Danh mục cha</span></td>
-                                <td>-</td>
-                                <td>
+                                <td class="text-center"><span class="type-chip parent">Danh mục cha</span></td>
+                                <td class="text-center" style="color: #bbb;">-</td>
+                                <td class="text-center">
                                     <span class="status ${parent.status == 1 ? 'active' : 'blocked'}">
                                         ${parent.status == 1 ? 'Đang hoạt động' : 'Đã khóa'}
                                     </span>
                                 </td>
-                                <td class="action-buttons">
+                                <td class="text-center action-buttons">
                                     <a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${parent.id}"
                                        class="icon-btn view"
                                        title="Xem chi tiết">
@@ -119,16 +128,16 @@
                             <c:forEach var="child" items="${childCategoriesList}">
                                 <c:if test="${child.parentId == parent.id}">
                                     <tr class="category-child-row" data-parent-id="${parent.id}">
-                                        <td>${child.id}</td>
+                                        <td class="text-center" style="color: #666;">${child.id}</td>
                                         <td class="category-name-child">${child.name}</td>
-                                        <td><span class="type-chip child">Danh mục con</span></td>
-                                        <td class="parent-name">${parent.name}</td>
-                                        <td>
+                                        <td class="text-center"><span class="type-chip child">Danh mục con</span></td>
+                                        <td class="text-center parent-name" style="font-weight: 500; color: #555;">${parent.name}</td>
+                                        <td class="text-center">
                                             <span class="status ${child.status == 1 ? 'active' : 'blocked'}">
                                                 ${child.status == 1 ? 'Đang hoạt động' : 'Đã khóa'}
                                             </span>
                                         </td>
-                                        <td class="action-buttons">
+                                        <td class="text-center action-buttons">
                                             <a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${child.id}"
                                                class="icon-btn view"
                                                title="Xem chi tiết">

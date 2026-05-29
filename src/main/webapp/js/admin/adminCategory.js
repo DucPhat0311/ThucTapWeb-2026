@@ -111,3 +111,38 @@ function closeToggleStatusModal() {
 
         button.classList.toggle('collapsed', !isCurrentlyHidden);
     }
+
+    function filterCategoryTable() {
+        const input = document.getElementById("categorySearchInput");
+        const filter = input.value.toLowerCase().trim();
+        const table = document.querySelector(".user-table");
+        const trs = table.querySelectorAll("tbody tr");
+
+        if (filter === "") {
+            // Restore default view based on collapse state
+            trs.forEach(tr => {
+                if (tr.classList.contains("category-parent-row")) {
+                    tr.style.display = "";
+                    const btn = tr.querySelector(".collapse-btn");
+                    const isCollapsed = btn ? btn.classList.contains("collapsed") : false;
+                    const parentId = tr.getAttribute("data-parent-row-id");
+                    
+                    const childRows = table.querySelectorAll(`tr.category-child-row[data-parent-id="${parentId}"]`);
+                    childRows.forEach(child => {
+                        child.style.display = isCollapsed ? "none" : "table-row";
+                    });
+                }
+            });
+            return;
+        }
+
+        // If search filter is active, search both parents and children and show them
+        trs.forEach(tr => {
+            const text = tr.innerText || tr.textContent;
+            if (text.toLowerCase().indexOf(filter) > -1) {
+                tr.style.display = "table-row";
+            } else {
+                tr.style.display = "none";
+            }
+        });
+    }
