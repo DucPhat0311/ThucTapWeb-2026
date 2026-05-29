@@ -33,14 +33,22 @@
             <div class="filter-section">
                 <h3>Khoảng Giá</h3>
                 <div class="price-input">
-                    <input type="number" id="min-price" value="${param.minPrice != null ? param.minPrice : 0}">
+                    <fmt:setLocale value="vi_VN"/>
+                    <input type="text" id="min-price-display" value="<fmt:formatNumber value='${param.minPrice != null ? param.minPrice : 0}' pattern='#,###'/>">
                     <span>-</span>
-                    <input type="number" id="max-price" value="${param.maxPrice != null ? param.maxPrice : 5000000}">
+                    <input type="text" id="max-price-display" value="<fmt:formatNumber value='${param.maxPrice != null ? param.maxPrice : 5000000}' pattern='#,###'/>">
+
+
+                    <input type="hidden" name="minPrice" id="min-price" value="${param.minPrice != null ? param.minPrice : 0}">
+                    <input type="hidden" name="maxPrice" id="max-price" value="${param.maxPrice != null ? param.maxPrice : 5000000}">
                 </div>
+
                 <div class="range-slider">
                     <input type="range" id="range-min" min="0" max="5000000" step="50000" value="${param.minPrice != null ? param.minPrice : 0}">
                 </div>
             </div>
+
+
 
             <c:set var="selectedSizes" value="${fn:split(param.sizes, ',')}" />
             <c:set var="selectedColors" value="${fn:split(param.colors, ',')}" />
@@ -163,26 +171,69 @@
 
 <script>
     const rangeMin = document.getElementById('range-min');
-    const minInput = document.getElementById('min-price');
-    const maxInput = document.getElementById('max-price');
+    const minDisplay = document.getElementById('min-price-display');
+    const maxDisplay = document.getElementById('max-price-display');
+    const minHidden = document.getElementById("min-price");
+    const maxHidden = document.getElementById("max-price");
+
+
+    function formatMoney(value) {
+        if (!value || isNaN(value)) return "0";
+        return parseInt(value).toLocaleString('vi-VN');
+    }
+
+
+    function unformatMoney(str) {
+        if (!str) return "0";
+        return str.toString().replace(/[\.,]/g, '');    }
+
 
     window.addEventListener('load', () => {
-        if (rangeMin && minInput) {
-            rangeMin.value = minInput.value;
+        if (rangeMin && minHidden) {
+            rangeMin.value = minHidden.value;
         }
     });
 
-    rangeMin.addEventListener('input', function() {
-        minInput.value = this.value;
-    });
 
-    minInput.addEventListener('change', function() {
-        let val = parseInt(this.value);
-        if (val > 5000000) val = 5000000;
-        if (val < 0) val = 0;
-        this.value = val;
-        rangeMin.value = val;
-    });
+    if (rangeMin) {
+        rangeMin.addEventListener('input', function() {
+            let val = this.value;
+            minHidden.value = val;
+            minDisplay.value = formatMoney(val);
+        });
+    }
+
+
+    if (minDisplay) {
+        minDisplay.addEventListener('input', function() {
+            let cleanValue = unformatMoney(this.value).replace(/\D/g, '');
+            let val = parseInt(cleanValue) || 0;
+
+
+            if (val > 5000000) val = 5000000;
+            if (val < 0) val = 0;
+
+
+            minHidden.value = val;
+            if (rangeMin) rangeMin.value = val;
+
+
+            this.value = formatMoney(val);
+        });
+    }
+
+
+    if (maxDisplay) {
+        maxDisplay.addEventListener('input', function() {
+            let cleanValue = unformatMoney(this.value).replace(/\D/g, '');
+            let val = parseInt(cleanValue) || 0;
+            if (val < 0) val = 0;
+
+
+            maxHidden.value = val;
+            this.value = formatMoney(val);
+        });
+    }
 
     function changeCategory(catId) {
         const urlParams = new URLSearchParams(window.location.search);
