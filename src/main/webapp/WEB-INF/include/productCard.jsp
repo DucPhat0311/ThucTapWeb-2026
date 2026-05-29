@@ -49,17 +49,50 @@
 
 
         <div class="rating-sold">
-            <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-            </div>
-            <div class="rating-info">
-                <span class="rating-avg">${not empty p.avgRating ? p.avgRating : '5.0'}</span>
-                <span class="rating-count">(${not empty p.totalReviews ? p.totalReviews : '0'} đánh giá)</span>
-            </div>
+            <c:choose>
+                <c:when test="${not empty p.totalReviews && p.totalReviews > 0}">
+                    <c:set var="rating" value="${p.avgRating}" />
+                    <c:set var="fullStars" value="${p.avgRating - (p.avgRating % 1)}" />
+                    <c:set var="hasHalf" value="${(p.avgRating % 1) >= 0.3 ? 1 : 0}" />
+                    <c:set var="emptyStars" value="${5 - fullStars - hasHalf}" />
+
+                    <div class="stars" style="color: #ffb703;">
+                        <c:forEach begin="1" end="${fullStars}">
+                            <i class="fas fa-star"></i>
+                        </c:forEach>
+
+                        <c:if test="${hasHalf == 1}">
+                            <i class="fas fa-star-half-alt"></i>
+                        </c:if>
+
+                        <c:if test="${emptyStars > 0}">
+                            <c:forEach begin="1" end="${emptyStars}">
+                                <i class="far fa-star"></i>
+                            </c:forEach>
+                        </c:if>
+                    </div>
+
+                    <div class="rating-info">
+                        <span class="rating-avg">${p.avgRating}</span>
+                        <span class="rating-count">(${p.totalReviews} đánh giá)</span>
+                    </div>
+                </c:when>
+
+                <c:otherwise>
+                    <div class="stars" style="color: #ccc;">
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <div class="rating-info">
+                        <span class="no-rating" style="color: #777; font-size: 13px; font-style: italic;">
+                            Chưa đánh giá
+                        </span>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </div>
