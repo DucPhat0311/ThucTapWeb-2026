@@ -502,6 +502,10 @@ html, body {
 .review-stars i { color: #FFD43B; font-size: 13px; }
 .review-content p { color: #444; line-height: 1.6; }
 .review-date { color: #999; font-size: 13px; display: block; margin-top: 8px; }
+.review-comment{
+
+    margin: 8px 0; font-size: 14.5px; color: #333; line-height: 1.5; word-break: break-word;
+}
 
 
 .suggested-products {

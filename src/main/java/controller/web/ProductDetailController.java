@@ -55,7 +55,7 @@
             double avgRating = reviewService.getAvgRating(id);
             int totalReviews = reviewService.getTotalReviews(id);
 
-            int displayStar = (int) Math.round(avgRating);
+            double displayStar = avgRating;
 
             List<ProductImage> listImage = productImageService.getImageByProduct(id);
 
