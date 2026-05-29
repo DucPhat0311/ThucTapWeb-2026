@@ -142,12 +142,27 @@ public class UserAdminController extends HttpServlet {
             }
 
             user.setAddress(request.getParameter("address"));
+            
+            String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirm_password");
 
-            userService.createUser(user);
-
-            response.sendRedirect("userAdmin");
-          
-            return;
+            try {
+                if (password == null || !password.equals(confirmPassword)) {
+                    throw new RuntimeException("Mật khẩu xác nhận không khớp!");
+                }
+                user.setPassword(password);
+                userService.createUser(user);
+                response.sendRedirect("userAdmin");
+                return;
+            } catch (RuntimeException e) {
+                request.setAttribute("error", e.getMessage());
+                request.setAttribute("user", user);
+                request.setAttribute("mode", "add");
+                request.setAttribute("roles", new service.RoleService().getAllRoles());
+                request.setAttribute("page", "user");
+                request.getRequestDispatcher("/WEB-INF/admin/form-userAdmin.jsp").forward(request, response);
+                return;
+            }
         }
 
         if ("update".equals(action)){
@@ -183,9 +198,17 @@ public class UserAdminController extends HttpServlet {
 
             user.setAddress(request.getParameter("address"));
 
-            userService.updateUser(user);
-
-            response.sendRedirect("userAdmin?mode=view&id=" + id);
+            try {
+                userService.updateUser(user);
+                response.sendRedirect("userAdmin?mode=view&id=" + id);
+            } catch (RuntimeException e) {
+                request.setAttribute("error", e.getMessage());
+                request.setAttribute("user", user);
+                request.setAttribute("mode", "edit");
+                request.setAttribute("roles", new service.RoleService().getAllRoles());
+                request.setAttribute("page", "user");
+                request.getRequestDispatcher("/WEB-INF/admin/form-userAdmin.jsp").forward(request, response);
+            }
 
         }
 

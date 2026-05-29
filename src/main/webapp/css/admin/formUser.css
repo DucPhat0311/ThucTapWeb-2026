@@ -287,3 +287,41 @@ textarea[name='content'] {
 textarea[name='shortDescription'] {
     min-height: 100px;
 }
+
+/* Custom error alerts */
+.alert-danger {
+    background-color: #fde8e8;
+    border: 1.5px solid #f8b4b4;
+    color: #9b1c1c;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Password wrapper and eye icon */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    background-color: #fcfbf9;
+    padding-right: 40px;
+    width: 100%;
+}
+
+.password-wrapper i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    z-index: 10;
+}
+
