@@ -142,8 +142,15 @@ public class UserAdminController extends HttpServlet {
             }
 
             user.setAddress(request.getParameter("address"));
+            
+            String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirm_password");
 
             try {
+                if (password == null || !password.equals(confirmPassword)) {
+                    throw new RuntimeException("Mật khẩu xác nhận không khớp!");
+                }
+                user.setPassword(password);
                 userService.createUser(user);
                 response.sendRedirect("userAdmin");
                 return;

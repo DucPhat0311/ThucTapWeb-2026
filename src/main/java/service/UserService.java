@@ -334,7 +334,13 @@ public class UserService {
         if (userDao.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("Email đã được sử dụng bởi một tài khoản khác!");
         }
-        String pass = "Newpass123*";
+        
+        String pass = user.getPassword();
+        String passwordError = checkPasswordStrength(pass);
+        if (passwordError != null) {
+            throw new RuntimeException(passwordError);
+        }
+        
         String hashed = PassUtil.hash(pass);
         user.setPassword(hashed);
 

@@ -10,6 +10,7 @@
                 <title>Admin User Form</title>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formUser.css">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
             </head>
 
             <body>
@@ -29,6 +30,17 @@
 
 
                     <form method="post" action="userAdmin">
+
+                        <c:if test="${not empty error}">
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>${error}</span>
+                            </div>
+                        </c:if>
+                        <div id="jsErrorAlert" class="alert alert-danger" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span id="jsErrorMessage"></span>
+                        </div>
 
                         <div class="card">
                             <h3>Thông tin tài khoản</h3>
@@ -85,6 +97,29 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <c:if test="${mode == 'add'}">
+                                <div class="row" style="margin-top: 22px;">
+                                    <div class="col">
+                                        <label>Mật khẩu</label>
+                                        <div class="password-wrapper">
+                                            <input type="password" id="password" name="password" required
+                                                placeholder="Nhập mật khẩu (tối thiểu 8 ký tự)">
+                                            <i class="fas fa-eye" id="togglePasswordIcon"
+                                                onclick="togglePassword('password', 'togglePasswordIcon')"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <label>Nhập lại mật khẩu</label>
+                                        <div class="password-wrapper">
+                                            <input type="password" id="confirm_password" name="confirm_password"
+                                                required placeholder="Nhập lại mật khẩu">
+                                            <i class="fas fa-eye" id="toggleConfirmPasswordIcon"
+                                                onclick="togglePassword('confirm_password', 'toggleConfirmPasswordIcon')"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
                         </div>
 
 
@@ -186,7 +221,7 @@
                         }
                     });
                 </script>
-
+                <script src="${pageContext.request.contextPath}/js/auth/register.js"></script>
             </body>
 
             </html>
