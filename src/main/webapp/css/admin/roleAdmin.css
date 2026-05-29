@@ -1,0 +1,532 @@
+/* =========================================
+   Role Admin - Phân Quyền
+   ========================================= */
+
+/* Layout 2 panel */
+.role-layout {
+    display: flex;
+    gap: 20px;
+    min-height: calc(100vh - 140px);
+}
+
+/* ====== Panel trái: Danh sách roles ====== */
+.role-list-panel {
+    width: 280px;
+    min-width: 280px;
+    background: #fff;
+    border: 1px solid #e2d2c1;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(163, 121, 82, 0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.role-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0e6d9;
+}
+
+.role-list-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #5a3e2b;
+    font-weight: 600;
+}
+
+.btn-add-role {
+    background: linear-gradient(135deg, #a3794e, #8b6542);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-add-role:hover {
+    background: linear-gradient(135deg, #8b6542, #7a5838);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(163, 121, 82, 0.3);
+}
+
+.role-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.role-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.role-list::-webkit-scrollbar-thumb {
+    background: #d4c4b0;
+    border-radius: 4px;
+}
+
+.role-item {
+    display: block;
+    padding: 12px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #5a3e2b;
+    transition: all 0.2s;
+    margin-bottom: 4px;
+    border: 1px solid transparent;
+}
+
+.role-item:hover {
+    background: #faf6f1;
+    border-color: #e2d2c1;
+}
+
+.role-item.active {
+    background: linear-gradient(135deg, #fdf6ef, #f5ebe0);
+    border-color: #a3794e;
+    box-shadow: 0 2px 8px rgba(163, 121, 82, 0.12);
+}
+
+.role-item-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.role-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.badge-system {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    color: #8b4513;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.role-desc {
+    font-size: 12px;
+    color: #9a8776;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ====== Panel phải: Bảng quyền ====== */
+.role-detail-panel {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #e2d2c1;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(163, 121, 82, 0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.role-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #f0e6d9;
+}
+
+.role-detail-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.role-detail-title h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #5a3e2b;
+    font-weight: 600;
+}
+
+.role-detail-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit-role {
+    background: #fff;
+    color: #a3794e;
+    border: 1px solid #a3794e;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-edit-role:hover {
+    background: #a3794e;
+    color: #fff;
+}
+
+.btn-delete-role {
+    background: #fff;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-delete-role:hover {
+    background: #e74c3c;
+    color: #fff;
+}
+
+/* ====== Permission Table ====== */
+.permission-table-wrapper {
+    flex: 1;
+    overflow: auto;
+    padding: 16px 24px;
+}
+
+.permission-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.permission-table thead th {
+    background: linear-gradient(135deg, #f8f0e8, #f0e6d9);
+    color: #5a3e2b;
+    font-weight: 600;
+    padding: 12px 8px;
+    text-align: center;
+    border-bottom: 2px solid #e2d2c1;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    font-size: 13px;
+}
+
+.permission-table thead th.module-col {
+    text-align: left;
+    padding-left: 16px;
+    width: 140px;
+}
+
+.th-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.check-all-col {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.check-all-col input[type="checkbox"] {
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    accent-color: #a3794e;
+}
+
+.permission-table tbody tr {
+    border-bottom: 1px solid #f5ebe0;
+    transition: background 0.15s;
+}
+
+.permission-table tbody tr:hover {
+    background: #fdf9f5;
+}
+
+.permission-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.module-name {
+    padding: 14px 16px;
+    font-weight: 600;
+    color: #5a3e2b;
+    font-size: 13px;
+}
+
+.perm-cell, .toggle-cell {
+    text-align: center;
+    padding: 10px 8px;
+}
+
+.toggle-col {
+    width: 60px;
+}
+
+/* ====== Custom Checkbox ====== */
+.perm-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+}
+
+.perm-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+}
+
+.perm-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d4c4b0;
+    border-radius: 5px;
+    background: #fff;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.perm-checkbox input:checked ~ .checkmark {
+    background: linear-gradient(135deg, #a3794e, #8b6542);
+    border-color: #8b6542;
+}
+
+.perm-checkbox input:checked ~ .checkmark::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.perm-checkbox input:disabled ~ .checkmark {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.perm-checkbox:hover .checkmark {
+    border-color: #a3794e;
+    box-shadow: 0 0 0 3px rgba(163, 121, 82, 0.1);
+}
+
+.toggle-row-checkbox .checkmark {
+    border-color: #c0b0a0;
+    background: #faf6f1;
+}
+
+/* ====== Footer: Save Button ====== */
+.permission-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #f0e6d9;
+    text-align: right;
+}
+
+.btn-save-perm {
+    background: linear-gradient(135deg, #a3794e, #8b6542);
+    color: #fff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.btn-save-perm:hover {
+    background: linear-gradient(135deg, #8b6542, #7a5838);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(163, 121, 82, 0.3);
+}
+
+/* ====== Empty State ====== */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 300px;
+    color: #b8a99a;
+}
+
+.empty-state i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 15px;
+}
+
+/* ====== Modal ====== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 32px;
+    width: 440px;
+    max-width: 90vw;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    animation: modalSlideIn 0.25s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal h3 {
+    margin: 0 0 20px;
+    color: #5a3e2b;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #5a3e2b;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.form-group .required {
+    color: #e74c3c;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e2d2c1;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #5a3e2b;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #a3794e;
+    box-shadow: 0 0 0 3px rgba(163, 121, 82, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #a3794e, #8b6542);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #8b6542, #7a5838);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #f5ebe0;
+    color: #5a3e2b;
+    border: 1px solid #e2d2c1;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-secondary:hover {
+    background: #ede0d4;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-1px);
+}
+
+.delete-warning {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 8px;
+    font-style: italic;
+}

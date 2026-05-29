@@ -22,6 +22,7 @@ public class User {
     private String phone;
     private String address;
     private String status;
+    private Integer roleId;
 
     public User(int id, String username, String email, String password, String role, int isActive, LocalDateTime createdAt, String otpCode, String fullName, LocalDate birthday, String gender, String phone, String address, String status) {
         this.id = id;
@@ -207,6 +208,14 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     @Override
