@@ -1,3 +1,24 @@
+// Khôi phục vị trí cuộn khi tải lại trang
+document.addEventListener('DOMContentLoaded', () => {
+    const tableScrollTop = sessionStorage.getItem('categoryTableScrollTop');
+    if (tableScrollTop !== null) {
+        const wrapper = document.querySelector('.user-table-wrapper');
+        if (wrapper) {
+            wrapper.scrollTop = parseFloat(tableScrollTop);
+        }
+        sessionStorage.removeItem('categoryTableScrollTop');
+    }
+
+    const pageScrollTop = sessionStorage.getItem('categoryPageScrollTop');
+    if (pageScrollTop !== null) {
+        const content = document.querySelector('.content');
+        if (content) {
+            content.scrollTop = parseFloat(pageScrollTop);
+        }
+        sessionStorage.removeItem('categoryPageScrollTop');
+    }
+});
+
 let currentCategoryId = null;
 let currentCategoryStatus = null;
 
@@ -9,7 +30,7 @@ function viewCategory(id) {
             document.getElementById('vc-id').textContent = data.id;
             document.getElementById('vc-name').textContent = data.name;
             document.getElementById('vc-status').textContent = data.status == 1 ? 'Đang dùng' : 'Đã khóa';
-            
+
             document.getElementById('view-category-modal').style.display = 'flex';
         })
         .catch(error => {
@@ -27,7 +48,7 @@ function editCategory(id) {
             document.getElementById('category-modal-title').textContent = 'Chỉnh sửa danh mục';
             document.getElementById('category-id').value = data.id;
             document.getElementById('category-name').value = data.name;
-            
+
             document.getElementById('category-modal').style.display = 'flex';
         })
         .catch(error => {
@@ -40,36 +61,56 @@ function editCategory(id) {
 function toggleCategoryStatus(id, name, status) {
     currentCategoryId = id;
     currentCategoryStatus = status;
-    
+
     const action = status == 1 ? 'Khóa' : 'Mở khóa';
     document.getElementById('toggle-status-title').textContent = `${action} danh mục này?`;
     document.getElementById('toggle-status-message').textContent = `Bạn có chắc chắn muốn ${action.toLowerCase()} danh mục "${name}"?`;
-    
+
     document.getElementById('toggle-status-modal').style.display = 'flex';
 }
-
 //Xác nhận khóa/mở khóa
 function confirmToggleStatus() {
+    // Lưu vị trí cuộn trước khi tải lại trang
+    const wrapper = document.querySelector('.user-table-wrapper');
+    if (wrapper) {
+        sessionStorage.setItem('categoryTableScrollTop', wrapper.scrollTop);
+    }
+    const content = document.querySelector('.content');
+    if (content) {
+        sessionStorage.setItem('categoryPageScrollTop', content.scrollTop);
+    }
+
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = 'categoryAdmin';
-    
+
     const actionInput = document.createElement('input');
     actionInput.type = 'hidden';
     actionInput.name = 'action';
     actionInput.value = 'toggle-status';
-    
+
     const idInput = document.createElement('input');
     idInput.type = 'hidden';
     idInput.name = 'id';
     idInput.value = currentCategoryId;
-    
+
     form.appendChild(actionInput);
     form.appendChild(idInput);
+
+    // Giữ nguyên trạng thái bộ lọc của URL hiện tại
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    if (status !== null) {
+        const statusInput = document.createElement('input');
+        statusInput.type = 'hidden';
+        statusInput.name = 'status';
+        statusInput.value = status;
+        form.appendChild(statusInput);
+    }
+
     document.body.appendChild(form);
     form.submit();
 }
-
 //Đóng modal
 function closeCategoryModal() {
     document.getElementById('category-modal').style.display = 'none';
@@ -86,28 +127,61 @@ function closeToggleStatusModal() {
 }
 
 //Đóng mở danh mục con
-    function toggleCategoryStatusFromButton(button) {
-        const id = parseInt(button.getAttribute('data-id'), 10);
-        const name = button.getAttribute('data-name') || '';
-        const status = parseInt(button.getAttribute('data-status'), 10);
-        toggleCategoryStatus(id, name, status);
+function toggleCategoryStatusFromButton(button) {
+    const id = parseInt(button.getAttribute('data-id'), 10);
+    const name = button.getAttribute('data-name') || '';
+    const status = parseInt(button.getAttribute('data-status'), 10);
+    toggleCategoryStatus(id, name, status);
+}
+
+function toggleCategoryChildrenFromButton(button) {
+    const parentId = parseInt(button.getAttribute('data-parent-id'), 10);
+    toggleCategoryChildren(parentId, button);
+}
+
+function toggleCategoryChildren(parentId, button) {
+    const childRows = document.querySelectorAll('tr.category-child-row[data-parent-id="' + parentId + '"]');
+    if (!childRows.length) {
+        return;
     }
 
-    function toggleCategoryChildrenFromButton(button) {
-        const parentId = parseInt(button.getAttribute('data-parent-id'), 10);
-        toggleCategoryChildren(parentId, button);
-    }
+    const isCurrentlyHidden = window.getComputedStyle(childRows[0]).display === 'none';
+    childRows.forEach((row) => {
+        row.style.display = isCurrentlyHidden ? 'table-row' : 'none';
+    });
 
-    function toggleCategoryChildren(parentId, button) {
-        const childRows = document.querySelectorAll('tr.category-child-row[data-parent-id="' + parentId + '"]');
-        if (!childRows.length) {
-            return;
-        }
+    button.classList.toggle('collapsed', !isCurrentlyHidden);
+}
 
-        const isCurrentlyHidden = window.getComputedStyle(childRows[0]).display === 'none';
-        childRows.forEach((row) => {
-            row.style.display = isCurrentlyHidden ? 'table-row' : 'none';
+function filterCategoryTable() {
+    const input = document.getElementById("categorySearchInput");
+    const filter = input.value.toLowerCase().trim();
+    const table = document.querySelector(".user-table");
+    const trs = table.querySelectorAll("tbody tr");
+
+    if (filter === "") {
+        trs.forEach(tr => {
+            if (tr.classList.contains("category-parent-row")) {
+                tr.style.display = "";
+                const btn = tr.querySelector(".collapse-btn");
+                const isCollapsed = btn ? btn.classList.contains("collapsed") : false;
+                const parentId = tr.getAttribute("data-parent-row-id");
+
+                const childRows = table.querySelectorAll(`tr.category-child-row[data-parent-id="${parentId}"]`);
+                childRows.forEach(child => {
+                    child.style.display = isCollapsed ? "none" : "table-row";
+                });
+            }
         });
-
-        button.classList.toggle('collapsed', !isCurrentlyHidden);
+        return;
     }
+
+    trs.forEach(tr => {
+        const text = tr.innerText || tr.textContent;
+        if (text.toLowerCase().indexOf(filter) > -1) {
+            tr.style.display = "table-row";
+        } else {
+            tr.style.display = "none";
+        }
+    });
+}

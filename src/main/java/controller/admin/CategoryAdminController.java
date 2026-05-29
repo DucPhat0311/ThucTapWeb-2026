@@ -108,11 +108,15 @@ public class CategoryAdminController extends HttpServlet {
         List<Category> childCategoriesList = new java.util.ArrayList<>();
         java.util.Map<Integer, String> parentNameMap = new java.util.HashMap<>();
 
+        for (Category c : allCategories) {
+            if (c.getParentId() == 0) {
+                parentNameMap.put(c.getId(), c.getName());
+            }
+        }
 
         for (Category c : categoriesForDisplay) {
             if (c.getParentId() == 0) {
                 parentCategoriesList.add(c);
-                parentNameMap.put(c.getId(), c.getName());
             }
         }
         List<Category> childSource = (statusFilter != null) ? filteredCategories : categoriesForDisplay;
@@ -126,6 +130,7 @@ public class CategoryAdminController extends HttpServlet {
         req.setAttribute("parentCategoriesList", parentCategoriesList);
         req.setAttribute("childCategoriesList", childCategoriesList);
         req.setAttribute("parentNameMap", parentNameMap);
+        req.setAttribute("filteredCategoriesList", filteredCategories);
         req.setAttribute("totalCategories", allCategories.size());
         req.setAttribute("activeCategories",
             allCategories.stream().filter(c -> c.getStatus() == 1).count());
@@ -226,7 +231,13 @@ public class CategoryAdminController extends HttpServlet {
         category.setStatus(newStatus);
 
         categoryAdminDao.update(category);
-        resp.sendRedirect(req.getContextPath() + "/categoryAdmin");
+
+        String status = req.getParameter("status");
+        String redirectUrl = req.getContextPath() + "/categoryAdmin";
+        if (status != null && !status.trim().isEmpty()) {
+            redirectUrl += "?status=" + status.trim();
+        }
+        resp.sendRedirect(redirectUrl);
     }
 
         private String escape(String s) {
