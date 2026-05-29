@@ -23,7 +23,7 @@
                         </div>
 
                         <form action="${pageContext.request.contextPath}/admin/warehouseForm" method="post">
-                            <div class="card" style="margin-bottom: 20px;">
+                            <div class="card card-margin-bottom">
                                 <h3>Thông tin phiếu</h3>
                                 <div class="row">
                                     <div class="col">
@@ -39,46 +39,43 @@
                                             placeholder="Nhập ghi chú cho phiếu kho...">
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="card">
-                                <h3 style="margin-bottom: 15px;">Chi tiết sản phẩm</h3>
+                                 <div class="card">
+                                <h3 class="h3-margin-bottom">Chi tiết sản phẩm</h3>
                                 <div id="product-list">
-                                    <div class="row product-row" style="align-items: flex-end; margin-bottom: 10px;">
-                                        <div class="col" style="flex: 2;">
+                                    <div class="row product-row row-align-end-margin">
+                                        <div class="col col-flex-2">
                                             <label>Sản phẩm (Kèm Màu & Size)</label>
                                             <select name="productVariantId[]" required
-                                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                                class="select-full-padding">
                                                 <option value="">-- Chọn sản phẩm --</option>
                                                 <c:forEach var="v" items="${variants}">
                                                     <option value="${v.id}">${v.productName} - Màu: ${v.colorName} -
                                                         Size: ${v.sizeName}</option>
-                                                </c:forEach>
+                                                 </c:forEach>
                                             </select>
                                         </div>
-                                        <div class="col">
-                                            <label>Số lượng</label>
-                                            <input type="number" name="quantity[]" min="1" required
-                                                placeholder="Nhập số lượng">
-                                        </div>
-                                        <div class="col">
-                                            <label>Đơn giá (Nhập/Xuất)</label>
-                                            <input type="number" name="price[]" step="0.01" min="0" required
-                                                placeholder="Nhập giá">
-                                        </div>
-                                        <div class="col" style="flex: 0.3;">
-                                            <button type="button" class="btn-danger"
-                                                onclick="this.parentElement.parentElement.remove()"
-                                                style="padding: 10px; background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 4px; width: 100%;">Xóa</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" onclick="addProductRow()"
-                                    style="margin-top: 10px; padding: 10px 15px; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">+
-                                    Thêm dòng sản phẩm</button>
-                            </div>
-
-                            <div class="form-footer" style="margin-top: 20px;">
+                                         <div class="col">
+                                             <label>Số lượng</label>
+                                             <input type="number" name="quantity[]" min="1" required
+                                                 placeholder="Nhập số lượng">
+                                         </div>
+                                         <div class="col">
+                                             <label>Đơn giá (Nhập/Xuất)</label>
+                                             <input type="number" name="price[]" step="0.01" min="0" required
+                                                 placeholder="Nhập giá">
+                                         </div>
+                                         <div class="col col-flex-0-3">
+                                             <button type="button" class="btn-danger btn-danger-custom"
+                                                 onclick="this.parentElement.parentElement.remove()">Xóa</button>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <button type="button" onclick="addProductRow()"
+                                     class="btn-success-custom">+
+                                     Thêm dòng sản phẩm</button>
+                             </div>
+ 
+                             <div class="form-footer footer-margin-top">
                                 <button type="button" class="btn-secondary"
                                     onclick="window.location.href='${pageContext.request.contextPath}/warehouseAdmin'">Hủy</button>
                                 <button type="submit" class="btn-primary">Lưu Phiếu Kho</button>
@@ -86,7 +83,7 @@
                         </form>
                     </div>
 
-                    <select id="variantTemplate" style="display: none;">
+                    <select id="variantTemplate" class="d-none">
                         <option value="">-- Chọn sản phẩm --</option>
                         <c:forEach var="v" items="${variants}">
                             <option value="${v.id}">${v.productName} - Màu: ${v.colorName} - Size: ${v.sizeName}
@@ -98,15 +95,12 @@
                         function addProductRow() {
                             const variantOptions = document.getElementById('variantTemplate').innerHTML;
                             const row = document.createElement('div');
-                            row.className = 'row product-row';
-                            row.style.alignItems = 'flex-end';
-                            row.style.marginBottom = '10px';
+                            row.className = 'row product-row row-align-end-margin';
 
                             const colProduct = document.createElement('div');
-                            colProduct.className = 'col';
-                            colProduct.style.flex = '2';
+                            colProduct.className = 'col col-flex-2';
                             colProduct.innerHTML = '<label>Sản phẩm (Kèm Màu & Size)</label>' +
-                                '<select name="productVariantId[]" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">' +
+                                '<select name="productVariantId[]" required class="select-full-padding">' +
                                 variantOptions + '</select>';
 
                             const colQty = document.createElement('div');
@@ -120,9 +114,8 @@
                                 '<input type="number" name="price[]" step="0.01" min="0" required placeholder="Nhập giá">';
 
                             const colBtn = document.createElement('div');
-                            colBtn.className = 'col';
-                            colBtn.style.flex = '0.3';
-                            colBtn.innerHTML = '<button type="button" class="btn-danger" onclick="this.parentElement.parentElement.remove()" style="padding: 10px; background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 4px; width: 100%;">Xóa</button>';
+                            colBtn.className = 'col col-flex-0-3';
+                            colBtn.innerHTML = '<button type="button" class="btn-danger btn-danger-custom" onclick="this.parentElement.parentElement.remove()">Xóa</button>';
 
                             row.appendChild(colProduct);
                             row.appendChild(colQty);

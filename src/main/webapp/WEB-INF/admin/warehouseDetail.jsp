@@ -19,19 +19,19 @@
 
                     <section class="content">
                         <header class="topbar">
-                            <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="topbar-title-wrap">
                                 <a href="${pageContext.request.contextPath}/warehouseAdmin" class="back-to-product-btn">
                                     <i class="fa fa-arrow-left"></i>
                                 </a>
-                                <h1 style="margin: 0;">Chi Tiết Phiếu Kho</h1>
+                                <h1 class="topbar-title">Chi Tiết Phiếu Kho</h1>
                             </div>
                             <div class="actions">
                                 <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
                             </div>
                         </header>
 
-                        <main id="page" style="padding: 20px;">
-                            <div class="cardHouse" style="background: #fff; padding: 24px; border-radius: 12px;">
+                        <main id="page" class="page-main-padding">
+                            <div class="cardHouse warehouse-card">
                                 <c:if test="${not empty receipt and receipt.orderId > 0 and receipt.type == 'EXPORT'}">
                                     <div class="warehouse-order-banner">
                                         <span class="warehouse-order-icon"><i
@@ -47,64 +47,58 @@
                                     </div>
                                 </c:if>
                                 <c:if test="${not empty receipt and receipt.orderId > 0 and receipt.type == 'RETURN'}">
-                                    <div class="warehouse-order-banner"
-                                        style="background: rgba(47, 158, 68, 0.08); border-color: rgba(47, 158, 68, 0.15);">
-                                        <span class="warehouse-order-icon"
-                                            style="background: #2f9e44; color: #fff; display: flex; align-items: center; justify-content: center;"><i
+                                    <div class="warehouse-order-banner warehouse-return-banner">
+                                        <span class="warehouse-order-icon warehouse-return-icon"><i
                                                 class="fa-solid fa-rotate-left"></i></span>
                                         <div>
-                                            <span class="warehouse-order-label" style="color: #2f9e44;">Hoàn kho từ Đơn
+                                            <span class="warehouse-order-label label-return">Hoàn kho từ Đơn
                                                 trả hàng #${receipt.orderId}</span>
                                             <a href="${pageContext.request.contextPath}/returnAdmin?mode=view&id=${receipt.orderId}"
-                                                class="warehouse-order-link" style="color: #2f9e44;"><i
-                                                    class="fa-solid fa-arrow-up-right-from-square"
-                                                    style="font-size:10px;"></i> Xem đơn trả hàng</a>
-                                        </div>
+                                                class="warehouse-order-link link-return"><i
+                                                    class="fa-solid fa-arrow-up-right-from-square icon-small"></i> Xem đơn trả hàng</a>
+                                         </div>
                                     </div>
                                 </c:if>
-                                <div class="table-container" style="margin-top: 4px;">
+                                <div class="table-container detail-table-container">
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th style="text-align:center;">ID Biến thể</th>
+                                                <th class="text-center">ID Biến thể</th>
                                                 <th>Tên Sản Phẩm</th>
-                                                <th style="text-align:center;">Màu sắc</th>
-                                                <th style="text-align:center;">Size</th>
-                                                <th style="text-align:center;">Số lượng</th>
-                                                <th style="text-align:right;">Đơn giá</th>
-                                                <th style="text-align:right;">Thành tiền</th>
+                                                <th class="text-center">Màu sắc</th>
+                                                <th class="text-center">Size</th>
+                                                <th class="text-center">Số lượng</th>
+                                                <th class="text-right">Đơn giá</th>
+                                                <th class="text-right">Thành tiền</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach var="detail" items="${receiptDetails}">
-                                                <tr>
-                                                    <td style="text-align: center;">${detail.productVariantId}</td>
-                                                    <td>${detail.productName}</td>
-                                                    <td style="text-align: center;">${detail.colorName}</td>
-                                                    <td style="text-align: center;">${detail.sizeName}</td>
-                                                    <td style="text-align: center;"><strong>${detail.quantity}</strong>
-                                                    </td>
-                                                    <td style="text-align: right; white-space: nowrap;">
-                                                        <fmt:formatNumber value="${detail.price}" type="number"
-                                                            maxFractionDigits="0" /> ₫
-                                                    </td>
-                                                    <td
-                                                        style="text-align: right; white-space: nowrap; font-weight: 600; color: var(--primary-color);">
-                                                        <fmt:formatNumber value="${detail.price * detail.quantity}"
-                                                            type="number" maxFractionDigits="0" /> ₫
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                            <c:if test="${empty receiptDetails}">
-                                                <tr>
-                                                    <td colspan="7"
-                                                        style="text-align: center; padding: 30px; color: var(--text-muted);">
-                                                        <i class="fa-solid fa-inbox"
-                                                            style="font-size:24px; display:block; margin-bottom:8px;"></i>
-                                                        Không có chi tiết nào.
-                                                    </td>
-                                                </tr>
-                                            </c:if>
+                                             <c:forEach var="detail" items="${receiptDetails}">
+                                                 <tr>
+                                                     <td class="text-center">${detail.productVariantId}</td>
+                                                     <td>${detail.productName}</td>
+                                                     <td class="text-center">${detail.colorName}</td>
+                                                     <td class="text-center">${detail.sizeName}</td>
+                                                     <td class="text-center"><strong>${detail.quantity}</strong>
+                                                     </td>
+                                                     <td class="text-right">
+                                                         <fmt:formatNumber value="${detail.price}" type="number"
+                                                             maxFractionDigits="0" /> ₫
+                                                     </td>
+                                                     <td class="detail-total-price">
+                                                         <fmt:formatNumber value="${detail.price * detail.quantity}"
+                                                             type="number" maxFractionDigits="0" /> ₫
+                                                     </td>
+                                                 </tr>
+                                             </c:forEach>
+                                             <c:if test="${empty receiptDetails}">
+                                                 <tr>
+                                                     <td colspan="7" class="detail-empty-state">
+                                                         <i class="fa-solid fa-inbox detail-empty-icon"></i>
+                                                         Không có chi tiết nào.
+                                                     </td>
+                                                 </tr>
+                                             </c:if>
                                         </tbody>
                                     </table>
                                 </div>

@@ -70,7 +70,7 @@
                 </form>
             </div>
 
-            <select id="variantTemplate" style="display:none;">
+            <select id="variantTemplate" class="d-none">
                 <option value="">-- Chọn sản phẩm --</option>
                 <c:forEach var="v" items="${variants}">
                     <option value="${v.id}">${v.productName} - Màu: ${v.colorName} - Size: ${v.sizeName} (Tồn:
