@@ -328,6 +328,12 @@ public class UserService {
     }
 
     public void createUser(User user) {
+        if (userDao.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("Tên đăng nhập đã tồn tại trên hệ thống!");
+        }
+        if (userDao.findByEmail(user.getEmail()) != null) {
+            throw new RuntimeException("Email đã được sử dụng bởi một tài khoản khác!");
+        }
         String pass = "Newpass123*";
         String hashed = PassUtil.hash(pass);
         user.setPassword(hashed);
@@ -336,6 +342,10 @@ public class UserService {
     }
 
     public void updateUser(User user) {
+        User existingEmail = userDao.findByEmail(user.getEmail());
+        if (existingEmail != null && existingEmail.getId() != user.getId()) {
+            throw new RuntimeException("Email đã được sử dụng bởi một tài khoản khác!");
+        }
         userDaoAdmin.updateUser(user);
     }
 
