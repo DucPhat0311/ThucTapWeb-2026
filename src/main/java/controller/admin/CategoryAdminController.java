@@ -231,7 +231,13 @@ public class CategoryAdminController extends HttpServlet {
         category.setStatus(newStatus);
 
         categoryAdminDao.update(category);
-        resp.sendRedirect(req.getContextPath() + "/categoryAdmin");
+
+        String status = req.getParameter("status");
+        String redirectUrl = req.getContextPath() + "/categoryAdmin";
+        if (status != null && !status.trim().isEmpty()) {
+            redirectUrl += "?status=" + status.trim();
+        }
+        resp.sendRedirect(redirectUrl);
     }
 
         private String escape(String s) {
