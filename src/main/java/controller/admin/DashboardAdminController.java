@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.constant.OrderStatusLabel;
 import service.DashboardService;
 
 import java.io.IOException;
@@ -28,10 +29,12 @@ public class DashboardAdminController extends HttpServlet {
         request.setAttribute("totalProducts", service.countProducts());
         request.setAttribute("totalUsers",    service.countUsers());
 
-        // Doanh thu theo tháng (JSON array 12 phần tử cho Chart.js)
         double[] monthlyRevenue = service.revenueByMonth();
         request.setAttribute("monthlyRevenueJson", mapper.writeValueAsString(monthlyRevenue));
         request.setAttribute("currentYear", LocalDate.now().getYear());
+        request.setAttribute("totalUsers", service.countUsers());
+        request.setAttribute("latestOrders", service.latestOrders(5));
+        request.setAttribute("orderStatusLabels", OrderStatusLabel.adminLabels());
 
         request.setAttribute("page", "dashboard");
         request.getRequestDispatcher("/WEB-INF/admin/dashboardAdmin.jsp").forward(request, response);

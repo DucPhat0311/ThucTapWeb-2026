@@ -170,7 +170,9 @@ public class OrderReturnAdminController extends HttpServlet {
                 PaymentStatus.UNPAID, "Chưa thanh toán",
                 PaymentStatus.PENDING, "Đang chờ thanh toán",
                 PaymentStatus.PAID, "Đã thanh toán",
-                PaymentStatus.FAILED, "Thanh toán thất bại"
+                PaymentStatus.FAILED, "Thanh toán thất bại",
+                PaymentStatus.REFUND_PENDING, "Chờ hoàn tiền",
+                PaymentStatus.REFUNDED, "Đã hoàn tiền"
         ));
     }
 

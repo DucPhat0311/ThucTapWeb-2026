@@ -52,6 +52,12 @@
     border-color: #d9c7f5;
 }
 
+.order-tabs .tab-processing {
+    background: #fff3e8;
+    color: #9a5b18;
+    border-color: #f2c79d;
+}
+
 .order-tabs .tab-shipping {
     background: #edf6ff;
     color: #2563a8;
@@ -80,6 +86,12 @@
     background: #6f42c1;
     color: #fff;
     border-color: #6f42c1;
+}
+
+.order-tabs .tab-processing.active {
+    background: #b76a1f;
+    color: #fff;
+    border-color: #b76a1f;
 }
 
 .order-tabs .tab-shipping.active {
@@ -255,6 +267,13 @@
     border-color: #d9c7f5;
 }
 
+.order-right .status-processing,
+.tracking-chip.status-processing {
+    background: #fff3e8;
+    color: #9a5b18;
+    border-color: #f2c79d;
+}
+
 .order-right .status-shipping,
 .tracking-chip.status-shipping {
     background: #edf6ff;
@@ -289,7 +308,9 @@
     font-weight: 600;
 }
 
-.cancel-order-form {
+.cancel-order-form,
+.retry-payment-form,
+.reorder-form {
     margin: 0;
 }
 
@@ -401,6 +422,31 @@
 
 .btn-cancel:hover {
     background: #ffe8e8;
+}
+
+.btn-retry-payment {
+    background: #000;
+    color: #fff;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+
+.btn-retry-payment:hover {
+    background: #a67c52;
+    border-color: #a67c52;
+}
+
+.btn-reorder {
+    background: #f8f1e8;
+    color: #6f4e37;
+    border: 1px solid #d7c6b4;
+    cursor: pointer;
+}
+
+.btn-reorder:hover {
+    background: #6f4e37;
+    color: #fff;
+    border-color: #6f4e37;
 }
 
 .btn-confirm {

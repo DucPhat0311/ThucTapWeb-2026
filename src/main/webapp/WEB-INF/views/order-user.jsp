@@ -71,6 +71,20 @@
                                         </div>
                                     </c:if>
 
+                                    <c:if test="${param.reorder == 'unavailable'}">
+                                        <div class="order-alert order-alert-error">
+                                            Một số sản phẩm trong đơn hàng này không còn khả dụng.
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${param.reorder == 'out_of_stock'}">
+                                        <div class="order-alert order-alert-error">
+                                            Một số sản phẩm trong đơn hàng này không đủ số lượng tồn kho.
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${param.reorder == 'invalid' || param.reorder == 'not_cancelled' || param.reorder == 'not_reorderable'}">
+                                        <div class="order-alert order-alert-error">Không thể mua lại đơn hàng này.</div>
+                                    </c:if>
+
                                     <div class="order-tabs">
                                         <a href="order-user?status=all"
                                             class="tab-item tab-all ${currentStatus == 'all' || empty currentStatus ? 'active' : ''}">
@@ -83,6 +97,10 @@
                                         <a href="order-user?status=PENDING_PAYMENT"
                                             class="tab-item tab-pending_payment ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}">
                                             Chờ thanh toán
+                                        </a>
+                                        <a href="order-user?status=PROCESSING"
+                                            class="tab-item tab-processing ${currentStatus == 'PROCESSING' ? 'active' : ''}">
+                                            Đang chuẩn bị hàng
                                         </a>
                                         <a href="order-user?status=SHIPPING"
                                             class="tab-item tab-shipping ${currentStatus == 'SHIPPING' ? 'active' : ''}">
@@ -190,7 +208,24 @@
                                             </div>
                                             <div class="order-actions">
                                                 <c:if
-                                                    test="${(o.orderStatus == 'PENDING' || o.orderStatus == 'PENDING_PAYMENT') && !(o.paymentMethods == 'VNPAY' && o.paymentStatuses == 'PAID') && empty o.ghnOrderCode}">
+                                                    test="${o.orderStatus == 'PENDING_PAYMENT' && o.paymentMethods == 'VNPAY' && o.paymentStatuses != 'PAID'}">
+                                                    <form method="post" action="payment-failed" class="retry-payment-form">
+                                                        <input type="hidden" name="orderId" value="${o.id}">
+                                                        <button type="submit" class="btn-order-action btn-retry-payment">
+                                                            Thanh toán lại
+                                                        </button>
+                                                    </form>
+                                                </c:if>
+                                                <c:if test="${o.orderStatus == 'CANCELLED' || o.orderStatus == 'COMPLETED'}">
+                                                    <form method="post" action="reorder" class="reorder-form">
+                                                        <input type="hidden" name="orderId" value="${o.id}">
+                                                        <button type="submit" class="btn-order-action btn-reorder">
+                                                            Mua lại
+                                                        </button>
+                                                    </form>
+                                                </c:if>
+                                                <c:if
+                                                    test="${(o.orderStatus == 'PENDING' || o.orderStatus == 'PENDING_PAYMENT') && empty o.ghnOrderCode}">
                                                     <form method="post" action="cancel-order" class="cancel-order-form">
                                                         <input type="hidden" name="id" value="${o.id}">
                                                         <button type="submit" class="btn-order-action btn-cancel">Hủy
@@ -285,6 +320,7 @@
                                 </div>
                             </div>
 
+                            <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
                             <script>
                                 document.addEventListener("DOMContentLoaded", () => {
                                     const stars = document.querySelectorAll(".star-rating .star");

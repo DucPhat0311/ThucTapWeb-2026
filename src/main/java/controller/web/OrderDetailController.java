@@ -15,6 +15,7 @@ import model.OrderReturn;
 import model.User;
 import model.constant.OrderReturnStatus;
 import model.constant.OrderStatus;
+import model.constant.OrderStatusLabel;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
 import model.constant.OrderReturnReason;
@@ -169,33 +170,11 @@ public class OrderDetailController extends HttpServlet {
     }
 
     private String getOrderStatusLabel(String status) {
-        if (status == null) {
-            return "Không xác định";
-        }
-        return switch (status) {
-            case OrderStatus.PENDING -> "Chờ xác nhận";
-            case OrderStatus.PENDING_PAYMENT -> "Chờ thanh toán";
-            case OrderStatus.SHIPPING -> "Đang giao hàng";
-            case OrderStatus.COMPLETED -> "Đã hoàn thành";
-            case OrderStatus.CANCELLED -> "Đã hủy";
-            default -> status;
-        };
+        return OrderStatusLabel.customerLabel(status);
     }
 
     private String getOrderStatusClass(String status) {
-        if (OrderStatus.PENDING_PAYMENT.equals(status)) {
-            return "pending-payment";
-        }
-        if (OrderStatus.SHIPPING.equals(status)) {
-            return "shipping";
-        }
-        if (OrderStatus.COMPLETED.equals(status)) {
-            return "delivered";
-        }
-        if (OrderStatus.CANCELLED.equals(status)) {
-            return "cancelled";
-        }
-        return "pending";
+        return OrderStatusLabel.customerCssClass(status);
     }
 
     private String getPaymentMethodLabel(String paymentMethod) {
@@ -214,6 +193,8 @@ public class OrderDetailController extends HttpServlet {
             case PaymentStatus.PENDING -> "Đang chờ thanh toán";
             case PaymentStatus.FAILED -> "Thanh toán thất bại";
             case PaymentStatus.UNPAID -> "Chưa thanh toán";
+            case PaymentStatus.REFUND_PENDING -> "Chờ hoàn tiền";
+            case PaymentStatus.REFUNDED -> "Đã hoàn tiền";
             default -> paymentStatus;
         };
     }
