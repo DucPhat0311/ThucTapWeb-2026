@@ -24,9 +24,20 @@ public class DashboardService {
         return dao.countUsers();
     }
 
-    /** Doanh thu theo từng tháng trong năm hiện tại. */
     public double[] revenueByMonth() {
         int currentYear = LocalDate.now().getYear();
         return dao.revenueByMonth(currentYear);
+    }
+
+    public double[] revenueByMonth(int year) {
+        return dao.revenueByMonth(year);
+    }
+
+    public double[] revenueByDaysInMonth(int year, int month) {
+        return dao.revenueByDaysInMonth(year, month);
+    }
+
+    public java.util.Map<String, Double> revenueByDateRange(String startDateStr, String endDateStr) {
+        return dao.revenueByDateRange(startDateStr, endDateStr);
     }
 }

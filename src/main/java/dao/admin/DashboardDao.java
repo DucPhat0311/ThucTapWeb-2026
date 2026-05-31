@@ -86,4 +86,83 @@ public class DashboardDao extends BaseDao {
         });
         return result;
     }
+
+    /**
+     * Doanh thu từng ngày trong một tháng cụ thể (chỉ tính đơn COMPLETED).
+     */
+    public double[] revenueByDaysInMonth(int year, int month) {
+        int daysInMonth = java.time.YearMonth.of(year, month).lengthOfMonth();
+        double[] result = new double[daysInMonth];
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                SELECT DAY(created_at) AS day,
+                       COALESCE(SUM(total_price), 0) AS revenue
+                FROM orders
+                WHERE order_status = :status
+                  AND YEAR(created_at) = :year
+                  AND MONTH(created_at) = :month
+                GROUP BY DAY(created_at)
+                ORDER BY day
+            """)
+                    .bind("status", OrderStatus.COMPLETED)
+                    .bind("year", year)
+                    .bind("month", month)
+                    .mapToMap()
+                    .forEach(row -> {
+                        int day = ((Number) row.get("day")).intValue();
+                        double rev = ((Number) row.get("revenue")).doubleValue();
+                        result[day - 1] = rev;
+                    });
+            return null;
+        });
+        return result;
+    }
+
+    /**
+     * Doanh thu từng ngày trong khoảng từ ngày startDate đến endDate (chỉ tính đơn COMPLETED).
+     */
+    public java.util.Map<String, Double> revenueByDateRange(String startDateStr, String endDateStr) {
+        java.time.LocalDate start = java.time.LocalDate.parse(startDateStr);
+        java.time.LocalDate end = java.time.LocalDate.parse(endDateStr);
+
+        java.util.Map<String, Double> result = new java.util.LinkedHashMap<>();
+        java.time.LocalDate current = start;
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        while (!current.isAfter(end)) {
+            result.put(current.format(formatter), 0.0);
+            current = current.plusDays(1);
+        }
+
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                SELECT DATE(created_at) AS order_date,
+                       COALESCE(SUM(total_price), 0) AS revenue
+                FROM orders
+                WHERE order_status = :status
+                  AND DATE(created_at) >= :startDate
+                  AND DATE(created_at) <= :endDate
+                GROUP BY DATE(created_at)
+                ORDER BY order_date
+            """)
+                    .bind("status", OrderStatus.COMPLETED)
+                    .bind("startDate", startDateStr)
+                    .bind("endDate", endDateStr)
+                    .mapToMap()
+                    .forEach(row -> {
+                        Object dateObj = row.get("order_date");
+                        java.time.LocalDate date;
+                        if (dateObj instanceof java.sql.Date) {
+                            date = ((java.sql.Date) dateObj).toLocalDate();
+                        } else if (dateObj instanceof java.time.LocalDate) {
+                            date = (java.time.LocalDate) dateObj;
+                        } else {
+                            date = java.time.LocalDate.parse(dateObj.toString());
+                        }
+                        double rev = ((Number) row.get("revenue")).doubleValue();
+                        result.put(date.format(formatter), rev);
+                    });
+            return null;
+        });
+        return result;
+    }
 }
