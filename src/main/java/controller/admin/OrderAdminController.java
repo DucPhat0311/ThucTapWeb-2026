@@ -178,6 +178,16 @@ public class OrderAdminController extends HttpServlet {
         String currentStatus = order.getOrderStatus();
         String paymentMethod = order.getPaymentMethods();
         String paymentStatus = order.getPaymentStatuses();
+
+        if ("confirmRefund".equals(orderAction)) {
+            if (!orderService.markRefunded(id)) {
+                resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=invalid_order_action");
+                return;
+            }
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&success=refund_confirmed");
+            return;
+        }
+
         String newStatus = resolveNextStatus(orderAction, currentStatus);
 
         if (OrderStatus.COMPLETED.equals(currentStatus) || OrderStatus.CANCELLED.equals(currentStatus)) {
@@ -316,7 +326,9 @@ public class OrderAdminController extends HttpServlet {
                 PaymentStatus.UNPAID, "Chưa thanh toán",
                 PaymentStatus.PENDING, "Đang chờ thanh toán",
                 PaymentStatus.PAID, "Đã thanh toán",
-                PaymentStatus.FAILED, "Thanh toán thất bại"
+                PaymentStatus.FAILED, "Thanh toán thất bại",
+                PaymentStatus.REFUND_PENDING, "Chờ hoàn tiền",
+                PaymentStatus.REFUNDED, "Đã hoàn tiền"
         );
     }
 }

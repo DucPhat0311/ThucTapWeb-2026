@@ -221,6 +221,26 @@
     border-color: #f0d19a;
 }
 
+.summary-item.payment-refund_pending {
+    background: #fffaf1;
+    border-color: #f0d19a;
+}
+
+.summary-item.payment-refund_pending > i {
+    color: #9c6b1d;
+    background: #fff1d3;
+}
+
+.summary-item.payment-refunded {
+    background: #f2faf4;
+    border-color: #cfe8d4;
+}
+
+.summary-item.payment-refunded > i {
+    color: #2f7a42;
+    background: #e1f3e5;
+}
+
 .summary-item.payment-failed {
     background: #fff2f2;
     border-color: #f1b8b5;

@@ -80,6 +80,12 @@ public class OrderSuccessController extends HttpServlet {
         if (PaymentStatus.FAILED.equals(paymentStatus)) {
             return "Thanh toán thất bại";
         }
+        if (PaymentStatus.REFUND_PENDING.equals(paymentStatus)) {
+            return "Chờ hoàn tiền";
+        }
+        if (PaymentStatus.REFUNDED.equals(paymentStatus)) {
+            return "Đã hoàn tiền";
+        }
         return "Chưa thanh toán";
     }
 
