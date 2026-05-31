@@ -98,6 +98,10 @@
                                             class="tab-item tab-pending_payment ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}">
                                             Chờ thanh toán
                                         </a>
+                                        <a href="order-user?status=PROCESSING"
+                                            class="tab-item tab-processing ${currentStatus == 'PROCESSING' ? 'active' : ''}">
+                                            Đang chuẩn bị hàng
+                                        </a>
                                         <a href="order-user?status=SHIPPING"
                                             class="tab-item tab-shipping ${currentStatus == 'SHIPPING' ? 'active' : ''}">
                                             Đang giao hàng

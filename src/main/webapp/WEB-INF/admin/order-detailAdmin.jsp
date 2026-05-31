@@ -221,12 +221,14 @@
                                         <c:if test="${order.orderStatus == 'PENDING_PAYMENT'}">
                                             <option value="PENDING_PAYMENT" selected>Chờ thanh toán</option>
                                         </c:if>
-                                        <option value="PENDING" ${order.orderStatus=='PENDING' ? 'selected' : '' }>Chờ
-                                            xử lý</option>
+                                        <option value="PENDING" ${order.orderStatus=='PENDING' ? 'selected' : '' }>Cần
+                                            xác nhận</option>
+                                        <option value="PROCESSING" ${order.orderStatus=='PROCESSING' ? 'selected' : '' }>
+                                            Đang chuẩn bị hàng</option>
                                         <option value="SHIPPING" ${order.orderStatus=='SHIPPING' ? 'selected' : '' }>
-                                            Đang giao</option>
+                                            Đang giao hàng</option>
                                         <option value="COMPLETED" ${order.orderStatus=='COMPLETED' ? 'selected' : '' }>
-                                            Hoàn thành</option>
+                                            Đã hoàn thành</option>
                                         <option value="CANCELLED" ${order.orderStatus=='CANCELLED' ? 'selected' : '' }>
                                             Đã hủy</option>
                                     </c:otherwise>

@@ -63,6 +63,7 @@ public class MyOrderController extends HttpServlet {
         return switch (status) {
             case OrderStatus.PENDING -> "Chờ xác nhận";
             case OrderStatus.PENDING_PAYMENT -> "Chờ thanh toán";
+            case OrderStatus.PROCESSING -> "Đang chuẩn bị hàng";
             case OrderStatus.SHIPPING -> "Đang giao hàng";
             case OrderStatus.COMPLETED -> "Đã hoàn thành";
             case OrderStatus.CANCELLED -> "Đã hủy";

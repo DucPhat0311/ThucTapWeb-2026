@@ -175,6 +175,7 @@ public class OrderDetailController extends HttpServlet {
         return switch (status) {
             case OrderStatus.PENDING -> "Chờ xác nhận";
             case OrderStatus.PENDING_PAYMENT -> "Chờ thanh toán";
+            case OrderStatus.PROCESSING -> "Đang chuẩn bị hàng";
             case OrderStatus.SHIPPING -> "Đang giao hàng";
             case OrderStatus.COMPLETED -> "Đã hoàn thành";
             case OrderStatus.CANCELLED -> "Đã hủy";
@@ -185,6 +186,9 @@ public class OrderDetailController extends HttpServlet {
     private String getOrderStatusClass(String status) {
         if (OrderStatus.PENDING_PAYMENT.equals(status)) {
             return "pending-payment";
+        }
+        if (OrderStatus.PROCESSING.equals(status)) {
+            return "processing";
         }
         if (OrderStatus.SHIPPING.equals(status)) {
             return "shipping";

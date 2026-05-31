@@ -54,25 +54,25 @@
                                 </div>
 
                                 <div class="order-progress-card">
-                                    <div class="order-progress-step ${order.orderStatus == 'PENDING' || order.orderStatus == 'PENDING_PAYMENT' || order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
+                                    <div class="order-progress-step ${order.orderStatus == 'PENDING' || order.orderStatus == 'PENDING_PAYMENT' || order.orderStatus == 'PROCESSING' || order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
                                         <span><i class="fa-solid fa-receipt"></i></span>
                                         <div>
                                             <strong>Đặt hàng</strong>
                                             <small>${order.createdAtFormatted}</small>
                                         </div>
                                     </div>
-                                    <div class="order-progress-step ${order.orderStatus == 'PENDING_PAYMENT' || order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
+                                    <div class="order-progress-step ${order.orderStatus == 'PENDING_PAYMENT' || order.orderStatus == 'PROCESSING' || order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
                                         <span><i class="fa-solid fa-credit-card"></i></span>
                                         <div>
                                             <strong>Thanh toán</strong>
                                             <small>${paymentStatusLabel}</small>
                                         </div>
                                     </div>
-                                    <div class="order-progress-step ${order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
+                                    <div class="order-progress-step ${order.orderStatus == 'PROCESSING' || order.orderStatus == 'SHIPPING' || order.orderStatus == 'COMPLETED' ? 'active' : ''}">
                                         <span><i class="fa-solid fa-truck-fast"></i></span>
                                         <div>
                                             <strong>Vận chuyển</strong>
-                                            <small>${not empty order.ghnStatusName ? order.ghnStatusName : orderStatusLabel}</small>
+                                            <small>${order.orderStatus == 'PROCESSING' ? 'Shop đang chuẩn bị hàng' : (not empty order.ghnStatusName ? order.ghnStatusName : orderStatusLabel)}</small>
                                         </div>
                                     </div>
                                     <div class="order-progress-step ${order.orderStatus == 'COMPLETED' ? 'active' : ''} ${order.orderStatus == 'CANCELLED' ? 'cancelled' : ''}">

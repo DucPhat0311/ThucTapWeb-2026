@@ -63,6 +63,10 @@ public class OrderAdminController extends HttpServlet {
                     .filter(o -> OrderStatus.PENDING_PAYMENT.equals(o.getOrderStatus()))
                     .count();
 
+            long processing = allOrders.stream()
+                    .filter(o -> OrderStatus.PROCESSING.equals(o.getOrderStatus()))
+                    .count();
+
             long completed = allOrders.stream()
                     .filter(o -> OrderStatus.COMPLETED.equals(o.getOrderStatus()))
                     .count();
@@ -106,6 +110,7 @@ public class OrderAdminController extends HttpServlet {
             req.setAttribute("totalOrders", filteredTotal);
             req.setAttribute("countPending", pending);
             req.setAttribute("countPendingPayment", pendingPayment);
+            req.setAttribute("countProcessing", processing);
             req.setAttribute("countCompleted", completed);
             req.setAttribute("countShipping", shipping);
             req.setAttribute("countCancelled", cancelled);
@@ -273,9 +278,10 @@ public class OrderAdminController extends HttpServlet {
     public static Map<String, String> getOrderStatusLabels() {
         return Map.of(
                 OrderStatus.PENDING_PAYMENT, "Chờ thanh toán",
-                OrderStatus.PENDING, "Chờ xử lý",
-                OrderStatus.SHIPPING, "Đang giao",
-                OrderStatus.COMPLETED, "Hoàn thành",
+                OrderStatus.PENDING, "Cần xác nhận",
+                OrderStatus.PROCESSING, "Đang chuẩn bị hàng",
+                OrderStatus.SHIPPING, "Đang giao hàng",
+                OrderStatus.COMPLETED, "Đã hoàn thành",
                 OrderStatus.CANCELLED, "Đã hủy"
         );
     }
