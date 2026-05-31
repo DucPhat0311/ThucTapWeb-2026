@@ -72,6 +72,12 @@
     border-color: #d9c7f5;
 }
 
+.status-badge.processing {
+    background: #fff3e8;
+    color: #9a5b18;
+    border-color: #f2c79d;
+}
+
 .status-badge.delivered {
     background: #edf8f0;
     color: #2f7a42;

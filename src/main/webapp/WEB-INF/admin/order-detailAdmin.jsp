@@ -50,6 +50,12 @@
                         </div>
                     </c:if>
 
+                    <c:if test="${param.error == 'invalid_order_action'}">
+                        <div class="card" style="border-left: 4px solid #dc3545;">
+                            <p>Thao tác cập nhật đơn hàng không hợp lệ với trạng thái hiện tại.</p>
+                        </div>
+                    </c:if>
+
                     <c:if test="${param.success == 'ghn_created'}">
                         <div class="card" style="border-left: 4px solid #28a745;">
                             <p>Tạo vận đơn GHN thành công.</p>
@@ -161,11 +167,20 @@
                             <c:otherwise>
                                 <p>Đơn hàng chưa có hành trình theo dõi.</p>
                                 <p>Chế độ mô phỏng phục vụ kiểm thử, không gửi yêu cầu tạo vận đơn đến GHN.</p>
-                                <form method="post" action="orderAdmin" class="status-form">
-                                    <input type="hidden" name="action" value="createDemoTracking">
-                                    <input type="hidden" name="id" value="${order.id}">
-                                    <button class="btn-primary">Tạo hành trình mô phỏng</button>
-                                </form>
+                                <c:choose>
+                                    <c:when test="${order.orderStatus == 'PROCESSING'}">
+                                        <form method="post" action="orderAdmin" class="status-form">
+                                            <input type="hidden" name="action" value="createDemoTracking">
+                                            <input type="hidden" name="id" value="${order.id}">
+                                            <button class="btn-primary">Tạo hành trình mô phỏng</button>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p style="margin-top: 10px; color: #8a6238;">
+                                            Cần xác nhận đơn trước khi tạo hành trình vận chuyển.
+                                        </p>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -202,46 +217,85 @@
                     </c:if>
 
                     <div class="card">
-                        <h3>Cập nhật trạng thái đơn hàng</h3>
+                        <h3>Thao tác xử lý đơn hàng</h3>
 
-                        <form method="post" action="orderAdmin" class="status-form">
-                            <input type="hidden" name="action" value="update">
-                            <input type="hidden" name="id" value="${order.id}">
+                        <div class="admin-order-actions">
+                            <c:choose>
+                                <c:when test="${order.orderStatus == 'PENDING'}">
+                                    <c:if test="${!unpaidOnlineOrder}">
+                                        <form method="post" action="orderAdmin" class="status-form">
+                                            <input type="hidden" name="action" value="update">
+                                            <input type="hidden" name="orderAction" value="confirm">
+                                            <input type="hidden" name="id" value="${order.id}">
+                                            <button class="btn-primary">Xác nhận đơn</button>
+                                        </form>
+                                    </c:if>
+                                    <form method="post" action="orderAdmin" class="status-form">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="orderAction" value="cancel">
+                                        <input type="hidden" name="id" value="${order.id}">
+                                        <button class="btn-warning">Hủy đơn</button>
+                                    </form>
+                                </c:when>
 
-                            <label for="orderStatus">Trạng thái</label>
-                            <select id="orderStatus" name="orderStatus">
-                                <c:choose>
-                                    <c:when test="${unpaidOnlineOrder}">
-                                        <option value="PENDING_PAYMENT" ${order.orderStatus=='PENDING_PAYMENT'
-                                            ? 'selected' : '' }>Chờ thanh toán</option>
-                                        <option value="CANCELLED" ${order.orderStatus=='CANCELLED' ? 'selected' : '' }>
-                                            Đã hủy</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:if test="${order.orderStatus == 'PENDING_PAYMENT'}">
-                                            <option value="PENDING_PAYMENT" selected>Chờ thanh toán</option>
-                                        </c:if>
-                                        <option value="PENDING" ${order.orderStatus=='PENDING' ? 'selected' : '' }>Chờ
-                                            xử lý</option>
-                                        <option value="SHIPPING" ${order.orderStatus=='SHIPPING' ? 'selected' : '' }>
-                                            Đang giao</option>
-                                        <option value="COMPLETED" ${order.orderStatus=='COMPLETED' ? 'selected' : '' }>
-                                            Hoàn thành</option>
-                                        <option value="CANCELLED" ${order.orderStatus=='CANCELLED' ? 'selected' : '' }>
-                                            Đã hủy</option>
-                                    </c:otherwise>
-                                </c:choose>
-                            </select>
+                                <c:when test="${order.orderStatus == 'PENDING_PAYMENT'}">
+                                    <p class="order-action-note">
+                                        Đơn đang chờ thanh toán. Admin chỉ nên hủy đơn hoặc chờ khách thanh toán thành công.
+                                    </p>
+                                    <form method="post" action="orderAdmin" class="status-form">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="orderAction" value="cancel">
+                                        <input type="hidden" name="id" value="${order.id}">
+                                        <button class="btn-warning">Hủy đơn</button>
+                                    </form>
+                                </c:when>
 
-                            <c:if test="${unpaidOnlineOrder}">
-                                <p style="margin-top: 10px; color: #dc3545;">
-                                    Đơn VNPay chưa thanh toán thành công nên không thể chuyển sang trạng thái xử lý hoặc
-                                    giao hàng.
+                                <c:when test="${order.orderStatus == 'PROCESSING'}">
+                                    <p class="order-action-note">
+                                        Đơn đã được xác nhận. Tạo hành trình vận chuyển ở khối theo dõi phía trên hoặc chuyển trực tiếp sang đang giao khi cần kiểm thử nhanh.
+                                    </p>
+                                    <form method="post" action="orderAdmin" class="status-form">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="orderAction" value="markShipping">
+                                        <input type="hidden" name="id" value="${order.id}">
+                                        <button class="btn-primary">Chuyển sang đang giao</button>
+                                    </form>
+                                    <form method="post" action="orderAdmin" class="status-form">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="orderAction" value="cancel">
+                                        <input type="hidden" name="id" value="${order.id}">
+                                        <button class="btn-warning">Hủy đơn</button>
+                                    </form>
+                                </c:when>
+
+                                <c:when test="${order.orderStatus == 'SHIPPING'}">
+                                    <form method="post" action="orderAdmin" class="status-form">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="orderAction" value="markCompleted">
+                                        <input type="hidden" name="id" value="${order.id}">
+                                        <button class="btn-primary">Giao thành công</button>
+                                    </form>
+                                    <form method="post" action="orderAdmin" class="status-form">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="orderAction" value="cancel">
+                                        <input type="hidden" name="id" value="${order.id}">
+                                        <button class="btn-warning">Hủy vận đơn</button>
+                                    </form>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <p class="order-action-note">
+                                        Đơn hàng đã ở trạng thái kết thúc, không thể cập nhật trạng thái chính.
+                                    </p>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <c:if test="${unpaidOnlineOrder && order.orderStatus != 'PENDING_PAYMENT'}">
+                                <p class="order-action-note danger">
+                                    Đơn VNPay chưa thanh toán thành công nên không thể chuyển sang trạng thái xử lý hoặc giao hàng.
                                 </p>
                             </c:if>
-
-                            <button class="btn-primary">Cập nhật</button>
-                        </form>
+                        </div>
                     </div>
 
                     <div class="card">

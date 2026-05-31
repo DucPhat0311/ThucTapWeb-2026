@@ -52,6 +52,12 @@
     border-color: #d9c7f5;
 }
 
+.order-tabs .tab-processing {
+    background: #fff3e8;
+    color: #9a5b18;
+    border-color: #f2c79d;
+}
+
 .order-tabs .tab-shipping {
     background: #edf6ff;
     color: #2563a8;
@@ -80,6 +86,12 @@
     background: #6f42c1;
     color: #fff;
     border-color: #6f42c1;
+}
+
+.order-tabs .tab-processing.active {
+    background: #b76a1f;
+    color: #fff;
+    border-color: #b76a1f;
 }
 
 .order-tabs .tab-shipping.active {
@@ -253,6 +265,13 @@
     background: #f4efff;
     color: #6941a5;
     border-color: #d9c7f5;
+}
+
+.order-right .status-processing,
+.tracking-chip.status-processing {
+    background: #fff3e8;
+    color: #9a5b18;
+    border-color: #f2c79d;
 }
 
 .order-right .status-shipping,

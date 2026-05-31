@@ -3,6 +3,7 @@ package controller.admin;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.constant.OrderStatusLabel;
 import service.DashboardService;
 import service.OrderService;
 
@@ -25,6 +26,7 @@ public class DashboardAdminController extends HttpServlet {
         request.setAttribute("totalProducts", service.countProducts());
         request.setAttribute("totalUsers", service.countUsers());
         request.setAttribute("latestOrders", service.latestOrders(5));
+        request.setAttribute("orderStatusLabels", OrderStatusLabel.adminLabels());
 
         request.setAttribute("page", "dashboard");
         request.getRequestDispatcher("/WEB-INF/admin/dashboardAdmin.jsp").forward(request, response);
