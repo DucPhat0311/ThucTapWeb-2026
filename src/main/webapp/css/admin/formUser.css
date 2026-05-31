@@ -225,6 +225,29 @@ button,
     margin-top: 15px;
 }
 
+.admin-order-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 15px;
+    margin-top: 12px;
+}
+
+.admin-order-actions .status-form {
+    margin-top: 0;
+}
+
+.order-action-note {
+    flex-basis: 100%;
+    margin: 0;
+    color: #6f6258;
+    line-height: 1.6;
+}
+
+.order-action-note.danger {
+    color: #dc3545;
+}
+
 .order-table {
     width: 100%;
     border-collapse: separate;

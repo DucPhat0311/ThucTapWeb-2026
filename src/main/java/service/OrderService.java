@@ -70,6 +70,18 @@ public class OrderService {
         dao.updateStatus(id, status);
     }
 
+    public void completeOrder(int id) {
+        Order order = dao.findById(id);
+        if (order == null) {
+            throw new IllegalArgumentException("KhÃ´ng tÃ¬m tháº¥y Ä‘Æ¡n hÃ ng.");
+        }
+
+        String paymentStatus = PaymentMethod.COD.equals(order.getPaymentMethods())
+                ? PaymentStatus.PAID
+                : order.getPaymentStatuses();
+        dao.updateStatusAndPayment(id, OrderStatus.COMPLETED, paymentStatus);
+    }
+
     public int getPendingPaymentHoldMinutes() {
         return PENDING_PAYMENT_HOLD_MINUTES;
     }
@@ -245,7 +257,7 @@ public class OrderService {
         if (order == null) {
             return false;
         }
-        if (OrderStatus.COMPLETED.equals(order.getOrderStatus()) || OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
+        if (!OrderStatus.PROCESSING.equals(order.getOrderStatus())) {
             return false;
         }
         return order.getGhnOrderCode() == null || order.getGhnOrderCode().isBlank();

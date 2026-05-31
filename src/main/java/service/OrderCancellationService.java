@@ -27,7 +27,9 @@ public class OrderCancellationService {
             return baseCheck;
         }
         String status = trimToEmpty(order.getOrderStatus());
-        if (OrderStatus.PENDING.equals(status) || OrderStatus.PENDING_PAYMENT.equals(status)) {
+        if (OrderStatus.PENDING.equals(status)
+                || OrderStatus.PENDING_PAYMENT.equals(status)
+                || OrderStatus.PROCESSING.equals(status)) {
             return CancellationCheck.accepted();
         }
         if (OrderStatus.SHIPPING.equals(status) && !trimToEmpty(order.getGhnOrderCode()).isBlank()) {

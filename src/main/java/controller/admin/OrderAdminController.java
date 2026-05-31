@@ -166,7 +166,7 @@ public class OrderAdminController extends HttpServlet {
         }
 
         int id = Integer.parseInt(req.getParameter("id"));
-        String newStatus = req.getParameter("orderStatus");
+        String orderAction = req.getParameter("orderAction");
 
         var order = orderService.findById(id);
         if (order == null) {
@@ -177,9 +177,15 @@ public class OrderAdminController extends HttpServlet {
         String currentStatus = order.getOrderStatus();
         String paymentMethod = order.getPaymentMethods();
         String paymentStatus = order.getPaymentStatuses();
+        String newStatus = resolveNextStatus(orderAction, currentStatus);
 
         if (OrderStatus.COMPLETED.equals(currentStatus) || OrderStatus.CANCELLED.equals(currentStatus)) {
             resp.sendRedirect("orderAdmin?mode=view&id=" + id);
+            return;
+        }
+
+        if (newStatus == null) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=invalid_order_action");
             return;
         }
 
@@ -190,17 +196,14 @@ public class OrderAdminController extends HttpServlet {
             return;
         }
 
-        if (OrderStatus.PENDING.equals(currentStatus) && OrderStatus.COMPLETED.equals(newStatus)) {
-            resp.sendRedirect("orderAdmin?mode=view&id=" + id);
-            return;
-        }
-
         if (OrderStatus.CANCELLED.equals(newStatus)) {
             var cancellationCheck = orderService.cancelAdminOrder(id);
             if (!cancellationCheck.cancellable()) {
                 redirectWithMessage(resp, id, "cancel_not_allowed", cancellationCheck.message());
                 return;
             }
+        } else if (OrderStatus.COMPLETED.equals(newStatus)) {
+            orderService.completeOrder(id);
         } else {
             orderService.updateStatus(id, newStatus);
         }
@@ -214,6 +217,27 @@ public class OrderAdminController extends HttpServlet {
         );
 
         resp.sendRedirect("orderAdmin?mode=view&id=" + id);
+    }
+
+    private String resolveNextStatus(String orderAction, String currentStatus) {
+        if (orderAction == null || orderAction.isBlank()) {
+            return null;
+        }
+
+        return switch (orderAction.trim()) {
+            case "confirm" -> OrderStatus.PENDING.equals(currentStatus) ? OrderStatus.PROCESSING : null;
+            case "cancel" -> isCancellableFromAdminAction(currentStatus) ? OrderStatus.CANCELLED : null;
+            case "markShipping" -> OrderStatus.PROCESSING.equals(currentStatus) ? OrderStatus.SHIPPING : null;
+            case "markCompleted" -> OrderStatus.SHIPPING.equals(currentStatus) ? OrderStatus.COMPLETED : null;
+            default -> null;
+        };
+    }
+
+    private boolean isCancellableFromAdminAction(String currentStatus) {
+        return OrderStatus.PENDING.equals(currentStatus)
+                || OrderStatus.PENDING_PAYMENT.equals(currentStatus)
+                || OrderStatus.PROCESSING.equals(currentStatus)
+                || OrderStatus.SHIPPING.equals(currentStatus);
     }
 
     private void createDemoTracking(HttpServletRequest req, HttpServletResponse resp) throws IOException {
