@@ -289,7 +289,8 @@
     font-weight: 600;
 }
 
-.cancel-order-form {
+.cancel-order-form,
+.retry-payment-form {
     margin: 0;
 }
 
@@ -401,6 +402,18 @@
 
 .btn-cancel:hover {
     background: #ffe8e8;
+}
+
+.btn-retry-payment {
+    background: #000;
+    color: #fff;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+
+.btn-retry-payment:hover {
+    background: #a67c52;
+    border-color: #a67c52;
 }
 
 .btn-confirm {
