@@ -24,6 +24,10 @@ import java.time.ZoneId;
 
 @WebServlet(name = "PlaceOrderController", value = "/place-order")
 public class PlaceOrderController extends HttpServlet {
+    private static final int TRANSIENT_CHECKOUT_CART_ID = -1;
+    private static final String BUY_NOW_ITEM = "buyNowItem";
+    private static final String REORDER_CHECKOUT_ITEMS = "reorderCheckoutItems";
+    private static final String CHECKOUT_SELECTED_IDS = "checkoutSelectedIds";
 
     private CartItemDao cartItemDao;
     private PaymentTransactionDao paymentTransactionDao;
@@ -57,6 +61,8 @@ public class PlaceOrderController extends HttpServlet {
 
         User user = (User) session.getAttribute("userlogin");
         Integer cartIdObj = (Integer) session.getAttribute("cartId");
+        boolean transientCheckout = isTransientCheckout(session);
+        Integer checkoutCartId = transientCheckout && cartIdObj == null ? TRANSIENT_CHECKOUT_CART_ID : cartIdObj;
         String[] variantIds = request.getParameterValues("variantIds");
         String[] quantities = request.getParameterValues("quantities");
 
@@ -66,7 +72,7 @@ public class PlaceOrderController extends HttpServlet {
         CheckoutService.PreparedCheckout preparedCheckout;
         CheckoutService.OrderPlacement orderPlacement;
         try {
-            preparedCheckout = checkoutService.prepareOrder(user.getId(), cartIdObj, variantIds, quantities);
+            preparedCheckout = checkoutService.prepareOrder(user.getId(), checkoutCartId, variantIds, quantities);
             orderPlacement = checkoutService.resolveOrderPlacement(paymentMethod);
         } catch (CheckoutService.CheckoutValidationException e) {
             handleCheckoutValidationError(e, session, response);
@@ -81,7 +87,7 @@ public class PlaceOrderController extends HttpServlet {
                 request.getParameter("expectedDeliveryEpochSeconds")
         );
 
-        int cartId = cartIdObj;
+        int cartId = transientCheckout ? TRANSIENT_CHECKOUT_CART_ID : checkoutCartId;
         int orderId;
         try {
             orderId = orderPlacementService.placeOrder(
@@ -99,7 +105,9 @@ public class PlaceOrderController extends HttpServlet {
             return;
         }
 
-        int remainingCart = cartItemDao.countTotalQuantity(cartId);
+        clearTransientCheckout(session);
+
+        int remainingCart = cartIdObj == null ? 0 : cartItemDao.countTotalQuantity(cartIdObj);
         session.setAttribute("cartSize", remainingCart);
 
         if (PaymentMethod.VNPAY.equals(orderPlacement.paymentMethod())) {
@@ -128,6 +136,17 @@ public class PlaceOrderController extends HttpServlet {
         session.setAttribute("lastOrderId", orderId);
 
         response.sendRedirect("order-success");
+    }
+
+    private boolean isTransientCheckout(HttpSession session) {
+        return session.getAttribute(BUY_NOW_ITEM) != null
+                || session.getAttribute(REORDER_CHECKOUT_ITEMS) != null;
+    }
+
+    private void clearTransientCheckout(HttpSession session) {
+        session.removeAttribute(BUY_NOW_ITEM);
+        session.removeAttribute(REORDER_CHECKOUT_ITEMS);
+        session.removeAttribute(CHECKOUT_SELECTED_IDS);
     }
 
     private void handleCheckoutValidationError(CheckoutService.CheckoutValidationException exception,

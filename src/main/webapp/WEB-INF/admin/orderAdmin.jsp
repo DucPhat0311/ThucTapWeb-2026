@@ -29,10 +29,11 @@
             <section id="dashboard" class="page active">
                 <div class="cards order-cards">
                     <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin'">Tổng đơn<br><span>${total}</span></div>
-                    <div class="card ${currentStatus == 'PENDING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PENDING'">Chờ xử lý<br><span>${countPending}</span></div>
+                    <div class="card ${currentStatus == 'PENDING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PENDING'">Cần xác nhận<br><span>${countPending}</span></div>
                     <div class="card ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PENDING_PAYMENT'">Chờ thanh toán<br><span>${countPendingPayment}</span></div>
-                    <div class="card ${currentStatus == 'SHIPPING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=SHIPPING'">Đang giao<br><span>${countShipping}</span></div>
-                    <div class="card ${currentStatus == 'COMPLETED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=COMPLETED'">Hoàn thành<br><span>${countCompleted}</span></div>
+                    <div class="card ${currentStatus == 'PROCESSING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PROCESSING'">Đang chuẩn bị hàng<br><span>${countProcessing}</span></div>
+                    <div class="card ${currentStatus == 'SHIPPING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=SHIPPING'">Đang giao hàng<br><span>${countShipping}</span></div>
+                    <div class="card ${currentStatus == 'COMPLETED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=COMPLETED'">Đã hoàn thành<br><span>${countCompleted}</span></div>
                     <div class="card ${currentStatus == 'CANCELLED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=CANCELLED'">Đã hủy<br><span>${countCancelled}</span></div>
                 </div>
 

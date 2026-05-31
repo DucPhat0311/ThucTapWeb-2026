@@ -19,6 +19,8 @@ import java.util.List;
 @WebServlet(name = "CheckoutController", value = "/checkout")
 public class CheckoutController extends HttpServlet {
     private static final String CHECKOUT_SELECTED_IDS = "checkoutSelectedIds";
+    private static final String BUY_NOW_ITEM = "buyNowItem";
+    private static final String REORDER_CHECKOUT_ITEMS = "reorderCheckoutItems";
 
     private CartItemDao cartItemDao;
     private AddressService addressService;
@@ -38,7 +40,7 @@ public class CheckoutController extends HttpServlet {
         }
 
         // check phải luồng mua ngay ko
-        if (session.getAttribute("buyNowItem") != null) {
+        if (session.getAttribute(BUY_NOW_ITEM) != null || session.getAttribute(REORDER_CHECKOUT_ITEMS) != null) {
             renderCheckout(request, response, session, null);
             return;
         }
@@ -68,7 +70,8 @@ public class CheckoutController extends HttpServlet {
 
 
         session.setAttribute(CHECKOUT_SELECTED_IDS, selectedIds);
-        session.removeAttribute("buyNowItem");
+        session.removeAttribute(BUY_NOW_ITEM);
+        session.removeAttribute(REORDER_CHECKOUT_ITEMS);
 
         renderCheckout(req, resp, session, selectedIds);
     }
@@ -85,11 +88,17 @@ public class CheckoutController extends HttpServlet {
 
         List<CartItem> checkoutItems = new ArrayList<>();
 
-        CartItem buyNowItem = (CartItem) session.getAttribute("buyNowItem");
+        CartItem buyNowItem = (CartItem) session.getAttribute(BUY_NOW_ITEM);
         if (buyNowItem != null) {
             checkoutItems.add(buyNowItem);
         }
-
+        else if (session.getAttribute(REORDER_CHECKOUT_ITEMS) instanceof List<?> reorderItems) {
+            for (Object item : reorderItems) {
+                if (item instanceof CartItem cartItem) {
+                    checkoutItems.add(cartItem);
+                }
+            }
+        }
         else {
             Integer cartId = (Integer) session.getAttribute("cartId");
             if (cartId == null || selectedIds == null) {

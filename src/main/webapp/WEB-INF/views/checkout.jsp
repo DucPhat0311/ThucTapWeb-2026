@@ -21,6 +21,11 @@
                             ${addressError}
                     </div>
                 </c:if>
+                <c:if test="${not empty checkoutError}">
+                    <div class="checkout-alert checkout-alert-error">
+                            ${checkoutError}
+                    </div>
+                </c:if>
                 <c:choose>
                     <c:when test="${not empty selectedAddress}">
                         <div class="selected-address">
@@ -50,9 +55,10 @@
                                 <h3>Chưa có địa chỉ giao hàng</h3>
                                 <p>Thêm địa chỉ ngay tại đây để dùng luôn cho đơn hàng. Địa chỉ mới sẽ được lưu vào sổ địa chỉ của bạn.</p>
                             </div>
-                            <button type="button" class="btn-address-primary" id="btnOpenModal">
+                            <a href="${pageContext.request.contextPath}/address?returnUrl=checkout"
+                               class="btn-address-primary">
                                 Thêm địa chỉ mới
-                            </button>
+                            </a>
                         </div>
                     </c:otherwise>
                 </c:choose>

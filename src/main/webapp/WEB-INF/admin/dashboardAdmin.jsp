@@ -122,10 +122,38 @@
                                             &rarr;</a>
                                     </div>
                                 </div>
-
                             </section>
                         </main>
                     </section>
+                <h2 style="margin-bottom: 12px; margin-top: 30px;">Đơn hàng mới nhất</h2>
+
+                <div class="user-table-wrapper">
+                    <table class="order-table">
+                        <tr>
+                            <th>Mã</th>
+                            <th>Người nhận</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+
+                        <c:forEach items="${latestOrders}" var="o">
+                            <tr>
+                                <td>#${o.id}</td>
+                                <td>${o.name}</td>
+                                <td>
+                                    <fmt:formatNumber value="${o.totalPrice}"/>đ
+                                </td>
+                                <td>
+                                    <span class="order-status ${o.orderStatus}">
+                                        ${orderStatusLabels[o.orderStatus]}
+                                    </span>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                    <div style="margin-top: 15px; text-align: right;">
+                        <a href="${pageContext.request.contextPath}/orderAdmin" style="color: #8d5e33; text-decoration: none;">Xem tất cả đơn hàng &rarr;</a>
+                    </div>
                 </div>
 
             </body>

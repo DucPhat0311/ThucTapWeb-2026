@@ -2,8 +2,6 @@ package service;
 
 import model.Order;
 import model.constant.OrderStatus;
-import model.constant.PaymentMethod;
-import model.constant.PaymentStatus;
 
 public class OrderCancellationService {
     public CancellationCheck checkUserCancellation(Order order, int userId) {
@@ -16,7 +14,7 @@ public class OrderCancellationService {
         }
         String status = trimToEmpty(order.getOrderStatus());
         if (!OrderStatus.PENDING.equals(status) && !OrderStatus.PENDING_PAYMENT.equals(status)) {
-            return CancellationCheck.rejected("Chỉ có thể hủy đơn hàng đang chờ xử lý hoặc chờ thanh toán.");
+            return CancellationCheck.rejected("Chỉ có thể hủy đơn hàng đang chờ xác nhận hoặc chờ thanh toán.");
         }
         return CancellationCheck.accepted();
     }
@@ -27,7 +25,9 @@ public class OrderCancellationService {
             return baseCheck;
         }
         String status = trimToEmpty(order.getOrderStatus());
-        if (OrderStatus.PENDING.equals(status) || OrderStatus.PENDING_PAYMENT.equals(status)) {
+        if (OrderStatus.PENDING.equals(status)
+                || OrderStatus.PENDING_PAYMENT.equals(status)
+                || OrderStatus.PROCESSING.equals(status)) {
             return CancellationCheck.accepted();
         }
         if (OrderStatus.SHIPPING.equals(status) && !trimToEmpty(order.getGhnOrderCode()).isBlank()) {
@@ -46,9 +46,6 @@ public class OrderCancellationService {
         }
         if (OrderStatus.COMPLETED.equals(status)) {
             return CancellationCheck.rejected("Đơn hàng đã hoàn thành nên không thể hủy.");
-        }
-        if (PaymentMethod.VNPAY.equals(order.getPaymentMethods()) && PaymentStatus.PAID.equals(order.getPaymentStatuses())) {
-            return CancellationCheck.rejected("Đơn VNPay đã thanh toán cần xử lý hoàn tiền trước khi hủy.");
         }
         return CancellationCheck.accepted();
     }

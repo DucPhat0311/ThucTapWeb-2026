@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.constant.OrderStatus;
+import model.constant.OrderStatusLabel;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
 import service.EmailService;
@@ -63,6 +64,10 @@ public class OrderAdminController extends HttpServlet {
                     .filter(o -> OrderStatus.PENDING_PAYMENT.equals(o.getOrderStatus()))
                     .count();
 
+            long processing = allOrders.stream()
+                    .filter(o -> OrderStatus.PROCESSING.equals(o.getOrderStatus()))
+                    .count();
+
             long completed = allOrders.stream()
                     .filter(o -> OrderStatus.COMPLETED.equals(o.getOrderStatus()))
                     .count();
@@ -106,6 +111,7 @@ public class OrderAdminController extends HttpServlet {
             req.setAttribute("totalOrders", filteredTotal);
             req.setAttribute("countPending", pending);
             req.setAttribute("countPendingPayment", pendingPayment);
+            req.setAttribute("countProcessing", processing);
             req.setAttribute("countCompleted", completed);
             req.setAttribute("countShipping", shipping);
             req.setAttribute("countCancelled", cancelled);
@@ -161,7 +167,7 @@ public class OrderAdminController extends HttpServlet {
         }
 
         int id = Integer.parseInt(req.getParameter("id"));
-        String newStatus = req.getParameter("orderStatus");
+        String orderAction = req.getParameter("orderAction");
 
         var order = orderService.findById(id);
         if (order == null) {
@@ -173,8 +179,24 @@ public class OrderAdminController extends HttpServlet {
         String paymentMethod = order.getPaymentMethods();
         String paymentStatus = order.getPaymentStatuses();
 
+        if ("confirmRefund".equals(orderAction)) {
+            if (!orderService.markRefunded(id)) {
+                resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=invalid_order_action");
+                return;
+            }
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&success=refund_confirmed");
+            return;
+        }
+
+        String newStatus = resolveNextStatus(orderAction, currentStatus);
+
         if (OrderStatus.COMPLETED.equals(currentStatus) || OrderStatus.CANCELLED.equals(currentStatus)) {
             resp.sendRedirect("orderAdmin?mode=view&id=" + id);
+            return;
+        }
+
+        if (newStatus == null) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=invalid_order_action");
             return;
         }
 
@@ -185,17 +207,14 @@ public class OrderAdminController extends HttpServlet {
             return;
         }
 
-        if (OrderStatus.PENDING.equals(currentStatus) && OrderStatus.COMPLETED.equals(newStatus)) {
-            resp.sendRedirect("orderAdmin?mode=view&id=" + id);
-            return;
-        }
-
         if (OrderStatus.CANCELLED.equals(newStatus)) {
             var cancellationCheck = orderService.cancelAdminOrder(id);
             if (!cancellationCheck.cancellable()) {
                 redirectWithMessage(resp, id, "cancel_not_allowed", cancellationCheck.message());
                 return;
             }
+        } else if (OrderStatus.COMPLETED.equals(newStatus)) {
+            orderService.completeOrder(id);
         } else {
             orderService.updateStatus(id, newStatus);
         }
@@ -209,6 +228,27 @@ public class OrderAdminController extends HttpServlet {
         );
 
         resp.sendRedirect("orderAdmin?mode=view&id=" + id);
+    }
+
+    private String resolveNextStatus(String orderAction, String currentStatus) {
+        if (orderAction == null || orderAction.isBlank()) {
+            return null;
+        }
+
+        return switch (orderAction.trim()) {
+            case "confirm" -> OrderStatus.PENDING.equals(currentStatus) ? OrderStatus.PROCESSING : null;
+            case "cancel" -> isCancellableFromAdminAction(currentStatus) ? OrderStatus.CANCELLED : null;
+            case "markShipping" -> OrderStatus.PROCESSING.equals(currentStatus) ? OrderStatus.SHIPPING : null;
+            case "markCompleted" -> OrderStatus.SHIPPING.equals(currentStatus) ? OrderStatus.COMPLETED : null;
+            default -> null;
+        };
+    }
+
+    private boolean isCancellableFromAdminAction(String currentStatus) {
+        return OrderStatus.PENDING.equals(currentStatus)
+                || OrderStatus.PENDING_PAYMENT.equals(currentStatus)
+                || OrderStatus.PROCESSING.equals(currentStatus)
+                || OrderStatus.SHIPPING.equals(currentStatus);
     }
 
     private void createDemoTracking(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -259,7 +299,7 @@ public class OrderAdminController extends HttpServlet {
     }
 
     public static String getOrderStatusLabel(String status) {
-        return getOrderStatusLabels().getOrDefault(status, status);
+        return OrderStatusLabel.adminLabel(status);
     }
 
     public static String getPaymentMethodLabel(String paymentMethod) {
@@ -271,13 +311,7 @@ public class OrderAdminController extends HttpServlet {
     }
 
     public static Map<String, String> getOrderStatusLabels() {
-        return Map.of(
-                OrderStatus.PENDING_PAYMENT, "Chờ thanh toán",
-                OrderStatus.PENDING, "Chờ xử lý",
-                OrderStatus.SHIPPING, "Đang giao",
-                OrderStatus.COMPLETED, "Hoàn thành",
-                OrderStatus.CANCELLED, "Đã hủy"
-        );
+        return OrderStatusLabel.adminLabels();
     }
 
     public static Map<String, String> getPaymentMethodLabels() {
@@ -292,7 +326,9 @@ public class OrderAdminController extends HttpServlet {
                 PaymentStatus.UNPAID, "Chưa thanh toán",
                 PaymentStatus.PENDING, "Đang chờ thanh toán",
                 PaymentStatus.PAID, "Đã thanh toán",
-                PaymentStatus.FAILED, "Thanh toán thất bại"
+                PaymentStatus.FAILED, "Thanh toán thất bại",
+                PaymentStatus.REFUND_PENDING, "Chờ hoàn tiền",
+                PaymentStatus.REFUNDED, "Đã hoàn tiền"
         );
     }
 }
