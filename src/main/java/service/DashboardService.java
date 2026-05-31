@@ -1,9 +1,8 @@
 package service;
 
 import dao.admin.DashboardDao;
-import model.Order;
 
-import java.util.List;
+import java.time.LocalDate;
 
 public class DashboardService {
 
@@ -25,7 +24,9 @@ public class DashboardService {
         return dao.countUsers();
     }
 
-    public List<Order> latestOrders(int limit) {
-        return dao.latestOrders(limit);
+    /** Doanh thu theo từng tháng trong năm hiện tại. */
+    public double[] revenueByMonth() {
+        int currentYear = LocalDate.now().getYear();
+        return dao.revenueByMonth(currentYear);
     }
 }

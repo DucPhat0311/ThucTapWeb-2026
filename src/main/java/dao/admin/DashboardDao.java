@@ -57,4 +57,33 @@ public class DashboardDao extends BaseDao {
                         .one()
         );
     }
+
+    /**
+     * Doanh thu từng tháng trong năm chỉ định (chỉ tính đơn COMPLETED).
+     * @return double[12] – index 0 = Tháng 1, ..., index 11 = Tháng 12
+     */
+    public double[] revenueByMonth(int year) {
+        double[] result = new double[12];
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                SELECT MONTH(created_at) AS month,
+                       COALESCE(SUM(total_price), 0) AS revenue
+                FROM orders
+                WHERE order_status = :status
+                  AND YEAR(created_at) = :year
+                GROUP BY MONTH(created_at)
+                ORDER BY month
+            """)
+                    .bind("status", OrderStatus.COMPLETED)
+                    .bind("year", year)
+                    .mapToMap()
+                    .forEach(row -> {
+                        int month = ((Number) row.get("month")).intValue();
+                        double rev   = ((Number) row.get("revenue")).doubleValue();
+                        result[month - 1] = rev;
+                    });
+            return null;
+        });
+        return result;
+    }
 }
