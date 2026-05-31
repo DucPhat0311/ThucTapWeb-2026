@@ -16,7 +16,7 @@ public class OrderCancellationService {
         }
         String status = trimToEmpty(order.getOrderStatus());
         if (!OrderStatus.PENDING.equals(status) && !OrderStatus.PENDING_PAYMENT.equals(status)) {
-            return CancellationCheck.rejected("Chỉ có thể hủy đơn hàng đang chờ xử lý hoặc chờ thanh toán.");
+            return CancellationCheck.rejected("Chỉ có thể hủy đơn hàng đang chờ xác nhận hoặc chờ thanh toán.");
         }
         return CancellationCheck.accepted();
     }

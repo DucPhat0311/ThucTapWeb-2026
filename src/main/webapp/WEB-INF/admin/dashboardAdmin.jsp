@@ -83,15 +83,7 @@
                                 </td>
                                 <td>
                                     <span class="order-status ${o.orderStatus}">
-                                        <c:choose>
-                                            <c:when test="${o.orderStatus == 'PENDING'}">Cần xác nhận</c:when>
-                                            <c:when test="${o.orderStatus == 'PENDING_PAYMENT'}">Chờ thanh toán</c:when>
-                                            <c:when test="${o.orderStatus == 'PROCESSING'}">Đang chuẩn bị hàng</c:when>
-                                            <c:when test="${o.orderStatus == 'SHIPPING'}">Đang giao hàng</c:when>
-                                            <c:when test="${o.orderStatus == 'COMPLETED'}">Đã hoàn thành</c:when>
-                                            <c:when test="${o.orderStatus == 'CANCELLED'}">Đã hủy</c:when>
-                                            <c:otherwise>${o.orderStatus}</c:otherwise>
-                                        </c:choose>
+                                        ${orderStatusLabels[o.orderStatus]}
                                     </span>
                                 </td>
                             </tr>

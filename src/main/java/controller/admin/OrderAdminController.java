@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.constant.OrderStatus;
+import model.constant.OrderStatusLabel;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
 import service.EmailService;
@@ -288,7 +289,7 @@ public class OrderAdminController extends HttpServlet {
     }
 
     public static String getOrderStatusLabel(String status) {
-        return getOrderStatusLabels().getOrDefault(status, status);
+        return OrderStatusLabel.adminLabel(status);
     }
 
     public static String getPaymentMethodLabel(String paymentMethod) {
@@ -300,14 +301,7 @@ public class OrderAdminController extends HttpServlet {
     }
 
     public static Map<String, String> getOrderStatusLabels() {
-        return Map.of(
-                OrderStatus.PENDING_PAYMENT, "Chờ thanh toán",
-                OrderStatus.PENDING, "Cần xác nhận",
-                OrderStatus.PROCESSING, "Đang chuẩn bị hàng",
-                OrderStatus.SHIPPING, "Đang giao hàng",
-                OrderStatus.COMPLETED, "Đã hoàn thành",
-                OrderStatus.CANCELLED, "Đã hủy"
-        );
+        return OrderStatusLabel.adminLabels();
     }
 
     public static Map<String, String> getPaymentMethodLabels() {

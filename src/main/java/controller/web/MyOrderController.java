@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Order;
 import model.User;
-import model.constant.OrderStatus;
+import model.constant.OrderStatusLabel;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
 import service.OrderService;
@@ -57,18 +57,7 @@ public class MyOrderController extends HttpServlet {
     }
 
     public static String getOrderStatusLabel(String status) {
-        if (status == null) {
-            return "Không xác định";
-        }
-        return switch (status) {
-            case OrderStatus.PENDING -> "Chờ xác nhận";
-            case OrderStatus.PENDING_PAYMENT -> "Chờ thanh toán";
-            case OrderStatus.PROCESSING -> "Đang chuẩn bị hàng";
-            case OrderStatus.SHIPPING -> "Đang giao hàng";
-            case OrderStatus.COMPLETED -> "Đã hoàn thành";
-            case OrderStatus.CANCELLED -> "Đã hủy";
-            default -> status;
-        };
+        return OrderStatusLabel.customerLabel(status);
     }
 
     public static String getPaymentMethodLabel(String paymentMethod) {
