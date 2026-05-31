@@ -81,7 +81,7 @@
                                             Một số sản phẩm trong đơn hàng này không đủ số lượng tồn kho.
                                         </div>
                                     </c:if>
-                                    <c:if test="${param.reorder == 'invalid' || param.reorder == 'not_cancelled'}">
+                                    <c:if test="${param.reorder == 'invalid' || param.reorder == 'not_cancelled' || param.reorder == 'not_reorderable'}">
                                         <div class="order-alert order-alert-error">Không thể mua lại đơn hàng này.</div>
                                     </c:if>
 
@@ -212,7 +212,7 @@
                                                         </button>
                                                     </form>
                                                 </c:if>
-                                                <c:if test="${o.orderStatus == 'CANCELLED'}">
+                                                <c:if test="${o.orderStatus == 'CANCELLED' || o.orderStatus == 'COMPLETED'}">
                                                     <form method="post" action="reorder" class="reorder-form">
                                                         <input type="hidden" name="orderId" value="${o.id}">
                                                         <button type="submit" class="btn-order-action btn-reorder">
