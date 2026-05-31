@@ -63,8 +63,8 @@ public class ReorderController extends HttpServlet {
             return;
         }
 
-        if (!OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
-            response.sendRedirect("order-user?reorder=not_cancelled");
+        if (!isReorderable(order.getOrderStatus())) {
+            response.sendRedirect("order-user?reorder=not_reorderable");
             return;
         }
 
@@ -121,6 +121,10 @@ public class ReorderController extends HttpServlet {
     private boolean isProductAvailable(Product product) {
         String status = product.getStatus();
         return status == null || !"Đã xoá".equalsIgnoreCase(status.trim());
+    }
+
+    private boolean isReorderable(String orderStatus) {
+        return OrderStatus.CANCELLED.equals(orderStatus) || OrderStatus.COMPLETED.equals(orderStatus);
     }
 
     private Integer parseOrderId(String rawOrderId) {
