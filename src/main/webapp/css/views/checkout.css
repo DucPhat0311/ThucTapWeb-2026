@@ -87,6 +87,9 @@
 }
 
 .btn-address-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     padding: 12px 20px;
     border: none;
@@ -94,11 +97,13 @@
     background: #6F4E37;
     color: #fff;
     font-weight: 600;
+    text-decoration: none;
     cursor: pointer;
 }
 
 .btn-address-primary:hover {
     background: #4A3C31;
+    color: #fff;
 }
 
 .selected-address-header a {
