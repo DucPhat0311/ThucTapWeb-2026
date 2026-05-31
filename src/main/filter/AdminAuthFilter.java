@@ -36,8 +36,7 @@ import jakarta.servlet.http.HttpSession;
         "/admin/warehouseExportForm",
         "/admin/warehouseReturnForm",
         "/admin/warehouseStockBatch",
-        "/roleAdmin",
-        "/revenueAdmin"
+        "/roleAdmin"
 })
 public class AdminAuthFilter implements Filter {
 
@@ -63,7 +62,6 @@ public class AdminAuthFilter implements Filter {
         URL_MODULE_MAP.put("/admin/warehouseReturnForm", "warehouse");
         URL_MODULE_MAP.put("/admin/warehouseStockBatch", "warehouse");
         URL_MODULE_MAP.put("/roleAdmin", "role");
-        URL_MODULE_MAP.put("/revenueAdmin", "order");
     }
 
     private RoleService roleService;

@@ -11,3 +11,41 @@
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+/* Biểu đồ doanh thu mới */
+.chart-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    padding: 28px;
+    border: 1px solid var(--border-color);
+}
+
+.chart-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.chart-card-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #4a3728;
+    margin: 0;
+}
+
+.year-badge {
+    font-size: 0.8rem;
+    color: #8B6F47;
+    background: #fdf5ef;
+    border: 1px solid #e8d5c0;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-weight: 500;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 380px;
+}
