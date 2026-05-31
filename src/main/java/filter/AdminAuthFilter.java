@@ -81,6 +81,7 @@ public class AdminAuthFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession(false);
 
+        // 1. Chưa đăng nhập → redirect login
         if (session == null || session.getAttribute("userlogin") == null) {
             resp.sendRedirect(req.getContextPath() + "/login?error=loginError&redirect=admin");
             return;
@@ -88,25 +89,30 @@ public class AdminAuthFilter implements Filter {
 
         User user = (User) session.getAttribute("userlogin");
 
+        // 2. Phải có role = 'admin'
         if (!"admin".equalsIgnoreCase(user.getRole())) {
             req.getRequestDispatcher("/WEB-INF/auth/error403.jsp").forward(req, resp);
             return;
         }
 
+        // 3. Super Admin không có roleId → toàn quyền
         if (user.getRoleId() == null) {
             chain.doFilter(request, response);
             return;
         }
 
+        // 4. Kiểm tra role có phải system role không (Admin hệ thống = toàn quyền)
         Role role = roleService.getRoleById(user.getRoleId());
         if (role == null || role.getIsSystem() == 1) {
             chain.doFilter(request, response);
             return;
         }
 
+        // 5. Staff role (isSystem = 0) → kiểm tra permission theo module/action
         String servletPath = req.getServletPath();
         String module = URL_MODULE_MAP.get(servletPath);
 
+        // Dashboard / Profile không cần check module → cho qua
         if (module == null) {
             chain.doFilter(request, response);
             return;
@@ -121,6 +127,15 @@ public class AdminAuthFilter implements Filter {
         }
     }
 
+    /**
+     * Xác định action cần kiểm tra dựa trên HTTP method và tham số action trong form.
+     * GET             → view_list
+     * POST create/add → add
+     * POST update/edit/save/savePermissions → edit
+     * POST delete     → delete
+     * POST block/unblock/lock/... → lock
+     * POST detail/view → view_detail
+     */
     private String resolveAction(String httpMethod, String actionParam) {
         if ("GET".equalsIgnoreCase(httpMethod)) {
             return "view_list";
@@ -132,7 +147,8 @@ public class AdminAuthFilter implements Filter {
             case "create", "add" -> "add";
             case "update", "edit", "save", "savepermissions" -> "edit";
             case "delete" -> "delete";
-            case "block", "unblock", "lock", "unlock", "active", "inactive", "deactivate", "activate" -> "lock";
+            case "block", "unblock", "lock", "unlock",
+                 "active", "inactive", "deactivate", "activate" -> "lock";
             case "detail", "view" -> "view_detail";
             default -> "view_list";
         };
