@@ -193,6 +193,8 @@ public class OrderDetailController extends HttpServlet {
             case PaymentStatus.PENDING -> "Đang chờ thanh toán";
             case PaymentStatus.FAILED -> "Thanh toán thất bại";
             case PaymentStatus.UNPAID -> "Chưa thanh toán";
+            case PaymentStatus.REFUND_PENDING -> "Chờ hoàn tiền";
+            case PaymentStatus.REFUNDED -> "Đã hoàn tiền";
             default -> paymentStatus;
         };
     }

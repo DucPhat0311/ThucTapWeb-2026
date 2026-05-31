@@ -157,6 +157,19 @@ public class OrderDaoAdmin extends BaseDao {
         );
     }
 
+    public void updatePaymentStatus(int id, String paymentStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET payment_statuses = :paymentStatus
+            WHERE id = :id
+        """)
+                        .bind("paymentStatus", paymentStatus)
+                        .bind("id", id)
+                        .execute()
+        );
+    }
+
     public void updateGhnOrderCreated(int id,
                                       String ghnOrderCode,
                                       String ghnStatus,

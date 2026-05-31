@@ -2,8 +2,6 @@ package service;
 
 import model.Order;
 import model.constant.OrderStatus;
-import model.constant.PaymentMethod;
-import model.constant.PaymentStatus;
 
 public class OrderCancellationService {
     public CancellationCheck checkUserCancellation(Order order, int userId) {
@@ -48,9 +46,6 @@ public class OrderCancellationService {
         }
         if (OrderStatus.COMPLETED.equals(status)) {
             return CancellationCheck.rejected("Đơn hàng đã hoàn thành nên không thể hủy.");
-        }
-        if (PaymentMethod.VNPAY.equals(order.getPaymentMethods()) && PaymentStatus.PAID.equals(order.getPaymentStatuses())) {
-            return CancellationCheck.rejected("Đơn VNPay đã thanh toán cần xử lý hoàn tiền trước khi hủy.");
         }
         return CancellationCheck.accepted();
     }

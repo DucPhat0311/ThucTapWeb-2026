@@ -18,7 +18,7 @@
                 <div class="container">
 
                     <c:set var="unpaidOnlineOrder"
-                        value="${order.paymentMethods == 'VNPAY' && order.paymentStatuses != 'PAID'}" />
+                        value="${order.paymentMethods == 'VNPAY' && order.paymentStatuses != 'PAID' && order.paymentStatuses != 'REFUND_PENDING' && order.paymentStatuses != 'REFUNDED'}" />
 
                     <div class="form-header">
                         <a href="orderAdmin" class="btn-back">← Quay lại danh sách</a>
@@ -94,6 +94,12 @@
                     <c:if test="${param.success == 'demo_updated'}">
                         <div class="card" style="border-left: 4px solid #28a745;">
                             <p>Cập nhật hành trình mô phỏng thành công.</p>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${param.success == 'refund_confirmed'}">
+                        <div class="card" style="border-left: 4px solid #28a745;">
+                            <p>Đã xác nhận hoàn tiền cho đơn hàng.</p>
                         </div>
                     </c:if>
 
@@ -280,6 +286,18 @@
                                         <input type="hidden" name="orderAction" value="cancel">
                                         <input type="hidden" name="id" value="${order.id}">
                                         <button class="btn-warning">Hủy vận đơn</button>
+                                    </form>
+                                </c:when>
+
+                                <c:when test="${order.orderStatus == 'CANCELLED' && order.paymentStatuses == 'REFUND_PENDING'}">
+                                    <p class="order-action-note">
+                                        Đơn VNPay đã hủy và đang chờ shop xác nhận hoàn tiền cho khách.
+                                    </p>
+                                    <form method="post" action="orderAdmin" class="status-form">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="orderAction" value="confirmRefund">
+                                        <input type="hidden" name="id" value="${order.id}">
+                                        <button class="btn-primary">Xác nhận đã hoàn tiền</button>
                                     </form>
                                 </c:when>
 

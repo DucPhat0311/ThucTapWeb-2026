@@ -225,7 +225,7 @@
                                                     </form>
                                                 </c:if>
                                                 <c:if
-                                                    test="${(o.orderStatus == 'PENDING' || o.orderStatus == 'PENDING_PAYMENT') && !(o.paymentMethods == 'VNPAY' && o.paymentStatuses == 'PAID') && empty o.ghnOrderCode}">
+                                                    test="${(o.orderStatus == 'PENDING' || o.orderStatus == 'PENDING_PAYMENT') && empty o.ghnOrderCode}">
                                                     <form method="post" action="cancel-order" class="cancel-order-form">
                                                         <input type="hidden" name="id" value="${o.id}">
                                                         <button type="submit" class="btn-order-action btn-cancel">Hủy

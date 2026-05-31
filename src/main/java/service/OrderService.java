@@ -70,6 +70,21 @@ public class OrderService {
         dao.updateStatus(id, status);
     }
 
+    public boolean markRefunded(int orderId) {
+        Order order = dao.findById(orderId);
+        if (order == null) {
+            return false;
+        }
+        if (!OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
+            return false;
+        }
+        if (!PaymentStatus.REFUND_PENDING.equals(order.getPaymentStatuses())) {
+            return false;
+        }
+        dao.updatePaymentStatus(orderId, PaymentStatus.REFUNDED);
+        return true;
+    }
+
     public void completeOrder(int id) {
         Order order = dao.findById(id);
         if (order == null) {
@@ -308,6 +323,7 @@ public class OrderService {
     private void restoreStockIfNeeded(Order order) {
         if (!OrderStatus.PENDING_PAYMENT.equals(order.getOrderStatus())
                 && !OrderStatus.PENDING.equals(order.getOrderStatus())
+                && !OrderStatus.PROCESSING.equals(order.getOrderStatus())
                 && !OrderStatus.SHIPPING.equals(order.getOrderStatus())) {
             return;
         }
@@ -329,6 +345,7 @@ public class OrderService {
                     "Hành trình mô phỏng đã được hủy.",
                     LocalDateTime.now()
             );
+            updatePaymentStatusAfterCancellation(order);
             return;
         }
         String statusName = ghnOrderTrackingService.resolveStatusName("cancel");
@@ -343,9 +360,26 @@ public class OrderService {
                     "Hủy vận đơn GHN thành công.",
                     java.time.LocalDateTime.now()
             );
+            updatePaymentStatusAfterCancellation(order);
+            return;
+        }
+        if (needsRefund(order)) {
+            dao.updateStatusAndPayment(order.getId(), OrderStatus.CANCELLED, PaymentStatus.REFUND_PENDING);
             return;
         }
         dao.updateStatus(order.getId(), OrderStatus.CANCELLED);
+    }
+
+    private void updatePaymentStatusAfterCancellation(Order order) {
+        if (needsRefund(order)) {
+            dao.updatePaymentStatus(order.getId(), PaymentStatus.REFUND_PENDING);
+        }
+    }
+
+    private boolean needsRefund(Order order) {
+        return order != null
+                && PaymentMethod.VNPAY.equals(order.getPaymentMethods())
+                && PaymentStatus.PAID.equals(order.getPaymentStatuses());
     }
 
 }
