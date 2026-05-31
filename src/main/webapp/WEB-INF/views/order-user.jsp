@@ -285,6 +285,7 @@
                                 </div>
                             </div>
 
+                            <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
                             <script>
                                 document.addEventListener("DOMContentLoaded", () => {
                                     const stars = document.querySelectorAll(".star-rating .star");
