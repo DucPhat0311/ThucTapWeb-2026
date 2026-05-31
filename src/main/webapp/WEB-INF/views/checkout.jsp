@@ -21,6 +21,11 @@
                             ${addressError}
                     </div>
                 </c:if>
+                <c:if test="${not empty checkoutError}">
+                    <div class="checkout-alert checkout-alert-error">
+                            ${checkoutError}
+                    </div>
+                </c:if>
                 <c:choose>
                     <c:when test="${not empty selectedAddress}">
                         <div class="selected-address">

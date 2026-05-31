@@ -71,6 +71,20 @@
                                         </div>
                                     </c:if>
 
+                                    <c:if test="${param.reorder == 'unavailable'}">
+                                        <div class="order-alert order-alert-error">
+                                            Một số sản phẩm trong đơn hàng này không còn khả dụng.
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${param.reorder == 'out_of_stock'}">
+                                        <div class="order-alert order-alert-error">
+                                            Một số sản phẩm trong đơn hàng này không đủ số lượng tồn kho.
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${param.reorder == 'invalid' || param.reorder == 'not_cancelled'}">
+                                        <div class="order-alert order-alert-error">Không thể mua lại đơn hàng này.</div>
+                                    </c:if>
+
                                     <div class="order-tabs">
                                         <a href="order-user?status=all"
                                             class="tab-item tab-all ${currentStatus == 'all' || empty currentStatus ? 'active' : ''}">
@@ -195,6 +209,14 @@
                                                         <input type="hidden" name="orderId" value="${o.id}">
                                                         <button type="submit" class="btn-order-action btn-retry-payment">
                                                             Thanh toán lại
+                                                        </button>
+                                                    </form>
+                                                </c:if>
+                                                <c:if test="${o.orderStatus == 'CANCELLED'}">
+                                                    <form method="post" action="reorder" class="reorder-form">
+                                                        <input type="hidden" name="orderId" value="${o.id}">
+                                                        <button type="submit" class="btn-order-action btn-reorder">
+                                                            Mua lại
                                                         </button>
                                                     </form>
                                                 </c:if>
