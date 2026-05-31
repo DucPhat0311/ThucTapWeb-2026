@@ -1,15 +1,9 @@
-/* =========================================
-   Role Admin - Phân Quyền
-   ========================================= */
-
-/* Layout 2 panel */
 .role-layout {
     display: flex;
     gap: 20px;
     min-height: calc(100vh - 140px);
 }
 
-/* ====== Panel trái: Danh sách roles ====== */
 .role-list-panel {
     width: 280px;
     min-width: 280px;
@@ -124,7 +118,6 @@
     text-overflow: ellipsis;
 }
 
-/* ====== Panel phải: Bảng quyền ====== */
 .role-detail-panel {
     flex: 1;
     background: #fff;
@@ -196,7 +189,6 @@
     color: #fff;
 }
 
-/* ====== Permission Table ====== */
 .permission-table-wrapper {
     flex: 1;
     overflow: auto;
@@ -277,7 +269,6 @@
     width: 60px;
 }
 
-/* ====== Custom Checkbox ====== */
 .perm-checkbox {
     display: inline-flex;
     align-items: center;
@@ -338,7 +329,6 @@
     background: #faf6f1;
 }
 
-/* ====== Footer: Save Button ====== */
 .permission-footer {
     padding: 16px 24px;
     border-top: 1px solid #f0e6d9;
@@ -363,7 +353,6 @@
     box-shadow: 0 4px 16px rgba(163, 121, 82, 0.3);
 }
 
-/* ====== Empty State ====== */
 .empty-state {
     display: flex;
     flex-direction: column;

@@ -17,7 +17,6 @@ public class RolePermission {
         this.allowed = allowed;
     }
 
-    // ===== getter / setter =====
     public int getId() {
         return id;
     }

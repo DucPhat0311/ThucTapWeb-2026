@@ -288,7 +288,6 @@ textarea[name='shortDescription'] {
     min-height: 100px;
 }
 
-/* Custom error alerts */
 .alert-danger {
     background-color: #fde8e8;
     border: 1.5px solid #f8b4b4;

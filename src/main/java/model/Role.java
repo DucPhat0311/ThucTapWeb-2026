@@ -19,7 +19,6 @@ public class Role {
         this.createdAt = createdAt;
     }
 
-    // ===== getter / setter =====
     public int getId() {
         return id;
     }

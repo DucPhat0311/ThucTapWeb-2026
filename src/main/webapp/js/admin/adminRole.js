@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Không cần xử lý gì thêm khi load
 });
 
-// ====== Modal: Tạo Role ======
 function openCreateModal() {
     document.getElementById('roleModalTitle').textContent = 'Thêm vai trò';
     document.getElementById('roleFormAction').value = 'create';
@@ -13,7 +11,6 @@ function openCreateModal() {
     document.getElementById('roleModal').classList.add('show');
 }
 
-// ====== Modal: Sửa Role ======
 function openEditModal(id, name, desc) {
     document.getElementById('roleModalTitle').textContent = 'Sửa vai trò';
     document.getElementById('roleFormAction').value = 'update';
@@ -28,7 +25,6 @@ function closeRoleModal() {
     document.getElementById('roleModal').classList.remove('show');
 }
 
-// ====== Modal: Xoá Role ======
 function openDeleteModal(id, name) {
     document.getElementById('deleteRoleId').value = id;
     document.getElementById('deleteRoleName').textContent = name;
@@ -39,7 +35,6 @@ function closeDeleteModal() {
     document.getElementById('deleteModal').classList.remove('show');
 }
 
-// ====== Toggle tất cả checkbox 1 hàng (module) ======
 function toggleRow(module, checked) {
     const checkboxes = document.querySelectorAll(
         'input[type="checkbox"][data-module="' + module + '"]'
@@ -51,7 +46,6 @@ function toggleRow(module, checked) {
     });
 }
 
-// ====== Toggle tất cả checkbox 1 cột (action) ======
 function toggleColumn(action, checked) {
     const checkboxes = document.querySelectorAll(
         'input[type="checkbox"][data-action="' + action + '"]'
@@ -63,7 +57,6 @@ function toggleColumn(action, checked) {
     });
 }
 
-// ====== Đóng modal khi click ngoài ======
 document.addEventListener('click', function (e) {
     if (e.target.classList.contains('modal-overlay')) {
         e.target.classList.remove('show');

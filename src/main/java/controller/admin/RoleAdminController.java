@@ -30,7 +30,6 @@ public class RoleAdminController extends HttpServlet {
         request.setAttribute("modules", roleService.getAllModules());
         request.setAttribute("actions", roleService.getAllActions());
 
-        // Nếu chọn 1 role cụ thể để xem/sửa quyền
         String roleIdParam = request.getParameter("roleId");
         if (roleIdParam != null && !roleIdParam.isEmpty()) {
             int roleId = Integer.parseInt(roleIdParam);
@@ -40,7 +39,6 @@ public class RoleAdminController extends HttpServlet {
             request.setAttribute("selectedRole", selectedRole);
             request.setAttribute("permissions", permissions);
         } else if (!roles.isEmpty()) {
-            // Mặc định chọn role đầu tiên
             Role selectedRole = roles.get(0);
             List<RolePermission> permissions = roleService.getPermissionsByRoleId(selectedRole.getId());
 

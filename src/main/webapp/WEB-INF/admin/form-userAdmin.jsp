@@ -122,7 +122,6 @@
                             </c:if>
                         </div>
 
-
                         <div class="card">
                             <h3>Thông tin cá nhân</h3>
 

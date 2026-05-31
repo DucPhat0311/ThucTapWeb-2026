@@ -87,20 +87,16 @@
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.status == 'COMPLETED'}">
-                                                                        <span class="warehouse-status completed">Hoàn
-                                                                            thành</span>
+                                                                        <span class="warehouse-status completed">Hoàn thành</span>
                                                                     </c:when>
                                                                     <c:when test="${r.status == 'PENDING'}">
-                                                                        <span class="warehouse-status pending">Chờ xử
-                                                                            lý</span>
+                                                                        <span class="warehouse-status pending">Chờ xử lý</span>
                                                                     </c:when>
                                                                     <c:when test="${r.status == 'CANCELLED'}">
-                                                                        <span class="warehouse-status cancelled">Đã
-                                                                            hủy</span>
+                                                                        <span class="warehouse-status cancelled">Đã hủy</span>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <span
-                                                                            class="warehouse-status">${r.status}</span>
+                                                                        <span class="warehouse-status">${r.status}</span>
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </td>
@@ -319,11 +315,9 @@
                                                 <c:forEach var="s" items="${stocks}">
                                                     <tr>
                                                         <td class="font-weight-semibold">${s.productName}</td>
-                                                        <td class="text-center"><span
-                                                                class="badge badge-color">${s.colorName}</span>
+                                                        <td class="text-center"><span class="badge badge-color">${s.colorName}</span>
                                                         </td>
-                                                        <td class="text-center"><span
-                                                                class="badge badge-size">${s.sizeName}</span>
+                                                        <td class="text-center"><span class="badge badge-size">${s.sizeName}</span>
                                                         </td>
                                                         <td class="text-center">
                                                             <strong class="stock-qty">${s.stock}</strong>
@@ -331,8 +325,7 @@
                                                         <td class="text-center">
                                                             <c:choose>
                                                                 <c:when test="${s.stock == 0}">
-                                                                    <span class="stock-status out-of-stock">Hết
-                                                                        hàng</span>
+                                                                    <span class="stock-status out-of-stock">Hết hàng</span>
                                                                 </c:when>
                                                                 <c:when test="${s.stock <= 5}">
                                                                     <span class="stock-status low-stock">Sắp hết</span>
@@ -371,8 +364,7 @@
                             <div class="modal-header">
                                 <h2 id="modalStockTitle" class="stock-modal-title">Chi tiết
                                     đợt nhập kho</h2>
-                                <button class="modal-close stock-modal-close-btn"
-                                    onclick="closeStockModal()">&times;</button>
+                                <button class="modal-close stock-modal-close-btn" onclick="closeStockModal()">&times;</button>
                             </div>
                             <div class="modal-body stock-modal-body">
                                 <div class="user-table-wrapper stock-modal-table-wrapper">
@@ -392,8 +384,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer stock-modal-footer">
-                                <button type="button" class="btn-back stock-modal-btn-close"
-                                    onclick="closeStockModal()">Đóng</button>
+                                <button type="button" class="btn-back stock-modal-btn-close" onclick="closeStockModal()">Đóng</button>
                             </div>
                         </div>
                     </div>
