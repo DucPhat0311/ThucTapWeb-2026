@@ -1,127 +1,104 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="model.User" %>
+<%@ page import="model.Category" %>
 <%@ page import="dao.user.CartDao" %>
 <%@ page import="dao.user.CartItemDao" %>
+<%@ page import="dao.user.CategoryDao" %>
+<%@ page import="java.util.List" %>
 
+<%
+    String contextPath = request.getContextPath();
+    Object pageCss = request.getAttribute("pageCss");
+    Object pageTitle = request.getAttribute("pageTitle");
+
+    User userLog = (User) session.getAttribute("userlogin");
+    boolean loggedIn = userLog != null;
+    String displayName = "";
+    int cartSize = 0;
+
+    if (loggedIn) {
+        displayName = userLog.getFullName() != null && !userLog.getFullName().isBlank()
+                ? userLog.getFullName()
+                : userLog.getUsername();
+
+        CartDao cDao = new CartDao();
+        Integer cId = cDao.findCartIdByUser(userLog.getId());
+        if (cId != null) {
+            cartSize = new CartItemDao().countTotalQuantity(cId);
+            session.setAttribute("cartSize", cartSize);
+        }
+    }
+%>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>${pageTitle != null ? pageTitle : "AURA Studio"}</title>
+    <title><%= pageTitle != null ? pageTitle : "AURA Studio" %></title>
 
-
-    <c:if test="${not empty pageCss}">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/${pageCss}">
-    </c:if>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
+    <% if (pageCss != null && !pageCss.toString().isBlank()) { %>
+        <link rel="stylesheet" href="<%= contextPath %>/css/<%= pageCss %>">
+    <% } %>
+    <link rel="stylesheet" href="<%= contextPath %>/css/include/header.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/include/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
-
 <body>
 
-
-<%
-    if (session.getAttribute("userlogin") != null) {
-        User userLog = (User) session.getAttribute("userlogin");
-        CartDao cDao = new CartDao();
-        Integer cId = cDao.findCartIdByUser(userLog.getId());
-        if (cId != null) {
-            int size = new CartItemDao().countTotalQuantity(cId);
-            session.setAttribute("cartSize", size);
-        }
-    }
-%>
 <header class="header" id="header">
     <div class="header-top">
         <div class="logo">
-            <a href="home" class="iconUser">
-                <img src="img/logo.png" alt="AURA Studio Logo">
+            <a href="<%= contextPath %>/home" class="iconUser">
+                <img src="<%= contextPath %>/img/logo.png" alt="AURA Studio Logo">
             </a>
         </div>
 
-
         <div class="search-bar">
-            <form action="search" method="get">
-                <input type="text" name="keyword" value="${param.keyword}" placeholder="Tìm kiếm sản phẩm..." required />
+            <form action="<%= contextPath %>/search" method="get">
+                <input type="text" name="keyword" value="${param.keyword}" placeholder="Tìm kiếm sản phẩm..." required>
                 <button type="submit">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
         </div>
 
-
         <div class="actions">
+            <a href="<%= loggedIn ? contextPath + "/my-wishlist" : contextPath + "/login" %>" class="iconWishlist">
+                <i class="fa-regular fa-heart"></i>
+            </a>
 
-            <c:choose>
-                <c:when test="${not empty sessionScope.userlogin}">
-                    <a href="my-wishlist" class="iconWishlist">
-                        <i class="fa-regular fa-heart"></i>
-                    </a>
-                </c:when>
-                <c:otherwise>
-                    <a href="login" class="iconWishlist">
-                        <i class="fa-regular fa-heart"></i>
-                    </a>
-                </c:otherwise>
-            </c:choose>
+            <div class="user-menu">
+                <a href="#" class="iconUser">
+                    <i class="fa-regular fa-user"></i>
+                    <%= loggedIn ? displayName : "" %>
+                </a>
+                <ul class="user-dropdown">
+                    <% if (loggedIn) { %>
+                        <li><a href="<%= contextPath %>/profile">Thông tin cá nhân</a></li>
+                        <li><a href="<%= contextPath %>/order-user">Đơn hàng của tôi</a></li>
+                        <li><a href="<%= contextPath %>/logout">Đăng xuất</a></li>
+                    <% } else { %>
+                        <li><a href="<%= contextPath %>/login">Đăng nhập</a></li>
+                        <li><a href="<%= contextPath %>/register">Đăng ký</a></li>
+                    <% } %>
+                </ul>
+            </div>
 
-
-            <c:choose>
-                <c:when test="${not empty sessionScope.userlogin}">
-                    <div class="user-menu">
-                        <a href="#" class="iconUser">
-                            <i class="fa-regular fa-user"></i>
-                                ${not empty sessionScope.userlogin.fullName ? sessionScope.userlogin.fullName : sessionScope.userlogin.username}
-                        </a>
-                        <ul class="user-dropdown">
-                            <li><a href="profile">Thông tin cá nhân</a></li>
-                            <li><a href="order-user">Đơn hàng của tôi</a></li>
-                            <li><a href="logout">Đăng xuất</a></li>
-                        </ul>
-                    </div>
-                </c:when>
-
-
-                <c:otherwise>
-                    <div class="user-menu">
-                        <a href="#" class="iconUser">
-                            <i class="fa-regular fa-user"></i>
-                        </a>
-                        <ul class="user-dropdown">
-                            <li><a href="login">Đăng nhập</a></li>
-                            <li><a href="register">Đăng ký</a></li>
-                        </ul>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-
-
-            <c:choose>
-                <c:when test="${not empty sessionScope.userlogin}">
-                    <a href="my-cart" class="iconCart">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span class="cart-count" id="cartCountBadge"
-                              style="${(sessionScope.cartSize == null || sessionScope.cartSize == 0) ? 'display:none' : 'display:inline-block'}">
-                                ${sessionScope.cartSize != null ? sessionScope.cartSize : 0}
-                        </span>
-                    </a>
-                </c:when>
-                <c:otherwise>
-                    <a href="login" class="iconCart">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </a>
-                </c:otherwise>
-            </c:choose>
-
+            <a href="<%= loggedIn ? contextPath + "/my-cart" : contextPath + "/login" %>" class="iconCart">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <% if (loggedIn) { %>
+                    <span class="cart-count" id="cartCountBadge"
+                          style="<%= cartSize == 0 ? "display:none" : "display:inline-block" %>">
+                        <%= cartSize %>
+                    </span>
+                <% } %>
+            </a>
 
             <div class="notification-wrapper">
                 <p id="thongBao" class="iconNotification">
                     <i class="fa-regular fa-bell"></i>
                 </p>
-
 
                 <div id="notification-box">
                     <ul>
@@ -130,30 +107,28 @@
                     </ul>
                 </div>
             </div>
-
-
         </div>
     </div>
-
 
     <nav class="header-bottom">
         <div class="menu">
             <ul>
-                <li><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
-                <li><a href="product">Danh mục ▾</a>
+                <li><a href="<%= contextPath %>/home">Trang chủ</a></li>
+                <li><a href="<%= contextPath %>/product">Danh mục ▾</a>
                     <ul class="sub">
-                        <jsp:useBean id="categoryDao" class="dao.user.CategoryDao" />
-                        <c:set var="categoryTree" value="${categoryDao.categoryTree}" />
-                        <c:forEach var="parentCat" items="${categoryTree}">
+                        <%
+                            List<Category> categoryTree = new CategoryDao().getCategoryTree();
+                            for (Category parentCat : categoryTree) {
+                        %>
                             <li class="subItem">
-                                <a href="product?category=${parentCat.id}">${parentCat.name}</a>
+                                <a href="<%= contextPath %>/product?category=<%= parentCat.getId() %>"><%= parentCat.getName() %></a>
                             </li>
-                        </c:forEach>
+                        <% } %>
                     </ul>
                 </li>
-                <li><a href="blog">Bài viết</a></li>
-                <li><a href="sales">Khuyến mãi</a></li>
-                <li><a href="contact">Liên hệ</a></li>
+                <li><a href="<%= contextPath %>/blog">Bài viết</a></li>
+                <li><a href="<%= contextPath %>/sales">Khuyến mãi</a></li>
+                <li><a href="<%= contextPath %>/contact">Liên hệ</a></li>
             </ul>
         </div>
     </nav>
@@ -233,10 +208,3 @@
         });
     })();
 </script>
-
-
-
-
-</body>
-</html>
-
