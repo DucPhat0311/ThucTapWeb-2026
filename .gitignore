@@ -48,3 +48,6 @@ gradle.properties
 build/
 target/
 bin/
+
+# Local runtime secrets/config
+src/main/resources/local.properties

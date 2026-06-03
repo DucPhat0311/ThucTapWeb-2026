@@ -5,6 +5,8 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import model.User;
 
 import org.jdbi.v3.core.Jdbi;
+import util.ConfigUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,8 +25,9 @@ public class BaseDao {
 
     protected  void connect() {
         MysqlDataSource dataSource = new MysqlDataSource();
-        System.out.println("jdbc:mysql://"+DBProperties.host+":"+DBProperties.port+"/"+DBProperties.name);
-        dataSource.setURL("jdbc:mysql://"+DBProperties.host+":"+DBProperties.port+"/"+DBProperties.name);
+        String jdbcUrl = "jdbc:mysql://" + DBProperties.host + ":" + DBProperties.port + "/" + DBProperties.name;
+        System.out.println(jdbcUrl);
+        dataSource.setURL(jdbcUrl);
         dataSource.setUser(DBProperties.user);
         dataSource.setPassword(DBProperties.password);
         try {
@@ -52,11 +55,25 @@ public class BaseDao {
             }
         }
 
-        public static String host = prop.getProperty("db.host");
-        public static String port = prop.getProperty("db.port");
-        public static String user = prop.getProperty("db.user");
-        public static String password = prop.getProperty("db.pass");
-        public static String name = prop.getProperty("db.name");
+        public static String host = readConfig("DB_HOST", "db.host", "localhost");
+        public static String port = readConfig("DB_PORT", "db.port", "3306");
+        public static String user = readConfig("DB_USER", "db.user", "root");
+        public static String password = readConfig("DB_PASS", "db.pass", "");
+        public static String name = readConfig("DB_NAME", "db.name", "aurastudio");
+
+        private static String readConfig(String envName, String propName, String defaultValue) {
+            String configValue = ConfigUtil.get(envName);
+            if (!configValue.isBlank()) {
+                return configValue;
+            }
+
+            String propValue = prop.getProperty(propName);
+            if (propValue != null && !propValue.isBlank()) {
+                return propValue.trim();
+            }
+
+            return defaultValue;
+        }
 
     }
     public static void main(String[] args) {

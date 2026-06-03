@@ -10,12 +10,20 @@ import java.util.Map;
 
 public final class CloudinaryUtil {
 
-    private static final Cloudinary CLOUDINARY = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", "dp8ttx3jh",
-            "api_key", "732752992924324",
-            "api_secret", "TB0aEDEQh8kS-tMpBbqSAo2Oh7c"));
+    private static final Cloudinary CLOUDINARY = createCloudinary();
 
     private CloudinaryUtil() {
+    }
+
+    private static Cloudinary createCloudinary() {
+        String cloudName = ConfigUtil.getRequired("CLOUDINARY_CLOUD_NAME");
+        String apiKey = ConfigUtil.getRequired("CLOUDINARY_API_KEY");
+        String apiSecret = ConfigUtil.getRequired("CLOUDINARY_API_SECRET");
+
+        return new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret));
     }
 
     public static String uploadImage(Part filePart, String folder) throws IOException {
