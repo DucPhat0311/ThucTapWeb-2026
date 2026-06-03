@@ -28,6 +28,12 @@ public class LoginFacebookController extends HttpServlet {
 
             // chưa có code ==> về trang login FB
             if (code == null || code.isEmpty()) {
+                if (FacebookConstants.FACEBOOK_APP_ID == null || FacebookConstants.FACEBOOK_APP_ID.isBlank()
+                        || FacebookConstants.FACEBOOK_APP_SECRET == null || FacebookConstants.FACEBOOK_APP_SECRET.isBlank()
+                        || FacebookConstants.FACEBOOK_REDIRECT_URL.isBlank()) {
+                    response.sendRedirect(request.getContextPath() + "/login?error=facebook_config_missing");
+                    return;
+                }
                 response.sendRedirect(FacebookConstants.FACEBOOK_LOGIN_URL);
                 return;
             }
@@ -56,7 +62,7 @@ public class LoginFacebookController extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
                 // nếu lỗi ==> về trang login
-                response.sendRedirect("login?error=facebook_auth_failed");
+                response.sendRedirect(request.getContextPath() + "/login?error=facebook_auth_failed");
             }
         }
 

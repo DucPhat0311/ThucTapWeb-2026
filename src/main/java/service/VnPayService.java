@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import util.ConfigUtil;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -204,9 +205,9 @@ public class VnPayService {
     }
 
     private static String readConfig(String envName, String propName, Properties props) {
-        String env = System.getenv(envName);
-        if (env != null && !env.isBlank()) {
-            return env.trim();
+        String configValue = ConfigUtil.get(envName);
+        if (!configValue.isBlank()) {
+            return configValue;
         }
 
         String value = props.getProperty(propName);
