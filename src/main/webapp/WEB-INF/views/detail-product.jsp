@@ -71,8 +71,35 @@
                 <div class="product-info">
                     <h1 class="product-name">${product.name}</h1>
 
-                    <div class="product-sku">
-                        Mã sản phẩm: <strong id="display-sku">AUR-${product.id}</strong>
+                    <div class="sku-stock-wrapper">
+                        <div class="product-sku">
+                            Mã sản phẩm: <strong id="display-sku">AUR-${product.id}</strong>
+                        </div>
+
+                        <span class="divider"></span>
+
+                        <div class="product-stock-status">
+                            <span class="status-label">Tình trạng:</span>
+                            <c:set var="totalProductStock" value="0" />
+                            <c:forEach var="v" items="${variants}">
+                                <c:set var="totalProductStock" value="${totalProductStock + v.stock}" />
+                            </c:forEach>
+
+                            <c:choose>
+                                <c:when test="${totalProductStock > 0}">
+                        <span id="stock-status-text" class="stock-status in-stock">
+                            Còn hàng (Tổng còn ${totalProductStock} sản phẩm)
+                        </span>
+                                    <script> var firstTotalStock = ${totalProductStock}; </script>
+                                </c:when>
+                                <c:otherwise>
+                        <span id="stock-status-text" class="stock-status out-of-stock">
+                            Hết hàng
+                        </span>
+                                    <script> var firstTotalStock = 0; </script>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
                     </div>
 
                     <p class="product-price">Giá:
