@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+    <%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
         <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
             <!DOCTYPE html>
@@ -334,7 +335,7 @@
                                 <c:forEach items="${items}" var="i">
                                     <tr>
                                         <td>
-                                            <img src="${fn:startsWith(i.thumbnail, 'http') ? i.thumbnail : pageContext.request.contextPath.concat('/img/products').concat(i.thumbnail)}" class="product-thumb"
+                                            <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', i.thumbnail, 'img/aox.webp')}" class="product-thumb"
                                                 onerror="this.onerror=null; this.style.display='none';">
                                         </td>
                                         <td>${i.productName}</td>

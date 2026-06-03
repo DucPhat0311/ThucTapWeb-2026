@@ -1,6 +1,7 @@
     <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+    <%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <!DOCTYPE html>
@@ -45,7 +46,7 @@
                         <c:set var="hasMain" value="false" />
                         <c:forEach var="img" items="${images}">
                             <c:if test="${img.main && not hasMain}">
-                                <img id="main-image" src="${pageContext.request.contextPath}/img/products${img.imageUrl}" alt="${product.name}">
+                                <img id="main-image" src="${aura:resolve(pageContext.request.contextPath, '/img/products', img.imageUrl, 'img/aox.webp')}" alt="${product.name}">
                                 <c:set var="hasMain" value="true" />
                             </c:if>
                         </c:forEach>
@@ -57,7 +58,7 @@
                             <c:forEach var="img" items="${images}">
                                 <div class="swiper-slide">
                                     <img class="thumb-item ${img.main && not hasMain2 ? 'active' : ''}"
-                                         src="${pageContext.request.contextPath}/img/products${img.imageUrl}"
+                                         src="${aura:resolve(pageContext.request.contextPath, '/img/products', img.imageUrl, 'img/aox.webp')}"
                                          alt="${product.name}">
                                 </div>
                                 <c:set var="hasMain2" value="true" />
@@ -277,7 +278,7 @@
                                             <c:if test="${not empty rv.images}">
                                                 <div class="review-images" style="display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
                                                     <c:forEach var="imgUrl" items="${rv.images}">
-                                                        <img src="${pageContext.request.contextPath}/${imgUrl}"
+                                                        <img src="${aura:resolve(pageContext.request.contextPath, '', imgUrl, '')}"
                                                              alt="Review Image"
                                                              style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer;"
                                                              onclick="window.open(this.src)">

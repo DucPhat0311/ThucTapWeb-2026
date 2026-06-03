@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 
@@ -65,7 +66,7 @@
                             <tr>
                                 <td>${n.id}</td>
                                 <td>
-                                    <img src="${fn:startsWith(n.img, 'http') ? n.img : pageContext.request.contextPath.concat('/').concat(n.img)}">
+                                    <img src="${aura:resolve(pageContext.request.contextPath, '', n.img, '')}">
                                 </td>
                                 <td>${n.title}</td>
                                 <td>${n.createdAt}</td>

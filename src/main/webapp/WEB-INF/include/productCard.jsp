@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 
 <link rel="stylesheet" href="css/views/productCard.css">
@@ -12,10 +13,10 @@
     <div class="image-box">
 
 
-        <img class="img-default" src="${pageContext.request.contextPath}/img/products${p.thumbnail}" alt="${p.name}">
+        <img class="img-default" src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/aox.webp')}" alt="${p.name}">
 
         <c:if test="${not empty p.hoverImage}">
-            <img class="img-hover" src="${pageContext.request.contextPath}/img/products${p.hoverImage}" alt="${p.name}">
+            <img class="img-hover" src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.hoverImage, '')}" alt="${p.name}">
         </c:if>
     </div>
 

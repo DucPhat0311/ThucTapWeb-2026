@@ -2,6 +2,7 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 
 <!DOCTYPE html>
@@ -59,7 +60,7 @@
 
 
                                 <td>
-                                    <img src="${fn:startsWith(item.product.thumbnail, 'http') ? item.product.thumbnail : pageContext.request.contextPath.concat('/img/products').concat(item.product.thumbnail)}" width="60">
+                                    <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', item.product.thumbnail, 'img/aox.webp')}" width="60">
                                     <br>
                                         ${item.product.name}
                                 </td>

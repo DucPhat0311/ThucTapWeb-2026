@@ -2,6 +2,7 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
             <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+            <%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
                 <!DOCTYPE html>
                 <html lang="en">
@@ -38,7 +39,7 @@
                                     <div class="profile-left">
                                         <div class="avatar-area">
                                             <div class="avatar-container">
-                                                <img src="${empty adminInfo.avatarUrl ? pageContext.request.contextPath.concat('/img/avt.jpg') : (fn:startsWith(adminInfo.avatarUrl, 'http') ? adminInfo.avatarUrl : pageContext.request.contextPath.concat('/img/avatars/').concat(adminInfo.avatarUrl))}"
+                                                <img src="${aura:resolve(pageContext.request.contextPath, '', adminInfo.avatarUrl, 'img/avt.jpg')}"
                                                     alt="Avatar" id="avatar-preview">
                                             </div>
                                             <form id="avatarForm" action="${pageContext.request.contextPath}/profileAdmin"

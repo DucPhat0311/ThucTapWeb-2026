@@ -2,6 +2,7 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
             <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+            <%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
                 <% request.setAttribute("pageCss", "views/order-detail.css" );
                     request.setAttribute("pageTitle", "Chi tiết đơn hàng" ); %>
@@ -14,16 +15,7 @@
                                     <div class="avatar">
                                         <c:set var="avatarPath"
                                             value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
-                                        <c:choose>
-                                            <c:when
-                                                test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
-                                                <img src="${avatarPath}" alt="Avatar">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img src="${pageContext.request.contextPath}/${avatarPath}"
-                                                    alt="Avatar">
-                                            </c:otherwise>
-                                        </c:choose>
+                                        <img src="${aura:resolve(pageContext.request.contextPath, '', avatarPath, 'img/avt.jpg')}" alt="Avatar">
                                     </div>
                                 </div>
 
@@ -212,21 +204,8 @@
                                                 <div class="product-left">
                                                     <c:set var="itemThumb"
                                                         value="${empty item.thumbnail ? 'img/aox.webp' : item.thumbnail}" />
-                                                    <c:choose>
-                                                        <c:when
-                                                            test="${fn:startsWith(itemThumb, 'http://') or fn:startsWith(itemThumb, 'https://')}">
-                                                            <img src="${itemThumb}" alt="${item.productName}">
-                                                        </c:when>
-                                                        <c:when
-                                                            test="${fn:startsWith(itemThumb, 'img/') or fn:startsWith(itemThumb, '/img/')}">
-                                                            <img src="${pageContext.request.contextPath}${fn:startsWith(itemThumb, '/') ? itemThumb : '/'.concat(itemThumb)}"
-                                                                alt="${item.productName}">
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <img src="${pageContext.request.contextPath}/img/products${fn:startsWith(itemThumb, '/') ? itemThumb : '/'.concat(itemThumb)}"
-                                                                alt="${item.productName}">
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                    <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', itemThumb, 'img/aox.webp')}"
+                                                        alt="${item.productName}">
                                                     <div class="product-info">
                                                         <h4>${item.productName}</h4>
                                                         <p>Màu sắc: ${item.color}</p>

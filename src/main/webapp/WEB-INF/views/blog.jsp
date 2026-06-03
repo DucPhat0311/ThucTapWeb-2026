@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 <c:set var="pageTitle" value="Bài viết - AURA Studio" scope="request"/>
 <c:set var="pageCss" value="views/blog.css" scope="request"/>
@@ -21,7 +22,7 @@
                 <c:forEach var="blog" items="${blogList}">
                     <div class="blogItem">
                         <a href="${pageContext.request.contextPath}/blog?id=${blog.id}">
-                            <img src="${fn:startsWith(blog.img, 'http') ? blog.img : pageContext.request.contextPath.concat('/').concat(blog.img)}" alt="${blog.title}">
+                            <img src="${aura:resolve(pageContext.request.contextPath, '', blog.img, '')}" alt="${blog.title}">
                         </a>
 
                         <div class="blog-content">

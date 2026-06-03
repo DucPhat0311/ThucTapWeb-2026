@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 <c:set var="pageTitle" value="${blog.title} - AURA Studio" scope="request"/>
 <c:set var="pageCss" value="views/blog-detail.css" scope="request"/>
@@ -24,7 +25,7 @@
         </p>
 
         <div class="article-img">
-            <img src="${fn:startsWith(blog.img, 'http') ? blog.img : pageContext.request.contextPath.concat('/').concat(blog.img)}" alt="${blog.title}">
+            <img src="${aura:resolve(pageContext.request.contextPath, '', blog.img, '')}" alt="${blog.title}">
         </div>
 
         <p class="article-lead">${blog.description}</p>
@@ -45,7 +46,7 @@
                         <div class="related-item">
                             <a href="${pageContext.request.contextPath}/blogs?id=${related.id}">
                                 <div class="related-img-wrapper">
-                                    <img src="${fn:startsWith(related.img, 'http') ? related.img : pageContext.request.contextPath.concat('/').concat(related.img)}" alt="${related.title}">
+                                    <img src="${aura:resolve(pageContext.request.contextPath, '', related.img, '')}" alt="${related.title}">
                                 </div>
                                 <div class="related-info">
                                     <h4>${related.title}</h4>
