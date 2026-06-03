@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Hủy đơn hàng - AURA Studio</title>
-    <link rel="stylesheet" href="css/views/shared-profile.css">
-    <link rel="stylesheet" href="css/views/cancelled-order.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/shared-profile.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/cancelled-order.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -18,7 +18,7 @@
     <div class="profile-sidebar">
         <div class="user-info">
             <div class="avatar">
-                <img src="img/avt.jpg" alt="Avatar">
+                <img src="${pageContext.request.contextPath}/img/avt.jpg" alt="Avatar">
                 <button type="button" class="change-avatar-btn">Đổi ảnh</button>
             </div>
             <h3>Nguyễn Văn A</h3>

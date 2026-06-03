@@ -33,16 +33,16 @@
 
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/blogAdmin'">
                         Tổng bài viết<br><span>${total}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin?status=1'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/blogAdmin?status=1'">
                         Đang hiển thị<br><span>${totalActive}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='blogAdmin?status=0'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/blogAdmin?status=0'">
                         Đang ẩn<br><span>${totalHidden}</span></div>
                 </div>
 
                 <div class="toolbar">
-                    <a href="blogAdmin?mode=add" class="btn-add">
+                    <a href="${pageContext.request.contextPath}/blogAdmin?mode=add" class="btn-add">
                         <i class="fa fa-plus"></i> Thêm bài viết
                     </a>
                 </div>
@@ -82,13 +82,13 @@
                                 </td>
                                 <td class="actions">
                                     <!-- XEM -->
-                                    <a href="blogAdmin?mode=view&id=${n.id}"
+                                    <a href="${pageContext.request.contextPath}/blogAdmin?mode=view&id=${n.id}"
                                        class="icon-btn view" title="Xem chi tiết">
                                         <i class="fa fa-eye"></i>
                                     </a>
 
                                     <!-- SỬA -->
-                                    <a href="blogAdmin?mode=edit&id=${n.id}"
+                                    <a href="${pageContext.request.contextPath}/blogAdmin?mode=edit&id=${n.id}"
                                        class="icon-btn edit" title="Chỉnh sửa">
                                         <i class="fa fa-pen"></i>
                                     </a>
@@ -116,7 +116,7 @@
             <h3>Xác nhận xóa</h3>
             <p id="deleteMessage">Bạn có chắc muốn xóa bài viết này không?</p>
 
-            <form id="deleteForm" method="post" action="blogAdmin">
+            <form id="deleteForm" method="post" action="${pageContext.request.contextPath}/blogAdmin">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" id="deleteBlogId">
 

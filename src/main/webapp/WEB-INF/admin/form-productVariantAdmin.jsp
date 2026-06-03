@@ -16,7 +16,7 @@
 <div class="container">
 
     <div class="form-header">
-        <a href="productVariantAdmin?productId=${productId}" class="btn-back">
+        <a href="${pageContext.request.contextPath}/productVariantAdmin?productId=${productId}" class="btn-back">
             ← Quay lại
         </a>
         <h2>
@@ -28,7 +28,7 @@
     </div>
 
 
-    <form method="post" action="productVariantAdmin">
+    <form method="post" action="${pageContext.request.contextPath}/productVariantAdmin">
 
         <div class="card">
             <h3>Thông tin biến thể</h3>
@@ -84,7 +84,7 @@
                 Lưu
             </button>
 
-            <a href="productVariantAdmin?productId=${productId}"
+            <a href="${pageContext.request.contextPath}/productVariantAdmin?productId=${productId}"
                class="btn-secondary">
                 Hủy
             </a>

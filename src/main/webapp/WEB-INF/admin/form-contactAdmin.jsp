@@ -18,12 +18,12 @@
 
     <!-- HEADER -->
     <div class="form-header">
-        <a href="contactAdmin" class="btn-back">← Quay lại</a>
+        <a href="${pageContext.request.contextPath}/contactAdmin" class="btn-back">← Quay lại</a>
         <h2>Xử lý liên hệ</h2>
     </div>
 
 
-    <form method="post" action="contactAdmin">
+    <form method="post" action="${pageContext.request.contextPath}/contactAdmin">
 
         <div class="card">
             <h3>Thông tin liên hệ</h3>
@@ -99,7 +99,7 @@
                     class="btn-primary">
                 Cập nhật trạng thái
             </button>
-            <a href="contactAdmin" class="btn-secondary">Hủy</a>
+            <a href="${pageContext.request.contextPath}/contactAdmin" class="btn-secondary">Hủy</a>
         </div>
 
         <!-- HIDDEN -->

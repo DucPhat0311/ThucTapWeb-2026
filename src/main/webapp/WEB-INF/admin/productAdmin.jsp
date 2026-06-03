@@ -36,19 +36,19 @@
                                 <section id="product" class="page active">
                                     <div class="cards">
                                         <div class="card ${empty currentStatus ? 'active' : ''}"
-                                            style="cursor: pointer;" onclick="window.location.href='productAdmin'">
+                                            style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/productAdmin'">
                                             Tổng sản phẩm
                                             <span>${totalProducts}</span>
                                         </div>
                                         <div class="card ${currentStatus == 'Đang hoạt động' ? 'active' : ''}"
                                             style="cursor: pointer;"
-                                            onclick="window.location.href='productAdmin?status=Đang hoạt động'">
+                                            onclick="window.location.href='${pageContext.request.contextPath}/productAdmin?status=Đang hoạt động'">
                                             Đang hoạt động
                                             <span>${activeProducts}</span>
                                         </div>
                                         <div class="card ${currentStatus == 'Đã ẩn' ? 'active' : ''}"
                                             style="cursor: pointer;"
-                                            onclick="window.location.href='productAdmin?status=Đã ẩn'">
+                                            onclick="window.location.href='${pageContext.request.contextPath}/productAdmin?status=Đã ẩn'">
                                             Đã ẩn
                                             <span>${inactiveProducts}</span>
                                         </div>
@@ -66,7 +66,7 @@
                                             </button>
                                         </form>
 
-                                        <a href="productAdmin?mode=add" class="btn-add">
+                                        <a href="${pageContext.request.contextPath}/productAdmin?mode=add" class="btn-add">
                                             <i class="fa fa-plus"></i> Thêm sản phẩm
                                         </a>
                                     </div>
@@ -146,32 +146,32 @@
                                                         <td class="actions">
 
 
-                                                            <a href="productAdmin?action=toggle-active&id=${p.id}&page=${currentPage}&status=${currentStatus}"
+                                                            <a href="${pageContext.request.contextPath}/productAdmin?action=toggle-active&id=${p.id}&page=${currentPage}&status=${currentStatus}"
                                                                 class="custom-switch ${p.status == 'Đang hoạt động' ? 'active' : ''}"
                                                                 title="${p.status == 'Đang hoạt động' ? 'Ẩn sản phẩm' : 'Hiển thị sản phẩm'}">
                                                                 <span class="switch-slider"></span>
                                                             </a>
 
-                                                            <a href="productAdmin?mode=view&id=${p.id}"
+                                                            <a href="${pageContext.request.contextPath}/productAdmin?mode=view&id=${p.id}"
                                                                 class="icon-btn view" title="Xem chi tiết">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>
 
 
 
-                                                            <a href="productAdmin?mode=edit&id=${p.id}"
+                                                            <a href="${pageContext.request.contextPath}/productAdmin?mode=edit&id=${p.id}"
                                                                 class="icon-btn edit" title="Chỉnh sửa">
                                                                 <i class="fa fa-pen"></i>
                                                             </a>
 
 
-                                                            <a href="productVariantAdmin?productId=${p.id}"
+                                                            <a href="${pageContext.request.contextPath}/productVariantAdmin?productId=${p.id}"
                                                                 class="icon-btn variant" title="Quản lý biến thể">
                                                                 <i class="fa fa-layer-group"></i>
                                                             </a>
 
 
-                                                            <a href="productImgAdmin?productId=${p.id}"
+                                                            <a href="${pageContext.request.contextPath}/productImgAdmin?productId=${p.id}"
                                                                 class="icon-btn image" title="Quản lý ảnh">
                                                                 <i class="fa fa-images"></i>
                                                             </a>
@@ -208,9 +208,9 @@
                                             </div>
                                             <div class="pagination-controls">
                                                 <c:if test="${currentPage > 1}">
-                                                    <a href="productAdmin?page=1${statusParam}" class="page-btn">«
+                                                    <a href="${pageContext.request.contextPath}/productAdmin?page=1${statusParam}" class="page-btn">«
                                                         Đầu</a>
-                                                    <a href="productAdmin?page=${currentPage - 1}${statusParam}"
+                                                    <a href="${pageContext.request.contextPath}/productAdmin?page=${currentPage - 1}${statusParam}"
                                                         class="page-btn">‹ Trước</a>
                                                 </c:if>
 
@@ -221,7 +221,7 @@
                                                         </c:when>
                                                         <c:when
                                                             test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                                            <a href="productAdmin?page=${i}${statusParam}"
+                                                            <a href="${pageContext.request.contextPath}/productAdmin?page=${i}${statusParam}"
                                                                 class="page-btn">${i}</a>
                                                         </c:when>
                                                         <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
@@ -231,9 +231,9 @@
                                                 </c:forEach>
 
                                                 <c:if test="${currentPage < totalPages}">
-                                                    <a href="productAdmin?page=${currentPage + 1}${statusParam}"
+                                                    <a href="${pageContext.request.contextPath}/productAdmin?page=${currentPage + 1}${statusParam}"
                                                         class="page-btn">Sau ›</a>
-                                                    <a href="productAdmin?page=${totalPages}${statusParam}"
+                                                    <a href="${pageContext.request.contextPath}/productAdmin?page=${totalPages}${statusParam}"
                                                         class="page-btn">Cuối »</a>
                                                 </c:if>
                                             </div>

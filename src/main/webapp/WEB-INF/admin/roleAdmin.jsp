@@ -43,7 +43,7 @@
 
                                             <div class="role-list">
                                                 <c:forEach items="${roles}" var="r">
-                                                    <a href="roleAdmin?roleId=${r.id}"
+                                                    <a href="${pageContext.request.contextPath}/roleAdmin?roleId=${r.id}"
                                                         class="role-item ${selectedRole.id == r.id ? 'active' : ''}">
                                                         <div class="role-item-info">
                                                             <span class="role-name">${r.name}</span>
@@ -81,7 +81,7 @@
                                                     </c:if>
                                                 </div>
 
-                                                <form method="post" action="roleAdmin" id="permissionForm">
+                                                <form method="post" action="${pageContext.request.contextPath}/roleAdmin" id="permissionForm">
                                                     <input type="hidden" name="action" value="savePermissions">
                                                     <input type="hidden" name="roleId" value="${selectedRole.id}">
 
@@ -257,7 +257,7 @@
                         <div id="roleModal" class="modal-overlay">
                             <div class="modal">
                                 <h3 id="roleModalTitle">Thêm vai trò</h3>
-                                <form method="post" action="roleAdmin" id="roleForm">
+                                <form method="post" action="${pageContext.request.contextPath}/roleAdmin" id="roleForm">
                                     <input type="hidden" name="action" id="roleFormAction" value="create">
                                     <input type="hidden" name="roleId" id="roleFormId">
 
@@ -290,7 +290,7 @@
                                     <p class="delete-warning">Những người dùng đang gán vai trò này sẽ bị chuyển về role
                                         mặc
                                         định.</p>
-                                    <form method="post" action="roleAdmin">
+                                    <form method="post" action="${pageContext.request.contextPath}/roleAdmin">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="roleId" id="deleteRoleId">
                                         <div class="modal-actions">

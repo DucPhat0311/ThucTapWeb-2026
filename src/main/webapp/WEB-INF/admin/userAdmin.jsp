@@ -29,16 +29,16 @@
         <main id="page">
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='userAdmin<c:if test="${not empty currentKeyword}">?keyword=${currentKeyword}</c:if>'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/userAdmin<c:if test="${not empty currentKeyword}">?keyword=${currentKeyword}</c:if>'">
                         Tổng người dùng<br><span id="dashboard-total-user">${total}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='userAdmin?status=ACTIVE<c:if test="${not empty currentKeyword}">&keyword=${currentKeyword}</c:if>'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/userAdmin?status=ACTIVE<c:if test="${not empty currentKeyword}">&keyword=${currentKeyword}</c:if>'">
                         Hoạt động<br><span id="dashboard-total-user-active">${countActive}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='userAdmin?status=BLOCKED<c:if test="${not empty currentKeyword}">&keyword=${currentKeyword}</c:if>'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/userAdmin?status=BLOCKED<c:if test="${not empty currentKeyword}">&keyword=${currentKeyword}</c:if>'">
                         Bị khóa<br><span id="dashboard-total-user-block">${countBlock}</span></div>
                 </div>
 
                 <div class="user-toolbar">
-                    <form method="get" action="userAdmin" class="user-toolbar">
+                    <form method="get" action="${pageContext.request.contextPath}/userAdmin" class="user-toolbar">
 
                         <c:if test="${not empty currentStatus}">
                             <input type="hidden" name="status" value="${currentStatus}">
@@ -56,7 +56,7 @@
                         </button>
                     </form>
 
-                    <a href="userAdmin?mode=add" class="btn-add">
+                    <a href="${pageContext.request.contextPath}/userAdmin?mode=add" class="btn-add">
                         <i class="fa fa-plus"></i> Thêm người dùng
                     </a>
                 </div>
@@ -104,12 +104,12 @@
                                     </c:choose>
                                 </td>
                                 <td class="actions">
-                                    <a href="userAdmin?mode=view&id=${u.id}"
+                                    <a href="${pageContext.request.contextPath}/userAdmin?mode=view&id=${u.id}"
                                        class="icon-btn view" title="Xem chi tiết">
                                         <i class="fa fa-eye"></i>
                                     </a>
 
-                                    <a href="userAdmin?mode=edit&id=${u.id}"
+                                    <a href="${pageContext.request.contextPath}/userAdmin?mode=edit&id=${u.id}"
                                        class="icon-btn edit" title="Chỉnh sửa">
                                         <i class="fa fa-pen"></i>
                                     </a>
@@ -159,8 +159,8 @@
 
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
-                                <a href="userAdmin?page=1${qs}" class="page-btn">« Đầu</a>
-                                <a href="userAdmin?page=${currentPage - 1}${qs}" class="page-btn">‹ Trước</a>
+                                <a href="${pageContext.request.contextPath}/userAdmin?page=1${qs}" class="page-btn">« Đầu</a>
+                                <a href="${pageContext.request.contextPath}/userAdmin?page=${currentPage - 1}${qs}" class="page-btn">‹ Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -169,7 +169,7 @@
                                         <span class="page-btn active">${i}</span>
                                     </c:when>
                                     <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="userAdmin?page=${i}${qs}" class="page-btn">${i}</a>
+                                        <a href="${pageContext.request.contextPath}/userAdmin?page=${i}${qs}" class="page-btn">${i}</a>
                                     </c:when>
                                     <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
                                         <span class="page-btn dots">...</span>
@@ -178,8 +178,8 @@
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="userAdmin?page=${currentPage + 1}${qs}" class="page-btn">Sau ›</a>
-                                <a href="userAdmin?page=${totalPages}${qs}" class="page-btn">Cuối »</a>
+                                <a href="${pageContext.request.contextPath}/userAdmin?page=${currentPage + 1}${qs}" class="page-btn">Sau ›</a>
+                                <a href="${pageContext.request.contextPath}/userAdmin?page=${totalPages}${qs}" class="page-btn">Cuối »</a>
                             </c:if>
                         </div>
                     </div>
@@ -193,7 +193,7 @@
         <div class="modal">
             <h3>Xác nhận</h3>
             <p>Bạn có chắc muốn <b id="modalActionText">khóa người dùng</b> này không?</p>
-            <form id="confirmForm" method="post" action="userAdmin">
+            <form id="confirmForm" method="post" action="${pageContext.request.contextPath}/userAdmin">
                 <input type="hidden" name="action" id="formActionField" value="block">
                 <input type="hidden" name="id" id="confirmUserId">
 

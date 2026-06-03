@@ -14,7 +14,7 @@
 
 <fmt:setLocale value="vi_VN"/> <section class="checkout">
     <div class="checkout-container">
-        <form action="place-order" method="post">
+        <form action="${pageContext.request.contextPath}/place-order" method="post">
             <div class="checkout-left">
                 <h2>Thông tin giao hàng</h2>
                 <c:if test="${not empty addressError}">

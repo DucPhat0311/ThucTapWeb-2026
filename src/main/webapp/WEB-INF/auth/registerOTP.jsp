@@ -15,7 +15,7 @@
             <i class="fa-solid fa-arrow-left"></i>
         </a>
         <h2 class="quenMatKhau" style="font-size: 2rem;">Nhập mã OTP</h2>
-        <form id="forgetForm" action="sendOTP" method="post">
+        <form id="forgetForm" action="${pageContext.request.contextPath}/sendOTP" method="post">
             <% if(request.getAttribute("error") != null) { %>
                 <div class="error-message">${error}</div>
             <% } %>
@@ -36,7 +36,7 @@
             <button type="submit" class="btn-primary">Xác nhận</button>
         </form>
         <div class="form-links">
-            <a href="login">Quay lại đăng nhập</a>
+            <a href="${pageContext.request.contextPath}/login">Quay lại đăng nhập</a>
         </div>
     </div>
 </main>

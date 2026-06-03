@@ -30,16 +30,16 @@
         <main id="page">
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='bannerAdmin'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/bannerAdmin'">
                         Tổng banner<br><span id="dashboard-total-banner">${total}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='bannerAdmin?status=1'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/bannerAdmin?status=1'">
                         Đang hoạt động<br><span id="dashboard-total-banner-active">${totalActive}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='bannerAdmin?status=0'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/bannerAdmin?status=0'">
                         Đã ẩn<br><span id="dashboard-total-banner-block">${totalBlocked}</span></div>
                 </div>
 
                 <div class="banner-toolbar">
-                    <a href="bannerAdmin?mode=add" class="btn-add">
+                    <a href="${pageContext.request.contextPath}/bannerAdmin?mode=add" class="btn-add">
                         <i class="fa fa-plus"></i> Thêm banner
                     </a>
                 </div>
@@ -78,13 +78,13 @@
                                 </td>
                                 <td class="actions">
                                     <!-- XEM -->
-                                    <a href="bannerAdmin?mode=view&id=${b.id}"
+                                    <a href="${pageContext.request.contextPath}/bannerAdmin?mode=view&id=${b.id}"
                                        class="icon-btn view" title="Xem chi tiết">
                                         <i class="fa fa-eye"></i>
                                     </a>
 
                                     <!-- SỬA -->
-                                    <a href="bannerAdmin?mode=edit&id=${b.id}"
+                                    <a href="${pageContext.request.contextPath}/bannerAdmin?mode=edit&id=${b.id}"
                                        class="icon-btn edit" title="Chỉnh sửa">
                                         <i class="fa fa-pen"></i>
                                     </a>
@@ -113,7 +113,7 @@
         <div class="modal">
             <h3>Xác nhận xóa</h3>
             <p id="deleteMessage">Bạn có chắc muốn xóa banner này không?</p>
-            <form id="deleteForm" method="post" action="bannerAdmin">
+            <form id="deleteForm" method="post" action="${pageContext.request.contextPath}/bannerAdmin">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" id="deleteBannerId">
                 <div class="modal-actions">

@@ -54,11 +54,11 @@
 
     <div class="pagination">
         <c:if test="${currentPage > 1}">
-            <a href="blog?page=${currentPage - 1}">&laquo;</a>
+            <a href="${pageContext.request.contextPath}/blog?page=${currentPage - 1}">&laquo;</a>
         </c:if>
 
         <c:if test="${currentPage > 3}">
-            <a href="blog/page=1">1</a>
+            <a href="${pageContext.request.contextPath}/blog/page=1">1</a>
             <c:if test="${currentPage > 4}">
                 <span class="paging-sep">...</span>
             </c:if>
@@ -68,7 +68,7 @@
         <c:set var="end" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}" />
 
         <c:forEach var="i" begin="${begin}" end="${end}">
-            <a href="blog?page=${i}"
+            <a href="${pageContext.request.contextPath}/blog?page=${i}"
                class="${currentPage == i ? 'active' : ''}">${i}</a>
         </c:forEach>
 
@@ -76,11 +76,11 @@
             <c:if test="${currentPage < totalPages - 3}">
                 <span class="paging-sep">...</span>
             </c:if>
-            <a href="blog?page=${totalPages}">${totalPages}</a>
+            <a href="${pageContext.request.contextPath}/blog?page=${totalPages}">${totalPages}</a>
         </c:if>
 
         <c:if test="${currentPage < totalPages}">
-            <a href="blog?page=${currentPage + 1}">&raquo;</a>
+            <a href="${pageContext.request.contextPath}/blog?page=${currentPage + 1}">&raquo;</a>
         </c:if>
     </div>
 

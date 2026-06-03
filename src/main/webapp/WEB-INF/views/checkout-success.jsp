@@ -48,8 +48,8 @@
                                 </div>
 
                                 <div class="action-buttons">
-                                    <a href="order-user" class="btn-secondary">Đơn hàng của tôi</a>
-                                    <a href="home" class="btn-main">Tiếp tục mua sắm</a>
+                                    <a href="${pageContext.request.contextPath}/order-user" class="btn-secondary">Đơn hàng của tôi</a>
+                                    <a href="${pageContext.request.contextPath}/home" class="btn-main">Tiếp tục mua sắm</a>
                                 </div>
                             </div>
 

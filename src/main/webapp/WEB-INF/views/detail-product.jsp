@@ -9,9 +9,9 @@
     <head>
         <meta charset="UTF-8">
         <title>Chi tiết sản phẩm - AURA Studio</title>
-        <link rel="stylesheet" href="css/include/header.css">
-        <link rel="stylesheet" href="css/include/footer.css">
-        <link rel="stylesheet" href="css/views/detail-product.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/detail-product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
     <body>
@@ -415,7 +415,7 @@
                         <p>Không tìm thấy sản phẩm phù hợp khác.</p>
                     </c:if>
                 </div>
-                <a href="product" class="btn-view-more">Xem thêm</a>
+                <a href="${pageContext.request.contextPath}/product" class="btn-view-more">Xem thêm</a>
             </section>
         </div>
     </main>

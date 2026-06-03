@@ -21,7 +21,7 @@
                 <c:set var="avatarPath" value="${empty user.avatarUrl ? 'img/avt.jpg' : user.avatarUrl}" />
                 <img src="${aura:resolve(pageContext.request.contextPath, '', avatarPath, 'img/avt.jpg')}" alt="Avatar">
 
-                <form id="avatar-form" class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
+                <form id="avatar-form" class="avatar-upload-form" method="post" action="${pageContext.request.contextPath}/profile" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="updateAvatar">
                     <input type="hidden" name="redirectTo" value="profile">
                     <input type="file"
@@ -69,11 +69,11 @@
 
         <nav class="profile-menu">
             <ul>
-                <li class="active"><a href="profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                <li><a href="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
-                <li><a href="order-user"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
-                <li><a href="change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
-                <li><a href="logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
+                <li class="active"><a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                <li><a href="${pageContext.request.contextPath}/address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
+                <li><a href="${pageContext.request.contextPath}/order-user"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
+                <li><a href="${pageContext.request.contextPath}/change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+                <li><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
             </ul>
         </nav>
     </div>
@@ -86,7 +86,7 @@
             </c:if>
         </div>
 
-        <form class="profile-form" method="post" action="profile" onsubmit="syncBirthday()">
+        <form class="profile-form" method="post" action="${pageContext.request.contextPath}/profile" onsubmit="syncBirthday()">
             <input type="hidden" name="action" value="updateProfile">
             <div class="form-row">
                 <div class="form-group">

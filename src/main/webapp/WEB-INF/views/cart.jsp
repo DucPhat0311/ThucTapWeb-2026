@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Giỏ hàng - AURA Studio</title>
-    <link rel="stylesheet" href="css/views/cart.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/cart.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -32,7 +32,7 @@
                     <div class="empty-cart-msg">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <p>Giỏ hàng của bạn đang trống</p>
-                        <a href="product" class="btn-shopping-now">Mua sắm ngay</a>
+                        <a href="${pageContext.request.contextPath}/product" class="btn-shopping-now">Mua sắm ngay</a>
                     </div>
                 </c:when>
 
@@ -73,7 +73,7 @@
 
 
                                 <td>
-                                    <form action="update-cart" method="post" class="qty-form" style="display:flex; justify-content:center; align-items:center; gap:6px;">
+                                    <form action="${pageContext.request.contextPath}/update-cart" method="post" class="qty-form" style="display:flex; justify-content:center; align-items:center; gap:6px;">
                                         <input type="hidden" name="variantId" value="${item.variantId}">
                                         <button type="button" class="btn-minus">−</button>
                                         <input type="text" name="quantity" class="qty-display" value="${item.quantity}" readonly style="width:40px; text-align:center;">
@@ -120,7 +120,7 @@
 
 
             <div class="card-content-right-button">
-                <a href="product"><button id="ttms">TIẾP TỤC MUA SẮM</button></a>
+                <a href="${pageContext.request.contextPath}/product"><button id="ttms">TIẾP TỤC MUA SẮM</button></a>
                 <c:if test="${not empty cartItems}">
                     <form action="${pageContext.request.contextPath}/checkout" method="post" id="checkoutForm" class="checkout-form">
                         <button type="submit" id="tt">THANH TOÁN</button>
