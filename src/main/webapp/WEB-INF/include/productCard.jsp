@@ -12,6 +12,14 @@
     <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a>
     <div class="image-box">
 
+        <c:choose>
+            <c:when test="${p.totalStock > 0}">
+                <div class="stock-text-badge in-stock">Còn hàng</div>
+            </c:when>
+            <c:otherwise>
+                <div class="stock-text-badge out-of-stock">Hết hàng</div>
+            </c:otherwise>
+        </c:choose>
 
         <img class="img-default" src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/aox.webp')}" alt="${p.name}">
 
@@ -47,7 +55,6 @@
                 </c:otherwise>
             </c:choose>
         </div>
-
 
         <div class="rating-sold">
             <c:choose>

@@ -30,7 +30,8 @@ public class ProductDao extends BaseDao {
                                         "(SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, " +
                                         "(SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount, " +
                                         "(SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) AS avgRating, " +
-                                        "(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews " +
+                                        "(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews, " +
+                                        "(SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = p.id) AS totalStock " +
                                         "FROM products p " +
                                         "WHERE p.status = 'Đang hoạt động' " +
                                         "ORDER BY p.created_at DESC LIMIT :limit"
@@ -51,7 +52,8 @@ public class ProductDao extends BaseDao {
                 "(SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, " +
                 "(SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount, " +
                 "(SELECT COALESCE(ROUND(AVG(rating), 1), 5.0) FROM reviews WHERE product_id = p.id) AS avgRating, " +
-                "(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews " +
+                "(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews, " +
+                "(SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = p.id) AS totalStock "+
                 "FROM products p " +
                 "WHERE p.category_id IN (<ids>) AND p.status = 'Đang hoạt động' " +
                 "ORDER BY p.created_at DESC LIMIT :limit";
@@ -75,7 +77,7 @@ public class ProductDao extends BaseDao {
     public Product findById(int id) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
-              SELECT p.*, c.name AS categoryName
+              SELECT p.*, c.name AS categoryName, "(SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = p.id) AS totalStock "
               FROM products p
               JOIN categories c ON p.category_id = c.id
               WHERE p.id = :id
@@ -98,7 +100,8 @@ public class ProductDao extends BaseDao {
                    (SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, 
                    (SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount, 
                    (SELECT COALESCE(ROUND(AVG(rating), 1), 5.0) FROM reviews WHERE product_id = p.id) AS avgRating, 
-                   (SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews 
+                   (SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews,
+                   (SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = p.id) AS totalStock
             FROM products p 
             WHERE p.category_id = :categoryId 
               AND p.id <> :currentProductId 
@@ -122,7 +125,7 @@ public class ProductDao extends BaseDao {
 
     public List<Product> searchByName(String keyword) {
         String sql = """
-  SELECT p.*, c.name AS categoryName
+  SELECT p.*, c.name AS categoryName, (SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = p.id) AS totalStock
   FROM products p
   JOIN categories c ON p.category_id = c.id
   WHERE p.status <> 'Đã xoá'
@@ -204,8 +207,8 @@ public class ProductDao extends BaseDao {
         if (categoryIds == null || categoryIds.isEmpty()) {
             return List.of();
         }
-        String sql = "SELECT * FROM products " +
-                "WHERE category_id IN (<ids>) AND status = 'Đang hoạt động'";
+        String sql = "SELECT *, (SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = p.id) AS totalStock " +
+                "FROM products p WHERE category_id IN (<ids>) AND status = 'Đang hoạt động'";
         return getJdbi().withHandle(handle ->
                 handle.createQuery(sql)
                         .bindList("ids", categoryIds)
@@ -238,7 +241,8 @@ public class ProductDao extends BaseDao {
         sql.append("(SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, ");
         sql.append("(SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount, ");
         sql.append("(SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) AS avgRating, ");
-        sql.append("(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews ");
+        sql.append("(SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews, ");
+        sql.append("(SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = p.id) AS totalStock ");
         sql.append("FROM products p ");
         if (sizes != null || colors != null) {
             sql.append(" JOIN product_variants pv ON p.id = pv.product_id ");
@@ -345,7 +349,8 @@ public class ProductDao extends BaseDao {
               (SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount,
               (SELECT COUNT(DISTINCT size_id) FROM product_variants WHERE product_id = p.id) AS sizeCount,
               (SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) AS avgRating,
-              (SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews
+              (SELECT COUNT(*) FROM reviews WHERE product_id = p.id) AS totalReviews,
+              (SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = p.id) AS totalStock
            FROM products p
            WHERE p.status = 'Đang hoạt động'
        """);

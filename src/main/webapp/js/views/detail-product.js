@@ -17,12 +17,31 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedRating = 0;
     let currentStock = 0;
 
-    function checkAndRenderVariant() {
-        if (!selectedColorId || !selectedSizeId) return;
 
+    function checkAndRenderVariant() {
+        const stockStatusText = document.getElementById("stock-status-text");
+        if (!selectedColorId || !selectedSizeId) {
+            if (stockStatusText) {
+
+                    if (firstTotalStock > 0) {
+                        stockStatusText.innerHTML = ` Còn hàng (Tổng còn ${firstTotalStock} sản phẩm)`;
+                    } else {
+                        stockStatusText.innerHTML = `Hết hàng`;
+                    }
+                }
+
+            return;
+        }
         const matchedVariant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
 
         if (matchedVariant) {
+            if (stockStatusText) {
+                if (matchedVariant.stock > 0) {
+                    stockStatusText.innerHTML = `Còn hàng (Mẫu này còn ${matchedVariant.stock} sản phẩm)`;
+                } else {
+                    stockStatusText.innerHTML = `Hết hàng`;
+                }
+            }
             if (priceDisplayContainer) {
                 let htmlPrice = "";
                 if (matchedVariant.salePrice > 0 && matchedVariant.salePrice < matchedVariant.price) {
