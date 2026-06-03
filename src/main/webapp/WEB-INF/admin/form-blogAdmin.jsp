@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <!DOCTYPE html>
@@ -64,7 +65,7 @@
 
                     <c:if test="${mode == 'edit' || mode == 'view'}">
                         <div class="preview">
-                            <img src="${fn:startsWith(blog.img, 'http') ? blog.img : pageContext.request.contextPath.concat('/').concat(blog.img)}" style="max-width:300px;">
+                            <img src="${aura:resolve(pageContext.request.contextPath, '', blog.img, '')}" style="max-width:300px;">
                         </div>
                     </c:if>
                 </div>

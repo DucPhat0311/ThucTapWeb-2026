@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_3_0.xsd"
+        version="3.0">
+    <tlib-version>1.0</tlib-version>
+    <short-name>aura</short-name>
+    <uri>/WEB-INF/tlds/aura.tld</uri>
+
+    <function>
+        <name>resolve</name>
+        <function-class>util.AssetUrlUtil</function-class>
+        <function-signature>java.lang.String resolve(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+    </function>
+</taglib>

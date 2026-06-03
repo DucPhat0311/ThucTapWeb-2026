@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
@@ -77,7 +78,7 @@
 
                     <div class="preview">
                         <img id="previewImg"
-                             src="${fn:startsWith(banner.imageUrl, 'http') ? banner.imageUrl : pageContext.request.contextPath.concat('/img/').concat(banner.imageUrl)}"
+                             src="${aura:resolve(pageContext.request.contextPath, '/img', banner.imageUrl, '')}"
                              alt="Preview"
                              style="${mode == 'add' ? 'display:none' : 'display:block'}; max-width:300px;">
 

@@ -3,6 +3,7 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -33,7 +34,7 @@
   <div class="product-grid discount-grid">
     <c:forEach items="${discountProducts}" var="p">
       <div class="product-card" data-product-id="${p.id}" data-sale-price="${p.sale_price}">
-        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a><span class="badge flash">SALE -${p.discountPercent}%</span><img src="${fn:startsWith(p.thumbnail, 'http') ? p.thumbnail : pageContext.request.contextPath.concat('/img/products').concat(p.thumbnail)}" alt="${p.name}">
+        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a><span class="badge flash">SALE -${p.discountPercent}%</span><img src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/aox.webp')}" alt="${p.name}">
         <div class="product-info-wrapper">
   <h3>${p.name}</h3>
                     <p class="price">

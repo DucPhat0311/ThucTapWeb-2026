@@ -2,6 +2,7 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
         <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+        <%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
             <% request.setAttribute("pageCss", "views/checkout-success.css" );
                 request.setAttribute("pageTitle", "Đặt hàng thành công" ); %>
@@ -60,21 +61,8 @@
                                             <div class="product-img">
                                                 <c:set var="itemThumb"
                                                     value="${empty item.thumbnail ? 'img/aox.webp' : item.thumbnail}" />
-                                                <c:choose>
-                                                    <c:when
-                                                        test="${fn:startsWith(itemThumb, 'http://') or fn:startsWith(itemThumb, 'https://')}">
-                                                        <img src="${itemThumb}" alt="${item.productName}" />
-                                                    </c:when>
-                                                    <c:when
-                                                        test="${fn:startsWith(itemThumb, 'img/') or fn:startsWith(itemThumb, '/img/')}">
-                                                        <img src="${pageContext.request.contextPath}${fn:startsWith(itemThumb, '/') ? itemThumb : '/'.concat(itemThumb)}"
-                                                            alt="${item.productName}" />
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <img src="${pageContext.request.contextPath}/img/products${fn:startsWith(itemThumb, '/') ? itemThumb : '/'.concat(itemThumb)}"
-                                                            alt="${item.productName}" />
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', itemThumb, 'img/aox.webp')}"
+                                                    alt="${item.productName}" />
                                                 <span class="qty-badge">${item.quantity}</span>
                                             </div>
                                             <div class="product-info">

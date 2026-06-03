@@ -2,6 +2,7 @@
          pageEncoding="UTF-8" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 
 <!DOCTYPE html>
@@ -24,7 +25,7 @@
                     <c:forEach var="b" items="${banners}">
                         <div class="slide">
                             <a href="${b.navigateTo}">
-                                <img src="${pageContext.request.contextPath}/img/${b.imageUrl}" alt="${b.title}">
+                                <img src="${aura:resolve(pageContext.request.contextPath, '/img', b.imageUrl, '')}" alt="${b.title}">
                             </a>
                         </div>
                     </c:forEach>

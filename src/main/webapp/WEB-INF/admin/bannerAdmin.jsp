@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
@@ -62,7 +63,7 @@
                         <c:forEach items="${banners}" var="b">
                             <tr>
                                 <td>${b.id}</td>
-                                <td><img src="${fn:startsWith(b.imageUrl, 'http') ? b.imageUrl : pageContext.request.contextPath.concat('/img/').concat(b.imageUrl)}" alt="" class="banner-thumb"></td>
+                                <td><img src="${aura:resolve(pageContext.request.contextPath, '/img', b.imageUrl, '')}" alt="" class="banner-thumb"></td>
                                 <td>${b.navigateTo}</td>
                                 <td>${b.title}</td>
                                 <td>

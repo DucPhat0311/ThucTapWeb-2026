@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -55,7 +56,7 @@
 
                 <c:if test="${mode != 'add' && image.imageUrl != null}">
                     <div class="image-preview">
-                        <img src="${fn:startsWith(image.imageUrl, 'http') ? image.imageUrl : pageContext.request.contextPath.concat('/img/products').concat(image.imageUrl)}" alt="Current Image" id="currentImage">
+                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', image.imageUrl, 'img/aox.webp')}" alt="Current Image" id="currentImage">
                     </div>
                 </c:if>
 

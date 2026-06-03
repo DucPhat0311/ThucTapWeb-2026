@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 <%
     request.setAttribute("pageCss", "views/checkout.css");
@@ -107,7 +108,7 @@
                     <c:set var="total" value="0"/>
                     <c:forEach var="item" items="${checkoutItems}">
                         <div class="order-item">
-                            <img src="${pageContext.request.contextPath}/img/products${item.product.thumbnail}" alt="${item.product.name}">
+                            <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', item.product.thumbnail, 'img/aox.webp')}" alt="${item.product.name}">
                             <div class="info">
                                 <p class="name">${item.product.name}</p>
                                 <p class="variant">Size ${item.size} · ${item.color}</p>

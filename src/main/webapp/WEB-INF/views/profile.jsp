@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 
@@ -18,14 +19,7 @@
         <div class="user-info">
             <div class="avatar">
                 <c:set var="avatarPath" value="${empty user.avatarUrl ? 'img/avt.jpg' : user.avatarUrl}" />
-                <c:choose>
-                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
-                        <img src="${avatarPath}" alt="Avatar">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
-                    </c:otherwise>
-                </c:choose>
+                <img src="${aura:resolve(pageContext.request.contextPath, '', avatarPath, 'img/avt.jpg')}" alt="Avatar">
 
                 <form id="avatar-form" class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="updateAvatar">

@@ -2,6 +2,7 @@
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 <%
     request.setAttribute("pageCss", "views/address.css");
@@ -16,14 +17,7 @@
         <div class="user-info">
             <div class="avatar">
                 <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
-                <c:choose>
-                    <c:when test="${fn:startsWith(avatarPath, 'http://') or fn:startsWith(avatarPath, 'https://')}">
-                        <img src="${avatarPath}" alt="Avatar">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/${avatarPath}" alt="Avatar">
-                    </c:otherwise>
-                </c:choose>
+                <img src="${aura:resolve(pageContext.request.contextPath, '', avatarPath, 'img/avt.jpg')}" alt="Avatar">
                 <form class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="updateAvatar">
                     <input type="hidden" name="redirectTo" value="address">
