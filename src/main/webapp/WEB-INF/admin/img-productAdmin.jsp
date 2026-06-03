@@ -24,7 +24,7 @@
     <section class="content">
         <div class="page-header">
             <div style="display: flex; align-items: center; gap: 15px;">
-                <a href="productAdmin" class="back-to-product-btn" title="Quay về quản lý sản phẩm">
+                <a href="${pageContext.request.contextPath}/productAdmin" class="back-to-product-btn" title="Quay về quản lý sản phẩm">
                     <i class="fa fa-arrow-left"></i>
                 </a>
                 <h1>Quản Lý Ảnh Sản Phẩm</h1>
@@ -43,7 +43,7 @@
 
 
             <div class="user-toolbar" style="justify-content: flex-end; margin-bottom: 20px;">
-                <a href="productImgAdmin?productId=${productId}&mode=add" class="btn-add">
+                <a href="${pageContext.request.contextPath}/productImgAdmin?productId=${productId}&mode=add" class="btn-add">
                     <i class="fa fa-plus"></i> Thêm Ảnh
                 </a>
             </div>
@@ -93,12 +93,12 @@
                                     </td>
                                     <td>
                                         <div class="actions">
-                                            <a href="productImgAdmin?productId=${productId}&mode=view&id=${img.id}"
+                                            <a href="${pageContext.request.contextPath}/productImgAdmin?productId=${productId}&mode=view&id=${img.id}"
                                                class="icon-btn view"
                                                title="Xem">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                            <a href="productImgAdmin?productId=${productId}&mode=edit&id=${img.id}"
+                                            <a href="${pageContext.request.contextPath}/productImgAdmin?productId=${productId}&mode=edit&id=${img.id}"
                                                class="icon-btn edit"
                                                title="Sửa">
                                                 <i class="fa fa-pen"></i>

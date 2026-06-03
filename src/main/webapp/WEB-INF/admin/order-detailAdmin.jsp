@@ -22,7 +22,7 @@
                         value="${order.paymentMethods == 'VNPAY' && order.paymentStatuses != 'PAID' && order.paymentStatuses != 'REFUND_PENDING' && order.paymentStatuses != 'REFUNDED'}" />
 
                     <div class="form-header">
-                        <a href="orderAdmin" class="btn-back">← Quay lại danh sách</a>
+                        <a href="${pageContext.request.contextPath}/orderAdmin" class="btn-back">← Quay lại danh sách</a>
                         <h2>Chi tiết đơn hàng #${order.id}</h2>
                     </div>
 
@@ -150,7 +150,7 @@
                                 <c:if test="${demoTracking && order.orderStatus != 'COMPLETED' && order.orderStatus != 'CANCELLED'}">
                                     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
                                     <h3>Cập nhật chặng mô phỏng</h3>
-                                    <form method="post" action="orderAdmin" class="status-form">
+                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="updateDemoTracking">
                                         <input type="hidden" name="id" value="${order.id}">
 
@@ -176,7 +176,7 @@
                                 <p>Chế độ mô phỏng phục vụ kiểm thử, không gửi yêu cầu tạo vận đơn đến GHN.</p>
                                 <c:choose>
                                     <c:when test="${order.orderStatus == 'PROCESSING'}">
-                                        <form method="post" action="orderAdmin" class="status-form">
+                                        <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                             <input type="hidden" name="action" value="createDemoTracking">
                                             <input type="hidden" name="id" value="${order.id}">
                                             <button class="btn-primary">Tạo hành trình mô phỏng</button>
@@ -230,14 +230,14 @@
                             <c:choose>
                                 <c:when test="${order.orderStatus == 'PENDING'}">
                                     <c:if test="${!unpaidOnlineOrder}">
-                                        <form method="post" action="orderAdmin" class="status-form">
+                                        <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                             <input type="hidden" name="action" value="update">
                                             <input type="hidden" name="orderAction" value="confirm">
                                             <input type="hidden" name="id" value="${order.id}">
                                             <button class="btn-primary">Xác nhận đơn</button>
                                         </form>
                                     </c:if>
-                                    <form method="post" action="orderAdmin" class="status-form">
+                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderAction" value="cancel">
                                         <input type="hidden" name="id" value="${order.id}">
@@ -249,7 +249,7 @@
                                     <p class="order-action-note">
                                         Đơn đang chờ thanh toán. Admin chỉ nên hủy đơn hoặc chờ khách thanh toán thành công.
                                     </p>
-                                    <form method="post" action="orderAdmin" class="status-form">
+                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderAction" value="cancel">
                                         <input type="hidden" name="id" value="${order.id}">
@@ -261,13 +261,13 @@
                                     <p class="order-action-note">
                                         Đơn đã được xác nhận. Tạo hành trình vận chuyển ở khối theo dõi phía trên hoặc chuyển trực tiếp sang đang giao khi cần kiểm thử nhanh.
                                     </p>
-                                    <form method="post" action="orderAdmin" class="status-form">
+                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderAction" value="markShipping">
                                         <input type="hidden" name="id" value="${order.id}">
                                         <button class="btn-primary">Chuyển sang đang giao</button>
                                     </form>
-                                    <form method="post" action="orderAdmin" class="status-form">
+                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderAction" value="cancel">
                                         <input type="hidden" name="id" value="${order.id}">
@@ -276,13 +276,13 @@
                                 </c:when>
 
                                 <c:when test="${order.orderStatus == 'SHIPPING'}">
-                                    <form method="post" action="orderAdmin" class="status-form">
+                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderAction" value="markCompleted">
                                         <input type="hidden" name="id" value="${order.id}">
                                         <button class="btn-primary">Giao thành công</button>
                                     </form>
-                                    <form method="post" action="orderAdmin" class="status-form">
+                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderAction" value="cancel">
                                         <input type="hidden" name="id" value="${order.id}">
@@ -294,7 +294,7 @@
                                     <p class="order-action-note">
                                         Đơn VNPay đã hủy và đang chờ shop xác nhận hoàn tiền cho khách.
                                     </p>
-                                    <form method="post" action="orderAdmin" class="status-form">
+                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderAction" value="confirmRefund">
                                         <input type="hidden" name="id" value="${order.id}">

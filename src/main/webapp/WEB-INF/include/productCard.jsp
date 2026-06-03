@@ -4,7 +4,7 @@
 <%@ taglib prefix="aura" uri="/WEB-INF/tlds/aura.tld" %>
 
 
-<link rel="stylesheet" href="css/views/productCard.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/productCard.css">
 <c:set var="p" value="${requestScope.product_item}" />
 
 

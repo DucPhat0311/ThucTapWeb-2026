@@ -98,10 +98,10 @@
         <div class="main-products">
             <div class="category-navigation-wrapper">
                 <nav class="routine-breadcrumb">
-                    <a href="product">Trang chủ</a>
+                    <a href="${pageContext.request.contextPath}/product">Trang chủ</a>
                     <c:forEach var="bc" items="${breadcrumbList}">
                         <span class="arrow">/</span>
-                        <a href="product?categoryId=${bc.id}"
+                        <a href="${pageContext.request.contextPath}/product?categoryId=${bc.id}"
                            class="${bc.id == currentCategory.id ? 'active-link' : ''}">
                                 ${bc.name}
                         </a>
@@ -109,7 +109,7 @@
                 </nav>
                 <div class="routine-tag-list">
                     <c:forEach var="tag" items="${displayTags}">
-                        <a href="product?categoryId=${tag.id}"
+                        <a href="${pageContext.request.contextPath}/product?categoryId=${tag.id}"
                            class="tag-node ${param.categoryId == tag.id.toString() ? 'node-selected' : ''}">
                                 ${tag.name}
                         </a>
@@ -136,11 +136,11 @@
 
             <div class="pagination">
                 <c:if test="${currentPage > 1}">
-                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage - 1}">&laquo;</a>
+                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage - 1}">&laquo;</a>
                 </c:if>
 
                 <c:if test="${currentPage > 3}">
-                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=1">1</a>
+                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=1">1</a>
                     <c:if test="${currentPage > 4}">
                         <span class="paging-sep">...</span>
                     </c:if>
@@ -150,7 +150,7 @@
                 <c:set var="end" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}" />
 
                 <c:forEach var="i" begin="${begin}" end="${end}">
-                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${i}"
+                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${i}"
                        class="${currentPage == i ? 'active' : ''}">${i}</a>
                 </c:forEach>
 
@@ -158,10 +158,10 @@
                     <c:if test="${currentPage < totalPages - 3}">
                         <span class="paging-sep">...</span>
                     </c:if>
-                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${totalPages}">${totalPages}</a>
+                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${totalPages}">${totalPages}</a>
                 </c:if>
                 <c:if test="${currentPage < totalPages}">
-                    <a href="product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage + 1}">&raquo;</a>
+                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage + 1}">&raquo;</a>
                 </c:if>
             </div>
         </div>

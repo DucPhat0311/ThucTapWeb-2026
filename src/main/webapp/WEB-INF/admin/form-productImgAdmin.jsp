@@ -24,7 +24,7 @@
 <body>
 <div class="container">
     <div class="form-header">
-        <a href="productImgAdmin?productId=${productId}" class="btn-back">
+        <a href="${pageContext.request.contextPath}/productImgAdmin?productId=${productId}" class="btn-back">
             <i class="fa fa-arrow-left"></i> Quay lại
         </a>
 
@@ -39,7 +39,7 @@
 
 
     <div class="card">
-        <form action="productImgAdmin" method="post" enctype="multipart/form-data">
+        <form action="${pageContext.request.contextPath}/productImgAdmin" method="post" enctype="multipart/form-data">
             <input type="hidden" name="productId" value="${productId}">
             <c:if test="${mode == 'edit'}">
                 <input type="hidden" name="id" value="${image.id}">
@@ -101,7 +101,7 @@
 
             <c:if test="${mode != 'view'}">
                 <div class="form-footer" style="margin-top: 25px;">
-                    <a href="productImgAdmin?productId=${productId}" class="btn-secondary">
+                    <a href="${pageContext.request.contextPath}/productImgAdmin?productId=${productId}" class="btn-secondary">
                         <i class="fa fa-times"></i> Hủy
                     </a>
                     <button type="submit" class="btn-primary">

@@ -18,7 +18,7 @@
 
 
     <div class="form-header">
-        <a href="bannerAdmin" class="btn-back">← Quay lại</a>
+        <a href="${pageContext.request.contextPath}/bannerAdmin" class="btn-back">← Quay lại</a>
         <h2>
             <c:choose>
                 <c:when test="${mode == 'add'}">Thêm banner</c:when>
@@ -29,7 +29,7 @@
     </div>
 
 
-    <form method="post" action="bannerAdmin" enctype="multipart/form-data">
+    <form method="post" action="${pageContext.request.contextPath}/bannerAdmin" enctype="multipart/form-data">
 
         <div class="card">
             <h3>Thông tin banner</h3>
@@ -97,7 +97,7 @@
                     Lưu
                 </button>
             </c:if>
-            <a href="bannerAdmin" class="btn-secondary">Hủy</a>
+            <a href="${pageContext.request.contextPath}/bannerAdmin" class="btn-secondary">Hủy</a>
         </div>
 
 

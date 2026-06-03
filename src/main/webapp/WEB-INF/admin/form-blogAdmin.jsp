@@ -16,7 +16,7 @@
 <div class="container">
 
     <div class="form-header">
-        <a href="blogAdmin" class="btn-back">← Quay lại</a>
+        <a href="${pageContext.request.contextPath}/blogAdmin" class="btn-back">← Quay lại</a>
         <h2>
             <c:if test="${mode == 'add'}">Thêm tin tức</c:if>
             <c:if test="${mode == 'edit'}">Chỉnh sửa tin tức</c:if>
@@ -24,7 +24,7 @@
         </h2>
     </div>
 
-    <form action="blogAdmin" method="post" enctype="multipart/form-data">
+    <form action="${pageContext.request.contextPath}/blogAdmin" method="post" enctype="multipart/form-data">
 
         <div class="card">
             <h3>Thông tin bài viết </h3>
@@ -84,7 +84,7 @@
             <c:if test="${mode != 'view'}">
                 <button type="submit" class="btn-primary">Lưu</button>
             </c:if>
-            <a href="blogAdmin" class="btn-secondary">Hủy</a>
+            <a href="${pageContext.request.contextPath}/blogAdmin" class="btn-secondary">Hủy</a>
         </div>
 
         <input type="hidden" name="id" value="${blog.id}">

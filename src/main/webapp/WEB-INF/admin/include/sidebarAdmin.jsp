@@ -4,29 +4,29 @@
     <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo">
     <p>ADMIN</p>
     <div class="nav" id="menu">
-        <a href="dashboardAdmin" class="nav-item ${page == 'dashboard' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/dashboardAdmin" class="nav-item ${page == 'dashboard' ? 'active' : ''}">
             <i class="fas fa-chart-line"></i> Thống Kê</a>
-        <a href="userAdmin" class="nav-item ${page == 'user' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/userAdmin" class="nav-item ${page == 'user' ? 'active' : ''}">
             <i class="fas fa-users"></i> Người Dùng</a>
-        <a href="categoryAdmin" class="nav-item ${page == 'category' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/categoryAdmin" class="nav-item ${page == 'category' ? 'active' : ''}">
             <i class="fas fa-tags"></i> Danh Mục</a>
-        <a href="productAdmin" class="nav-item ${page == 'product' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/productAdmin" class="nav-item ${page == 'product' ? 'active' : ''}">
             <i class="fas fa-box"></i> Sản Phẩm</a>
-        <a href="orderAdmin" class="nav-item ${page == 'order' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/orderAdmin" class="nav-item ${page == 'order' ? 'active' : ''}">
             <i class="fas fa-shopping-cart"></i> Đơn Hàng</a>
-        <a href="returnAdmin" class="nav-item ${page == 'return' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/returnAdmin" class="nav-item ${page == 'return' ? 'active' : ''}">
             <i class="fas fa-rotate-left"></i> Trả Hàng</a>
-        <a href="bannerAdmin" class="nav-item ${page == 'banner' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/bannerAdmin" class="nav-item ${page == 'banner' ? 'active' : ''}">
             <i class="fas fa-image"></i> Banner</a>
-        <a href="blogAdmin" class="nav-item ${page == 'blog' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/blogAdmin" class="nav-item ${page == 'blog' ? 'active' : ''}">
             <i class="fas fa-newspaper"></i> Bài Viết</a>
-        <a href="contactAdmin" class="nav-item ${page == 'contact' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/contactAdmin" class="nav-item ${page == 'contact' ? 'active' : ''}">
             <i class="fas fa-envelope"></i> Liên hệ</a>
-        <a href="warehouseAdmin" class="nav-item ${page == 'warehouse' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/warehouseAdmin" class="nav-item ${page == 'warehouse' ? 'active' : ''}">
             <i class="fas fa-warehouse"></i> Quản Lý Kho</a>
-        <a href="roleAdmin" class="nav-item ${page == 'role' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/roleAdmin" class="nav-item ${page == 'role' ? 'active' : ''}">
             <i class="fas fa-user-shield"></i> Phân Quyền</a>
-        <a href="profileAdmin" class="nav-item ${page == 'profile' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/profileAdmin" class="nav-item ${page == 'profile' ? 'active' : ''}">
             <i class="fas fa-user-circle"></i> Hồ Sơ Admin</a>
     </div>
 </aside>

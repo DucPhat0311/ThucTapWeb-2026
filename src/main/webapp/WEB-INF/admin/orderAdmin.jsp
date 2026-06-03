@@ -28,13 +28,13 @@
         <main id="page">
             <section id="dashboard" class="page active">
                 <div class="cards order-cards">
-                    <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin'">Tổng đơn<br><span>${total}</span></div>
-                    <div class="card ${currentStatus == 'PENDING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PENDING'">Cần xác nhận<br><span>${countPending}</span></div>
-                    <div class="card ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PENDING_PAYMENT'">Chờ thanh toán<br><span>${countPendingPayment}</span></div>
-                    <div class="card ${currentStatus == 'PROCESSING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=PROCESSING'">Đang chuẩn bị hàng<br><span>${countProcessing}</span></div>
-                    <div class="card ${currentStatus == 'SHIPPING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=SHIPPING'">Đang giao hàng<br><span>${countShipping}</span></div>
-                    <div class="card ${currentStatus == 'COMPLETED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=COMPLETED'">Đã hoàn thành<br><span>${countCompleted}</span></div>
-                    <div class="card ${currentStatus == 'CANCELLED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='orderAdmin?status=CANCELLED'">Đã hủy<br><span>${countCancelled}</span></div>
+                    <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/orderAdmin'">Tổng đơn<br><span>${total}</span></div>
+                    <div class="card ${currentStatus == 'PENDING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/orderAdmin?status=PENDING'">Cần xác nhận<br><span>${countPending}</span></div>
+                    <div class="card ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/orderAdmin?status=PENDING_PAYMENT'">Chờ thanh toán<br><span>${countPendingPayment}</span></div>
+                    <div class="card ${currentStatus == 'PROCESSING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/orderAdmin?status=PROCESSING'">Đang chuẩn bị hàng<br><span>${countProcessing}</span></div>
+                    <div class="card ${currentStatus == 'SHIPPING' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/orderAdmin?status=SHIPPING'">Đang giao hàng<br><span>${countShipping}</span></div>
+                    <div class="card ${currentStatus == 'COMPLETED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/orderAdmin?status=COMPLETED'">Đã hoàn thành<br><span>${countCompleted}</span></div>
+                    <div class="card ${currentStatus == 'CANCELLED' ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/orderAdmin?status=CANCELLED'">Đã hủy<br><span>${countCancelled}</span></div>
                 </div>
 
                 <div class="user-table-wrapper">
@@ -74,7 +74,7 @@
                                 </td>
                                 <td>${o.createdAtFormatted}</td>
                                 <td>
-                                    <a href="orderAdmin?mode=view&id=${o.id}" class="icon-btn view">
+                                    <a href="${pageContext.request.contextPath}/orderAdmin?mode=view&id=${o.id}" class="icon-btn view">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                 </td>
@@ -101,8 +101,8 @@
                         </div>
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
-                                <a href="orderAdmin?page=1${statusParam}" class="page-btn">« Đầu</a>
-                                <a href="orderAdmin?page=${currentPage - 1}${statusParam}" class="page-btn">‹ Trước</a>
+                                <a href="${pageContext.request.contextPath}/orderAdmin?page=1${statusParam}" class="page-btn">« Đầu</a>
+                                <a href="${pageContext.request.contextPath}/orderAdmin?page=${currentPage - 1}${statusParam}" class="page-btn">‹ Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -111,7 +111,7 @@
                                         <span class="page-btn active">${i}</span>
                                     </c:when>
                                     <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="orderAdmin?page=${i}${statusParam}" class="page-btn">${i}</a>
+                                        <a href="${pageContext.request.contextPath}/orderAdmin?page=${i}${statusParam}" class="page-btn">${i}</a>
                                     </c:when>
                                     <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
                                         <span class="page-btn dots">...</span>
@@ -120,8 +120,8 @@
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="orderAdmin?page=${currentPage + 1}${statusParam}" class="page-btn">Sau ›</a>
-                                <a href="orderAdmin?page=${totalPages}${statusParam}" class="page-btn">Cuối »</a>
+                                <a href="${pageContext.request.contextPath}/orderAdmin?page=${currentPage + 1}${statusParam}" class="page-btn">Sau ›</a>
+                                <a href="${pageContext.request.contextPath}/orderAdmin?page=${totalPages}${statusParam}" class="page-btn">Cuối »</a>
                             </c:if>
                         </div>
                     </div>

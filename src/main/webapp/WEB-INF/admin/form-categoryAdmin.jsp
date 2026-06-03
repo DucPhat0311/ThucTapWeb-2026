@@ -15,7 +15,7 @@
 <div class="container">
 
     <div class="form-header">
-        <a href="categoryAdmin" class="btn-back">← Quay lại</a>
+        <a href="${pageContext.request.contextPath}/categoryAdmin" class="btn-back">← Quay lại</a>
         <h2>
             <c:choose>
                 <c:when test="${mode == 'add'}">Thêm danh mục</c:when>
@@ -26,7 +26,7 @@
     </div>
 
 
-    <form method="post" action="categoryAdmin">
+    <form method="post" action="${pageContext.request.contextPath}/categoryAdmin">
 
 
         <div class="card">
@@ -83,7 +83,7 @@
                     Lưu
                 </button>
             </c:if>
-            <a href="categoryAdmin" class="btn-secondary">Hủy</a>
+            <a href="${pageContext.request.contextPath}/categoryAdmin" class="btn-secondary">Hủy</a>
         </div>
 
 

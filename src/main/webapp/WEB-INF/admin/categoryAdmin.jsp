@@ -33,15 +33,15 @@
             <section id="category" class="page active">
 
                 <div class="cards">
-                    <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='categoryAdmin'">
+                    <div class="card ${empty currentStatus ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/categoryAdmin'">
                         Tổng danh mục
                         <span>${totalCategories}</span>
                     </div>
-                    <div class="card ${currentStatus == 1 ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='categoryAdmin?status=1'">
+                    <div class="card ${currentStatus == 1 ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/categoryAdmin?status=1'">
                         Đang hoạt động
                         <span>${activeCategories}</span>
                     </div>
-                    <div class="card ${currentStatus == 0 ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='categoryAdmin?status=0'">
+                    <div class="card ${currentStatus == 0 ? 'active' : ''}" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/categoryAdmin?status=0'">
                         Đã khóa
                         <span>${lockedCategories}</span>
                     </div>

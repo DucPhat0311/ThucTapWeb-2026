@@ -18,7 +18,7 @@
 
 
     <div class="form-header">
-        <a href="productAdmin" class="btn-back">← Quay lại</a>
+        <a href="${pageContext.request.contextPath}/productAdmin" class="btn-back">← Quay lại</a>
         <h2>
             <c:choose>
                 <c:when test="${mode == 'add'}">Thêm sản phẩm</c:when>
@@ -29,7 +29,7 @@
     </div>
 
 
-    <form method="post" action="productAdmin" enctype="multipart/form-data">
+    <form method="post" action="${pageContext.request.contextPath}/productAdmin" enctype="multipart/form-data">
 
 
         <div class="card">
@@ -197,7 +197,7 @@
                     Lưu
                 </button>
             </c:if>
-            <a href="productAdmin" class="btn-secondary">Hủy</a>
+            <a href="${pageContext.request.contextPath}/productAdmin" class="btn-secondary">Hủy</a>
         </div>
 
 

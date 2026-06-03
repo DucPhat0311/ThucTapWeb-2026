@@ -18,7 +18,7 @@
             <% if(request.getAttribute("error") != null) { %>
                 <div class="error-message">${error}</div>
             <% } %>
-            <form id="forgetForm" action="forgetPass" method="post">
+            <form id="forgetForm" action="${pageContext.request.contextPath}/forgetPass" method="post">
                 <div class="input-group">
                     <label for="email">Email đã đăng ký</label>
                     <input type="email" id="email" name="email" placeholder="Nhập email" required>
@@ -27,7 +27,7 @@
                 <button type="submit" class="btn-primary">Tiếp theo</button>
             </form>
                 <div class="links">
-                    <a href="login">Quay lại đăng nhập</a>
+                    <a href="${pageContext.request.contextPath}/login">Quay lại đăng nhập</a>
                     </div>
         </div>
     </main>

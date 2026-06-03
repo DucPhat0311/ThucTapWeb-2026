@@ -18,7 +18,7 @@
                 <div class="container">
 
                     <div class="form-header">
-                        <a href="userAdmin" class="btn-back">← Quay lại</a>
+                        <a href="${pageContext.request.contextPath}/userAdmin" class="btn-back">← Quay lại</a>
                         <h2>
                             <c:choose>
                                 <c:when test="${mode == 'add'}">Thêm người dùng</c:when>
@@ -29,7 +29,7 @@
                     </div>
 
 
-                    <form method="post" action="userAdmin">
+                    <form method="post" action="${pageContext.request.contextPath}/userAdmin">
 
                         <c:if test="${not empty error}">
                             <div class="alert alert-danger">
@@ -174,7 +174,7 @@
                                     Lưu
                                 </button>
                             </c:if>
-                            <a href="userAdmin" class="btn-secondary">Hủy</a>
+                            <a href="${pageContext.request.contextPath}/userAdmin" class="btn-secondary">Hủy</a>
                         </div>
 
 

@@ -21,13 +21,13 @@
 
                                 <nav class="profile-menu">
                                     <ul>
-                                        <li><a href="profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                                        <li><a href="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a>
+                                        <li><a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a>
                                         </li>
-                                        <li class="active"><a href="order-user"><i class="fas fa-clipboard-list"></i>
+                                        <li class="active"><a href="${pageContext.request.contextPath}/order-user"><i class="fas fa-clipboard-list"></i>
                                                 Đơn hàng của tôi</a></li>
-                                        <li><a href="change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
-                                        <li><a href="logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -374,7 +374,7 @@
                                 </c:if>
 
                                 <div class="detail-actions">
-                                    <a href="order-user" class="btn-back">Quay lại đơn hàng</a>
+                                    <a href="${pageContext.request.contextPath}/order-user" class="btn-back">Quay lại đơn hàng</a>
                                 </div>
                             </div>
                         </section>

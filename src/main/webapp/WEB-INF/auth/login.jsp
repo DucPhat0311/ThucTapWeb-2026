@@ -40,7 +40,7 @@
 
             <h2 class="dangNhap">Đăng nhập</h2>
 
-            <form id="loginForm" action="login" method="post" novalidate>
+            <form id="loginForm" action="${pageContext.request.contextPath}/login" method="post" novalidate>
                 <% if (!error.isEmpty()) { %>
                     <div class="error-message"><%=error%></div>
                 <% } %>
@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="remember-forgot">
-                    <a href="forgetPass">Quên mật khẩu?</a>
+                    <a href="${pageContext.request.contextPath}/forgetPass">Quên mật khẩu?</a>
                 </div>
 
                 <button type="submit" class="btn-primary">Đăng nhập</button>
@@ -85,7 +85,7 @@
                 </a>
 
                 <div class="form-links">
-                    <p class="notAccount">Chưa có tài khoản? <a href="register">Đăng ký ngay</a></p>
+                    <p class="notAccount">Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký ngay</a></p>
                 </div>
             </form>
         </div>

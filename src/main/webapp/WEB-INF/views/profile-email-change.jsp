@@ -9,7 +9,7 @@
 
 <section class="profile-email-change-page">
     <div class="profile-email-change-box">
-        <a href="profile" class="profile-email-back">
+        <a href="${pageContext.request.contextPath}/profile" class="profile-email-back">
             <i class="fa-solid fa-arrow-left"></i>
             Quay lại hồ sơ
         </a>
@@ -35,14 +35,14 @@
                     <div class="profile-email-error">${error}</div>
                 </c:if>
 
-                <form method="post" action="profile-email-change" class="profile-email-form">
+                <form method="post" action="${pageContext.request.contextPath}/profile-email-change" class="profile-email-form">
                     <input type="hidden" name="step" value="new">
                     <label for="otp">Mã OTP email mới</label>
                     <input type="text" id="otp" name="otp" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required>
                     <button type="submit">Hoàn tất đổi email</button>
                 </form>
 
-                <form method="post" action="profile-email-change" class="profile-email-form">
+                <form method="post" action="${pageContext.request.contextPath}/profile-email-change" class="profile-email-form">
                     <input type="hidden" name="action" value="resendNewOtp">
                     <button type="submit" class="profile-email-secondary-btn">Gửi lại mã OTP email mới</button>
                 </form>
@@ -58,7 +58,7 @@
                     <div class="profile-email-error">${error}</div>
                 </c:if>
 
-                <form method="post" action="profile-email-change" class="profile-email-form">
+                <form method="post" action="${pageContext.request.contextPath}/profile-email-change" class="profile-email-form">
                     <input type="hidden" name="step" value="old">
                     <label for="otp">Mã OTP email hiện tại</label>
                     <input type="text" id="otp" name="otp" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required>

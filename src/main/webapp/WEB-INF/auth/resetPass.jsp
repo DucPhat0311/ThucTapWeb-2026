@@ -14,7 +14,7 @@
 <main class="forget-container">
     <div class="forget-box">
 
-        <a href="sendOTP">
+        <a href="${pageContext.request.contextPath}/sendOTP">
             <button class="close-btn"><i class="fa-solid fa-arrow-left"></i></button>
         </a>
 
@@ -22,7 +22,7 @@
         <h2 class="quenMatKhau">Thiết Lập Mật Khẩu</h2>
         <div class="reset-email">Tạo mật khẩu mới cho <span style="color:#4a332a; font-size:1.15rem; font-weight:700;">${param.email}</span></div>
 
-        <form action="resetPass" method="post">
+        <form action="${pageContext.request.contextPath}/resetPass" method="post">
             <input type="hidden" name="email" value="${param.email}">
             <input type="hidden" name="otp" value="${param.otp}">
 

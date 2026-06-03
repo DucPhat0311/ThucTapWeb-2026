@@ -19,7 +19,7 @@
             <div class="avatar">
                 <c:set var="avatarPath" value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
                 <img src="${aura:resolve(pageContext.request.contextPath, '', avatarPath, 'img/avt.jpg')}" alt="Avatar">
-                <form class="avatar-upload-form" method="post" action="profile" enctype="multipart/form-data">
+                <form class="avatar-upload-form" method="post" action="${pageContext.request.contextPath}/profile" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="updateAvatar">
                     <input type="hidden" name="redirectTo" value="change-password">
                     <input type="file"
@@ -36,11 +36,11 @@
 
         <nav class="profile-menu">
             <ul>
-                <li><a href="profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                <li><a href="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
-                <li><a href="order-user"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
-                <li class="active"><a href="change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
-                <li><a href="logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
+                <li><a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                <li><a href="${pageContext.request.contextPath}/address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của tôi</a></li>
+                <li><a href="${pageContext.request.contextPath}/order-user"><i class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
+                <li class="active"><a href="${pageContext.request.contextPath}/change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+                <li><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
             </ul>
         </nav>
     </div>
@@ -50,7 +50,7 @@
             <h2>Đổi mật khẩu</h2>
         </div>
 
-        <form class="profile-form change-password-form" method="post" action="change-password">
+        <form class="profile-form change-password-form" method="post" action="${pageContext.request.contextPath}/change-password">
             <div class="form-row">
                 <div class="form-group">
                     <label for="oldpass">Mật khẩu hiện tại</label>

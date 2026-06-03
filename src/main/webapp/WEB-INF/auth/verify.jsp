@@ -10,7 +10,7 @@
     <div class="forget-image"></div>
     <main class="forget-container">
         <div class="forget-box">
-            <a href="forgetPass">
+            <a href="${pageContext.request.contextPath}/forgetPass">
                 <button class="close-btn"><i class="fa-solid fa-arrow-left"></i></button>
             </a>
             <h2 class="quenMatKhau">Nhập mã xác nhận</h2>
@@ -21,7 +21,7 @@
                 Mã xác minh đã được gửi đến Email<br>
                 <strong>${param.email}</strong>
             </p>
-            <form action="sendOTP" method="post" onsubmit="return joinOtp()">
+            <form action="${pageContext.request.contextPath}/sendOTP" method="post" onsubmit="return joinOtp()">
                 <input type="hidden" name="email" value="${param.email}">
                 <input type="hidden" name="otp" id="otp">
                 <input type="hidden" name="type" value="${type}">

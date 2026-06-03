@@ -20,7 +20,7 @@
         %>
         <div class="register-box wide-box">
             <h2 class="dangKy">Đăng ký tài khoản</h2>
-            <form class="registerForm" action="register" method="post">
+            <form class="registerForm" action="${pageContext.request.contextPath}/register" method="post">
                 <% if(error != null && !error.isEmpty()){ %>
                   <div class="error-message"><%=error%></div>
                 <% } %>
@@ -84,7 +84,7 @@
                 <button type="submit" class="btn-primary">Đăng Ký</button>
 
                 <div class="notAccount">
-                    <p>Đã có tài khoản? <a href="login">Đăng nhập</a></p>
+                    <p>Đã có tài khoản? <a href="${pageContext.request.contextPath}/login">Đăng nhập</a></p>
                 </div>
             </form>
         </div>

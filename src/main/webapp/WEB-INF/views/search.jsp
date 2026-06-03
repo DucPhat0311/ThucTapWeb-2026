@@ -9,10 +9,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Tìm kiếm - AURA Studio</title>
-  <link rel="stylesheet" href="css/include/header.css">
-  <link rel="stylesheet" href="css/include/footer.css">
-  <link rel="stylesheet" href="css/views/search.css">
-  <link rel="stylesheet" href="css/views/productCard.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/header.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/include/footer.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/search.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/productCard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -59,11 +59,11 @@
   <div class="pagination">
 
     <c:if test="${currentPage > 1}">
-      <a href="search?keyword=${param.keyword}&page=${currentPage - 1}">&laquo;</a>
+      <a href="${pageContext.request.contextPath}/search?keyword=${param.keyword}&page=${currentPage - 1}">&laquo;</a>
     </c:if>
 
         <c:if test="${currentPage > 3}">
-      <a href="search?keyword=${param.keyword}&page=1">1</a>
+      <a href="${pageContext.request.contextPath}/search?keyword=${param.keyword}&page=1">1</a>
       <c:if test="${currentPage > 4}">
         <span class="paging-sep">...</span>
       </c:if>
@@ -73,7 +73,7 @@
     <c:set var="end" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}" />
 
         <c:forEach var="i" begin="${begin}" end="${end}">
-      <a href="search?keyword=${param.keyword}&page=${i}"
+      <a href="${pageContext.request.contextPath}/search?keyword=${param.keyword}&page=${i}"
          class="${currentPage == i ? 'active' : ''}">${i}</a>
     </c:forEach>
 
@@ -81,12 +81,12 @@
       <c:if test="${currentPage < totalPages - 3}">
         <span class="paging-sep">...</span>
       </c:if>
-      <a href="search?keyword=${param.keyword}&page=${totalPages}">${totalPages}</a>
+      <a href="${pageContext.request.contextPath}/search?keyword=${param.keyword}&page=${totalPages}">${totalPages}</a>
     </c:if>
 
 
     <c:if test="${currentPage < totalPages}">
-      <a href="search?keyword=${param.keyword}&page=${currentPage + 1}">&raquo;</a>
+      <a href="${pageContext.request.contextPath}/search?keyword=${param.keyword}&page=${currentPage + 1}">&raquo;</a>
     </c:if>
 
 

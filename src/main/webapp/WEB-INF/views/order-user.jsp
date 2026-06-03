@@ -18,7 +18,7 @@
                                             <c:set var="avatarPath"
                                                 value="${empty sessionScope.userlogin.avatarUrl ? 'img/avt.jpg' : sessionScope.userlogin.avatarUrl}" />
                                             <img src="${aura:resolve(pageContext.request.contextPath, '', avatarPath, 'img/avt.jpg')}" alt="Avatar">
-                                            <form class="avatar-upload-form" method="post" action="profile"
+                                            <form class="avatar-upload-form" method="post" action="${pageContext.request.contextPath}/profile"
                                                 enctype="multipart/form-data">
                                                 <input type="hidden" name="action" value="updateAvatar">
                                                 <input type="hidden" name="redirectTo" value="order-user">
@@ -35,14 +35,14 @@
 
                                     <nav class="profile-menu">
                                         <ul>
-                                            <li><a href="profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                                            <li><a href="address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của
+                                            <li><a href="${pageContext.request.contextPath}/profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                                            <li><a href="${pageContext.request.contextPath}/address"><i class="fas fa-map-marker-alt"></i> Địa chỉ của
                                                     tôi</a></li>
-                                            <li class="active"><a href="order-user"><i
+                                            <li class="active"><a href="${pageContext.request.contextPath}/order-user"><i
                                                         class="fas fa-clipboard-list"></i> Đơn hàng của tôi</a></li>
-                                            <li><a href="change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a>
+                                            <li><a href="${pageContext.request.contextPath}/change-password"><i class="fas fa-lock"></i> Đổi mật khẩu</a>
                                             </li>
-                                            <li><a href="logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
+                                            <li><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"></i> Đăng xuất</a></li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -78,31 +78,31 @@
                                     </c:if>
 
                                     <div class="order-tabs">
-                                        <a href="order-user?status=all"
+                                        <a href="${pageContext.request.contextPath}/order-user?status=all"
                                             class="tab-item tab-all ${currentStatus == 'all' || empty currentStatus ? 'active' : ''}">
                                             Tất cả
                                         </a>
-                                        <a href="order-user?status=PENDING"
+                                        <a href="${pageContext.request.contextPath}/order-user?status=PENDING"
                                             class="tab-item tab-pending ${currentStatus == 'PENDING' ? 'active' : ''}">
                                             Chờ xác nhận
                                         </a>
-                                        <a href="order-user?status=PENDING_PAYMENT"
+                                        <a href="${pageContext.request.contextPath}/order-user?status=PENDING_PAYMENT"
                                             class="tab-item tab-pending_payment ${currentStatus == 'PENDING_PAYMENT' ? 'active' : ''}">
                                             Chờ thanh toán
                                         </a>
-                                        <a href="order-user?status=PROCESSING"
+                                        <a href="${pageContext.request.contextPath}/order-user?status=PROCESSING"
                                             class="tab-item tab-processing ${currentStatus == 'PROCESSING' ? 'active' : ''}">
                                             Đang chuẩn bị hàng
                                         </a>
-                                        <a href="order-user?status=SHIPPING"
+                                        <a href="${pageContext.request.contextPath}/order-user?status=SHIPPING"
                                             class="tab-item tab-shipping ${currentStatus == 'SHIPPING' ? 'active' : ''}">
                                             Đang giao hàng
                                         </a>
-                                        <a href="order-user?status=COMPLETED"
+                                        <a href="${pageContext.request.contextPath}/order-user?status=COMPLETED"
                                             class="tab-item tab-completed ${currentStatus == 'COMPLETED' ? 'active' : ''}">
                                             Đã hoàn thành
                                         </a>
-                                        <a href="order-user?status=CANCELLED"
+                                        <a href="${pageContext.request.contextPath}/order-user?status=CANCELLED"
                                             class="tab-item tab-cancelled ${currentStatus == 'CANCELLED' ? 'active' : ''}">
                                             Đã hủy
                                         </a>
@@ -131,7 +131,7 @@
                                                                     <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', itemThumb, 'img/aox.webp')}"
                                                                         alt="${i.productName}">
                                                                     <div class="order-info">
-                                                                        <a href="detail-product?id=${i.productId}">
+                                                                        <a href="${pageContext.request.contextPath}/detail-product?id=${i.productId}">
                                                                             <h3>${i.productName}</h3>
                                                                         </a>
                                                                         <p>Phân loại: ${i.color}, ${i.size}</p>
@@ -188,7 +188,7 @@
                                             <div class="order-actions">
                                                 <c:if
                                                     test="${o.orderStatus == 'PENDING_PAYMENT' && o.paymentMethods == 'VNPAY' && o.paymentStatuses != 'PAID'}">
-                                                    <form method="post" action="payment-failed" class="retry-payment-form">
+                                                    <form method="post" action="${pageContext.request.contextPath}/payment-failed" class="retry-payment-form">
                                                         <input type="hidden" name="orderId" value="${o.id}">
                                                         <button type="submit" class="btn-order-action btn-retry-payment">
                                                             Thanh toán lại
@@ -196,7 +196,7 @@
                                                     </form>
                                                 </c:if>
                                                 <c:if test="${o.orderStatus == 'CANCELLED' || o.orderStatus == 'COMPLETED'}">
-                                                    <form method="post" action="reorder" class="reorder-form">
+                                                    <form method="post" action="${pageContext.request.contextPath}/reorder" class="reorder-form">
                                                         <input type="hidden" name="orderId" value="${o.id}">
                                                         <button type="submit" class="btn-order-action btn-reorder">
                                                             Mua lại
@@ -205,7 +205,7 @@
                                                 </c:if>
                                                 <c:if
                                                     test="${(o.orderStatus == 'PENDING' || o.orderStatus == 'PENDING_PAYMENT') && empty o.ghnOrderCode}">
-                                                    <form method="post" action="cancel-order" class="cancel-order-form">
+                                                    <form method="post" action="${pageContext.request.contextPath}/cancel-order" class="cancel-order-form">
                                                         <input type="hidden" name="id" value="${o.id}">
                                                         <button type="submit" class="btn-order-action btn-cancel">Hủy
                                                             đơn</button>
@@ -225,7 +225,7 @@
                                                         </c:choose>
                                                     </span>
                                                 </c:if>
-                                                <a href="order-detail?id=${o.id}"
+                                                <a href="${pageContext.request.contextPath}/order-detail?id=${o.id}"
                                                     class="btn-order-action btn-detail">Xem chi tiết</a>
                                             </div>
                                         </div>
@@ -240,7 +240,7 @@
                                     <div class="cancel-order-actions">
                                         <button type="button" class="btn-cancel-back"
                                             onclick="closeCancelOrderModal()">Quay lại</button>
-                                        <form method="post" action="cancel-order" id="cancelConfirmForm">
+                                        <form method="post" action="${pageContext.request.contextPath}/cancel-order" id="cancelConfirmForm">
                                             <input type="hidden" name="id" id="cancelOrderId">
                                             <button type="submit" class="btn-cancel-confirm">Xác nhận hủy</button>
                                         </form>

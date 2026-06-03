@@ -23,7 +23,7 @@
             <section id="dashboard" class="page active">
                 <div class="page-header">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <a href="productAdmin" class="back-to-product-btn" title="Quay về quản lý sản phẩm">
+                        <a href="${pageContext.request.contextPath}/productAdmin" class="back-to-product-btn" title="Quay về quản lý sản phẩm">
                             <i class="fa fa-arrow-left"></i>
                         </a>
                         <h1 id="pageTitle">Quản Lý Biến Thể</h1>
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="user-toolbar" style="justify-content: flex-end; margin-bottom: 20px;">
-                    <a href="productVariantAdmin?mode=add&productId=${productId}" class="btn-add">
+                    <a href="${pageContext.request.contextPath}/productVariantAdmin?mode=add&productId=${productId}" class="btn-add">
                         <i class="fa fa-plus"></i> Thêm biến thể
                     </a>
                 </div>
@@ -81,7 +81,7 @@
                                 </td>
 
                                 <td class="actions">
-                                    <a href="productVariantAdmin?mode=edit&id=${v.id}&productId=${productId}"
+                                    <a href="${pageContext.request.contextPath}/productVariantAdmin?mode=edit&id=${v.id}&productId=${productId}"
                                        class="icon-btn edit" title="Chỉnh sửa">
                                         <i class="fa fa-pen"></i>
                                     </a>
@@ -109,7 +109,7 @@
                 <h3>Xác nhận xóa</h3>
             </div>
 
-            <form method="post" action="productVariantAdmin">
+            <form method="post" action="${pageContext.request.contextPath}/productVariantAdmin">
                 <div class="modal-body">
                     <p id="deleteMessage">Bạn có chắc muốn xóa biến thể này không?</p>
                     <input type="hidden" name="action" value="delete">

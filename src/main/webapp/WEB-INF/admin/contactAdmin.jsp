@@ -36,13 +36,13 @@
             <!-- DASHBROAD -->
             <section id="dashboard" class="page active">
                 <div class="cards">
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='contactAdmin'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/contactAdmin'">
                         Tổng liên hệ<br><span id="dashboard-total-contact">${total}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='contactAdmin?status=New'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/contactAdmin?status=New'">
                         Liên hệ mới<br><span id="dashboard-total-contact-new">${totalNew}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='contactAdmin?status=Processing'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/contactAdmin?status=Processing'">
                         Liên hệ đang xử lý<br><span id="dashboard-total-contact-processing">${totalProcessing}</span></div>
-                    <div class="card" style="cursor: pointer;" onclick="window.location.href='contactAdmin?status=Closed'">
+                    <div class="card" style="cursor: pointer;" onclick="window.location.href='${pageContext.request.contextPath}/contactAdmin?status=Closed'">
                         Liên hệ đã xử lý<br><span id="dashboard-total-contact-closed">${totalClosed}</span></div>
                 </div>
 
@@ -89,7 +89,7 @@
                                 </td>
                                 <td class="actions">
                                     <!-- XỬ LÝ (Thay cho Xem / Sửa) -->
-                                    <a href="contactAdmin?mode=edit&id=${c.id}"
+                                    <a href="${pageContext.request.contextPath}/contactAdmin?mode=edit&id=${c.id}"
                                        class="icon-btn view" style="color: green;" title="Xử lý liên hệ">
                                         <i class="fa-solid fa-envelope-open-text"></i>
                                     </a>
@@ -123,8 +123,8 @@
                         </div>
                         <div class="pagination-controls">
                             <c:if test="${currentPage > 1}">
-                                <a href="contactAdmin?page=1${qs}" class="page-btn">« Đầu</a>
-                                <a href="contactAdmin?page=${currentPage - 1}${qs}" class="page-btn">‹ Trước</a>
+                                <a href="${pageContext.request.contextPath}/contactAdmin?page=1${qs}" class="page-btn">« Đầu</a>
+                                <a href="${pageContext.request.contextPath}/contactAdmin?page=${currentPage - 1}${qs}" class="page-btn">‹ Trước</a>
                             </c:if>
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
@@ -133,7 +133,7 @@
                                         <span class="page-btn active">${i}</span>
                                     </c:when>
                                     <c:when test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
-                                        <a href="contactAdmin?page=${i}${qs}" class="page-btn">${i}</a>
+                                        <a href="${pageContext.request.contextPath}/contactAdmin?page=${i}${qs}" class="page-btn">${i}</a>
                                     </c:when>
                                     <c:when test="${i == currentPage - 3 || i == currentPage + 3}">
                                         <span class="page-btn dots">...</span>
@@ -142,8 +142,8 @@
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
-                                <a href="contactAdmin?page=${currentPage + 1}${qs}" class="page-btn">Sau ›</a>
-                                <a href="contactAdmin?page=${totalPages}${qs}" class="page-btn">Cuối »</a>
+                                <a href="${pageContext.request.contextPath}/contactAdmin?page=${currentPage + 1}${qs}" class="page-btn">Sau ›</a>
+                                <a href="${pageContext.request.contextPath}/contactAdmin?page=${totalPages}${qs}" class="page-btn">Cuối »</a>
                             </c:if>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
             <h3>Xác nhận xóa</h3>
             <p id="deleteMessage">Bạn có chắc muốn xóa liên hệ này không?</p>
 
-            <form id="deleteForm" method="post" action="contactAdmin">
+            <form id="deleteForm" method="post" action="${pageContext.request.contextPath}/contactAdmin">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" id="deleteContactId">
 
