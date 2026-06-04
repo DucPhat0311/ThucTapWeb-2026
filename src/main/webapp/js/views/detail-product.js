@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnAddCart) {
         btnAddCart.addEventListener("click", () => {
             if (!selectedColorId || !selectedSizeId) {
-                showToast("Vui lòng chọn màu và size!");
+                showToast("Vui lòng chọn màu và size");
                 return;
             }
 
@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
         buyNowBtn.addEventListener("click", function(e) {
             e.preventDefault();
             if (!selectedColorId || !selectedSizeId) {
-                showToast("Vui lòng chọn đầy đủ Màu sắc và Kích thước!");
+                showToast("Vui lòng chọn màu và size");
                 return;
             }
 
