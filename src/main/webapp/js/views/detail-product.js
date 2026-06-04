@@ -87,35 +87,48 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function updateSizeAvailability() {
-        sizeButtons.forEach(btn => {
-            const sizeId = Number(btn.dataset.sizeId);
-            const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === sizeId);
-
-            if (!variant || variant.stock <= 0) {
-                btn.disabled = true;
-                btn.classList.add("disabled");
-            } else {
-                btn.disabled = false;
-                btn.classList.remove("disabled");
-            }
-        });
-
-        selectedSizeId = null;
-        currentStock = 0;
-        if (quantityInput) quantityInput.value = 1;
-        sizeButtons.forEach(b => b.classList.remove("active"));
-
-    }
+    // function updateSizeAvailability() {
+    //     sizeButtons.forEach(btn => {
+    //         const sizeId = Number(btn.dataset.sizeId);
+    //         const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === sizeId);
+    //
+    //         if (!variant || variant.stock <= 0) {
+    //             btn.disabled = true;
+    //             btn.classList.add("disabled");
+    //         } else {
+    //             btn.disabled = false;
+    //             btn.classList.remove("disabled");
+    //         }
+    //     });
+    //
+    //     selectedSizeId = null;
+    //     currentStock = 0;
+    //     if (quantityInput) quantityInput.value = 1;
+    //     sizeButtons.forEach(b => b.classList.remove("active"));
+    //
+    // }
 
     // chọn Màu
     colorBtns.forEach(btn => {
         btn.addEventListener("click", () => {
-            colorBtns.forEach(t => t.classList.remove("active"));
-            btn.classList.add("active");
-            selectedColorId = Number(btn.dataset.colorId);
+            const colorId = Number(btn.dataset.colorId);
 
-            updateSizeAvailability();
+            if (selectedColorId === colorId) {
+                btn.classList.remove("active");
+                selectedColorId = null;
+            } else {
+                colorBtns.forEach(t => t.classList.remove("active"));
+                btn.classList.add("active");
+                selectedColorId = colorId;
+            }
+
+            if (selectedColorId && selectedSizeId) {
+                const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
+                currentStock = variant ? variant.stock : 0;
+            } else {
+                currentStock = 0;
+            }
+
             checkAndRenderVariant();
         });
     });
@@ -123,17 +136,26 @@ document.addEventListener("DOMContentLoaded", () => {
     // chọn Size
     sizeButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-            if (btn.disabled) return;
+            const sizeId = Number(btn.dataset.sizeId);
 
-            sizeButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
+            if (selectedSizeId === sizeId) {
+                btn.classList.remove("active");
+                selectedSizeId = null;
+                currentStock = 0;
+            } else {
+                sizeButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                selectedSizeId = sizeId;
+            }
 
-            selectedSizeId = Number(btn.dataset.sizeId);
+            if (selectedColorId && selectedSizeId) {
+                const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
+                currentStock = variant ? variant.stock : 0;
+            } else {
+                currentStock = 0;
+            }
 
-            const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
-            currentStock = variant ? variant.stock : 0;
             if (quantityInput) quantityInput.value = 1;
-
             checkAndRenderVariant();
         });
     });
@@ -243,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (foundVariant.stock <= 0) {
-                showToast("Sản phẩm này đã hết hàng!", true);
+                showToast("Sản phẩm đã hết hàng", true);
                 return;
             }
             if (quantity > foundVariant.stock) {
