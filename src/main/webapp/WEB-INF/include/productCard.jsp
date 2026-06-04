@@ -21,7 +21,7 @@
             </c:otherwise>
         </c:choose>
 
-        <img class="img-default" src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/aox.webp')}" alt="${p.name}">
+    <img class="img-default" src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/logo.png')}" alt="${p.name}">
 
         <c:if test="${not empty p.hoverImage}">
             <img class="img-hover" src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.hoverImage, '')}" alt="${p.name}">

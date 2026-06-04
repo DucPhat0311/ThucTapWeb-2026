@@ -1,0 +1,18 @@
+# Build outputs
+build/
+target/
+.gradle/
+
+# VCS + IDE
+.git/
+.idea/
+.vscode/
+*.iml
+
+# Local secrets / machine-specific
+.env
+src/main/resources/local.properties
+gradle.properties
+
+# Optional: DB scripts not needed for image build
+database/

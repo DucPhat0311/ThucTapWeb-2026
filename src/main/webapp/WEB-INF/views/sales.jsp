@@ -34,7 +34,7 @@
   <div class="product-grid discount-grid">
     <c:forEach items="${discountProducts}" var="p">
       <div class="product-card" data-product-id="${p.id}" data-sale-price="${p.sale_price}">
-        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a><span class="badge flash">SALE -${p.discountPercent}%</span><img src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/aox.webp')}" alt="${p.name}">
+        <a href="${pageContext.request.contextPath}/detail-product?id=${p.id}" class="link-cover"></a><span class="badge flash">SALE -${p.discountPercent}%</span><img src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/logo.png')}" alt="${p.name}">
         <div class="product-info-wrapper">
   <h3>${p.name}</h3>
                     <p class="price">

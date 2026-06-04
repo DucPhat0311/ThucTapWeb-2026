@@ -73,7 +73,7 @@
                                     <td>${status.index + 1}</td>
                                     <td>${img.id}</td>
                                     <td>
-                                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', img.imageUrl, 'img/aox.webp')}"
+                                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', img.imageUrl, 'img/logo.png')}"
                                             alt="Product Image"
                                             class="product-thumbnail">
                                     </td>
