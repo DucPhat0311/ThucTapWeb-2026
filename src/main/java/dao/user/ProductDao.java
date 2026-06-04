@@ -258,7 +258,7 @@ public class ProductDao extends BaseDao {
             if (!catIdList.isEmpty()) sql.append(" AND p.category_id IN (<catIds>) ");
         }
         if (colors != null && !colors.isEmpty()) {
-            sql.append(" AND c_v.name IN (<colorList>) ");
+            sql.append(" AND c_v.id IN (<colorList>) ");
         }
         if (sizes != null && !sizes.isEmpty()) {
             sql.append(" AND s_v.code IN (<sizeList>) ");
@@ -313,7 +313,7 @@ public class ProductDao extends BaseDao {
         boolean bindMax = (maxPrice != null && !maxPrice.isEmpty());
         if (bindMin) sql.append(" AND ").append(truePrice).append(" >= :minP ");
         if (bindMax) sql.append(" AND ").append(truePrice).append(" <= :maxP ");
-        if (hasColor) sql.append(" AND c_v.name IN (<colorList>) ");
+        if (hasColor) sql.append(" AND c_v.id IN (<colorList>) ");
         if (hasSize) sql.append(" AND s_v.code IN (<sizeList>) ");
 
         return getJdbi().withHandle(handle -> {
