@@ -83,8 +83,8 @@
                                                 <div class="product-item">
                                                     <div class="product-img">
                                                         <c:set var="itemThumb"
-                                                            value="${empty item.thumbnail ? 'img/aox.webp' : item.thumbnail}" />
-                                                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', itemThumb, 'img/aox.webp')}"
+                                                            value="${empty item.thumbnail ? 'img/logo.png' : item.thumbnail}" />
+                                                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', itemThumb, 'img/logo.png')}"
                                                             alt="${item.productName}">
                                                         <span class="qty-badge">${item.quantity}</span>
                                                     </div>

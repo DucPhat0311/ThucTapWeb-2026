@@ -93,7 +93,7 @@
                                                         <td>${p.id}</td>
 
                                                         <td>
-                                                            <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/aox.webp')}" alt="${p.name}"
+                                                            <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', p.thumbnail, 'img/logo.png')}" alt="${p.name}"
                                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                                         </td>
 

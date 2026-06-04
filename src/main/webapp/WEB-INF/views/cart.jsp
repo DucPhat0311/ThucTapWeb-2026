@@ -60,7 +60,7 @@
 
 
                                 <td>
-                                    <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', item.product.thumbnail, 'img/aox.webp')}" width="60">
+                                    <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', item.product.thumbnail, 'img/logo.png')}" width="60">
                                     <br>
                                         ${item.product.name}
                                 </td>

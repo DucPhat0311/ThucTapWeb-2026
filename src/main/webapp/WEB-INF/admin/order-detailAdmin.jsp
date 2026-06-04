@@ -335,7 +335,7 @@
                                 <c:forEach items="${items}" var="i">
                                     <tr>
                                         <td>
-                                            <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', i.thumbnail, 'img/aox.webp')}" class="product-thumb"
+                                            <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', i.thumbnail, 'img/logo.png')}" class="product-thumb"
                                                 onerror="this.onerror=null; this.style.display='none';">
                                         </td>
                                         <td>${i.productName}</td>

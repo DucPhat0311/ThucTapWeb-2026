@@ -182,7 +182,7 @@
             <c:forEach items="${items}" var="item">
                 <tr>
                     <td>
-                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', item.thumbnail, 'img/aox.webp')}"
+                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', item.thumbnail, 'img/logo.png')}"
                              class="product-thumb" alt="" onerror="this.style.display='none'">
                     </td>
                     <td><c:out value="${item.productName}"/></td>

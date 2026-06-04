@@ -127,8 +127,8 @@
                                                             <c:forEach var="i" items="${o.items}">
                                                                 <div class="single-product">
                                                                     <c:set var="itemThumb"
-                                                                        value="${empty i.thumbnail ? 'img/aox.webp' : i.thumbnail}" />
-                                                                    <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', itemThumb, 'img/aox.webp')}"
+                                                                        value="${empty i.thumbnail ? 'img/logo.png' : i.thumbnail}" />
+                                                                    <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', itemThumb, 'img/logo.png')}"
                                                                         alt="${i.productName}">
                                                                     <div class="order-info">
                                                                         <a href="${pageContext.request.contextPath}/detail-product?id=${i.productId}">

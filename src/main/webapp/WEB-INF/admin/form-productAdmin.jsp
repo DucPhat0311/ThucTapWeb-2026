@@ -115,7 +115,7 @@
                     <div id="product-image-preview-container" style="margin-top: 10px;">
                         <c:if test="${not empty product.thumbnail}">
                             <label>Xem trước ảnh</label>
-                            <img id="product-image-preview" src="${aura:resolve(pageContext.request.contextPath, '/img/products', product.thumbnail, 'img/aox.webp')}" 
+                            <img id="product-image-preview" src="${aura:resolve(pageContext.request.contextPath, '/img/products', product.thumbnail, 'img/logo.png')}" 
                                  alt="Product image"
                                  style="max-width: 300px; max-height: 300px; border-radius: 8px; border: 1px solid #ddd; display: block; margin-top: 10px;">
                         </c:if>

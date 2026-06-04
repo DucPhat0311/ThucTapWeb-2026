@@ -50,4 +50,5 @@ target/
 bin/
 
 # Local runtime secrets/config
+.env
 src/main/resources/local.properties

@@ -108,7 +108,7 @@
                     <c:set var="total" value="0"/>
                     <c:forEach var="item" items="${checkoutItems}">
                         <div class="order-item">
-                            <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', item.product.thumbnail, 'img/aox.webp')}" alt="${item.product.name}">
+                            <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', item.product.thumbnail, 'img/logo.png')}" alt="${item.product.name}">
                             <div class="info">
                                 <p class="name">${item.product.name}</p>
                                 <p class="variant">Size ${item.size} · ${item.color}</p>

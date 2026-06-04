@@ -46,7 +46,7 @@
                         <c:set var="hasMain" value="false" />
                         <c:forEach var="img" items="${images}">
                             <c:if test="${img.main && not hasMain}">
-                                <img id="main-image" src="${aura:resolve(pageContext.request.contextPath, '/img/products', img.imageUrl, 'img/aox.webp')}" alt="${product.name}">
+                                <img id="main-image" src="${aura:resolve(pageContext.request.contextPath, '/img/products', img.imageUrl, 'img/logo.png')}" alt="${product.name}">
                                 <c:set var="hasMain" value="true" />
                             </c:if>
                         </c:forEach>
@@ -58,7 +58,7 @@
                             <c:forEach var="img" items="${images}">
                                 <div class="swiper-slide">
                                     <img class="thumb-item ${img.main && not hasMain2 ? 'active' : ''}"
-                                         src="${aura:resolve(pageContext.request.contextPath, '/img/products', img.imageUrl, 'img/aox.webp')}"
+                                         src="${aura:resolve(pageContext.request.contextPath, '/img/products', img.imageUrl, 'img/logo.png')}"
                                          alt="${product.name}">
                                 </div>
                                 <c:set var="hasMain2" value="true" />

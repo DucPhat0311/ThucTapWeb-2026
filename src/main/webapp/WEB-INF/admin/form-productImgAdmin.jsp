@@ -56,7 +56,7 @@
 
                 <c:if test="${mode != 'add' && image.imageUrl != null}">
                     <div class="image-preview">
-                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', image.imageUrl, 'img/aox.webp')}" alt="Current Image" id="currentImage">
+                        <img src="${aura:resolve(pageContext.request.contextPath, '/img/products', image.imageUrl, 'img/logo.png')}" alt="Current Image" id="currentImage">
                     </div>
                 </c:if>
 
