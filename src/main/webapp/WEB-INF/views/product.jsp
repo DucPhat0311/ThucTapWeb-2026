@@ -79,14 +79,13 @@
                     <c:forEach var="colorItem" items="${colors}">
                         <c:set var="isColorChecked" value="false" />
                         <c:forEach var="selectedColor" items="${selectedColors}">
-                            <c:if test="${selectedColor eq colorItem.code}">
+                            <c:if test="${selectedColor eq colorItem.id.toString()}">
                                 <c:set var="isColorChecked" value="true" />
                             </c:if>
                         </c:forEach>
 
                         <label class="color-filter-item">
-                            <input type="checkbox" class="color-checkbox" value="${colorItem.name}" ${isColorChecked ? 'checked' : ''}>
-                            <span class="color-circle" style="background-color: ${colorItem.code};" title="${colorItem.name}"></span>
+                            <input type="checkbox" class="color-checkbox" value="${colorItem.id}" ${isColorChecked ? 'checked' : ''}>                            <span class="color-circle" style="background-color: ${colorItem.code};" title="${colorItem.name}"></span>
                         </label>
                     </c:forEach>
                 </div>
