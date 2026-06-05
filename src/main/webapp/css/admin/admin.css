@@ -96,24 +96,7 @@ body,
     margin-bottom: 35px;
 }
 
-.cards.order-cards {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-}
 
-.cards.order-cards .card {
-    padding: 16px 18px;
-}
-
-.cards.order-cards .card {
-    font-size: 14px;
-    letter-spacing: 0.2px;
-    white-space: nowrap;
-}
-
-.cards.order-cards .card span {
-    font-size: 24px;
-    margin-top: 4px;
-}
 
 .card {
     background: var(--card-bg);
@@ -156,7 +139,6 @@ body,
     letter-spacing: 0;
 }
 
-/* Card lợi nhuận - màu xanh lá nổi bật */
 .card.card--profit {
     border-color: rgba(34, 197, 94, 0.35);
     background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
@@ -529,6 +511,33 @@ body,
 .page.active {
     display: block;
     animation: fadeIn 0.3s;
+}
+
+.cards.order-cards {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.cards.order-cards .card {
+    padding: 12px 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 13px;
+    letter-spacing: 0;
+    word-break: break-word;
+}
+
+.cards.order-cards .card span {
+    font-size: 24px;
+    margin-top: 4px;
+    font-weight: 700;
+    color: var(--primary-color);
 }
 
 .page-title {
@@ -1593,6 +1602,7 @@ td.actions>*:last-child {
 .order-table td {
     padding: 14px 16px;
     text-align: left;
+    vertical-align: middle;
     border-bottom: 1px solid #eee;
     font-size: 14px;
 }
@@ -1611,42 +1621,86 @@ td.actions>*:last-child {
     background: #f9fbff;
 }
 
-.order-status {
-    padding: 5px 12px;
-    border-radius: 20px;
+.order-status,
+.pay-status {
+    padding: 4px 10px;
+    border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
     display: inline-block;
+    white-space: nowrap;
 }
 
 .order-status.PENDING {
     background: #fff3bf;
     color: #f08c00;
+    border: 1px solid #ffe066;
 }
 
 .order-status.PENDING_PAYMENT {
     background: #f3e8ff;
     color: #7b2cbf;
+    border: 1px solid #eebefa;
 }
 
 .order-status.PROCESSING {
     background: #fff4e6;
     color: #b76a1f;
+    border: 1px solid #ffd8a8;
 }
 
 .order-status.SHIPPING {
     background: #e7f5ff;
     color: #1c7ed6;
+    border: 1px solid #a5d8ff;
 }
 
 .order-status.COMPLETED {
     background: #ebfbee;
-    color: #2f9e44;
+    color: #2b8a3e;
+    border: 1px solid #b2f2bb;
 }
 
 .order-status.CANCELLED {
-    background: #fff0f0;
-    color: var(--danger-color);
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+.pay-status.UNPAID {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
+.pay-status.PENDING {
+    background: #fff3bf;
+    color: #f08c00;
+    border: 1px solid #ffe066;
+}
+
+.pay-status.PAID {
+    background: #ebfbee;
+    color: #2b8a3e;
+    border: 1px solid #b2f2bb;
+}
+
+.pay-status.FAILED {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+.pay-status.REFUND_PENDING {
+    background: #fff4e6;
+    color: #b76a1f;
+    border: 1px solid #ffd8a8;
+}
+
+.pay-status.REFUNDED {
+    background: #e7f5ff;
+    color: #1c7ed6;
+    border: 1px solid #a5d8ff;
 }
 
 .order-actions {
