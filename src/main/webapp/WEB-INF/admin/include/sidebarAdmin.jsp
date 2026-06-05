@@ -30,3 +30,23 @@
             <i class="fas fa-user-circle"></i> Hồ Sơ Admin</a>
     </div>
 </aside>
+
+<c:if test="${not empty sessionScope.access_denied}">
+    <c:remove var="access_denied" scope="session" />
+    <div id="accessDeniedToast" class="toast toast-error">
+        <i class="fa-solid fa-circle-exclamation"></i> Không có quyền truy cập tính năng này!
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toast = document.getElementById('accessDeniedToast');
+            if (toast) {
+                setTimeout(function() {
+                    toast.classList.add('show');
+                }, 100);
+                setTimeout(function() {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</c:if>

@@ -91,69 +91,77 @@
 
     <c:choose>
         <c:when test="${orderReturn.returnStatus == 'REQUESTED'}">
-            <section class="card action-card">
-                <h3>Xét duyệt yêu cầu</h3>
-                <div class="action-grid">
-                    <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="decision-form">
-                        <input type="hidden" name="id" value="${orderReturn.id}">
-                        <input type="hidden" name="action" value="approve">
-                        <label for="approveNote">Ghi chú khi chấp nhận (không bắt buộc)</label>
-                        <textarea id="approveNote" name="adminNote" maxlength="1000" placeholder="Ví dụ: Vui lòng đóng gói sản phẩm và gửi lại shop."></textarea>
-                        <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Chấp nhận</button>
-                    </form>
-                    <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="decision-form reject-form">
-                        <input type="hidden" name="id" value="${orderReturn.id}">
-                        <input type="hidden" name="action" value="reject">
-                        <label for="rejectNote">Lý do từ chối <span class="required">*</span></label>
-                        <textarea id="rejectNote" name="adminNote" maxlength="1000" required placeholder="Nêu rõ lý do yêu cầu không đủ điều kiện."></textarea>
-                        <button type="submit" class="btn-reject"><i class="fa-solid fa-xmark"></i> Từ chối</button>
-                    </form>
-                </div>
-            </section>
+            <c:if test="${perms['edit']}">
+                <section class="card action-card">
+                    <h3>Xét duyệt yêu cầu</h3>
+                    <div class="action-grid">
+                        <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="decision-form">
+                            <input type="hidden" name="id" value="${orderReturn.id}">
+                            <input type="hidden" name="action" value="approve">
+                            <label for="approveNote">Ghi chú khi chấp nhận (không bắt buộc)</label>
+                            <textarea id="approveNote" name="adminNote" maxlength="1000" placeholder="Ví dụ: Vui lòng đóng gói sản phẩm và gửi lại shop."></textarea>
+                            <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i> Chấp nhận</button>
+                        </form>
+                        <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="decision-form reject-form">
+                            <input type="hidden" name="id" value="${orderReturn.id}">
+                            <input type="hidden" name="action" value="reject">
+                            <label for="rejectNote">Lý do từ chối <span class="required">*</span></label>
+                            <textarea id="rejectNote" name="adminNote" maxlength="1000" required placeholder="Nêu rõ lý do yêu cầu không đủ điều kiện."></textarea>
+                            <button type="submit" class="btn-reject"><i class="fa-solid fa-xmark"></i> Từ chối</button>
+                        </form>
+                    </div>
+                </section>
+            </c:if>
         </c:when>
         <c:when test="${orderReturn.returnStatus == 'APPROVED'}">
-            <section class="card action-card">
-                <h3>Cập nhật tiến trình hoàn hàng</h3>
-                <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="returning-form">
-                    <input type="hidden" name="id" value="${orderReturn.id}">
-                    <input type="hidden" name="action" value="startReturning">
-                    <label for="returningNote">Ghi chú vận chuyển hoàn (không bắt buộc)</label>
-                    <textarea id="returningNote" name="adminNote" maxlength="1000" placeholder="Ví dụ: Khách hàng đã bàn giao gói hàng cho đơn vị vận chuyển."></textarea>
-                    <button type="submit" class="btn-primary"><i class="fa-solid fa-truck-arrow-right"></i> Xác nhận đang hoàn hàng</button>
-                </form>
-            </section>
+            <c:if test="${perms['edit']}">
+                <section class="card action-card">
+                    <h3>Cập nhật tiến trình hoàn hàng</h3>
+                    <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="returning-form">
+                        <input type="hidden" name="id" value="${orderReturn.id}">
+                        <input type="hidden" name="action" value="startReturning">
+                        <label for="returningNote">Ghi chú vận chuyển hoàn (không bắt buộc)</label>
+                        <textarea id="returningNote" name="adminNote" maxlength="1000" placeholder="Ví dụ: Khách hàng đã bàn giao gói hàng cho đơn vị vận chuyển."></textarea>
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-truck-arrow-right"></i> Xác nhận đang hoàn hàng</button>
+                    </form>
+                </section>
+            </c:if>
         </c:when>
         <c:when test="${orderReturn.returnStatus == 'RETURNING'}">
-            <section class="card action-card">
-                <h3>Xác nhận nhận lại sản phẩm</h3>
-                <p class="action-description">Chỉ xác nhận sau khi shop đã kiểm tra và nhận lại đầy đủ sản phẩm. Thao tác này sẽ cộng số lượng sản phẩm trở lại kho và không thể thực hiện lần hai.</p>
-                <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="returning-form">
-                    <input type="hidden" name="id" value="${orderReturn.id}">
-                    <input type="hidden" name="action" value="completeReturn">
-                    <label for="returnedNote">Ghi chú nhận hàng (không bắt buộc)</label>
-                    <textarea id="returnedNote" name="adminNote" maxlength="1000" placeholder="Ví dụ: Shop đã nhận đủ sản phẩm, tình trạng nguyên vẹn."></textarea>
-                    <button type="submit" class="btn-primary"><i class="fa-solid fa-box-open"></i> Xác nhận đã nhận và hoàn kho</button>
-                </form>
-            </section>
+            <c:if test="${perms['edit']}">
+                <section class="card action-card">
+                    <h3>Xác nhận nhận lại sản phẩm</h3>
+                    <p class="action-description">Chỉ xác nhận sau khi shop đã kiểm tra và nhận lại đầy đủ sản phẩm. Thao tác này sẽ cộng số lượng sản phẩm trở lại kho và không thể thực hiện lần hai.</p>
+                    <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="returning-form">
+                        <input type="hidden" name="id" value="${orderReturn.id}">
+                        <input type="hidden" name="action" value="completeReturn">
+                        <label for="returnedNote">Ghi chú nhận hàng (không bắt buộc)</label>
+                        <textarea id="returnedNote" name="adminNote" maxlength="1000" placeholder="Ví dụ: Shop đã nhận đủ sản phẩm, tình trạng nguyên vẹn."></textarea>
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-box-open"></i> Xác nhận đã nhận và hoàn kho</button>
+                    </form>
+                </section>
+            </c:if>
         </c:when>
         <c:when test="${orderReturn.returnStatus == 'RETURNED'}">
             <c:choose>
                 <c:when test="${orderReturn.refundStatus == 'PENDING'}">
-                    <section class="card action-card">
-                        <h3>Xử lý hoàn tiền</h3>
-                        <p class="action-description">
-                            Đơn hàng đã thanh toán và đã được nhận lại. Sau khi thực hiện hoàn tiền
-                            cho khách qua phương thức phù hợp, hãy xác nhận kết quả tại đây.
-                        </p>
-                        <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="returning-form">
-                            <input type="hidden" name="id" value="${orderReturn.id}">
-                            <input type="hidden" name="action" value="confirmRefund">
-                            <label for="refundNote">Ghi chú hoàn tiền (không bắt buộc)</label>
-                            <textarea id="refundNote" name="adminNote" maxlength="1000"
-                                      placeholder="Ví dụ: Đã hoàn tiền theo giao dịch VNPay hoặc chuyển khoản cho khách."></textarea>
-                            <button type="submit" class="btn-primary"><i class="fa-solid fa-money-check-dollar"></i> Xác nhận đã hoàn tiền</button>
-                        </form>
-                    </section>
+                    <c:if test="${perms['edit']}">
+                        <section class="card action-card">
+                            <h3>Xử lý hoàn tiền</h3>
+                            <p class="action-description">
+                                Đơn hàng đã thanh toán và đã được nhận lại. Sau khi thực hiện hoàn tiền
+                                cho khách qua phương thức phù hợp, hãy xác nhận kết quả tại đây.
+                            </p>
+                            <form method="post" action="${pageContext.request.contextPath}/returnAdmin" class="returning-form">
+                                <input type="hidden" name="id" value="${orderReturn.id}">
+                                <input type="hidden" name="action" value="confirmRefund">
+                                <label for="refundNote">Ghi chú hoàn tiền (không bắt buộc)</label>
+                                <textarea id="refundNote" name="adminNote" maxlength="1000"
+                                          placeholder="Ví dụ: Đã hoàn tiền theo giao dịch VNPay hoặc chuyển khoản cho khách."></textarea>
+                                <button type="submit" class="btn-primary"><i class="fa-solid fa-money-check-dollar"></i> Xác nhận đã hoàn tiền</button>
+                            </form>
+                        </section>
+                    </c:if>
                 </c:when>
                 <c:when test="${orderReturn.refundStatus == 'REFUNDED'}">
                     <div class="notice info">Shop đã nhận lại sản phẩm, cập nhật tồn kho và hoàn tiền cho khách hàng.</div>

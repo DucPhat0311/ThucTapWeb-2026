@@ -84,10 +84,12 @@
                             </td>
                             <td><c:out value="${returnRequest.refundStatusLabel}"/></td>
                             <td>
-                                <a href="${pageContext.request.contextPath}/returnAdmin?mode=view&amp;id=${returnRequest.id}"
-                                   class="icon-btn view" title="Xem và xử lý yêu cầu" aria-label="Xem và xử lý yêu cầu">
-                                    <i class="fa fa-eye"></i>
-                                </a>
+                                <c:if test="${perms['view_detail']}">
+                                    <a href="${pageContext.request.contextPath}/returnAdmin?mode=view&amp;id=${returnRequest.id}"
+                                       class="icon-btn view" title="Xem và xử lý yêu cầu" aria-label="Xem và xử lý yêu cầu">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
