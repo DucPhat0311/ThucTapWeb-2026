@@ -156,6 +156,21 @@ body,
     letter-spacing: 0;
 }
 
+/* Card lợi nhuận - màu xanh lá nổi bật */
+.card.card--profit {
+    border-color: rgba(34, 197, 94, 0.35);
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.card.card--profit:hover {
+    border-color: #22c55e;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.2);
+}
+
+.card.card--profit span {
+    color: #16a34a;
+}
+
 .cardHouse span {
     font-size: 15px;
     font-weight: 700;

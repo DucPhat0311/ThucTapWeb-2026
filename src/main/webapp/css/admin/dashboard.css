@@ -159,3 +159,42 @@
     border-color: #d1c5b8;
     transform: translateY(-1px);
 }
+
+.chart-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.chart-tab {
+    padding: 8px 22px;
+    border: 1.5px solid #EAE3DC;
+    border-radius: 8px;
+    background: #FFFDF9;
+    color: #9e8070;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    outline: none;
+}
+
+.chart-tab:hover {
+    border-color: #A37952;
+    color: #A37952;
+    background: #fdf5ef;
+}
+
+#tabRevenue.active {
+    background: #A37952;
+    color: #fff;
+    border-color: #A37952;
+    box-shadow: 0 3px 10px rgba(163,121,82,0.25);
+}
+
+#tabProfit.active {
+    background: #16a34a;
+    color: #fff;
+    border-color: #16a34a;
+    box-shadow: 0 3px 10px rgba(22,163,74,0.25);
+}
