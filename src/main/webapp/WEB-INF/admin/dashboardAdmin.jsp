@@ -76,8 +76,7 @@
                                                 <div class="rev-filter-group">
                                                     <label>Tháng</label>
                                                     <select name="month" id="filterMonth">
-                                                        <option value="all" ${selectedMonth==null ||
-                                                            selectedMonth=='all' ? 'selected' : '' }>Tất cả tháng
+                                                        <option value="all" ${empty selectedMonth ? 'selected' : '' }>Tất cả tháng
                                                         </option>
                                                         <c:forEach var="m" begin="1" end="12">
                                                             <option value="${m}" ${selectedMonth==m ? 'selected' : '' }>
