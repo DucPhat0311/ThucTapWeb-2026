@@ -94,12 +94,14 @@ public class AdminAuthFilter implements Filter {
         }
 
         if (user.getRoleId() == null) {
+            setFullPerms(req);
             chain.doFilter(request, response);
             return;
         }
 
         Role role = roleService.getRoleById(user.getRoleId());
         if (role == null || role.getIsSystem() == 1) {
+            setFullPerms(req);
             chain.doFilter(request, response);
             return;
         }
@@ -112,28 +114,51 @@ public class AdminAuthFilter implements Filter {
             return;
         }
 
-        String requiredAction = resolveAction(req.getMethod(), req.getParameter("action"));
+        String requiredAction = resolveAction(req);
 
         if (roleService.hasPermission(user.getRoleId(), module, requiredAction)) {
+            Map<String, Boolean> perms = new HashMap<>();
+            for (String action : new String[]{"view_list", "view_detail", "add", "edit", "delete", "lock"}) {
+                perms.put(action, roleService.hasPermission(user.getRoleId(), module, action));
+            }
+            req.setAttribute("perms", perms);
+            
             chain.doFilter(request, response);
         } else {
-            req.getRequestDispatcher("/WEB-INF/auth/error403.jsp").forward(req, resp);
+            req.getSession().setAttribute("access_denied", true);
+            String referer = req.getHeader("Referer");
+            if (referer != null && !referer.contains("/login") && !referer.contains(req.getServletPath())) {
+                resp.sendRedirect(referer);
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/dashboardAdmin");
+            }
         }
     }
 
-    private String resolveAction(String httpMethod, String actionParam) {
-        if ("GET".equalsIgnoreCase(httpMethod)) {
+    private void setFullPerms(HttpServletRequest req) {
+        Map<String, Boolean> perms = new HashMap<>();
+        for (String action : new String[]{"view_list", "view_detail", "add", "edit", "delete", "lock"}) {
+            perms.put(action, true);
+        }
+        req.setAttribute("perms", perms);
+    }
+
+    private String resolveAction(HttpServletRequest req) {
+        String actionParam = req.getParameter("action");
+        String modeParam = req.getParameter("mode");
+        
+        String actionToResolve = actionParam != null ? actionParam : modeParam;
+        
+        if (actionToResolve == null || actionToResolve.trim().isEmpty()) {
             return "view_list";
         }
-        if (actionParam == null) {
-            return "view_list";
-        }
-        return switch (actionParam.toLowerCase()) {
+        
+        return switch (actionToResolve.toLowerCase()) {
             case "create", "add" -> "add";
             case "update", "edit", "save", "savepermissions" -> "edit";
             case "delete" -> "delete";
             case "block", "unblock", "lock", "unlock",
-                    "active", "inactive", "deactivate", "activate" ->
+                    "active", "inactive", "deactivate", "activate", "toggle-active", "toggle-status" ->
                 "lock";
             case "detail", "view" -> "view_detail";
             default -> "view_list";

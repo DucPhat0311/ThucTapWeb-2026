@@ -29,6 +29,14 @@ public class RoleAdminController extends HttpServlet {
         request.setAttribute("roles", roles);
         request.setAttribute("modules", roleService.getAllModules());
         request.setAttribute("actions", roleService.getAllActions());
+        
+        java.util.Map<String, Boolean> applicableMap = new java.util.HashMap<>();
+        for (String module1 : roleService.getAllModules()) {
+            for (String act : roleService.getAllActions()) {
+                applicableMap.put(module1 + "_" + act, RoleService.isActionApplicable(module1, act));
+            }
+        }
+        request.setAttribute("applicableMap", applicableMap);
 
         String roleIdParam = request.getParameter("roleId");
         if (roleIdParam != null && !roleIdParam.isEmpty()) {

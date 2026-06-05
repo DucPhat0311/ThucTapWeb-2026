@@ -21,6 +21,22 @@ public class RoleService {
             "view_list", "view_detail", "add", "edit", "delete", "lock"
     };
 
+    public static boolean isActionApplicable(String module, String action) {
+        return switch (module) {
+            case "user" -> action.matches("view_list|view_detail|add|edit|lock");
+            case "category" -> action.matches("view_list|view_detail|add|edit|lock");
+            case "product" -> action.matches("view_list|view_detail|add|edit|delete|lock");
+            case "order" -> action.matches("view_list|view_detail|edit");
+            case "return" -> action.matches("view_list|view_detail|edit");
+            case "banner" -> action.matches("view_list|view_detail|add|edit|delete|lock");
+            case "blog" -> action.matches("view_list|view_detail|add|edit|delete|lock");
+            case "contact" -> action.matches("view_list|view_detail|delete");
+            case "warehouse" -> action.matches("view_list|view_detail|add");
+            case "role" -> action.matches("view_list|add|edit|delete");
+            default -> false;
+        };
+    }
+
     public String[] getAllModules() {
         return MODULES;
     }

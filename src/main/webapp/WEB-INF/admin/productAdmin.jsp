@@ -66,9 +66,11 @@
                                             </button>
                                         </form>
 
-                                        <a href="${pageContext.request.contextPath}/productAdmin?mode=add" class="btn-add">
-                                            <i class="fa fa-plus"></i> Thêm sản phẩm
-                                        </a>
+                                        <c:if test="${perms['add']}">
+                                            <a href="${pageContext.request.contextPath}/productAdmin?mode=add" class="btn-add">
+                                                <i class="fa fa-plus"></i> Thêm sản phẩm
+                                            </a>
+                                        </c:if>
                                     </div>
 
 
@@ -146,11 +148,13 @@
                                                         <td class="actions">
 
 
-                                                            <a href="${pageContext.request.contextPath}/productAdmin?action=toggle-active&id=${p.id}&page=${currentPage}&status=${currentStatus}"
-                                                                class="custom-switch ${p.status == 'Đang hoạt động' ? 'active' : ''}"
-                                                                title="${p.status == 'Đang hoạt động' ? 'Ẩn sản phẩm' : 'Hiển thị sản phẩm'}">
-                                                                <span class="switch-slider"></span>
-                                                            </a>
+                                                            <c:if test="${perms['lock']}">
+                                                                <a href="${pageContext.request.contextPath}/productAdmin?action=toggle-active&id=${p.id}&page=${currentPage}&status=${currentStatus}"
+                                                                    class="custom-switch ${p.status == 'Đang hoạt động' ? 'active' : ''}"
+                                                                    title="${p.status == 'Đang hoạt động' ? 'Ẩn sản phẩm' : 'Hiển thị sản phẩm'}">
+                                                                    <span class="switch-slider"></span>
+                                                                </a>
+                                                            </c:if>
 
                                                             <a href="${pageContext.request.contextPath}/productAdmin?mode=view&id=${p.id}"
                                                                 class="icon-btn view" title="Xem chi tiết">
@@ -159,28 +163,31 @@
 
 
 
-                                                            <a href="${pageContext.request.contextPath}/productAdmin?mode=edit&id=${p.id}"
-                                                                class="icon-btn edit" title="Chỉnh sửa">
-                                                                <i class="fa fa-pen"></i>
-                                                            </a>
+                                                            <c:if test="${perms['edit']}">
+                                                                <a href="${pageContext.request.contextPath}/productAdmin?mode=edit&id=${p.id}"
+                                                                    class="icon-btn edit" title="Chỉnh sửa">
+                                                                    <i class="fa fa-pen"></i>
+                                                                </a>
 
 
-                                                            <a href="${pageContext.request.contextPath}/productVariantAdmin?productId=${p.id}"
-                                                                class="icon-btn variant" title="Quản lý biến thể">
-                                                                <i class="fa fa-layer-group"></i>
-                                                            </a>
+                                                                <a href="${pageContext.request.contextPath}/productVariantAdmin?productId=${p.id}"
+                                                                    class="icon-btn variant" title="Quản lý biến thể">
+                                                                    <i class="fa fa-layer-group"></i>
+                                                                </a>
 
 
-                                                            <a href="${pageContext.request.contextPath}/productImgAdmin?productId=${p.id}"
-                                                                class="icon-btn image" title="Quản lý ảnh">
-                                                                <i class="fa fa-images"></i>
-                                                            </a>
+                                                                <a href="${pageContext.request.contextPath}/productImgAdmin?productId=${p.id}"
+                                                                    class="icon-btn image" title="Quản lý ảnh">
+                                                                    <i class="fa fa-images"></i>
+                                                                </a>
+                                                            </c:if>
 
-
-                                                            <button class="icon-btn delete" title="Xoá sản phẩm"
-                                                                onclick="openDeleteProductModal(${p.id}, '${fn:escapeXml(p.name)}')">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
+                                                            <c:if test="${perms['delete']}">
+                                                                <button class="icon-btn delete" title="Xoá sản phẩm"
+                                                                    onclick="openDeleteProductModal(${p.id}, '${fn:escapeXml(p.name)}')">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </c:if>
 
                                                         </td>
 
