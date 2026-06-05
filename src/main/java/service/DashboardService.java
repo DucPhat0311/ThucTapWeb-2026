@@ -40,4 +40,20 @@ public class DashboardService {
     public java.util.Map<String, Double> revenueByDateRange(String startDateStr, String endDateStr) {
         return dao.revenueByDateRange(startDateStr, endDateStr);
     }
+
+    public double totalProfit() {
+        return dao.totalProfit();
+    }
+
+    public double[] profitByMonth(int year) {
+        return dao.profitByMonth(year);
+    }
+
+    public double[] profitByDaysInMonth(int year, int month) {
+        return dao.profitByDaysInMonth(year, month);
+    }
+
+    public java.util.Map<String, Double> profitByDateRange(String startDateStr, String endDateStr) {
+        return dao.profitByDateRange(startDateStr, endDateStr);
+    }
 }
