@@ -105,6 +105,15 @@ public class ProductDaoAdmin extends BaseDao {
     }
 
 
+    public void updateThumbnail(int productId, String thumbnail) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("UPDATE products SET thumbnail = :thumbnail WHERE id = :id")
+                        .bind("id", productId)
+                        .bind("thumbnail", thumbnail)
+                        .execute()
+        );
+    }
+
     public void softDelete(int id) {
         String sql = """
         UPDATE products SET status = 'Đã xoá' WHERE id = :id

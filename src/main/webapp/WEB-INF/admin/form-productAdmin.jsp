@@ -219,7 +219,7 @@
     </style>
 </c:if>
 
-<script src="${pageContext.request.contextPath}/js/admin/adminProductForm.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin/adminProductForm.js?v=<%= System.currentTimeMillis() %>"></script>
 </body>
 </html>
 

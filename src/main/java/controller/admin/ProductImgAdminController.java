@@ -104,20 +104,45 @@ public class ProductImgAdminController extends HttpServlet {
     private void createImage(HttpServletRequest request, HttpServletResponse response, int productId)
             throws ServletException, IOException {
 
-        String imagePath = handleFileUpload(request, "imageFile");
-        String isMainParam = request.getParameter("isMain");
+        List<Part> fileParts = request.getParts().stream()
+                .filter(part -> "imageFiles".equals(part.getName()) && part.getSize() > 0
+                        && part.getSubmittedFileName() != null)
+                .toList();
 
-        if (imagePath == null || imagePath.isEmpty()) {
+        if (fileParts.isEmpty()) {
             response.sendRedirect("productImgAdmin?productId=" + productId + "&error=no_image");
             return;
         }
 
-        ProductImage image = new ProductImage();
-        image.setProductId(productId);
-        image.setImageUrl(imagePath);
-        image.setMain(isMainParam != null && isMainParam.equals("true"));
+        String mainIndexParam = request.getParameter("mainImageIndex");
+        int mainIndex = -1;
+        if (mainIndexParam != null && !mainIndexParam.isEmpty()) {
+            try {
+                mainIndex = Integer.parseInt(mainIndexParam);
+            } catch (NumberFormatException ignored) {
+            }
+        }
 
-        productImageService.createImage(image);
+        int index = 0;
+        for (Part part : fileParts) {
+            String imagePath = CloudinaryUtil.uploadImage(part, "products");
+            if (imagePath != null && !imagePath.isEmpty()) {
+                ProductImage image = new ProductImage();
+                image.setProductId(productId);
+                image.setImageUrl(imagePath);
+
+                boolean isMain = (index == mainIndex);
+                image.setMain(isMain);
+
+                if (isMain) {
+                    productImageService.resetMainImageAndSetThumbnail(productId, imagePath);
+                }
+
+                productImageService.createImage(image);
+            }
+            index++;
+        }
+
         response.sendRedirect("productImgAdmin?productId=" + productId);
     }
 
@@ -128,11 +153,22 @@ public class ProductImgAdminController extends HttpServlet {
         String isMainParam = request.getParameter("isMain");
 
         ProductImage image = productImageService.getImageById(id);
-        image.setMain(isMainParam != null && isMainParam.equals("true"));
+        boolean isMain = isMainParam != null && isMainParam.equals("true");
+        image.setMain(isMain);
 
-        String newImage = handleFileUpload(request, "imageFile");
-        if (newImage != null && !newImage.isEmpty()) {
-            image.setImageUrl(newImage);
+        List<Part> fileParts = request.getParts().stream()
+                .filter(part -> "imageFiles".equals(part.getName()) && part.getSize() > 0 && part.getSubmittedFileName() != null)
+                .toList();
+
+        if (!fileParts.isEmpty()) {
+            String newImage = CloudinaryUtil.uploadImage(fileParts.get(0), "products");
+            if (newImage != null && !newImage.isEmpty()) {
+                image.setImageUrl(newImage);
+            }
+        }
+
+        if (isMain) {
+            productImageService.resetMainImageAndSetThumbnail(productId, image.getImageUrl());
         }
 
         productImageService.updateImage(image);

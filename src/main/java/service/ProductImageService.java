@@ -2,6 +2,7 @@ package service;
 
 import dao.user.ProductImageDao;
 import dao.admin.ProductImgDaoAdmin;
+import dao.admin.ProductDaoAdmin;
 import model.ProductImage;
 
 import java.util.List;
@@ -9,6 +10,12 @@ import java.util.List;
 public class ProductImageService {
     private ProductImageDao productImageDao = new ProductImageDao();
     private ProductImgDaoAdmin productImgDaoAdmin = new ProductImgDaoAdmin();
+    private ProductDaoAdmin productDaoAdmin = new ProductDaoAdmin();
+
+    public void resetMainImageAndSetThumbnail(int productId, String imageUrl) {
+        productImgDaoAdmin.resetMainImage(productId);
+        productDaoAdmin.updateThumbnail(productId, imageUrl);
+    }
 
     public List<ProductImage> getImageByProduct(int id) {
         return productImageDao.getImageByProduct(id);
