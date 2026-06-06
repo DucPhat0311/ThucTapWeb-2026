@@ -100,11 +100,11 @@
             <div class="row">
                 <div class="col">
                     <label>Hình ảnh sản phẩm</label>
-                    <input type="file" name="imageFile" accept="image/*" 
-                           onchange="previewProductImage(event)"
+                    <input type="file" name="imageFiles" accept="image/*" multiple
+                           onchange="previewProductImages(event)"
                            ${mode == 'view' ? 'disabled' : ''}>
                     <small style="color: #666; display: block; margin-top: 5px;">
-                        Chọn ảnh sản phẩm
+                        Chọn ảnh sản phẩm (có thể chọn nhiều ảnh cùng lúc)
                     </small>
                 </div>
             </div>
@@ -112,16 +112,14 @@
 
             <div class="row">
                 <div class="col">
-                    <div id="product-image-preview-container" style="margin-top: 10px;">
-                        <c:if test="${not empty product.thumbnail}">
-                            <label>Xem trước ảnh</label>
-                            <img id="product-image-preview" src="${aura:resolve(pageContext.request.contextPath, '/img/products', product.thumbnail, 'img/logo.png')}" 
-                                 alt="Product image"
-                                 style="max-width: 300px; max-height: 300px; border-radius: 8px; border: 1px solid #ddd; display: block; margin-top: 10px;">
-                        </c:if>
-                        <c:if test="${empty product.thumbnail}">
-                            <img id="product-image-preview" src="" alt="Preview" 
-                                 style="display: none; max-width: 300px; max-height: 300px; border-radius: 8px; border: 1px solid #ddd; margin-top: 10px;">
+                    <label>Xem trước ảnh</label>
+                    <div id="product-image-preview-container" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 15px;">
+                        <c:if test="${not empty product.thumbnail && mode != 'add'}">
+                            <div style="position: relative; display: inline-block; border: 1px solid #ddd; padding: 5px; border-radius: 8px;">
+                                <img id="product-image-preview" src="${aura:resolve(pageContext.request.contextPath, '/img/products', product.thumbnail, 'img/logo.png')}" 
+                                     alt="Product image"
+                                     style="width: 120px; height: 120px; object-fit: cover; border-radius: 4px; display: block;">
+                            </div>
                         </c:if>
                     </div>
                 </div>

@@ -81,9 +81,7 @@
                                                     </c:if>
                                                 </div>
 
-                                                <form method="post"
-                                                    action="${pageContext.request.contextPath}/roleAdmin"
-                                                    id="permissionForm">
+                                                <form method="post" action="${pageContext.request.contextPath}/roleAdmin" id="permissionForm">
                                                     <input type="hidden" name="action" value="savePermissions">
                                                     <input type="hidden" name="roleId" value="${selectedRole.id}">
 
@@ -177,8 +175,8 @@
                                                                 <c:set var="actionNames"
                                                                     value="view_list,view_detail,add,edit,delete,lock" />
 
-                                                                <c:forTokens items="${moduleNames}" delims=","
-                                                                    var="moduleName" varStatus="moduleIdx">
+                                                                <c:forTokens items="${moduleNames}" delims="," var="moduleName"
+                                                                    varStatus="moduleIdx">
                                                                     <tr>
                                                                         <td class="module-name">
                                                                             <c:forTokens items="${moduleLabels}"
@@ -192,15 +190,11 @@
                                                                         <c:forTokens items="${actionNames}" delims=","
                                                                             var="act">
                                                                             <td class="perm-cell">
-                                                                                <c:set var="mapKey"
-                                                                                    value="${moduleName}_${act}" />
+                                                                                <c:set var="mapKey" value="${moduleName}_${act}" />
                                                                                 <c:choose>
-                                                                                    <c:when
-                                                                                        test="${applicableMap[mapKey]}">
-                                                                                        <c:set var="isChecked"
-                                                                                            value="false" />
-                                                                                        <c:forEach
-                                                                                            items="${permissions}"
+                                                                                    <c:when test="${applicableMap[mapKey]}">
+                                                                                        <c:set var="isChecked" value="false" />
+                                                                                        <c:forEach items="${permissions}"
                                                                                             var="p">
                                                                                             <c:if
                                                                                                 test="${p.module eq moduleName and p.action eq act and p.allowed eq 1}">
@@ -212,21 +206,17 @@
                                                                                         <label class="perm-checkbox">
                                                                                             <input type="checkbox"
                                                                                                 name="perm_${moduleName}_${act}"
-                                                                                                value="1"
-                                                                                                data-module="${moduleName}"
+                                                                                                value="1" data-module="${moduleName}"
                                                                                                 data-action="${act}"
-                                                                                                ${isChecked=='true'
-                                                                                                ? 'checked' : '' }
+                                                                                                ${isChecked=='true' ? 'checked'
+                                                                                                : '' }
                                                                                                 ${selectedRole.isSystem==1
-                                                                                                ? 'checked disabled'
-                                                                                                : '' }>
-                                                                                            <span
-                                                                                                class="checkmark"></span>
+                                                                                                ? 'checked disabled' : '' }>
+                                                                                            <span class="checkmark"></span>
                                                                                         </label>
                                                                                     </c:when>
                                                                                     <c:otherwise>
-                                                                                        <span
-                                                                                            style="color: #d4c4b0; font-weight: bold;">-</span>
+                                                                                        <span style="color: #d4c4b0; font-weight: bold;">-</span>
                                                                                     </c:otherwise>
                                                                                 </c:choose>
                                                                             </td>
