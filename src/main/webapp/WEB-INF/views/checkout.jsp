@@ -153,9 +153,21 @@
                     </div>
                 </div>
 
-                <button type="submit" id="submit-btn" class="btn-checkout" disabled>
-                    XÁC NHẬN THANH TOÁN
-                </button>
+                <c:choose>
+                    <c:when test="${not empty checkoutError}">
+                        <a href="${pageContext.request.contextPath}/my-cart"
+                           id="submit-btn"
+                           class="btn-checkout btn-checkout-error">
+                            QUAY LẠI GIỎ HÀNG
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <button type="submit" id="submit-btn" class="btn-checkout" disabled>
+                            XÁC NHẬN THANH TOÁN
+                        </button>
+                    </c:otherwise>
+                </c:choose>
+
                 <c:if test="${empty selectedAddress}">
                     <p class="checkout-note" style="color: #ff4d4f; margin-top: 10px; font-size: 13px; text-align: center;">
                         Bạn cần thêm địa chỉ giao hàng trước khi xác nhận thanh toán.
@@ -313,7 +325,7 @@
 
                 if (submitBtn) submitBtn.disabled = false;
             } else {
-                if (displayElement) displayElement.innerText = "Không tính được phí tỉnh này";
+                if (displayElement) displayElement.innerText = "Không tính được phí";
             }
         } catch (error) {
             console.error(error);

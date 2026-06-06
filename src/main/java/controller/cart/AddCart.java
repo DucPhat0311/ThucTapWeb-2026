@@ -2,12 +2,15 @@ package controller.cart;
 
 
 import java.io.IOException;
+
+import dao.user.ProductDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import dao.user.CartItemDao;
 import dao.user.ProductVariantDao;
 import dao.user.UserDao;
+import model.Product;
 import model.User;
 
 
@@ -56,6 +59,16 @@ public class AddCart extends HttpServlet {
             int variantId = Integer.parseInt(request.getParameter("variantId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
+            ProductDao productDao = new ProductDao();
+            int productId = variantDao.getProductIdByVariantId(variantId);
+            Product product = productDao.findById(productId);
+
+            if (product == null || !"Đang hoạt động".equals(product.getStatus())) {
+                response.getWriter().write(
+                        "{\"success\":false,\"message\":\"Sản phẩm này hiện đã ngừng kinh doanh\"}"
+                );
+                return;
+            }
 
             int stock = variantDao.getStockByVariantId(variantId);
             int currentQty = cartItemDao.getQuantityByVariant(cartId, variantId);
@@ -80,7 +93,7 @@ public class AddCart extends HttpServlet {
             }
 
             double price = variantDao.getPriceByVariantId(variantId);
-            int productId = variantDao.getProductIdByVariantId(variantId);
+//            int productId = variantDao.getProductIdByVariantId(variantId);
 
             cartItemDao.addOrUpdate(cartId, variantId, productId, quantity, price);
 

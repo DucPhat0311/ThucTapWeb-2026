@@ -323,3 +323,37 @@
         margin-top: 12px;
     }
 }
+
+.checkout-alert checkout-alert-error{
+    line-height: 1.5; padding: 12px 15px;
+}
+
+.btn-checkout {
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.btn-checkout:hover {
+    opacity: 0.9;
+    color: #fff;
+}
+
+.btn-checkout-error {
+    background: #ff4d4f !important;
+}
+
+.btn-checkout-error:hover {
+    background: #ff7875 !important;
+}
