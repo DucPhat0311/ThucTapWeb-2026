@@ -73,6 +73,7 @@
                         <input type="file"
                                name="imageFile"
                                accept="image/*"
+                               onchange="previewImage(this, 'previewImg')"
                                <c:if test="${mode == 'add'}">required</c:if>>
                     </c:if>
 
@@ -107,6 +108,19 @@
 
 
 </div>
+<script>
+    function previewImage(input, imgId) {
+        var preview = document.getElementById(imgId);
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 </body>
 </html>
 

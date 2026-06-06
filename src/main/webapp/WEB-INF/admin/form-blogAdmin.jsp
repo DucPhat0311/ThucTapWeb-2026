@@ -60,14 +60,12 @@
                 <div class="col">
                     <label>Ảnh đại diện</label>
                     <c:if test="${mode != 'view'}">
-                        <input type="file" name="imageFile" accept="image/*">
+                        <input type="file" name="imageFile" accept="image/*" onchange="previewImage(this, 'previewImg')">
                     </c:if>
 
-                    <c:if test="${mode == 'edit' || mode == 'view'}">
-                        <div class="preview">
-                            <img src="${aura:resolve(pageContext.request.contextPath, '', blog.img, '')}" style="max-width:300px;">
-                        </div>
-                    </c:if>
+                    <div class="preview">
+                        <img id="previewImg" src="${mode == 'add' ? '' : aura:resolve(pageContext.request.contextPath, '', blog.img, '')}" style="${mode == 'add' ? 'display:none' : 'display:block'}; max-width:300px;">
+                    </div>
                 </div>
 
                 <div class="col">
@@ -95,6 +93,19 @@
 
 </div>
 
+<script>
+    function previewImage(input, imgId) {
+        var preview = document.getElementById(imgId);
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 </body>
 </html>
 

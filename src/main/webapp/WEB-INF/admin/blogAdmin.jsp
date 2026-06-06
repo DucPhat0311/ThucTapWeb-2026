@@ -73,10 +73,10 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${n.status == 1}">
-                                            <span class="status active">Hiển thị</span>
+                                            <span class="stock-badge in-stock">Hiển thị</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="status blocked">Ẩn</span>
+                                            <span class="stock-badge out-of-stock">Ẩn</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>

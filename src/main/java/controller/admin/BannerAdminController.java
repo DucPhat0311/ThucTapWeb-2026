@@ -44,10 +44,45 @@ public class BannerAdminController extends HttpServlet {
                 request.setAttribute("currentStatus", status);
             }
 
-            request.setAttribute("banners", banners);
             request.setAttribute("total", total);
             request.setAttribute("totalActive", totalActive);
             request.setAttribute("totalBlocked", totalBlocked);
+
+            int page = 1;
+            int pageSize = 3;
+
+            String pageParam = request.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+
+            int totalItems = banners.size();
+            int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+            if (page < 1)
+                page = 1;
+            if (page > totalPages && totalPages > 0)
+                page = totalPages;
+
+            int start = (page - 1) * pageSize;
+            int end = Math.min(start + pageSize, totalItems);
+            List<Banner> pagedBanners = totalItems > 0 ? banners.subList(start, end) : banners;
+
+            request.setAttribute("banners", pagedBanners);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("totalItems", totalItems);
+
+            StringBuilder qs = new StringBuilder();
+            if (status != null && !status.isEmpty()) {
+                qs.append("&status=").append(status);
+            }
+            request.setAttribute("qs", qs.toString());
 
             request.setAttribute("page", "banner");
             request.getRequestDispatcher("/WEB-INF/admin/bannerAdmin.jsp").forward(request, response);
