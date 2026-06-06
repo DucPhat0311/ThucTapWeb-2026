@@ -22,14 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const stockStatusText = document.getElementById("stock-status-text");
         if (!selectedColorId || !selectedSizeId) {
             if (stockStatusText) {
-
-                    if (firstTotalStock > 0) {
-                        stockStatusText.innerHTML = ` Còn hàng (Tổng còn ${firstTotalStock} sản phẩm)`;
-                    } else {
-                        stockStatusText.innerHTML = `Hết hàng`;
-                    }
+                if (firstTotalStock > 0) {
+                    stockStatusText.innerHTML = ` Còn hàng (Tổng còn ${firstTotalStock} sản phẩm)`;
+                } else {
+                    stockStatusText.innerHTML = `Hết hàng`;
                 }
-
+            }
             return;
         }
         const matchedVariant = variants.find(v => v.colorId === selectedColorId && v.sizeId === selectedSizeId);
@@ -73,10 +71,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const toast = document.getElementById("toast");
         if (!toast) return;
         toast.textContent = message;
+
+        if (isError) {
+            toast.style.backgroundColor = "#ff4d4f";
+            toast.style.color = "#ffffff";
+            toast.style.fontWeight = "bold";
+            toast.style.boxShadow = "0 4px 12px rgba(255, 77, 79, 0.4)";
+        } else {
+            toast.style.backgroundColor = "";
+            toast.style.color = "";
+            toast.style.fontWeight = "";
+            toast.style.boxShadow = "";
+        }
+
         toast.className = "show";
         setTimeout(() => {
             toast.className = toast.className.replace("show", "");
-        }, 3000);
+        }, 6000);
     }
 
     function updateCartBadge(quantity) {
@@ -86,27 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
             badge.style.display = quantity > 0 ? "inline-block" : "none";
         }
     }
-
-    // function updateSizeAvailability() {
-    //     sizeButtons.forEach(btn => {
-    //         const sizeId = Number(btn.dataset.sizeId);
-    //         const variant = variants.find(v => v.colorId === selectedColorId && v.sizeId === sizeId);
-    //
-    //         if (!variant || variant.stock <= 0) {
-    //             btn.disabled = true;
-    //             btn.classList.add("disabled");
-    //         } else {
-    //             btn.disabled = false;
-    //             btn.classList.remove("disabled");
-    //         }
-    //     });
-    //
-    //     selectedSizeId = null;
-    //     currentStock = 0;
-    //     if (quantityInput) quantityInput.value = 1;
-    //     sizeButtons.forEach(b => b.classList.remove("active"));
-    //
-    // }
 
     // chọn Màu
     colorBtns.forEach(btn => {
@@ -164,8 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (decreaseBtn && increaseBtn && quantityInput) {
         decreaseBtn.addEventListener("click", () => {
             if (!selectedColorId || !selectedSizeId) {
-                showToast("Vui lòng chọn màu và size trước");
-                return;
+                showToast("Vui lòng chọn màu và size trước", true);
             }
             let val = parseInt(quantityInput.value);
             if (val > 1) quantityInput.value = val - 1;
@@ -173,14 +162,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         increaseBtn.addEventListener("click", () => {
             if (!selectedColorId || !selectedSizeId) {
-                showToast("Vui lòng chọn màu và size trước");
+                showToast("Vui lòng chọn màu và size trước", true);
                 return;
             }
             let val = parseInt(quantityInput.value);
             if (val < currentStock) {
                 quantityInput.value = val + 1;
             } else {
-                showToast(`Chỉ còn ${currentStock} sản phẩm`);
+                showToast(`Chỉ còn ${currentStock} sản phẩm`, true);
             }
         });
     }
@@ -211,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnAddCart) {
         btnAddCart.addEventListener("click", () => {
             if (!selectedColorId || !selectedSizeId) {
-                showToast("Vui lòng chọn màu và size");
+                showToast("Vui lòng chọn màu và size", true);
                 return;
             }
 
@@ -233,26 +222,25 @@ document.addEventListener("DOMContentLoaded", () => {
                         return;
                     }
                     if (data.success) {
-                        showToast("Đã thêm vào giỏ hàng!");
+                        showToast("Đã thêm vào giỏ hàng!", false);
                         const newCartSize = data.cartSize !== undefined ? data.cartSize : data.totalQuantity;
                         updateCartBadge(newCartSize);
                     } else {
-                        showToast(data.message || "Thêm thất bại");
+                        showToast(data.message || "Thêm thất bại", true);
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    showToast("Lỗi kết nối tới Server");
+                    showToast("Lỗi kết nối tới Server", true);
                 });
         });
     }
 
-    // handle nút Mua ngay
     if (buyNowBtn) {
         buyNowBtn.addEventListener("click", function(e) {
             e.preventDefault();
             if (!selectedColorId || !selectedSizeId) {
-                showToast("Vui lòng chọn màu và size");
+                showToast("Vui lòng chọn màu và size", true);
                 return;
             }
 
@@ -273,30 +261,54 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const form = document.createElement("form");
-            form.method = "POST";
-            form.action = requestContextPath + "/buy-now";
+            fetch("add-cart", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    variantId: foundVariant.id,
+                    quantity: quantity
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error === "not_logged_in") {
+                        window.location.href = "login";
+                        return;
+                    }
 
-            const fields = {
-                variantId: foundVariant.id,
-                quantity: quantity,
-                productId: currentProductId
-            };
+                    if (!data.success) {
+                        showToast(data.message || "Sản phẩm hiện không thể mua hàng!", true);
+                        return;
+                    }
 
-            for (const key in fields) {
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = key;
-                input.value = fields[key];
-                form.appendChild(input);
-            }
+                    const form = document.createElement("form");
+                    form.method = "POST";
+                    form.action = requestContextPath + "/buy-now";
 
-            document.body.appendChild(form);
-            form.submit();
+                    const fields = {
+                        variantId: foundVariant.id,
+                        quantity: quantity,
+                        productId: currentProductId
+                    };
+
+                    for (const key in fields) {
+                        const input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = key;
+                        input.value = fields[key];
+                        form.appendChild(input);
+                    }
+
+                    document.body.appendChild(form);
+                    form.submit();
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast("Lỗi hệ thống khi kiểm tra sản phẩm", true);
+                });
         });
     }
 });
-
 // handle nút back trogn chrome khi thêm giỏ hàng
 window.addEventListener("pageshow", function (event) {
     if (event.persisted) {
