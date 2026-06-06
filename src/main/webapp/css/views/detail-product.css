@@ -253,27 +253,21 @@ html, body {
 
 
 .color-btn {
-    width: 36px;
-    height: 36px;
-    padding: 0;
+    padding: 8px 16px;
     border: 2px solid #cccccc;
-    border-radius: 50%;
+    background: #ffffff;
+    border-radius: var(--border-radius);
     cursor: pointer;
+    font-size: 14px;
     transition: all 0.2s ease;
 }
 
 
-.size-btn:hover, .size-btn.active {
+.size-btn:hover, .size-btn.active,
+.color-btn:hover, .color-btn.active {
     color: #ffffff !important;
     border-color: var(--primary-color) !important;
     background: var(--primary-color) !important;
-}
-
-
-.color-btn:hover, .color-btn.active {
-    border-color: var(--primary-color) !important;
-    transform: scale(1.1);
-    box-shadow: 0 0 5px rgba(0,0,0,0.2);
 }
 
 

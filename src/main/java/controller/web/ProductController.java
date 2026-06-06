@@ -89,18 +89,20 @@ public class ProductController extends HttpServlet {
         String maxPrice = request.getParameter("maxPrice");
         String sizes = request.getParameter("sizes");
         String colors = request.getParameter("colors");
+        String rating = request.getParameter("rating");
 
         String categoryIds = categoryService.handleGetCategoryIdsWithChildren(categoryIdStr);
 
         if (sizes == null || sizes.trim().isEmpty()) sizes = null;
         if (colors == null || colors.trim().isEmpty()) colors = null;
+        if (rating == null || rating.trim().isEmpty()) rating = null;
         if (minPrice == null || minPrice.trim().isEmpty()) minPrice = null;
         if (maxPrice == null || maxPrice.trim().isEmpty()) maxPrice = null;
         if (sortType == null || sortType.trim().isEmpty()) sortType = "latest"; // default
 
 
-        List<Product> productList = productService.handleFilterProducts(categoryIds, sortType, minPrice, maxPrice, sizes, colors, pageSize, offset);
-        int totalProducts = productService.handleCountProducts(categoryIds, minPrice, maxPrice, sizes, colors);
+        List<Product> productList = productService.handleFilterProducts(categoryIds, sortType, minPrice, maxPrice, sizes, colors, rating, pageSize, offset);
+        int totalProducts = productService.handleCountProducts(categoryIds, minPrice, maxPrice, sizes, colors, rating);
         int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
 
         request.setAttribute("productList", productList);

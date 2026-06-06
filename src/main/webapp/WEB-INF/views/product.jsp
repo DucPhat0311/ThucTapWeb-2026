@@ -75,7 +75,7 @@
 
             <div class="filter-group">
                 <div class="group-title">Màu sắc</div>
-                <div class="color-grid">
+                <div class="color-options">
                     <c:forEach var="colorItem" items="${colors}">
                         <c:set var="isColorChecked" value="false" />
                         <c:forEach var="selectedColor" items="${selectedColors}">
@@ -84,8 +84,31 @@
                             </c:if>
                         </c:forEach>
 
-                        <label class="color-filter-item">
-                            <input type="checkbox" class="color-checkbox" value="${colorItem.id}" ${isColorChecked ? 'checked' : ''}>                            <span class="color-circle" style="background-color: ${colorItem.code};" title="${colorItem.name}"></span>
+                        <label class="amazon-filter-item">
+                            <input type="checkbox" class="color-checkbox" value="${colorItem.id}" ${isColorChecked ? 'checked' : ''}>
+                            <span class="custom-checkbox"></span>
+                            <span class="filter-text">${colorItem.name}</span>
+                        </label>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="group-title">Đánh giá</div>
+                <div class="rating-options">
+                    <c:forEach var="i" begin="0" end="4">
+                        <c:set var="starVal" value="${5 - i}" />
+                        <label class="amazon-filter-item">
+                            <input type="radio" name="rating" class="rating-radio" value="${starVal}" ${param.rating == starVal ? 'checked' : ''}>
+                            <span class="custom-checkbox custom-radio-btn"></span>
+                            <span class="filter-text rating-filter-text">
+                                <span class="stars-display">
+                                    <c:forEach var="s" begin="1" end="5">
+                                        <i class="fa fa-star ${s <= starVal ? 'active' : ''}"></i>
+                                    </c:forEach>
+                                </span>
+                                <c:if test="${starVal < 5}"><span class="rating-text-suffix">&amp; trở lên</span></c:if>
+                            </span>
                         </label>
                     </c:forEach>
                 </div>
@@ -134,12 +157,13 @@
             </div>
 
             <div class="pagination">
+                <c:set var="baseQuery" value="groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&minPrice=${param.minPrice}&maxPrice=${param.maxPrice}&sizes=${param.sizes}&colors=${param.colors}&rating=${param.rating}" />
                 <c:if test="${currentPage > 1}">
-                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage - 1}">&laquo;</a>
+                    <a href="${pageContext.request.contextPath}/product?${baseQuery}&page=${currentPage - 1}">&laquo;</a>
                 </c:if>
 
                 <c:if test="${currentPage > 3}">
-                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=1">1</a>
+                    <a href="${pageContext.request.contextPath}/product?${baseQuery}&page=1">1</a>
                     <c:if test="${currentPage > 4}">
                         <span class="paging-sep">...</span>
                     </c:if>
@@ -149,7 +173,7 @@
                 <c:set var="end" value="${currentPage + 2 < totalPages ? currentPage + 2 : totalPages}" />
 
                 <c:forEach var="i" begin="${begin}" end="${end}">
-                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${i}"
+                    <a href="${pageContext.request.contextPath}/product?${baseQuery}&page=${i}"
                        class="${currentPage == i ? 'active' : ''}">${i}</a>
                 </c:forEach>
 
@@ -157,10 +181,10 @@
                     <c:if test="${currentPage < totalPages - 3}">
                         <span class="paging-sep">...</span>
                     </c:if>
-                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${totalPages}">${totalPages}</a>
+                    <a href="${pageContext.request.contextPath}/product?${baseQuery}&page=${totalPages}">${totalPages}</a>
                 </c:if>
                 <c:if test="${currentPage < totalPages}">
-                    <a href="${pageContext.request.contextPath}/product?groupId=${param.groupId}&categoryId=${param.categoryId}&sortType=${param.sortType}&page=${currentPage + 1}">&raquo;</a>
+                    <a href="${pageContext.request.contextPath}/product?${baseQuery}&page=${currentPage + 1}">&raquo;</a>
                 </c:if>
             </div>
         </div>
@@ -245,10 +269,16 @@
         const urlParams = new URLSearchParams(window.location.search);
         const sizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => cb.value);
         const colors = Array.from(document.querySelectorAll('.color-checkbox:checked')).map(cb => cb.value);
+        const ratingNode = document.querySelector('.rating-radio:checked');
+        const rating = ratingNode ? ratingNode.value : null;
+
         if (sizes.length > 0) urlParams.set('sizes', sizes.join(','));
         else urlParams.delete('sizes');
         if (colors.length > 0) urlParams.set('colors', colors.join(','));
         else urlParams.delete('colors');
+        if (rating) urlParams.set('rating', rating);
+        else urlParams.delete('rating');
+
         urlParams.set('minPrice', document.getElementById('min-price').value);
         urlParams.set('maxPrice', document.getElementById('max-price').value);
         urlParams.set('page', 1);
