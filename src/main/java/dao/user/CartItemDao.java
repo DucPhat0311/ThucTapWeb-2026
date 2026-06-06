@@ -132,8 +132,6 @@ public class CartItemDao extends BaseDao {
                             p.setId(rs.getInt("pid"));
                             p.setName(rs.getString("name"));
                             p.setThumbnail(rs.getString("thumbnail"));
-
-
                             p.setWeight(rs.getInt("weight"));
                             p.setLength(rs.getInt("length"));
                             p.setWidth(rs.getInt("width"));

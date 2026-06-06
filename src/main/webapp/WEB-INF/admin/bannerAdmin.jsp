@@ -69,10 +69,10 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${b.status}">
-                                            <span class="status active">Hoạt động</span>
+                                            <span class="stock-badge in-stock">Hoạt động</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="status blocked">Đã ẩn</span>
+                                            <span class="stock-badge out-of-stock">Đã ẩn</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -104,6 +104,43 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <c:if test="${totalPages > 1}">
+                    <div class="pagination">
+                        <div class="pagination-info">
+                            Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize >
+                            totalItems ? totalItems : currentPage * pageSize} của ${totalItems} banner
+                        </div>
+
+                        <div class="pagination-controls">
+                            <c:if test="${currentPage > 1}">
+                                <a href="${pageContext.request.contextPath}/bannerAdmin?page=1${qs}"
+                                   class="page-btn">Đầu</a>
+                                <a href="${pageContext.request.contextPath}/bannerAdmin?page=${currentPage - 1}${qs}"
+                                   class="page-btn">Trước</a>
+                            </c:if>
+
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <c:choose>
+                                    <c:when test="${i == currentPage}">
+                                        <span class="page-btn active">${i}</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/bannerAdmin?page=${i}${qs}"
+                                           class="page-btn">${i}</a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <a href="${pageContext.request.contextPath}/bannerAdmin?page=${currentPage + 1}${qs}"
+                                   class="page-btn">Sau</a>
+                                <a href="${pageContext.request.contextPath}/bannerAdmin?page=${totalPages}${qs}"
+                                   class="page-btn">Cuối</a>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:if>
             </section>
         </main>
     </section>
