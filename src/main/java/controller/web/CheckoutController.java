@@ -14,7 +14,9 @@ import service.AddressService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @WebServlet(name = "CheckoutController", value = "/checkout")
 public class CheckoutController extends HttpServlet {
@@ -110,7 +112,7 @@ public class CheckoutController extends HttpServlet {
             for (String idStr : selectedIds) {
                 int id = Integer.parseInt(idStr);
                 for (CartItem item : allItems) {
-                    if (item.getVariantId() == id) {
+                    if (item.getVariantId() == id || item.getVariantId() == id) {
                         checkoutItems.add(item);
                         break;
                     }
@@ -121,6 +123,31 @@ public class CheckoutController extends HttpServlet {
         if (checkoutItems.isEmpty()) {
             resp.sendRedirect("my-cart");
             return;
+        }
+
+        // liệt kê các sp mà bị admin cho status ẩn
+        Set<String> disabledProductNames = new LinkedHashSet<>();
+
+        for (CartItem item : checkoutItems) {
+            if (item.getProduct() != null && !"Đang hoạt động".equalsIgnoreCase(item.getProduct().getStatus())) {
+                String name = item.getProduct().getName();
+                if (!disabledProductNames.contains(name)) {
+                    disabledProductNames.add(name);
+                }
+            }
+        }
+
+        if (!disabledProductNames.isEmpty()) {
+            StringBuilder errorMsg = new StringBuilder("Trong đơn hàng của bạn có các sản phẩm sau đã ngừng kinh doanh và không thể thanh toán:<br>");
+            errorMsg.append("<ul style='margin-top: 5px; margin-bottom: 5px; padding-left: 20px;'>");
+
+            for (String productName : disabledProductNames) {
+                errorMsg.append("<li>").append(productName).append("</li>");
+            }
+
+            errorMsg.append("</ul>Vui lòng quay lại giỏ hàng để xóa hoặc bỏ chọn các sản phẩm này.");
+
+            req.setAttribute("checkoutError", errorMsg.toString());
         }
 
         int totalWeight = 0;
@@ -175,6 +202,9 @@ public class CheckoutController extends HttpServlet {
         if (error == null || error.isBlank()) {
             return;
         }
+        if (req.getAttribute("checkoutError") != null) {
+            return;
+        }
 
         String errorMessage = switch (error) {
             case "out_of_stock" -> "Một số sản phẩm trong giỏ đã vượt quá số lượng tồn kho.";
@@ -183,6 +213,7 @@ public class CheckoutController extends HttpServlet {
             case "payment_not_found" -> "Không tìm thấy giao dịch thanh toán tương ứng với đơn hàng của bạn.";
             case "payment_cancelled" -> "Bạn đã hủy thanh toán VNPay. Đơn hàng vẫn đang chờ thanh toán.";
             case "payment_failed" -> "Thanh toán VNPay không thành công. Vui lòng thử lại.";
+            case "product_disabled" -> "Đơn hàng chứa sản phẩm này hiện không khả dụng. Vui lòng kiểm tra lại giỏ hàng.";
             default -> null;
         };
 
