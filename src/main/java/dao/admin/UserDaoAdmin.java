@@ -53,10 +53,10 @@ public class UserDaoAdmin extends BaseDao {
                 handle.createUpdate("""
                 INSERT INTO users
                 (username, email, password, role, status,
-                 full_name, birthday, gender, phone, address, created_at, role_id)
+                 full_name, birthday, gender, phone, address, created_at, role_id, is_active)
                 VALUES
                 (:username, :email, :password, :role, :status,
-                 :fullName, :birthday, :gender, :phone, :address, NOW(), :roleId)
+                 :fullName, :birthday, :gender, :phone, :address, NOW(), :roleId, 1)
             """)
                         .bindBean(user)
                         .execute()
