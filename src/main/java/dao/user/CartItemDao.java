@@ -104,6 +104,7 @@ public class CartItemDao extends BaseDao {
            p.length,
            p.width,
            p.height,
+           p.status,
            s.code AS size,
            c.name AS color
        FROM cart_items ci
@@ -137,7 +138,7 @@ public class CartItemDao extends BaseDao {
                             p.setLength(rs.getInt("length"));
                             p.setWidth(rs.getInt("width"));
                             p.setHeight(rs.getInt("height"));
-
+                            p.setStatus(rs.getString("status"));
 
                             item.setProduct(p);
                             return item;
