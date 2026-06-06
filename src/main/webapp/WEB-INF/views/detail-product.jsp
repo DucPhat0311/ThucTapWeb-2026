@@ -176,7 +176,8 @@
                         <p><strong>Màu sắc:</strong></p>
                         <div class="color-options">
                             <c:forEach var="color" items="${colors}">
-                                <button class="color-btn" data-color-id="${color.id}" style="background-color: ${color.code};">
+                                <button class="color-btn" data-color-id="${color.id}">
+                                    ${color.name}
                                 </button>
                             </c:forEach>
                         </div>

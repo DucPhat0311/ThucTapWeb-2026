@@ -8,7 +8,7 @@ import java.util.List;
 public class ColorDao extends BaseDao {
     public List<Color> getColorByProductId(int id) {
         return getJdbi().withHandle(handle -> handle.createQuery("""
-                SELECT DISTINCT c.id, c.code
+                SELECT DISTINCT c.id, c.name
                 FROM product_variants p
                 JOIN colors c ON p.color_id = c.id
                 WHERE p.product_id = :id
@@ -20,7 +20,7 @@ public class ColorDao extends BaseDao {
 
     public List<Color> getAllColors() {
         return getJdbi().withHandle(handle -> handle.createQuery("""
-                SELECT id, name, code
+                SELECT id, name
                 FROM colors
                 """)
                 .mapToBean(Color.class)

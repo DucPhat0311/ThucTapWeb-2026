@@ -218,7 +218,7 @@ public class ProductDao extends BaseDao {
     }
 
     public List<Product> filterProducts(String categoryIds, String sortType, String minPrice, String maxPrice,
-                                        String sizes, String colors, int limit, int offset) {
+                                        String sizes, String colors, String rating, int limit, int offset) {
         StringBuilder sql = new StringBuilder("SELECT DISTINCT p.*, ");
         sql.append("(SELECT image_url FROM product_images WHERE product_id = p.id AND is_main = 0 ORDER BY id ASC LIMIT 1) AS hoverImage, ");
         sql.append("(SELECT COUNT(DISTINCT color_id) FROM product_variants WHERE product_id = p.id) AS colorCount, ");
@@ -250,6 +250,10 @@ public class ProductDao extends BaseDao {
         if (minPrice != null && !minPrice.isEmpty()) sql.append(" AND ").append(truePrice).append(" >= :minP ");
         if (maxPrice != null && !maxPrice.isEmpty()) sql.append(" AND ").append(truePrice).append(" <= :maxP ");
 
+        if (rating != null && !rating.isEmpty()) {
+            sql.append(" AND (SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) >= :minRating ");
+        }
+
         String orderBy = switch (sortType != null ? sortType : "") {
             case "price_up" -> truePrice + " ASC";
             case "price_down" -> truePrice + " DESC";
@@ -266,13 +270,15 @@ public class ProductDao extends BaseDao {
             if (sizes != null && !sizes.isEmpty()) query.bindList("sizeList", List.of(sizes.split(",")));
             query.bind("minP", (minPrice == null || minPrice.isEmpty()) ? 0 : Double.parseDouble(minPrice));
             query.bind("maxP", (maxPrice == null || maxPrice.isEmpty()) ? 99999999 : Double.parseDouble(maxPrice));
+            if (rating != null && !rating.isEmpty()) query.bind("minRating", Double.parseDouble(rating));
+
             query.bind("limit", limit);
             query.bind("offset", offset);
             return query.mapToBean(Product.class).list();
         });
     }
 
-    public int countProducts(String categoryIds, String minPrice, String maxPrice, String sizes, String colors) {
+    public int countProducts(String categoryIds, String minPrice, String maxPrice, String sizes, String colors, String rating) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT p.id) FROM products p ");
         boolean hasSize = (sizes != null && !sizes.isEmpty());
         boolean hasColor = (colors != null && !colors.isEmpty());
@@ -299,6 +305,10 @@ public class ProductDao extends BaseDao {
         if (hasColor) sql.append(" AND c_v.id IN (<colorList>) ");
         if (hasSize) sql.append(" AND s_v.code IN (<sizeList>) ");
 
+        if (rating != null && !rating.isEmpty()) {
+            sql.append(" AND (SELECT COALESCE(ROUND(AVG(rating), 1), 0) FROM reviews WHERE product_id = p.id) >= :minRating ");
+        }
+
         return getJdbi().withHandle(handle -> {
             var query = handle.createQuery(sql.toString());
             if (!catIds.isEmpty()) {
@@ -319,6 +329,10 @@ public class ProductDao extends BaseDao {
 
             if (hasSize) {
                 query.bindList("sizeList", List.of(sizes.split(",")));
+            }
+
+            if (rating != null && !rating.isEmpty()) {
+                query.bind("minRating", Double.parseDouble(rating));
             }
 
             return query.mapTo(Integer.class).one();
