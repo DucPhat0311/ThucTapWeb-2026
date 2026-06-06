@@ -64,7 +64,40 @@ public class BlogAdminController extends HttpServlet {
             }
         }
 
-        request.setAttribute("blogList", allBlog);
+        int page = 1;
+        int pageSize = 5;
+
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
+        int totalItems = allBlog.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        if (page < 1) page = 1;
+        if (page > totalPages && totalPages > 0) page = totalPages;
+
+        int start = (page - 1) * pageSize;
+        int end = Math.min(start + pageSize, totalItems);
+        List<Blog> pagedBlogs = totalItems > 0 ? allBlog.subList(start, end) : allBlog;
+
+        request.setAttribute("blogList", pagedBlogs);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalItems", totalItems);
+
+        StringBuilder qs = new StringBuilder();
+        if (status != null && !status.trim().isEmpty()) {
+            qs.append("&status=").append(status);
+        }
+        request.setAttribute("qs", qs.toString());
+
         request.setAttribute("total", total);
         request.setAttribute("totalActive", totalActive);
         request.setAttribute("totalHidden", totalHidden);

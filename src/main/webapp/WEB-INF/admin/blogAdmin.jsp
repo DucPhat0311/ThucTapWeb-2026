@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Blog</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css"><link rel="stylesheet" href="${pageContext.request.contextPath}/css/views/blog.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
 </head>
@@ -106,6 +106,43 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <c:if test="${totalPages > 1}">
+                    <div class="pagination">
+                        <div class="pagination-info">
+                            Hiển thị ${(currentPage - 1) * pageSize + 1} - ${currentPage * pageSize >
+                            totalItems ? totalItems : currentPage * pageSize} của ${totalItems} bài viết
+                        </div>
+
+                        <div class="pagination-controls">
+                            <c:if test="${currentPage > 1}">
+                                <a href="${pageContext.request.contextPath}/blogAdmin?page=1${qs}"
+                                   class="page-btn">Đầu</a>
+                                <a href="${pageContext.request.contextPath}/blogAdmin?page=${currentPage - 1}${qs}"
+                                   class="page-btn">Trước</a>
+                            </c:if>
+
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <c:choose>
+                                    <c:when test="${i == currentPage}">
+                                        <span class="page-btn active">${i}</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/blogAdmin?page=${i}${qs}"
+                                           class="page-btn">${i}</a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <a href="${pageContext.request.contextPath}/blogAdmin?page=${currentPage + 1}${qs}"
+                                   class="page-btn">Sau</a>
+                                <a href="${pageContext.request.contextPath}/blogAdmin?page=${totalPages}${qs}"
+                                   class="page-btn">Cuối</a>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:if>
             </section>
         </main>
     </section>
