@@ -58,61 +58,20 @@
 
                                 <%-- Bộ lọc doanh thu --%>
 
-                                <div class="revenue-filters">
-                                            <form method="GET"
-                                                action="${pageContext.request.contextPath}/dashboardAdmin"
-                                                id="filterForm">
+                                    <div class="revenue-filters">
+                                        <form method="GET" action="${pageContext.request.contextPath}/dashboardAdmin"
+                                            id="filterForm">
 
-                                                <!-- Lọc theo năm -->
-                                                <div class="rev-filter-group">
-                                                    <label>Năm</label>
-                                                    <select name="year" id="filterYear">
-                                                        <c:forEach var="y" begin="2020" end="2030">
-                                                            <option value="${y}" ${selectedYear==y ? 'selected' : '' }>
-                                                                ${y}</option>
-                                                        </c:forEach>
-                                                    </select>
-                                                </div>
-
-                                                <!-- Lọc theo tháng -->
-                                                <div class="rev-filter-group">
-                                                    <label>Tháng</label>
-                                                    <select name="month" id="filterMonth">
-                                                        <option value="all" ${empty selectedMonth ? 'selected' : '' }>Tất cả tháng
-                                                        </option>
-                                                        <c:forEach var="m" begin="1" end="12">
-                                                            <option value="${m}" ${selectedMonth==m ? 'selected' : '' }>
-                                                                Tháng ${m}</option>
-                                                        </c:forEach>
-                                                    </select>
-                                                </div>
-
-                                                <!-- Từ ngày -->
-                                                <div class="rev-filter-group">
-                                                    <label>Từ ngày</label>
-                                                    <input type="date" name="startDate" id="filterStartDate"
-                                                        value="${startDate}">
-                                                </div>
-
-                                                <!-- Đến ngày -->
-                                                <div class="rev-filter-group">
-                                                    <label>Đến ngày</label>
-                                                    <input type="date" name="endDate" id="filterEndDate"
-                                                        value="${endDate}">
-                                                </div>
-
-                                                <!-- Nút hành động -->
-                                                <div class="rev-btn-actions">
-                                                    <button type="submit" class="btn-filter">
-                                                        Lọc dữ liệu
-                                                    </button>
-                                                    <a href="${pageContext.request.contextPath}/dashboardAdmin"
-                                                        class="btn-reset">
-                                                        Đặt lại
-                                                    </a>
-                                                </div>
-                                            </form>
-                                        </div>
+                                            <!-- Lọc theo năm -->
+                                            <div class="rev-filter-group">
+                                                <label>Năm</label>
+                                                <select name="year" id="filterYear">
+                                                    <c:forEach var="y" begin="2020" end="2030">
+                                                        <option value="${y}" ${selectedYear==y ? 'selected' : '' }>
+                                                            ${y}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
 
                                             <!-- Lọc theo tháng -->
                                             <div class="rev-filter-group">

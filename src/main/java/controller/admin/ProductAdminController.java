@@ -176,15 +176,52 @@ public class ProductAdminController extends HttpServlet {
                 }
                 p.setCategory_id(Integer.parseInt(req.getParameter("category_id")));
 
-                String imagePath = handleFileUpload(req, "imageFile");
-                if (imagePath != null && !imagePath.isEmpty()) {
-                    p.setThumbnail(imagePath);
+                List<Part> fileParts = req.getParts().stream()
+                        .filter(part -> "imageFiles".equals(part.getName()) && part.getSize() > 0
+                                && part.getSubmittedFileName() != null && !part.getSubmittedFileName().isEmpty())
+                        .collect(java.util.stream.Collectors.toList());
+
+                String mainImageIndexStr = req.getParameter("mainImageIndex");
+                int mainIndex = 0;
+                if (mainImageIndexStr != null) {
+                    try {
+                        mainIndex = Integer.parseInt(mainImageIndexStr);
+                    } catch (NumberFormatException ignored) {
+                    }
                 }
+
+                List<String> uploadedPaths = new java.util.ArrayList<>();
+                for (Part part : fileParts) {
+                    String path = CloudinaryUtil.uploadImage(part, "products");
+                    if (path != null) {
+                        uploadedPaths.add(path);
+                    }
+                }
+
+                if (!uploadedPaths.isEmpty()) {
+                    if (mainIndex >= 0 && mainIndex < uploadedPaths.size()) {
+                        p.setThumbnail(uploadedPaths.get(mainIndex));
+                    } else {
+                        p.setThumbnail(uploadedPaths.get(0));
+                    }
+                }
+
                 p.setStatus(req.getParameter("status"));
                 p.setDescription(req.getParameter("description"));
                 productDaoAdmin.insert(p);
 
                 int productId = productDaoAdmin.findAll().get(0).getId();
+
+                if (!uploadedPaths.isEmpty()) {
+                    dao.admin.ProductImgDaoAdmin imgDao = new dao.admin.ProductImgDaoAdmin();
+                    for (int i = 0; i < uploadedPaths.size(); i++) {
+                        model.ProductImage pImg = new model.ProductImage();
+                        pImg.setProductId(productId);
+                        pImg.setImageUrl(uploadedPaths.get(i));
+                        pImg.setMain(i == mainIndex);
+                        imgDao.insert(pImg);
+                    }
+                }
 
                 String[] sizes = req.getParameterValues("variant_size[]");
                 String[] colors = req.getParameterValues("variant_color[]");
@@ -235,9 +272,43 @@ public class ProductAdminController extends HttpServlet {
                 }
                 p.setCategory_id(Integer.parseInt(req.getParameter("category_id")));
                 p.setDescription(req.getParameter("description"));
-                String imagePath = handleFileUpload(req, "imageFile");
-                if (imagePath != null && !imagePath.isEmpty()) {
-                    p.setThumbnail(imagePath);
+                List<Part> fileParts = req.getParts().stream()
+                        .filter(part -> "imageFiles".equals(part.getName()) && part.getSize() > 0
+                                && part.getSubmittedFileName() != null && !part.getSubmittedFileName().isEmpty())
+                        .collect(java.util.stream.Collectors.toList());
+
+                String mainImageIndexStr = req.getParameter("mainImageIndex");
+                int mainIndex = 0;
+                if (mainImageIndexStr != null) {
+                    try {
+                        mainIndex = Integer.parseInt(mainImageIndexStr);
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+
+                List<String> uploadedPaths = new java.util.ArrayList<>();
+                for (Part part : fileParts) {
+                    String path = CloudinaryUtil.uploadImage(part, "products");
+                    if (path != null) {
+                        uploadedPaths.add(path);
+                    }
+                }
+
+                if (!uploadedPaths.isEmpty()) {
+                    if (mainIndex >= 0 && mainIndex < uploadedPaths.size()) {
+                        p.setThumbnail(uploadedPaths.get(mainIndex));
+                    } else {
+                        p.setThumbnail(uploadedPaths.get(0));
+                    }
+
+                    dao.admin.ProductImgDaoAdmin imgDao = new dao.admin.ProductImgDaoAdmin();
+                    for (int i = 0; i < uploadedPaths.size(); i++) {
+                        model.ProductImage pImg = new model.ProductImage();
+                        pImg.setProductId(p.getId());
+                        pImg.setImageUrl(uploadedPaths.get(i));
+                        pImg.setMain(i == mainIndex);
+                        imgDao.insert(pImg);
+                    }
                 } else {
                     Product oldProduct = productDaoAdmin.findById(p.getId());
                     if (oldProduct != null && oldProduct.getThumbnail() != null) {
@@ -266,22 +337,6 @@ public class ProductAdminController extends HttpServlet {
         }
 
         resp.sendRedirect(req.getContextPath() + "/productAdmin");
-    }
-
-    private String handleFileUpload(HttpServletRequest req, String fieldName)
-            throws IOException, ServletException {
-
-        Part filePart = req.getPart(fieldName);
-        if (filePart == null || filePart.getSize() == 0) {
-            return null;
-        }
-
-        String fileName = filePart.getSubmittedFileName();
-        if (fileName == null || fileName.isEmpty()) {
-            return null;
-        }
-
-        return CloudinaryUtil.uploadImage(filePart, "products");
     }
 
     private String escape(String s) {
