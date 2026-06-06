@@ -133,14 +133,13 @@
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${p.totalStock == 0}">
-                                                                    <span class="status blocked">0</span>
+                                                                    <span class="stock-badge out-of-stock">0</span>
                                                                 </c:when>
                                                                 <c:when test="${p.totalStock < 10}">
-                                                                    <span
-                                                                        class="status processing">${p.totalStock}</span>
+                                                                    <span class="stock-badge low-stock">${p.totalStock}</span>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <span class="status active">${p.totalStock}</span>
+                                                                    <span class="stock-badge in-stock">${p.totalStock}</span>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </td>

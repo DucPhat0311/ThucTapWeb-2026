@@ -41,6 +41,14 @@ public class ProductImgDaoAdmin extends BaseDao {
                 .execute());
     }
 
+    public void resetMainImage(int productId) {
+        getJdbi().useHandle(handle -> handle.createUpdate("""
+                UPDATE product_images SET is_main = false WHERE product_id = :productId
+                """)
+                .bind("productId", productId)
+                .execute());
+    }
+
     public void delete(int id) {
         getJdbi().useHandle(handle -> handle.createUpdate("""
                 DELETE FROM product_images WHERE id = :id
