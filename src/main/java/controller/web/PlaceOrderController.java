@@ -2,6 +2,7 @@ package controller.web;
 
 import dao.user.CartItemDao;
 import dao.user.PaymentTransactionDao;
+import dao.user.ProductDao;
 import dao.user.ProductVariantDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Product;
 import model.User;
 import model.constant.PaymentMethod;
 import model.constant.PaymentTransactionStatus;
@@ -34,6 +36,7 @@ public class PlaceOrderController extends HttpServlet {
     private CheckoutService checkoutService;
     private OrderPlacementService orderPlacementService;
     private VnPayService vnPayService;
+    private ProductDao productDao;
 
     @Override
     public void init() {
@@ -42,6 +45,7 @@ public class PlaceOrderController extends HttpServlet {
         checkoutService = new CheckoutService();
         orderPlacementService = new OrderPlacementService();
         vnPayService = new VnPayService();
+        productDao = new ProductDao();
     }
 
     @Override
@@ -74,6 +78,21 @@ public class PlaceOrderController extends HttpServlet {
         try {
             preparedCheckout = checkoutService.prepareOrder(user.getId(), checkoutCartId, variantIds, quantities);
             orderPlacement = checkoutService.resolveOrderPlacement(paymentMethod);
+
+            if (preparedCheckout != null && preparedCheckout.items() != null) {
+                for (CheckoutService.PreparedOrderItem item : preparedCheckout.items()) {
+                    if (item.variantDetail() != null) {
+                        int productId = item.variantDetail().getProductId();
+                        Product product = productDao.findById(productId);
+                        if (product == null || !"Đang hoạt động".equals(product.getStatus())) {
+                            request.setAttribute("checkoutError", "Đơn hàng chứa sản phẩm đã ngừng kinh doanh. Vui lòng quay lại giỏ hàng.");
+                            request.getRequestDispatcher("/checkout").forward(request, response);
+                            return;
+                        }
+                    }
+                }
+            }
+
         } catch (CheckoutService.CheckoutValidationException e) {
             handleCheckoutValidationError(e, session, response);
             return;
