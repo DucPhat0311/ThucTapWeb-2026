@@ -157,6 +157,15 @@ public class PlaceOrderController extends HttpServlet {
         session.setAttribute("lastOrderId", orderId);
 
         try {
+            NotificationDao notificationDao = new NotificationDao();
+            String title = "Đặt hàng thành công #" + orderId;
+            String message = "Đơn hàng của bạn đã được đặt thành công. Mã đơn: #" + orderId;
+            String url = request.getContextPath() + "/order-user?orderId=" + orderId;
+            notificationDao.createNotification(user.getId(), title, message, url);
+        } catch (Exception ignored) {
+        }
+
+        try {
             String userEmail = user.getEmail();
             String customerName = user.getFullName() == null || user.getFullName().isBlank() ? user.getUsername() : user.getFullName();
             String subject = "Xác nhận đơn hàng #" + orderId;
