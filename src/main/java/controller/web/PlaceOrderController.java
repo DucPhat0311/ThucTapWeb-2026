@@ -15,8 +15,10 @@ import model.User;
 import model.constant.PaymentMethod;
 import model.constant.PaymentTransactionStatus;
 import service.CheckoutService;
+import service.EmailService;
 import service.OrderPlacementService;
 import service.VnPayService;
+import dao.user.NotificationDao;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -153,6 +155,26 @@ public class PlaceOrderController extends HttpServlet {
         }
 
         session.setAttribute("lastOrderId", orderId);
+
+        try {
+            String userEmail = user.getEmail();
+            String customerName = user.getFullName() == null || user.getFullName().isBlank() ? user.getUsername() : user.getFullName();
+            String subject = "Xác nhận đơn hàng #" + orderId;
+            String content = "<p>Chào " + customerName + ",</p>"
+                    + "<p>Cảm ơn bạn! Đơn hàng của bạn (Mã đơn: <strong>#" + orderId + "</strong>) đã được đặt thành công.</p>"
+                    + "<p>Tổng thanh toán: <strong>" + String.format("%,.0f", finalAmount) + " VND</strong></p>"
+                    + "<p>Bạn có thể xem chi tiết đơn hàng trong trang tài khoản của bạn.</p>"
+                    + "<p>Trân trọng,<br/>AURA Studio</p>";
+            if (userEmail != null && !userEmail.isBlank()) {
+                try {
+                    EmailService.sendEmail(userEmail, subject, content);
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (Exception ignored) {
+        }
 
         response.sendRedirect("order-success");
     }
