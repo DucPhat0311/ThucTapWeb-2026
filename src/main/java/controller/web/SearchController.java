@@ -1,5 +1,6 @@
 package controller.web;
 
+import dao.user.ProductDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -48,6 +49,7 @@ public class SearchController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentPage", page);
 
+//        saveSearchHistory(request, response, keyword);
 
         request.getRequestDispatcher("/WEB-INF/views/search.jsp").forward(request, response);
     }

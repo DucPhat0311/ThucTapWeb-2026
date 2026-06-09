@@ -54,13 +54,20 @@
             </a>
         </div>
 
-        <div class="search-bar">
+        <div class="search-bar" style="position: relative;">
             <form action="<%= contextPath %>/search" method="get">
-                <input type="text" name="keyword" value="${param.keyword}" placeholder="Tìm kiếm sản phẩm..." required>
-                <button type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
+                <input type="text"
+                       id="headerSearchInput"
+                       name="keyword"
+                       value="${param.keyword}"
+                       placeholder="Tìm kiếm sản phẩm..."
+                       required
+                       autocomplete="off"> <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
             </form>
+
+            <div id="searchHistoryDropdown" class="search-history-dropdown" style="display: none;"></div>
         </div>
 
         <div class="actions">
@@ -207,4 +214,70 @@
             }
         });
     })();
+    (function () {
+        var searchInput = document.getElementById("headerSearchInput");
+        var historyDropdown = document.getElementById("searchHistoryDropdown");
+        var contextPath = "<%= contextPath %>";
+
+        if (!searchInput || !historyDropdown) return;
+
+        var apiUrl = contextPath + "/search-history";
+
+        function checkAndShowHistory() {
+            if (searchInput.value.trim() !== "") {
+                historyDropdown.style.display = "none";
+                return;
+            }
+
+            fetch(apiUrl)
+                .then(function (response) {
+                    if (!response.ok) throw new Error("Chưa đăng nhập hoặc lỗi hệ thống");
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data && data.length > 0) {
+                        historyDropdown.innerHTML = "";
+
+                        data.forEach(function (keyword) {
+                            var item = document.createElement("div");
+                            item.className = "history-item";
+                            item.style.display = "flex";
+                            item.style.alignItems = "center";
+                            item.style.padding = "10px 15px";
+                            item.style.cursor = "pointer";
+
+                            item.innerHTML =
+                                '<i class="fa-solid fa-clock-rotate-left" style="color: #999; margin-right: 12px; font-size: 0.9rem;"></i>' +
+                                '<span style="color: #333; font-size: 0.95rem;">' + keyword + '</span>';
+
+                            item.addEventListener("mousedown", function (e) {
+                                e.preventDefault();
+                                var searchUrl = contextPath.endsWith('/') ? contextPath + "search" : contextPath + "/search";
+                                window.location.href = searchUrl + "?keyword=" + encodeURIComponent(keyword);
+                            });
+
+                            historyDropdown.appendChild(item);
+                        });
+
+                        historyDropdown.style.display = "block";
+                    } else {
+                        historyDropdown.style.display = "none";
+                    }
+                })
+                .catch(function (error) {
+                    historyDropdown.style.display = "none";
+                });
+        }
+
+        searchInput.addEventListener("focus", checkAndShowHistory);
+
+        searchInput.addEventListener("input", checkAndShowHistory);
+
+        document.addEventListener("click", function (event) {
+            if (!searchInput.contains(event.target) && !historyDropdown.contains(event.target)) {
+                historyDropdown.style.display = "none";
+            }
+        });
+    })();
+
 </script>
