@@ -1,12 +1,10 @@
 package controller.web;
 
-import dao.user.ProductDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import model.Product;
 import model.User;
 import service.ProductService;
@@ -49,9 +47,11 @@ public class SearchController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currentPage", page);
 
-//        saveSearchHistory(request, response, keyword);
+        User userLog = (User) request.getSession().getAttribute("userlogin");
+        if (userLog != null && keyword != null && !keyword.trim().isEmpty()) {
+            productService.saveSearchHistory(userLog.getId(), keyword.trim());
+        }
 
         request.getRequestDispatcher("/WEB-INF/views/search.jsp").forward(request, response);
     }
 }
-

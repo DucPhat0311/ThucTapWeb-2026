@@ -116,4 +116,11 @@ public List<Product> handleFilterProducts(String categoryId, String sortType, St
         }
         return productDao.countAndSearch(keyword.trim());
     }
+
+    public void saveSearchHistory(int userId, String keyword) {
+        if (keyword == null) return;
+        String kw = keyword.trim();
+        if (kw.isEmpty()) return;
+        productDao.saveSearchHistory(userId, kw);
+    }
 }
