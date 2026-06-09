@@ -117,6 +117,15 @@ public class VnPayReturnController extends HttpServlet {
                     } catch (RuntimeException e) {
                         e.printStackTrace();
                     }
+                    try {
+                        NotificationDao nd = new NotificationDao();
+                        String title = "Thanh toán thành công #" + orderId;
+                        String message = "Thanh toán cho đơn hàng của bạn đã thành công. Mã đơn: #" + orderId;
+                        String url = request.getContextPath() + "/order-user?orderId=" + orderId;
+                        nd.createNotification(order.getUserId(), title, message, url);
+                    } catch (Exception ignored) {
+
+                    }
                 }
 
 
