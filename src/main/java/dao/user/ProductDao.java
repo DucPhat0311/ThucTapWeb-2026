@@ -2,6 +2,7 @@ package dao.user;
 
 import dao.core.BaseDao;
 import model.Product;
+import model.SearchHistory;
 import org.jdbi.v3.core.Jdbi;
 import java.util.ArrayList;
 import java.util.List;
@@ -389,6 +390,50 @@ public class ProductDao extends BaseDao {
                 query.bind("word" + i, "% " + words[i].toLowerCase() + " %");
             }
             return query.mapTo(Integer.class).one();
+            });
+            }
+
+    public void saveSearchHistory(int userId, String keyword) {
+        getJdbi().useHandle(handle -> {
+            // xóa từ khóa cũ tồn tại và đưa lên đầu
+            handle.createUpdate("DELETE FROM user_search_history WHERE user_id = :userId AND keyword = :keyword")
+                    .bind("userId", userId)
+                    .bind("keyword", keyword)
+                    .execute();
+
+            // thêm từ khóa vừa mới tìm
+            handle.createUpdate("INSERT INTO user_search_history (user_id, keyword) VALUES (:userId, :keyword)")
+                    .bind("userId", userId)
+                    .bind("keyword", keyword)
+                    .execute();
+
+            // xóa từ khóa cux ==> giữ 10 cái mới nhất
+            handle.createUpdate("""
+                DELETE FROM user_search_history 
+                WHERE user_id = :userId 
+                AND id NOT IN (
+                    SELECT id FROM (
+                        SELECT id FROM user_search_history 
+                        WHERE user_id = :userId 
+                        ORDER BY id DESC 
+                        LIMIT 10
+                    ) AS temp
+                )
+            """)
+                    .bind("userId", userId)
+                    .execute();
         });
     }
+
+    public List<SearchHistory> getSearchHistory(int userId) {
+        String sql = "SELECT id, user_id AS userId, keyword, created_at AS createdAt FROM user_search_history WHERE user_id = :userId ORDER BY id DESC LIMIT 5";
+        return getJdbi().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("userId", userId)
+                        .mapToBean(SearchHistory.class)
+                        .list()
+        );
+    }
+
+
 }
