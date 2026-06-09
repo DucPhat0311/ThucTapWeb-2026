@@ -13,6 +13,8 @@ import model.constant.OrderStatus;
 import model.constant.PaymentStatus;
 import model.constant.PaymentTransactionStatus;
 import service.OrderService;
+import service.EmailService;
+import dao.user.NotificationDao;
 import service.VnPayService;
 
 import java.io.IOException;
@@ -99,6 +101,27 @@ public class VnPayReturnController extends HttpServlet {
             );
 
             finalizePaidOrder(order, session);
+
+            try {
+                String userEmail = orderService.getUserEmailByOrderId(orderId);
+                String customerName = order.getName() == null || order.getName().isBlank() ? "Bạn" : order.getName();
+                String subject = "Thanh toán thành công cho đơn hàng #" + orderId;
+                String content = "<p>Chào " + customerName + ",</p>"
+                        + "<p>Thanh toán cho đơn hàng <strong>#" + orderId + "</strong> đã được xác nhận thành công.</p>"
+                        + "<p>Số tiền: <strong>" + String.format("%,.0f", order.getFinalAmount()) + " VND</strong></p>"
+                        + "<p>Cảm ơn bạn đã thanh toán. Đơn hàng đang trong quá trình xử lý.</p>"
+                        + "<p>Trân trọng,<br/>AURA Studio</p>";
+                if (userEmail != null && !userEmail.isBlank()) {
+                    try {
+                        EmailService.sendEmail(userEmail, subject, content);
+                    } catch (RuntimeException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            } catch (Exception ignored) {
+            }
 
             session.setAttribute("lastOrderId", orderId);
             response.sendRedirect("order-success");
