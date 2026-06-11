@@ -47,6 +47,16 @@ public class MyOrderController extends HttpServlet {
             orders = orderDao.getByUserId(user.getId());
         }
 
+        // thêm ràng buộc paymentstatus = paid
+        orders = orders.stream()
+                .filter(order -> {
+                    if ("COMPLETED".equalsIgnoreCase(order.getOrderStatus())) {
+                        return PaymentStatus.PAID.equalsIgnoreCase(order.getPaymentStatuses());
+                    }
+                    return true;
+                })
+                .toList();
+
         for (Order order : orders) {
             order.setItems(orderItemDao.getByOrderId(order.getId()));
         }
