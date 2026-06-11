@@ -34,10 +34,6 @@
         %>
 
         <div class="login-box">
-            <a href="${pageContext.request.contextPath}/home">
-                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-            </a>
-
             <h2 class="dangNhap">Đăng nhập</h2>
 
             <form id="loginForm" action="${pageContext.request.contextPath}/login" method="post" novalidate>

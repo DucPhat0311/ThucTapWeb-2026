@@ -25,6 +25,11 @@ public class NotificationController extends HttpServlet {
             return;
         }
 
+        List<Notification> notes = notificationDao.findLatestForUser(userLog.getId());
+        request.setAttribute("notes", notes);
+
+        notificationDao.markAllReadForUser(userLog.getId());
+
         List<Notification> allNotifications = notificationDao.findAllByUserId(userLog.getId());
         request.setAttribute("allNotifications", allNotifications);
         request.setAttribute("pageTitle", "Thông báo của tôi");

@@ -1,10 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="model.User" %>
 <%@ page import="model.Category" %>
 <%@ page import="dao.user.CartDao" %>
 <%@ page import="dao.user.CartItemDao" %>
 <%@ page import="dao.user.CategoryDao" %>
 <%@ page import="java.util.List" %>
+<%@ page import="dao.user.NotificationDao" %>
+<%@ page import="model.Notification" %>
 
 <%
     String contextPath = request.getContextPath();
@@ -37,7 +40,7 @@
     <title><%= pageTitle != null ? pageTitle : "AURA Studio" %></title>
 
     <% if (pageCss != null && !pageCss.toString().isBlank()) { %>
-        <link rel="stylesheet" href="<%= contextPath %>/css/<%= pageCss %>">
+    <link rel="stylesheet" href="<%= contextPath %>/css/<%= pageCss %>">
     <% } %>
     <link rel="stylesheet" href="<%= contextPath %>/css/include/header.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/include/footer.css">
@@ -53,7 +56,6 @@
                 <img src="<%= contextPath %>/img/logo.png" alt="AURA Studio Logo">
             </a>
         </div>
-
         <div class="search-bar" style="position: relative;">
             <form action="<%= contextPath %>/search" method="get">
                 <input type="text"
@@ -62,9 +64,10 @@
                        value="${param.keyword}"
                        placeholder="Tìm kiếm sản phẩm..."
                        required
-                       autocomplete="off"> <button type="submit">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
+                       autocomplete="off">
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
             </form>
 
             <div id="searchHistoryDropdown" class="search-history-dropdown" style="display: none;"></div>
@@ -82,12 +85,12 @@
                 </a>
                 <ul class="user-dropdown">
                     <% if (loggedIn) { %>
-                        <li><a href="<%= contextPath %>/profile">Thông tin cá nhân</a></li>
-                        <li><a href="<%= contextPath %>/order-user">Đơn hàng của tôi</a></li>
-                        <li><a href="<%= contextPath %>/logout">Đăng xuất</a></li>
+                    <li><a href="<%= contextPath %>/profile">Thông tin cá nhân</a></li>
+                    <li><a href="<%= contextPath %>/order-user">Đơn hàng của tôi</a></li>
+                    <li><a href="<%= contextPath %>/logout">Đăng xuất</a></li>
                     <% } else { %>
-                        <li><a href="<%= contextPath %>/login">Đăng nhập</a></li>
-                        <li><a href="<%= contextPath %>/register">Đăng ký</a></li>
+                    <li><a href="<%= contextPath %>/login">Đăng nhập</a></li>
+                    <li><a href="<%= contextPath %>/register">Đăng ký</a></li>
                     <% } %>
                 </ul>
             </div>
@@ -95,23 +98,61 @@
             <a href="<%= loggedIn ? contextPath + "/my-cart" : contextPath + "/login" %>" class="iconCart">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <% if (loggedIn) { %>
-                    <span class="cart-count" id="cartCountBadge"
-                          style="<%= cartSize == 0 ? "display:none" : "display:inline-block" %>">
-                        <%= cartSize %>
-                    </span>
+                <span class="cart-count" id="cartCountBadge"
+                      style="<%= cartSize == 0 ? "display:none" : "display:inline-block" %>">
+                       <%= cartSize %>
+                   </span>
                 <% } %>
             </a>
 
             <div class="notification-wrapper">
                 <p id="thongBao" class="iconNotification">
                     <i class="fa-regular fa-bell"></i>
+                    <% if (loggedIn) {
+                        int unread = new NotificationDao().countUnreadForUser(userLog.getId());
+                        if (unread > 0) {
+                    %>
+                    <span class="notification-badge" id="notificationBadge" data-count="<%= unread %>"><%= unread %></span>
+                    <% } } %>
                 </p>
 
                 <div id="notification-box">
+                    <% if (loggedIn) {
+                        List<Notification> notes = new NotificationDao().findLatestForUser(userLog.getId());
+                        request.setAttribute("notes", notes);
+                    %>
+                    <div class="notification-header">
+                        <span>Thông báo</span>
+                        <button type="button" id="closeNotifBoxBtn" class="close-btn" aria-label="Close">×</button>
+                    </div>
                     <ul>
-                        <li>Hiện không có thông báo nào.</li>
-                        <li>Đăng nhập để được nhận thêm nhiều ưu đãi.</li>
+                        <c:if test="${not empty notes}">
+                            <c:forEach var="n" items="${notes}">
+                                <li class="notification-item ${n.isRead() ? '' : 'unread'}">
+                                    <a class="notif-link"
+                                       href="${not empty n.url and not n.url.isBlank() ? n.url : '#'}"
+                                       data-id="${n.id}"
+                                       style="text-decoration: none; color: inherit; display: block; width: 100%;">
+
+
+                                        <div class="notif-title">${n.title}</div>
+                                        <div class="notif-message">${n.message}</div>
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </c:if>
+
+
+                        <c:if test="${empty notes}">
+                            <li class="empty-message">Hiện không có thông báo nào.</li>
+                        </c:if>
                     </ul>
+                    <% } else { %>
+                    <ul>
+                        <li class="empty-message">Hiện không có thông báo nào.</li>
+                        <li class="empty-message">Đăng nhập để được nhận thêm nhiều ưu đãi.</li>
+                    </ul>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -121,20 +162,8 @@
         <div class="menu">
             <ul>
                 <li><a href="<%= contextPath %>/home">Trang chủ</a></li>
-                <li><a href="<%= contextPath %>/product">Danh mục ▾</a>
-                    <ul class="sub">
-                        <%
-                            List<Category> categoryTree = new CategoryDao().getCategoryTree();
-                            for (Category parentCat : categoryTree) {
-                        %>
-                            <li class="subItem">
-                                <a href="<%= contextPath %>/product?category=<%= parentCat.getId() %>"><%= parentCat.getName() %></a>
-                            </li>
-                        <% } %>
-                    </ul>
-                </li>
+                <li><a href="<%= contextPath %>/product">Danh mục</a></li>
                 <li><a href="<%= contextPath %>/blog">Bài viết</a></li>
-                <li><a href="<%= contextPath %>/sales">Khuyến mãi</a></li>
                 <li><a href="<%= contextPath %>/contact">Liên hệ</a></li>
             </ul>
         </div>
@@ -252,13 +281,11 @@
 
                             item.addEventListener("mousedown", function (e) {
                                 e.preventDefault();
-                                var searchUrl = contextPath.endsWith('/') ? contextPath + "search" : contextPath + "/search";
-                                window.location.href = searchUrl + "?keyword=" + encodeURIComponent(keyword);
+                                window.location.href = "/search?keyword=" + encodeURIComponent(keyword);
                             });
 
                             historyDropdown.appendChild(item);
                         });
-
                         historyDropdown.style.display = "block";
                     } else {
                         historyDropdown.style.display = "none";
@@ -270,7 +297,6 @@
         }
 
         searchInput.addEventListener("focus", checkAndShowHistory);
-
         searchInput.addEventListener("input", checkAndShowHistory);
 
         document.addEventListener("click", function (event) {
@@ -280,4 +306,32 @@
         });
     })();
 
+    (function () {
+        var bell = document.getElementById('thongBao');
+        var box = document.getElementById('notification-box');
+        var closeBtn = document.getElementById('closeNotifBoxBtn');
+
+        if (!bell || !box) return;
+        bell.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            box.classList.toggle('active');
+        });
+
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                box.classList.remove('active');
+            });
+        }
+
+
+        document.addEventListener('click', function (e) {
+            if (!bell.contains(e.target) && !box.contains(e.target)) {
+                box.classList.remove('active');
+            }
+        });
+    })();
 </script>
