@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="application" />
 <%@ page import="model.User" %>
 <%@ page import="model.Category" %>
 <%@ page import="dao.user.CartDao" %>
@@ -246,10 +247,8 @@
     (function () {
         var searchInput = document.getElementById("headerSearchInput");
         var historyDropdown = document.getElementById("searchHistoryDropdown");
-        var contextPath = "<%= contextPath %>";
-
         if (!searchInput || !historyDropdown) return;
-
+        var contextPath = "${contextPath}";
         var apiUrl = contextPath + "/search-history";
 
         function checkAndShowHistory() {
@@ -281,7 +280,7 @@
 
                             item.addEventListener("mousedown", function (e) {
                                 e.preventDefault();
-                                window.location.href = "/search?keyword=" + encodeURIComponent(keyword);
+                                window.location.href = contextPath + "/search?keyword=" + encodeURIComponent(keyword);
                             });
 
                             historyDropdown.appendChild(item);
