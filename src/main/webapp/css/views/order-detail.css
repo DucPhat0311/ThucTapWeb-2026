@@ -641,11 +641,39 @@
 }
 
 .return-media-preview-item {
+    position: relative;
     min-width: 0;
     padding: 8px;
     background: #ffffff;
     border: 1px solid #eadfd2;
     border-radius: 8px;
+}
+
+.return-media-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.72);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.return-media-remove:hover {
+    background: #b8473f;
+}
+
+.return-media-remove i {
+    color: inherit;
+    font-size: 12px;
 }
 
 .return-media-preview-item img {
@@ -771,6 +799,50 @@
 
 .return-request-details p:last-child {
     margin-bottom: 0;
+}
+
+.return-evidence {
+    margin-top: 18px;
+    padding-top: 17px;
+    border-top: 1px solid #e4d6c5;
+}
+
+.return-evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.return-evidence-item {
+    display: block;
+    min-width: 0;
+    color: #4c4037;
+    text-decoration: none;
+}
+
+.return-evidence-item img,
+.return-evidence-item video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid #e6d8ca;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.return-evidence-item.video video {
+    background: #111;
+}
+
+.return-evidence-item span {
+    display: block;
+    margin-top: 7px;
+    overflow: hidden;
+    color: #76675d;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .return-progress {
@@ -944,6 +1016,10 @@
     .return-media-preview {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .return-evidence-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 767px) {
@@ -984,6 +1060,10 @@
 
     .return-media-grid,
     .return-media-preview {
+        grid-template-columns: 1fr;
+    }
+
+    .return-evidence-grid {
         grid-template-columns: 1fr;
     }
 }

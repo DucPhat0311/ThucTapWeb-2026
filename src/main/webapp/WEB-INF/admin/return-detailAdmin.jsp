@@ -74,6 +74,30 @@
                     <p><c:out value="${orderReturn.adminNote}"/></p>
                 </div>
             </c:if>
+            <c:if test="${not empty orderReturn.mediaList}">
+                <div class="detail-content return-evidence">
+                    <span>Bằng chứng khách hàng gửi</span>
+                    <div class="return-evidence-grid">
+                        <c:forEach var="media" items="${orderReturn.mediaList}">
+                            <a class="return-evidence-item ${media.video ? 'video' : 'image'}"
+                               href="${media.mediaUrl}"
+                               target="_blank"
+                               rel="noopener">
+                                <c:choose>
+                                    <c:when test="${media.image}">
+                                        <img src="${media.mediaUrl}" alt="${media.originalName}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <video src="${media.mediaUrl}" controls preload="metadata"></video>
+                                    </c:otherwise>
+                                </c:choose>
+                                <strong><c:out value="${media.originalName}"/></strong>
+                                <small>${media.createdAtFormatted}</small>
+                            </a>
+                        </c:forEach>
+                    </div>
+                </div>
+            </c:if>
         </section>
 
         <section class="card">

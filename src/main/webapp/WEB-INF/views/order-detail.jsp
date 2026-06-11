@@ -304,6 +304,29 @@
                                                             <p><strong>Thời gian hoàn tiền:</strong> ${orderReturn.refundedAtFormatted}</p>
                                                         </c:if>
                                                     </div>
+                                                    <c:if test="${not empty orderReturn.mediaList}">
+                                                        <div class="return-evidence">
+                                                            <span class="return-caption">Bằng chứng đã gửi</span>
+                                                            <div class="return-evidence-grid">
+                                                                <c:forEach var="media" items="${orderReturn.mediaList}">
+                                                                    <a class="return-evidence-item ${media.video ? 'video' : 'image'}"
+                                                                       href="${media.mediaUrl}"
+                                                                       target="_blank"
+                                                                       rel="noopener">
+                                                                        <c:choose>
+                                                                            <c:when test="${media.image}">
+                                                                                <img src="${media.mediaUrl}" alt="${media.originalName}">
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <video src="${media.mediaUrl}" controls preload="metadata"></video>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                        <span><c:out value="${media.originalName}" /></span>
+                                                                    </a>
+                                                                </c:forEach>
+                                                            </div>
+                                                        </div>
+                                                    </c:if>
                                                 </div>
 
                                                 <div class="return-progress">
@@ -433,15 +456,30 @@
                                 const maxVideoSize = 30 * 1024 * 1024;
                                 const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
                                 const allowedVideoTypes = ["video/mp4", "video/webm"];
+                                let selectedImages = [];
+                                let selectedVideos = [];
 
                                 function setError(message) {
                                     errorBox.textContent = message || "";
                                     errorBox.style.display = message ? "block" : "none";
                                 }
 
+                                function syncFileInput(input, files) {
+                                    const dataTransfer = new DataTransfer();
+                                    files.forEach(function (file) {
+                                        dataTransfer.items.add(file);
+                                    });
+                                    input.files = dataTransfer.files;
+                                }
+
+                                function syncInputs() {
+                                    syncFileInput(imageInput, selectedImages);
+                                    syncFileInput(videoInput, selectedVideos);
+                                }
+
                                 function validateFiles() {
-                                    const images = Array.from(imageInput.files || []);
-                                    const videos = Array.from(videoInput.files || []);
+                                    const images = selectedImages;
+                                    const videos = selectedVideos;
 
                                     if (images.length > maxImages) {
                                         return "Bạn chỉ được tải lên tối đa 3 ảnh.";
@@ -472,11 +510,21 @@
                                     return "";
                                 }
 
+                                function createRemoveButton(label, onClick) {
+                                    const button = document.createElement("button");
+                                    button.type = "button";
+                                    button.className = "return-media-remove";
+                                    button.setAttribute("aria-label", label);
+                                    button.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                                    button.addEventListener("click", onClick);
+                                    return button;
+                                }
+
                                 function renderPreview() {
                                     setError(validateFiles());
                                     preview.innerHTML = "";
 
-                                    Array.from(imageInput.files || []).forEach(function (file) {
+                                    selectedImages.forEach(function (file, index) {
                                         const item = document.createElement("div");
                                         item.className = "return-media-preview-item";
 
@@ -490,12 +538,17 @@
                                         const name = document.createElement("span");
                                         name.textContent = file.name;
 
+                                        item.appendChild(createRemoveButton("Xóa ảnh " + file.name, function () {
+                                            selectedImages.splice(index, 1);
+                                            syncInputs();
+                                            renderPreview();
+                                        }));
                                         item.appendChild(img);
                                         item.appendChild(name);
                                         preview.appendChild(item);
                                     });
 
-                                    Array.from(videoInput.files || []).forEach(function (file) {
+                                    selectedVideos.forEach(function (file, index) {
                                         const item = document.createElement("div");
                                         item.className = "return-media-preview-item video";
 
@@ -505,15 +558,31 @@
                                         const name = document.createElement("span");
                                         name.textContent = file.name;
 
+                                        item.appendChild(createRemoveButton("Xóa video " + file.name, function () {
+                                            selectedVideos.splice(index, 1);
+                                            syncInputs();
+                                            renderPreview();
+                                        }));
                                         item.appendChild(icon);
                                         item.appendChild(name);
                                         preview.appendChild(item);
                                     });
                                 }
 
-                                imageInput.addEventListener("change", renderPreview);
-                                videoInput.addEventListener("change", renderPreview);
+                                imageInput.addEventListener("change", function () {
+                                    selectedImages = Array.from(imageInput.files || []);
+                                    syncInputs();
+                                    renderPreview();
+                                });
+
+                                videoInput.addEventListener("change", function () {
+                                    selectedVideos = Array.from(videoInput.files || []);
+                                    syncInputs();
+                                    renderPreview();
+                                });
+
                                 form.addEventListener("submit", function (event) {
+                                    syncInputs();
                                     const message = validateFiles();
                                     if (message) {
                                         event.preventDefault();
