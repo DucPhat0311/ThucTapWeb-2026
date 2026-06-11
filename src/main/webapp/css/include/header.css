@@ -1224,6 +1224,21 @@ header .sub::before {
     color: inherit !important;
 }
 
+.header-bottom .menu ul li a {
+    text-decoration: none;
+    color: #6F4E37;
+    padding: 10px 15px;
+    display: block;
+    transition: all 0.3s ease;
+    border-bottom: 5px solid transparent;
+}
+
+.header-bottom .menu ul li a:hover,
+.header-bottom .menu ul li a.active {
+    color: #A67B5B !important;
+    border-bottom: 2px solid #A67B5B !important;
+    background-color: rgba(245, 245, 220, 0.3);
+}
 
 
 
