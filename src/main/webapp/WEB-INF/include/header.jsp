@@ -162,10 +162,22 @@
     <nav class="header-bottom">
         <div class="menu">
             <ul>
-                <li><a href="<%= contextPath %>/home">Trang chủ</a></li>
-                <li><a href="<%= contextPath %>/product">Danh mục</a></li>
-                <li><a href="<%= contextPath %>/blog">Bài viết</a></li>
-                <li><a href="<%= contextPath %>/contact">Liên hệ</a></li>
+                <li>
+                    <a href="${contextPath}/home"
+                       class="${pageContext.request.requestURI.contains('/home') ? 'active' : ''}">Trang chủ</a>
+                </li>
+                <li>
+                    <a href="${contextPath}/product"
+                       class="${pageContext.request.requestURI.contains('/product') ? 'active' : ''}">Danh mục</a>
+                </li>
+                <li>
+                    <a href="${contextPath}/blog"
+                       class="${pageContext.request.requestURI.contains('/blog') ? 'active' : ''}">Bài viết</a>
+                </li>
+                <li>
+                    <a href="${contextPath}/contact"
+                       class="${pageContext.request.requestURI.contains('/contact') ? 'active' : ''}">Liên hệ</a>
+                </li>
             </ul>
         </div>
     </nav>
