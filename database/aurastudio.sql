@@ -422,6 +422,28 @@ CREATE TABLE `order_returns`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for order_return_media
+-- ----------------------------
+DROP TABLE IF EXISTS `order_return_media`;
+CREATE TABLE `order_return_media`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_return_id` int NOT NULL,
+  `media_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `media_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `original_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_order_return_media_return_id`(`order_return_id` ASC) USING BTREE,
+  INDEX `idx_order_return_media_type`(`media_type` ASC) USING BTREE,
+  CONSTRAINT `fk_order_return_media_return` FOREIGN KEY (`order_return_id`) REFERENCES `order_returns` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `chk_order_return_media_type` CHECK (`media_type` in (_utf8mb4'IMAGE',_utf8mb4'VIDEO'))
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'Luu bang chung anh va video cho yeu cau doi tra hoan hang' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of order_return_media
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for order_tracking
 -- ----------------------------
 DROP TABLE IF EXISTS `order_tracking`;

@@ -5,6 +5,8 @@ import model.constant.OrderReturnStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderReturn {
     private int id;
@@ -27,6 +29,7 @@ public class OrderReturn {
     private double orderAmount;
     private String paymentMethod;
     private String paymentStatus;
+    private List<OrderReturnMedia> mediaList = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -186,6 +189,14 @@ public class OrderReturn {
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public List<OrderReturnMedia> getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(List<OrderReturnMedia> mediaList) {
+        this.mediaList = mediaList == null ? new ArrayList<>() : mediaList;
     }
 
     public String getReasonLabel() {
