@@ -145,7 +145,7 @@
 
                                                                     <div class="review-section">
                                                                         <c:if
-                                                                            test="${!i.reviewed && o.orderStatus == 'COMPLETED'}">
+                                                                            test="${!i.reviewed && o.orderStatus == 'COMPLETED' && o.paymentStatuses == 'PAID'}">
                                                                             <button class="btn-review"
                                                                                 onclick="openReviewModal(${i.productId}, ${i.id})">
                                                                                 Đánh giá
