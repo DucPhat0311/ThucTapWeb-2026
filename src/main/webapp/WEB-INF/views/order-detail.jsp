@@ -343,6 +343,7 @@
                                                     theo chính sách 07 ngày của AURA Studio.
                                                 </p>
                                                 <form method="post" action="${pageContext.request.contextPath}/order-return"
+                                                      enctype="multipart/form-data"
                                                       class="return-request-form">
                                                     <input type="hidden" name="orderId" value="${order.id}">
 
@@ -358,6 +359,43 @@
                                                     <textarea id="returnDescription" name="description" maxlength="1000" rows="4"
                                                               placeholder="Mô tả tình trạng sản phẩm hoặc lý do bạn muốn trả hàng..."
                                                               required></textarea>
+
+                                                    <div class="return-media-upload">
+                                                        <label>Bằng chứng đổi trả</label>
+                                                        <p class="return-media-hint">
+                                                            Tải lên tối đa 3 ảnh và 1 video ngắn để shop kiểm tra yêu cầu nhanh hơn.
+                                                        </p>
+
+                                                        <div class="return-media-grid">
+                                                            <div class="return-media-field">
+                                                                <span class="return-media-label">
+                                                                    <i class="fa-regular fa-image"></i>
+                                                                    Ảnh sản phẩm
+                                                                </span>
+                                                                <input type="file"
+                                                                       id="returnImages"
+                                                                       name="returnImages"
+                                                                       accept="image/jpeg,image/png,image/webp"
+                                                                       multiple>
+                                                                <small>Tối đa 3 ảnh, mỗi ảnh không quá 5MB.</small>
+                                                            </div>
+
+                                                            <div class="return-media-field">
+                                                                <span class="return-media-label">
+                                                                    <i class="fa-solid fa-video"></i>
+                                                                    Video ngắn
+                                                                </span>
+                                                                <input type="file"
+                                                                       id="returnVideo"
+                                                                       name="returnVideo"
+                                                                       accept="video/mp4,video/webm">
+                                                                <small>Tối đa 1 video, không quá 30MB.</small>
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="returnMediaError" class="return-media-error"></div>
+                                                        <div id="returnMediaPreview" class="return-media-preview"></div>
+                                                    </div>
 
                                                     <button type="submit" class="btn-return-request">
                                                         Gửi yêu cầu trả hàng
@@ -378,5 +416,111 @@
                                 </div>
                             </div>
                         </section>
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const form = document.querySelector(".return-request-form");
+                                if (!form) {
+                                    return;
+                                }
+
+                                const imageInput = document.getElementById("returnImages");
+                                const videoInput = document.getElementById("returnVideo");
+                                const preview = document.getElementById("returnMediaPreview");
+                                const errorBox = document.getElementById("returnMediaError");
+                                const maxImages = 3;
+                                const maxImageSize = 5 * 1024 * 1024;
+                                const maxVideoSize = 30 * 1024 * 1024;
+                                const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
+                                const allowedVideoTypes = ["video/mp4", "video/webm"];
+
+                                function setError(message) {
+                                    errorBox.textContent = message || "";
+                                    errorBox.style.display = message ? "block" : "none";
+                                }
+
+                                function validateFiles() {
+                                    const images = Array.from(imageInput.files || []);
+                                    const videos = Array.from(videoInput.files || []);
+
+                                    if (images.length > maxImages) {
+                                        return "Bạn chỉ được tải lên tối đa 3 ảnh.";
+                                    }
+
+                                    if (videos.length > 1) {
+                                        return "Bạn chỉ được tải lên tối đa 1 video.";
+                                    }
+
+                                    for (const image of images) {
+                                        if (!allowedImageTypes.includes(image.type)) {
+                                            return "Ảnh bằng chứng chỉ hỗ trợ JPG, PNG hoặc WEBP.";
+                                        }
+                                        if (image.size > maxImageSize) {
+                                            return "Mỗi ảnh bằng chứng không được vượt quá 5MB.";
+                                        }
+                                    }
+
+                                    for (const video of videos) {
+                                        if (!allowedVideoTypes.includes(video.type)) {
+                                            return "Video bằng chứng chỉ hỗ trợ MP4 hoặc WEBM.";
+                                        }
+                                        if (video.size > maxVideoSize) {
+                                            return "Video bằng chứng không được vượt quá 30MB.";
+                                        }
+                                    }
+
+                                    return "";
+                                }
+
+                                function renderPreview() {
+                                    setError(validateFiles());
+                                    preview.innerHTML = "";
+
+                                    Array.from(imageInput.files || []).forEach(function (file) {
+                                        const item = document.createElement("div");
+                                        item.className = "return-media-preview-item";
+
+                                        const img = document.createElement("img");
+                                        img.src = URL.createObjectURL(file);
+                                        img.alt = file.name;
+                                        img.onload = function () {
+                                            URL.revokeObjectURL(img.src);
+                                        };
+
+                                        const name = document.createElement("span");
+                                        name.textContent = file.name;
+
+                                        item.appendChild(img);
+                                        item.appendChild(name);
+                                        preview.appendChild(item);
+                                    });
+
+                                    Array.from(videoInput.files || []).forEach(function (file) {
+                                        const item = document.createElement("div");
+                                        item.className = "return-media-preview-item video";
+
+                                        const icon = document.createElement("i");
+                                        icon.className = "fa-solid fa-circle-play";
+
+                                        const name = document.createElement("span");
+                                        name.textContent = file.name;
+
+                                        item.appendChild(icon);
+                                        item.appendChild(name);
+                                        preview.appendChild(item);
+                                    });
+                                }
+
+                                imageInput.addEventListener("change", renderPreview);
+                                videoInput.addEventListener("change", renderPreview);
+                                form.addEventListener("submit", function (event) {
+                                    const message = validateFiles();
+                                    if (message) {
+                                        event.preventDefault();
+                                        setError(message);
+                                    }
+                                });
+                            });
+                        </script>
 
                         <%@ include file="../include/footer.jsp" %>
