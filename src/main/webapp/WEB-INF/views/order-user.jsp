@@ -279,17 +279,16 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="form-label">Hình ảnh thực tế</label>
+                                            <label class="form-label">Hình ảnh đánh giá</label>
                                             <div class="upload-zone">
                                                 <input type="file" id="reviewImages" name="reviewImages"
-                                                    accept="image/*" multiple class="file-input">
+                                                       accept="image/*" multiple class="file-input">
                                                 <label for="reviewImages" class="upload-placeholder">
-                                                    <span class="upload-text">Thêm hình ảnh sản phẩm</span>
+                                                    <span class="upload-icon"></span> <span class="upload-text">Thêm hình ảnh sản phẩm</span>
+                                                    <span class="upload-subtext">(Tối đa 5 hình ảnh)</span>
                                                 </label>
                                             </div>
-                                            <div id="image-preview-container"
-                                                style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px;">
-                                            </div>
+                                            <div id="image-preview-container" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;"></div>
                                         </div>
 
                                         <div class="form-actions">
@@ -301,11 +300,14 @@
 
                             <script src="${pageContext.request.contextPath}/js/views/avatar-upload.js"></script>
                             <script>
+                                let selectedFiles = [];
+                                const MAX_IMAGES = 5;
                                 document.addEventListener("DOMContentLoaded", () => {
                                     const stars = document.querySelectorAll(".star-rating .star");
                                     const ratingInput = document.getElementById("rating-value");
                                     const ratingText = document.getElementById("rating-text");
-
+                                    const fileInput = document.getElementById("reviewImages");
+                                    const previewContainer = document.getElementById("image-preview-container");
                                     const renderStars = (rating) => {
                                         stars.forEach(star => {
                                             star.classList.toggle("selected", star.dataset.value <= rating);
@@ -317,7 +319,6 @@
                                             ratingText.style.color = "#888888";
                                         }
                                     };
-
                                     stars.forEach(star => {
                                         star.addEventListener("mouseover", () => renderStars(star.dataset.value));
                                         star.addEventListener("mouseout", () => renderStars(ratingInput.value || 0));
@@ -326,77 +327,129 @@
                                             renderStars(star.dataset.value);
                                         });
                                     });
+                                    if (fileInput) {
+                                        fileInput.addEventListener("change", function () {
+                                            const files = this.files;
+                                            if (files.length === 0) return;
 
-                                    // preview
-                                    const fileInput = document.getElementById("reviewImages");
-                                    const previewContainer = document.getElementById("image-preview-container");
+                                            Array.from(files).forEach((file) => {
+                                                if (!file.type.startsWith("image/")) {
+                                                    alert("Vui lòng chỉ chọn các tệp tin hình ảnh!");
+                                                    return;
+                                                }
+                                                if (selectedFiles.length >= MAX_IMAGES) {
+                                                    alert(`Bạn chỉ được phép tải lên tối đa ${MAX_IMAGES} hình ảnh.`);
+                                                    return;
+                                                }
+                                                selectedFiles.push(file);
+                                            });
 
-                                    fileInput.addEventListener("change", function () {
+                                            renderPreviews();
+
+                                            this.value = "";
+                                        });
+                                    }
+
+                                    function renderPreviews() {
+                                        if (!previewContainer) return;
                                         previewContainer.innerHTML = "";
-                                        const files = this.files;
-                                        if (files.length === 0) return;
 
-                                        Array.from(files).forEach((file) => {
+                                        previewContainer.style.cssText = "display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; margin-top: 12px !important; width: 100% !important; clear: both !important;";
+
+                                        selectedFiles.forEach((file, index) => {
                                             const fileRow = document.createElement("div");
-                                            fileRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; background: #f5f5f5; padding: 6px 12px; border-radius: 4px; font-size: 13px; color: #555; border: 1px solid #eee;";
+                                            fileRow.className = "single-image-preview-item";
+                                            fileRow.style.cssText = "position: relative !important; width: 75px !important; height: 75px !important; border: 1px solid #ddd !important; border-radius: 6px !important; background: #fafafa !important; display: block !important; overflow: visible !important;";
 
+                                            const imgEl = document.createElement("img");
+                                            imgEl.style.cssText = "width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 5px !important; display: block !important;";
+                                            const removeBtn = document.createElement("span");
+                                            removeBtn.className = "remove-img-btn";
+                                            removeBtn.setAttribute("data-index", index);
+                                            removeBtn.innerHTML = "&times;";
+                                            removeBtn.style.cssText = "position: absolute !important; top: -6px !important; right: -6px !important; width: 18px !important; height: 18px !important; background: #c62828 !important; color: #fff !important; border-radius: 50% !important; font-weight: bold !important; font-size: 14px !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important; z-index: 9999 !important;";
 
-                                            fileRow.innerHTML = `
-   <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 85%;"><i class="fa-regular fa-image" style="margin-right: 6px;"></i>${file.name}</span>
-   <span class="remove-img-btn" style="color: #c62828; cursor: pointer; font-weight: bold; font-size: 16px; padding: 0 4px;">&times;</span>
-`;
+                                            const reader = new FileReader();
+                                            reader.onload = function (e) {
+                                                imgEl.src = e.target.result;
+                                            };
+                                            reader.readAsDataURL(file);
 
+                                            fileRow.appendChild(imgEl);
+                                            fileRow.appendChild(removeBtn);
                                             previewContainer.appendChild(fileRow);
                                         });
-                                    });
-
-                                    // delete pic
+                                    }
                                     previewContainer.addEventListener("click", function (e) {
                                         if (e.target.classList.contains("remove-img-btn")) {
-                                            e.target.parentElement.remove();
+                                            const indexToRemove = parseInt(e.target.getAttribute("data-index"));
+                                            selectedFiles.splice(indexToRemove, 1);
+                                            renderPreviews();
+                                        }
+                                    });
+
+                                    previewContainer.addEventListener("click", function (e) {
+                                        if (e.target.classList.contains("remove-img-btn")) {
+                                            const indexToRemove = parseInt(e.target.getAttribute("data-index"));
+                                            const imgEl = e.target.parentElement.querySelector("img");
+                                            if (imgEl && imgEl.src.startsWith("blob:")) {
+                                                const originalBlob = imgEl.src.split("#")[0];
+                                                URL.revokeObjectURL(originalBlob);
+                                            }
+                                            selectedFiles.splice(indexToRemove, 1);
+                                            renderPreviews();
                                         }
                                     });
 
                                     const reviewForm = document.getElementById("reviewForm");
-                                    reviewForm.addEventListener("submit", async (e) => {
-                                        e.preventDefault();
+                                    if (reviewForm) {
+                                        reviewForm.addEventListener("submit", async (e) => {
+                                            e.preventDefault();
 
-                                        const rating = ratingInput ? ratingInput.value : "0";
-                                        if (!rating || rating === "0") {
-                                            alert("Vui lòng chọn số sao để đánh giá!");
-                                            return;
-                                        }
-
-                                        const submitBtn = reviewForm.querySelector(".btn-submit-review");
-                                        if (submitBtn.disabled) return;
-
-                                        const originalBtnText = submitBtn.innerText;
-                                        submitBtn.disabled = true;
-                                        submitBtn.innerText = "Đang gửi...";
-
-                                        try {
-                                            const formData = new FormData(reviewForm);
-                                            const response = await fetch("review", {
-                                                method: "POST",
-                                                body: formData
-                                            });
-
-                                            if (!response.ok) {
-                                                throw new Error("Lỗi Server: " + response.status);
+                                            const rating = ratingInput ? ratingInput.value : "0";
+                                            if (!rating || rating === "0") {
+                                                alert("Vui lòng chọn số sao để đánh giá!");
+                                                return;
                                             }
 
-                                            alert("Cảm ơn bạn đã đánh giá sản phẩm!");
-                                            closeReviewModal();
-                                            window.location.reload();
+                                            const submitBtn = reviewForm.querySelector(".btn-submit-review");
+                                            if (submitBtn.disabled) return;
 
-                                        } catch (error) {
-                                            console.error("Chi tiết lỗi: ", error);
-                                            alert("Không thể gửi đánh giá. Vui lòng kiểm tra lại!");
-                                            submitBtn.disabled = false;
-                                            submitBtn.innerText = originalBtnText;
-                                        }
-                                    });
+                                            const originalBtnText = submitBtn.innerText;
+                                            submitBtn.disabled = true;
+                                            submitBtn.innerText = "Đang gửi...";
 
+                                            try {
+                                                const formData = new FormData();
+                                                formData.append("product_id", document.getElementById("popup_product_id").value);
+                                                formData.append("order_item_id", document.getElementById("popup_order_item_id").value);
+                                                formData.append("rating", rating);
+                                                formData.append("comment", document.getElementById("review-comment").value);
+
+                                                selectedFiles.forEach((file) => {
+                                                    formData.append("reviewImages", file);
+                                                });
+
+                                                const response = await fetch("review", {
+                                                    method: "POST",
+                                                    body: formData
+                                                });
+
+                                                if (!response.ok) {
+                                                    throw new Error("Lỗi Server: " + response.status);
+                                                }
+
+                                                alert("Cảm ơn bạn đã đánh giá sản phẩm!");
+                                                closeReviewModal();
+                                                window.location.reload();
+
+                                            } catch (error) {
+                                                console.error("Chi tiết lỗi: ", error);
+                                                alert("Không thể gửi đánh giá. Vui lòng kiểm tra lại!");
+                                                submitBtn.disabled = false;
+                                                submitBtn.innerText = originalBtnText;
+                                            }
+                                        });}
                                     const cancelModal = document.getElementById("cancelOrderModal");
                                     const cancelForms = document.querySelectorAll(".cancel-order-form");
                                     const cancelOrderIdInput = document.getElementById("cancelOrderId");
@@ -408,7 +461,6 @@
                                             cancelModal.style.display = "flex";
                                         });
                                     });
-
                                     const reviewModalEl = document.getElementById("reviewModal");
                                     window.addEventListener("click", (e) => {
                                         if (e.target === reviewModalEl) {
@@ -419,32 +471,29 @@
                                         }
                                     });
                                 });
-
                                 window.openReviewModal = function (productId, orderItemId) {
                                     const modal = document.getElementById("reviewModal");
                                     const form = document.getElementById("reviewForm");
                                     const previewContainer = document.getElementById("image-preview-container");
-
                                     document.getElementById("popup_product_id").value = productId;
                                     document.getElementById("popup_order_item_id").value = orderItemId;
-
-                                    form.reset();
-                                    previewContainer.innerHTML = "";
+                                    if (form) form.reset();
+                                    selectedFiles = [];
+                                    if (previewContainer) previewContainer.innerHTML = "";
                                     document.getElementById("rating-value").value = "";
                                     document.getElementById("rating-text").innerText = "Vui lòng chọn số sao";
                                     document.getElementById("rating-text").style.color = "#888888";
-
                                     document.querySelectorAll(".star-rating .star").forEach(star => {
                                         star.classList.remove("selected");
                                     });
-
                                     modal.style.display = "flex";
                                 };
-
                                 window.closeReviewModal = function () {
                                     document.getElementById("reviewModal").style.display = "none";
+                                    selectedFiles = [];
+                                    const previewContainer = document.getElementById("image-preview-container");
+                                    if (previewContainer) previewContainer.innerHTML = "";
                                 };
-
                                 window.closeCancelOrderModal = function () {
                                     document.getElementById("cancelOrderModal").style.display = "none";
                                     document.getElementById("cancelOrderId").value = "";

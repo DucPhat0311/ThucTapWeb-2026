@@ -185,6 +185,7 @@
 
 .order-info {
     min-width: 0;
+    flex: 1;
 }
 
 .order-info h3 {
@@ -468,7 +469,9 @@
 }
 
 .btn-review {
-    padding: 6px 14px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 18px;
     background: #fff7e8;
     border: 1px solid #ecd1a6;
     color: #a67c52;
@@ -476,6 +479,7 @@
     font-size: 13px;
     cursor: pointer;
     transition: all 0.3s;
+    text-align: center;
 }
 
 .btn-review:hover {
@@ -489,7 +493,9 @@
 }
 
 .review-section {
-    margin-top: 10px;
+    align-self: stretch;
+    flex-shrink: 0;
+
 }
 
 .review-modal {
@@ -783,7 +789,7 @@
 .btn-submit-review {
     width: 100%;
     padding: 12px;
-    background: #ee4d2d;
+    background: #6F4E37 ;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -794,7 +800,7 @@
 }
 
 .btn-submit-review:hover {
-    background: #d73a17;
+    background: #6F4E37;
 }
 
 .btn-submit-review:active {
