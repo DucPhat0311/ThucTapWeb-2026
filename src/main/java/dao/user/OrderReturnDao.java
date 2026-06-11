@@ -21,8 +21,8 @@ public class OrderReturnDao extends BaseDao {
         );
     }
 
-    public void createCustomerRequest(int orderId, int userId, String reasonCode, String description) {
-        getJdbi().useHandle(h ->
+    public int createCustomerRequest(int orderId, int userId, String reasonCode, String description) {
+        return getJdbi().withHandle(h ->
                 h.createUpdate("""
                     INSERT INTO order_returns (
                         order_id,
@@ -52,7 +52,9 @@ public class OrderReturnDao extends BaseDao {
                         .bind("description", description)
                         .bind("returnStatus", OrderReturnStatus.REQUESTED)
                         .bind("refundStatus", OrderReturnStatus.REFUND_NOT_REQUIRED)
-                        .execute()
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(int.class)
+                        .one()
         );
     }
 

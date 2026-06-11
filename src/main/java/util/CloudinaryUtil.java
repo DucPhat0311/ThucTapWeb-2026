@@ -52,6 +52,22 @@ public final class CloudinaryUtil {
         return (String) result.get("secure_url");
     }
 
+    public static String uploadVideo(Part filePart, String folder) throws IOException {
+        if (filePart == null || filePart.getSize() == 0) {
+            return null;
+        }
+
+        try (InputStream inputStream = filePart.getInputStream()) {
+            byte[] fileBytes = inputStream.readAllBytes();
+            Map<?, ?> result = CLOUDINARY.uploader().upload(
+                    fileBytes,
+                    ObjectUtils.asMap(
+                            "folder", "shopquanao/" + folder,
+                            "resource_type", "video"));
+            return (String) result.get("secure_url");
+        }
+    }
+
     public static void deleteImage(String publicId) throws IOException {
         if (publicId == null || publicId.isBlank())
             return;
