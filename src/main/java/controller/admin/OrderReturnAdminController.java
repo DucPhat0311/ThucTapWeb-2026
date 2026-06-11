@@ -1,6 +1,7 @@
 package controller.admin;
 
 import dao.admin.OrderReturnDaoAdmin;
+import dao.user.OrderReturnMediaDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,11 +31,13 @@ public class OrderReturnAdminController extends HttpServlet {
     );
 
     private OrderReturnDaoAdmin orderReturnDao;
+    private OrderReturnMediaDao orderReturnMediaDao;
     private OrderService orderService;
 
     @Override
     public void init() {
         orderReturnDao = new OrderReturnDaoAdmin();
+        orderReturnMediaDao = new OrderReturnMediaDao();
         orderService = new OrderService();
     }
 
@@ -154,6 +157,7 @@ public class OrderReturnAdminController extends HttpServlet {
             return;
         }
 
+        orderReturn.setMediaList(orderReturnMediaDao.findByReturnId(orderReturn.getId()));
         request.setAttribute("orderReturn", orderReturn);
         request.setAttribute("order", orderService.findById(orderReturn.getOrderId()));
         request.setAttribute("items", orderService.getOrderItems(orderReturn.getOrderId()));

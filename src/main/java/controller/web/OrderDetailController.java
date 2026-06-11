@@ -3,6 +3,7 @@ package controller.web;
 import dao.user.OrderDao;
 import dao.user.OrderItemDao;
 import dao.user.OrderReturnDao;
+import dao.user.OrderReturnMediaDao;
 import dao.user.OrderTrackingLogDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,6 +33,7 @@ public class OrderDetailController extends HttpServlet {
     private OrderItemDao orderItemDao;
     private OrderTrackingLogDao trackingLogDao;
     private OrderReturnDao orderReturnDao;
+    private OrderReturnMediaDao orderReturnMediaDao;
     private GhnOrderTrackingService ghnOrderTrackingService;
     private OrderService orderService;
 
@@ -41,6 +43,7 @@ public class OrderDetailController extends HttpServlet {
         orderItemDao = new OrderItemDao();
         trackingLogDao = new OrderTrackingLogDao();
         orderReturnDao = new OrderReturnDao();
+        orderReturnMediaDao = new OrderReturnMediaDao();
         ghnOrderTrackingService = new GhnOrderTrackingService();
         orderService = new OrderService();
     }
@@ -101,6 +104,7 @@ public class OrderDetailController extends HttpServlet {
         request.setAttribute("returnReasons", OrderReturnReason.getCustomerReasons());
         request.setAttribute("orderReturn", orderReturn);
         if (orderReturn != null) {
+            orderReturn.setMediaList(orderReturnMediaDao.findByReturnId(orderReturn.getId()));
             request.setAttribute("returnReasonLabel", OrderReturnReason.getLabel(orderReturn.getReasonCode()));
             request.setAttribute("returnStatusLabel", OrderReturnStatus.getReturnLabel(orderReturn.getReturnStatus()));
             request.setAttribute("refundStatusLabel", OrderReturnStatus.getRefundLabel(orderReturn.getRefundStatus()));
