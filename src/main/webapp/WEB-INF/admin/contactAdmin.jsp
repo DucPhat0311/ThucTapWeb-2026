@@ -77,13 +77,13 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${c.status == 'New'}">
-                                            <span class="status active">Liên hệ mới</span>
+                                            <span class="order-status SHIPPING">Liên hệ mới</span>
                                         </c:when>
                                         <c:when test="${c.status == 'Processing'}">
-                                            <span class="status processing">Đang xử lý</span>
+                                            <span class="order-status CANCELLED">Đang xử lý</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="status blocked">Đã xử lý</span>
+                                            <span class="order-status COMPLETED">Đã xử lý</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -91,7 +91,7 @@
                                     <!-- XỬ LÝ (Thay cho Xem / Sửa) -->
                                     <a href="${pageContext.request.contextPath}/contactAdmin?mode=edit&id=${c.id}"
                                        class="icon-btn view" style="color: green;" title="Xử lý liên hệ">
-                                        <i class="fa-solid fa-envelope-open-text"></i>
+                                        <i class="fa-solid fa-envelope"></i>
                                     </a>
 
                                     <!-- XÓA MỀM -->
