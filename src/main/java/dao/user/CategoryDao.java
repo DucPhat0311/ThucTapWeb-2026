@@ -21,8 +21,13 @@ public class CategoryDao extends BaseDao {
     public List<Category> getAllCategories() {
         List<Category> parents = getParentCategories();
         for (Category p : parents) {
-            List<Category> cate = getSubCategories(p.getId());
-            p.setSubCategories(cate);
+            List<Category> subs = getSubCategories(p.getId());
+            p.setSubCategories(subs);
+
+            for (Category sub : subs) {
+                List<Category> subChildren = getSubCategories(sub.getId());
+                sub.setSubCategories(subChildren);
+            }
         }
         return parents;
     }
@@ -53,9 +58,15 @@ public class CategoryDao extends BaseDao {
     }
 
     public List<Category> getCategoryTree() {
-        List<Category> parents = getActiveParentCategories();
+        List<Category> parents = getActiveParentCategories(); 
         for (Category p : parents) {
-            p.setSubCategories(getCategoryChild(p.getId()));
+            List<Category> subs = getCategoryChild(p.getId());
+            p.setSubCategories(subs);
+
+            for (Category sub : subs) {
+                List<Category> subChildren = getCategoryChild(sub.getId());
+                sub.setSubCategories(subChildren);
+            }
         }
         return parents;
     }
