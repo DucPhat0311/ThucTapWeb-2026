@@ -135,6 +135,13 @@ public class OrderReturnDaoAdmin extends BaseDao {
             if (affectedRows == 0) {
                 throw new IllegalStateException("Không thể hoàn tất yêu cầu trả hàng sau khi cập nhật tồn kho.");
             }
+
+            // Cập nhật trạng thái đơn hàng thành Đã hoàn trả (RETURNED)
+            h.createUpdate("UPDATE orders SET order_status = :status WHERE id = :orderId")
+                    .bind("status", model.constant.OrderStatus.RETURNED)
+                    .bind("orderId", returnedOrder.orderId())
+                    .execute();
+
             return true;
         });
     }

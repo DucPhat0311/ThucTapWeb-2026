@@ -7,6 +7,7 @@ public final class OrderStatus {
     public static final String SHIPPING = "SHIPPING";
     public static final String COMPLETED = "COMPLETED";
     public static final String CANCELLED = "CANCELLED";
+    public static final String RETURNED = "RETURNED";
 
     private OrderStatus() {
     }
