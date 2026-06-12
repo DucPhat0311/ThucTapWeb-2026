@@ -19,6 +19,7 @@ public class DashboardDao extends BaseDao {
                     SELECT COALESCE(SUM(total_price),0)
                     FROM orders
                     WHERE order_status = :completedStatus
+                      AND id NOT IN (SELECT order_id FROM order_returns WHERE return_status = 'RETURNED')
                 """)
                 .bind("completedStatus", OrderStatus.COMPLETED)
                 .mapTo(double.class)
@@ -87,6 +88,7 @@ public class DashboardDao extends BaseDao {
                     FROM order_items oi
                     JOIN orders o ON oi.order_id = o.id
                     WHERE o.order_status = :completedStatus
+                      AND o.id NOT IN (SELECT order_id FROM order_returns WHERE return_status = 'RETURNED')
                 """)
                 .bind("completedStatus", OrderStatus.COMPLETED)
                 .mapTo(double.class)
@@ -126,6 +128,7 @@ public class DashboardDao extends BaseDao {
                         JOIN orders o ON oi.order_id = o.id
                         WHERE o.order_status = :status
                           AND YEAR(o.created_at) = :year
+                          AND o.id NOT IN (SELECT order_id FROM order_returns WHERE return_status = 'RETURNED')
                         GROUP BY MONTH(o.created_at)
                         ORDER BY month
                     """)
@@ -177,6 +180,7 @@ public class DashboardDao extends BaseDao {
                         WHERE o.order_status = :status
                           AND YEAR(o.created_at) = :year
                           AND MONTH(o.created_at) = :month
+                          AND o.id NOT IN (SELECT order_id FROM order_returns WHERE return_status = 'RETURNED')
                         GROUP BY DAY(o.created_at)
                         ORDER BY day
                     """)
@@ -238,6 +242,7 @@ public class DashboardDao extends BaseDao {
                         WHERE o.order_status = :status
                           AND DATE(o.created_at) >= :startDate
                           AND DATE(o.created_at) <= :endDate
+                          AND o.id NOT IN (SELECT order_id FROM order_returns WHERE return_status = 'RETURNED')
                         GROUP BY DATE(o.created_at)
                         ORDER BY order_date
                     """)
@@ -277,6 +282,7 @@ public class DashboardDao extends BaseDao {
                         FROM orders
                         WHERE order_status = :status
                           AND YEAR(created_at) = :year
+                          AND id NOT IN (SELECT order_id FROM order_returns WHERE return_status = 'RETURNED')
                         GROUP BY MONTH(created_at)
                         ORDER BY month
                     """)
@@ -304,6 +310,7 @@ public class DashboardDao extends BaseDao {
                         WHERE order_status = :status
                           AND YEAR(created_at) = :year
                           AND MONTH(created_at) = :month
+                          AND id NOT IN (SELECT order_id FROM order_returns WHERE return_status = 'RETURNED')
                         GROUP BY DAY(created_at)
                         ORDER BY day
                     """)
@@ -341,6 +348,7 @@ public class DashboardDao extends BaseDao {
                         WHERE order_status = :status
                           AND DATE(created_at) >= :startDate
                           AND DATE(created_at) <= :endDate
+                          AND id NOT IN (SELECT order_id FROM order_returns WHERE return_status = 'RETURNED')
                         GROUP BY DATE(created_at)
                         ORDER BY order_date
                     """)

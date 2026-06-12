@@ -9,8 +9,8 @@ public final class OrderStatusLabel {
             OrderStatus.PROCESSING, "Đang chuẩn bị hàng",
             OrderStatus.SHIPPING, "Đang giao hàng",
             OrderStatus.COMPLETED, "Đã hoàn thành",
-            OrderStatus.CANCELLED, "Đã hủy"
-    );
+            OrderStatus.CANCELLED, "Đã hủy",
+            OrderStatus.RETURNED, "Đã hoàn trả");
 
     private static final Map<String, String> CUSTOMER_LABELS = Map.of(
             OrderStatus.PENDING_PAYMENT, "Chờ thanh toán",
@@ -18,8 +18,8 @@ public final class OrderStatusLabel {
             OrderStatus.PROCESSING, "Đang chuẩn bị hàng",
             OrderStatus.SHIPPING, "Đang giao hàng",
             OrderStatus.COMPLETED, "Đã hoàn thành",
-            OrderStatus.CANCELLED, "Đã hủy"
-    );
+            OrderStatus.CANCELLED, "Đã hủy",
+            OrderStatus.RETURNED, "Đã hoàn trả");
 
     private OrderStatusLabel() {
     }
@@ -53,6 +53,9 @@ public final class OrderStatusLabel {
             return "delivered";
         }
         if (OrderStatus.CANCELLED.equals(status)) {
+            return "cancelled";
+        }
+        if (OrderStatus.RETURNED.equals(status)) {
             return "cancelled";
         }
         return "pending";

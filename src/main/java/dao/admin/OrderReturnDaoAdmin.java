@@ -128,50 +128,10 @@ public class OrderReturnDaoAdmin extends BaseDao {
                 throw new IllegalStateException("Không thể hoàn tất yêu cầu trả hàng sau khi cập nhật tồn kho.");
             }
 
-            double totalAmount = returnedItems.stream()
-                    .mapToDouble(item -> {
-                        Double price = h.createQuery(
-                                "SELECT oi.price FROM order_items oi WHERE oi.order_id = :orderId AND oi.variant_id = :variantId LIMIT 1")
-                                .bind("orderId", returnedOrder.orderId())
-                                .bind("variantId", item.variantId())
-                                .mapTo(Double.class)
-                                .findOne()
-                                .orElse(0.0);
-                        return price * item.quantity();
-                    })
-                    .sum();
-
-            int receiptId = h.createUpdate(
-                    "INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, order_id) "
-                            +
-                            "VALUES (:adminUserId, 'RETURN', :note, :totalAmount, NOW(), 'COMPLETED', :orderId)")
-                    .bind("adminUserId", adminUserId)
-                    .bind("note", "Nhập kho hoàn hàng - Yêu cầu #" + id)
-                    .bind("totalAmount", totalAmount)
+            h.createUpdate("UPDATE orders SET order_status = :status WHERE id = :orderId")
+                    .bind("status", model.constant.OrderStatus.RETURNED)
                     .bind("orderId", returnedOrder.orderId())
-                    .executeAndReturnGeneratedKeys()
-                    .mapTo(Integer.class)
-                    .one();
-
-            for (ReturnedItem item : returnedItems) {
-                Double price = h.createQuery(
-                        "SELECT oi.price FROM order_items oi WHERE oi.order_id = :orderId AND oi.variant_id = :variantId LIMIT 1")
-                        .bind("orderId", returnedOrder.orderId())
-                        .bind("variantId", item.variantId())
-                        .mapTo(Double.class)
-                        .findOne()
-                        .orElse(0.0);
-
-                h.createUpdate(
-                        "INSERT INTO inventory_receipt_details (receipt_id, product_variant_id, quantity, price, remaining_quantity) "
-                                +
-                                "VALUES (:receiptId, :variantId, :quantity, :price, :quantity)")
-                        .bind("receiptId", receiptId)
-                        .bind("variantId", item.variantId())
-                        .bind("quantity", item.quantity())
-                        .bind("price", price)
-                        .execute();
-            }
+                    .execute();
 
             return true;
         });
