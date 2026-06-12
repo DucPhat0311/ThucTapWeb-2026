@@ -23,7 +23,7 @@ public class OrderService {
     private static final String DEMO_INITIAL_STATUS_NAME = "Đã tiếp nhận đơn hàng";
     private static final DateTimeFormatter DEMO_CODE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     private static final Map<String, String> DEMO_TRACKING_STATUS_LABELS = createDemoTrackingStatusLabels();
-    
+
     private OrderDaoAdmin dao = new OrderDaoAdmin();
     private OrderDao orderDao = new OrderDao();
     private OrderTrackingLogDao trackingLogDao = new OrderTrackingLogDao();
@@ -33,10 +33,11 @@ public class OrderService {
     private OrderCancellationService orderCancellationService = new OrderCancellationService();
     private GhnOrderCancellationService ghnOrderCancellationService = new GhnOrderCancellationService();
     private ProductVariantDao productVariantDao = new ProductVariantDao();
+    private dao.admin.InventoryReceiptDaoAdmin inventoryReceiptDaoAdmin = new dao.admin.InventoryReceiptDaoAdmin();
 
     public List<Order> getAllOrders() {
         return dao.getAll();
-}
+    }
 
     public Order findById(int id) {
         return dao.findById(id);
@@ -194,8 +195,7 @@ public class OrderService {
                 result.orderCode(),
                 statusCode,
                 statusName,
-                result.expectedDeliveryTime()
-        );
+                result.expectedDeliveryTime());
         trackingLogDao.insertIfStatusChanged(
                 orderId,
                 "GHN",
@@ -203,8 +203,7 @@ public class OrderService {
                 statusCode,
                 statusName,
                 "Tạo vận đơn GHN thành công.",
-                java.time.LocalDateTime.now()
-        );
+                java.time.LocalDateTime.now());
         return result;
     }
 
@@ -224,8 +223,7 @@ public class OrderService {
                 DEMO_INITIAL_STATUS,
                 DEMO_INITIAL_STATUS_NAME,
                 "Đơn hàng đã được tiếp nhận tại AURA Studio.",
-                now
-        );
+                now);
         return trackingCode;
     }
 
@@ -234,7 +232,8 @@ public class OrderService {
         if (order == null || !isDemoTrackingCode(order.getGhnOrderCode())) {
             throw new IllegalStateException("Đơn hàng chưa có hành trình mô phỏng.");
         }
-        if (OrderStatus.COMPLETED.equals(order.getOrderStatus()) || OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
+        if (OrderStatus.COMPLETED.equals(order.getOrderStatus())
+                || OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
             throw new IllegalStateException("Hành trình của đơn hàng đã kết thúc, không thể cập nhật thêm.");
         }
 
@@ -247,8 +246,8 @@ public class OrderService {
         String newOrderStatus = "DELIVERED".equals(normalizedStatus) ? OrderStatus.COMPLETED : OrderStatus.SHIPPING;
         String newPaymentStatus = "DELIVERED".equals(normalizedStatus)
                 && PaymentMethod.COD.equals(order.getPaymentMethods())
-                ? PaymentStatus.PAID
-                : order.getPaymentStatuses();
+                        ? PaymentStatus.PAID
+                        : order.getPaymentStatuses();
         String description = buildDemoTrackingDescription(statusName, location);
         LocalDateTime now = LocalDateTime.now();
 
@@ -260,8 +259,7 @@ public class OrderService {
                 normalizedStatus,
                 statusName,
                 description,
-                now
-        );
+                now);
     }
 
     public Map<String, String> getDemoTrackingStatusLabels() {
@@ -327,15 +325,20 @@ public class OrderService {
                 && !OrderStatus.SHIPPING.equals(order.getOrderStatus())) {
             return;
         }
-        for (OrderItem item : dao.getItems(order.getId())) {
+        List<OrderItem> items = dao.getItems(order.getId());
+        for (OrderItem item : items) {
             productVariantDao.increaseStock(item.getVariantId(), item.getQuantity());
         }
+
+        int userId = order.getUserId();
+        inventoryReceiptDaoAdmin.createCancelReceipt(order.getId(), items, userId);
     }
 
     private void updateCancelledOrder(Order order) {
         if (isDemoTrackingCode(order.getGhnOrderCode())) {
             String statusName = "Đã hủy vận chuyển";
-            dao.updateGhnOrderCancelled(order.getId(), order.getGhnOrderCode(), "CANCELLED", statusName, order.getGhnExpectedDeliveryTime());
+            dao.updateGhnOrderCancelled(order.getId(), order.getGhnOrderCode(), "CANCELLED", statusName,
+                    order.getGhnExpectedDeliveryTime());
             trackingLogDao.insert(
                     order.getId(),
                     "DEMO",
@@ -343,14 +346,14 @@ public class OrderService {
                     "CANCELLED",
                     statusName,
                     "Hành trình mô phỏng đã được hủy.",
-                    LocalDateTime.now()
-            );
+                    LocalDateTime.now());
             updatePaymentStatusAfterCancellation(order);
             return;
         }
         String statusName = ghnOrderTrackingService.resolveStatusName("cancel");
         if (order.getGhnOrderCode() != null && !order.getGhnOrderCode().isBlank()) {
-            dao.updateGhnOrderCancelled(order.getId(), order.getGhnOrderCode(), "cancel", statusName, order.getGhnExpectedDeliveryTime());
+            dao.updateGhnOrderCancelled(order.getId(), order.getGhnOrderCode(), "cancel", statusName,
+                    order.getGhnExpectedDeliveryTime());
             trackingLogDao.insertIfStatusChanged(
                     order.getId(),
                     "GHN",
@@ -358,8 +361,7 @@ public class OrderService {
                     "cancel",
                     statusName,
                     "Hủy vận đơn GHN thành công.",
-                    java.time.LocalDateTime.now()
-            );
+                    java.time.LocalDateTime.now());
             updatePaymentStatusAfterCancellation(order);
             return;
         }
