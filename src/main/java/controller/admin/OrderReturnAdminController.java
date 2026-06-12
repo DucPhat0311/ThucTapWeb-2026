@@ -79,6 +79,9 @@ public class OrderReturnAdminController extends HttpServlet {
         boolean updated;
         String result;
 
+        model.User adminUser = (model.User) request.getSession(false).getAttribute("admin");
+        int adminUserId = (adminUser != null) ? adminUser.getId() : 1;
+
         if ("approve".equals(action)) {
             updated = orderReturnDao.approve(id, adminNote);
             result = "approved";
@@ -93,7 +96,7 @@ public class OrderReturnAdminController extends HttpServlet {
             updated = orderReturnDao.startReturning(id, adminNote);
             result = "returning";
         } else if ("completeReturn".equals(action)) {
-            updated = orderReturnDao.completeReturnAndRestoreStock(id, adminNote);
+            updated = orderReturnDao.completeReturnAndRestoreStock(id, adminNote, adminUserId);
             result = "returned";
         } else if ("confirmRefund".equals(action)) {
             updated = orderReturnDao.confirmRefund(id, adminNote);
