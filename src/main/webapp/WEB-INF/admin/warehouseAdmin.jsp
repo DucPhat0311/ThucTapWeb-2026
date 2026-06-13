@@ -236,11 +236,20 @@
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.orderId > 0}">
-                                                                        <span
-                                                                            class="warehouse-source-badge warehouse-source-return">
-                                                                            <i class="fa-solid fa-rotate-left"></i>
-                                                                            Đơn trả #${r.orderId}
-                                                                        </span>
+                                                                        <c:choose>
+                                                                            <c:when test="${fn:contains(r.note, 'huỷ')}">
+                                                                                <span class="warehouse-source-badge" style="background-color: #f8d7da; color: #721c24;">
+                                                                                    <i class="fa-solid fa-ban"></i>
+                                                                                    Đơn huỷ #${r.orderId}
+                                                                                </span>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <span class="warehouse-source-badge warehouse-source-return">
+                                                                                    <i class="fa-solid fa-rotate-left"></i>
+                                                                                    Đơn hoàn #${r.orderId}
+                                                                                </span>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         <span
