@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
 </head>
 <body>
 <div class="admin">
@@ -89,18 +89,22 @@
                                 </td>
                                 <td class="actions">
                                     <!-- XỬ LÝ (Thay cho Xem / Sửa) -->
-                                    <a href="${pageContext.request.contextPath}/contactAdmin?mode=edit&id=${c.id}"
-                                       class="icon-btn view" style="color: green;" title="Xử lý liên hệ">
-                                        <i class="fa-solid fa-envelope"></i>
-                                    </a>
+                                    <c:if test="${perms['edit']}">
+                                        <a href="${pageContext.request.contextPath}/contactAdmin?mode=edit&id=${c.id}"
+                                           class="icon-btn view" style="color: green;" title="Xử lý liên hệ">
+                                            <i class="fa-solid fa-envelope"></i>
+                                        </a>
+                                    </c:if>
 
                                     <!-- XÓA MỀM -->
-                                    <button type="button"
+                                    <c:if test="${perms[\'delete\']}">
+<button type="button"
                                             class="icon-btn delete"
                                             title="Xóa liên hệ"
                                             onclick="openDeleteModal(${c.id}, '${c.name}')">
                                         <i class="fa fa-trash"></i>
                                     </button>
+</c:if>
                                 </td>
 
                             </tr>

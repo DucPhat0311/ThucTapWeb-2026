@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/categoryAdmin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
 </head>
 
 <body>
@@ -56,9 +56,11 @@
                                    class="stock-search-input">
                             <i class="fa fa-search stock-search-icon"></i>
                         </div>
-                        <a href="${pageContext.request.contextPath}/categoryAdmin?mode=add" class="btn-add">
+                        <c:if test="${perms[\'add\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=add" class="btn-add">
                             <i class="fa fa-plus"></i> Thêm danh mục
                         </a>
+</c:if>
                     </div>
                 </div>
 
@@ -98,17 +100,22 @@
                                                     </span>
                                                 </td>
                                                 <td class="text-center action-buttons">
-                                                    <a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${c.id}"
+                                                    <c:if test="${perms[\'view_detail\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${c.id}"
                                                        class="icon-btn view"
                                                        title="Xem chi tiết">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    <a href="${pageContext.request.contextPath}/categoryAdmin?mode=edit&id=${c.id}"
+</c:if>
+                                                    <c:if test="${perms[\'edit\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=edit&id=${c.id}"
                                                        class="icon-btn edit"
                                                        title="Chỉnh sửa">
                                                         <i class="fa fa-pen"></i>
                                                     </a>
-                                                    <button class="icon-btn ${c.status == 1 ? 'delete' : 'view'}"
+</c:if>
+                                                    <c:if test="${perms[\'lock\']}">
+<button class="icon-btn ${c.status == 1 ? 'delete' : 'view'}"
                                                             title="${c.status == 1 ? 'Khóa danh mục' : 'Mở khóa'}"
                                                             data-id="${c.id}"
                                                             data-name="${fn:escapeXml(c.name)}"
@@ -116,6 +123,7 @@
                                                             onclick="toggleCategoryStatusFromButton(this)">
                                                         <i class="fa fa-${c.status == 1 ? 'lock' : 'unlock'}"></i>
                                                     </button>
+</c:if>
                                                 </td>
                                             </tr>
                                         </c:when>
@@ -133,17 +141,22 @@
                                                     </span>
                                                 </td>
                                                 <td class="text-center action-buttons">
-                                                    <a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${c.id}"
+                                                    <c:if test="${perms[\'view_detail\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${c.id}"
                                                        class="icon-btn view"
                                                        title="Xem chi tiết">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    <a href="${pageContext.request.contextPath}/categoryAdmin?mode=edit&id=${c.id}"
+</c:if>
+                                                    <c:if test="${perms[\'edit\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=edit&id=${c.id}"
                                                        class="icon-btn edit"
                                                        title="Chỉnh sửa">
                                                         <i class="fa fa-pen"></i>
                                                     </a>
-                                                    <button class="icon-btn ${c.status == 1 ? 'delete' : 'view'}"
+</c:if>
+                                                    <c:if test="${perms[\'lock\']}">
+<button class="icon-btn ${c.status == 1 ? 'delete' : 'view'}"
                                                             title="${c.status == 1 ? 'Khóa danh mục' : 'Mở khóa'}"
                                                             data-id="${c.id}"
                                                             data-name="${fn:escapeXml(c.name)}"
@@ -151,6 +164,7 @@
                                                             onclick="toggleCategoryStatusFromButton(this)">
                                                         <i class="fa fa-${c.status == 1 ? 'lock' : 'unlock'}"></i>
                                                     </button>
+</c:if>
                                                 </td>
                                             </tr>
                                         </c:otherwise>
@@ -179,17 +193,22 @@
                                             </span>
                                         </td>
                                         <td class="text-center action-buttons">
-                                            <a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${parent.id}"
+                                            <c:if test="${perms[\'view_detail\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${parent.id}"
                                                class="icon-btn view"
                                                title="Xem chi tiết">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                            <a href="${pageContext.request.contextPath}/categoryAdmin?mode=edit&id=${parent.id}"
+</c:if>
+                                            <c:if test="${perms[\'edit\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=edit&id=${parent.id}"
                                                class="icon-btn edit"
                                                title="Chỉnh sửa">
                                                 <i class="fa fa-pen"></i>
                                             </a>
-                                            <button class="icon-btn ${parent.status == 1 ? 'delete' : 'view'}"
+</c:if>
+                                            <c:if test="${perms[\'lock\']}">
+<button class="icon-btn ${parent.status == 1 ? 'delete' : 'view'}"
                                                     title="${parent.status == 1 ? 'Khóa danh mục' : 'Mở khóa'}"
                                                     data-id="${parent.id}"
                                                     data-name="${fn:escapeXml(parent.name)}"
@@ -197,6 +216,7 @@
                                                     onclick="toggleCategoryStatusFromButton(this)">
                                                 <i class="fa fa-${parent.status == 1 ? 'lock' : 'unlock'}"></i>
                                             </button>
+</c:if>
                                         </td>
                                     </tr>
 
@@ -213,17 +233,22 @@
                                                     </span>
                                                 </td>
                                                 <td class="text-center action-buttons">
-                                                    <a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${child.id}"
+                                                    <c:if test="${perms[\'view_detail\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=view&id=${child.id}"
                                                        class="icon-btn view"
                                                        title="Xem chi tiết">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    <a href="${pageContext.request.contextPath}/categoryAdmin?mode=edit&id=${child.id}"
+</c:if>
+                                                    <c:if test="${perms[\'edit\']}">
+<a href="${pageContext.request.contextPath}/categoryAdmin?mode=edit&id=${child.id}"
                                                        class="icon-btn edit"
                                                        title="Chỉnh sửa">
                                                         <i class="fa fa-pen"></i>
                                                     </a>
-                                                    <button class="icon-btn ${child.status == 1 ? 'delete' : 'view'}"
+</c:if>
+                                                    <c:if test="${perms[\'lock\']}">
+<button class="icon-btn ${child.status == 1 ? 'delete' : 'view'}"
                                                             title="${child.status == 1 ? 'Khóa danh mục' : 'Mở khóa'}"
                                                             data-id="${child.id}"
                                                             data-name="${fn:escapeXml(child.name)}"
@@ -231,6 +256,7 @@
                                                             onclick="toggleCategoryStatusFromButton(this)">
                                                         <i class="fa fa-${child.status == 1 ? 'lock' : 'unlock'}"></i>
                                                     </button>
+</c:if>
                                                 </td>
                                             </tr>
                                         </c:if>

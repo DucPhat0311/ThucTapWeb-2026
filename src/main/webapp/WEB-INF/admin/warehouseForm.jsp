@@ -9,7 +9,7 @@
                     <meta charset="UTF-8">
                     <title>Form Nhập/Xuất Kho</title>
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/formUser.css">
-                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
                     <link rel="stylesheet"
                         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
                 </head>

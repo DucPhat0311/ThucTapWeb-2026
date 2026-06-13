@@ -12,7 +12,7 @@
                     <title>Quản Lý Kho</title>
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/warehouse.css">
-                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
                     <link rel="stylesheet"
                         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
                 </head>
@@ -49,8 +49,10 @@
                                 <div id="import" class="tab-content active">
                                     <div class="tab-header">
                                         <h3>Lịch sử nhập kho</h3>
-                                        <a href="${pageContext.request.contextPath}/admin/warehouseImportForm"
-                                            class="btn-add">Thêm phiếu nhập</a>
+                                        <c:if test="${perms['add']}">
+                                            <a href="${pageContext.request.contextPath}/admin/warehouseImportForm"
+                                                class="btn-add">Thêm phiếu nhập</a>
+                                        </c:if>
                                     </div>
                                     <c:if test="${not empty message}">
                                         <div class="alert-success">${message}</div>
@@ -100,8 +102,8 @@
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </td>
-                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view"
-                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                                            <td><c:if test="${perms['view_detail']}"><a href="?action=view&id=${r.id}" class="icon-btn view"
+                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a></c:if>
                                                             </td>
                                                         </tr>
                                                     </c:if>
@@ -119,8 +121,10 @@
                                 <div id="export" class="tab-content">
                                     <div class="tab-header">
                                         <h3>Lịch sử xuất kho</h3>
-                                        <a href="${pageContext.request.contextPath}/admin/warehouseExportForm"
-                                            class="btn-add">Thêm phiếu xuất</a>
+                                        <c:if test="${perms['add']}">
+                                            <a href="${pageContext.request.contextPath}/admin/warehouseExportForm"
+                                                class="btn-add">Thêm phiếu xuất</a>
+                                        </c:if>
                                     </div>
                                     <div class="user-table-wrapper">
                                         <table class="user-table">
@@ -184,8 +188,8 @@
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </td>
-                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view"
-                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                                            <td><c:if test="${perms['view_detail']}"><a href="?action=view&id=${r.id}" class="icon-btn view"
+                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a></c:if>
                                                             </td>
                                                         </tr>
                                                     </c:if>
@@ -204,8 +208,10 @@
                                 <div id="return" class="tab-content">
                                     <div class="tab-header">
                                         <h3>Lịch sử hoàn kho</h3>
-                                        <a href="${pageContext.request.contextPath}/admin/warehouseReturnForm"
-                                            class="btn-add">Thêm phiếu hoàn kho</a>
+                                        <c:if test="${perms['add']}">
+                                            <a href="${pageContext.request.contextPath}/admin/warehouseReturnForm"
+                                                class="btn-add">Thêm phiếu hoàn kho</a>
+                                        </c:if>
                                     </div>
                                     <div class="user-table-wrapper">
                                         <table class="user-table">
@@ -271,8 +277,8 @@
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </td>
-                                                            <td><a href="?action=view&id=${r.id}" class="icon-btn view"
-                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a>
+                                                            <td><c:if test="${perms['view_detail']}"><a href="?action=view&id=${r.id}" class="icon-btn view"
+                                                                    title="Xem chi tiết"><i class="fa fa-eye"></i></a></c:if>
                                                             </td>
                                                         </tr>
                                                     </c:if>
@@ -336,11 +342,13 @@
                                                             </c:choose>
                                                         </td>
                                                         <td class="text-center">
-                                                            <button type="button" class="icon-btn view"
-                                                                onclick="showStockDetails(${s.id}, '${fn:escapeXml(s.productName)} - Màu: ${s.colorName} - Size: ${s.sizeName}')"
-                                                                title="Xem chi tiết các đợt nhập kho">
-                                                                <i class="fa fa-eye"></i>
-                                                            </button>
+                                                            <c:if test="${perms['view_detail']}">
+                                                                <button type="button" class="icon-btn view"
+                                                                    onclick="showStockDetails(${s.id}, '${fn:escapeXml(s.productName)} - Màu: ${s.colorName} - Size: ${s.sizeName}')"
+                                                                    title="Xem chi tiết các đợt nhập kho">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                            </c:if>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

@@ -16,7 +16,7 @@
                             rel="stylesheet">
                         <link rel="stylesheet"
                             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-                        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+                        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
                     </head>
 
                     <body>
@@ -112,10 +112,12 @@
                                                                                 class="icon-btn edit" title="Sửa">
                                                                                 <i class="fa fa-pen"></i>
                                                                             </a>
-                                                                            <button onclick="deleteImage(${img.id})"
+                                                                            <c:if test="${perms[\'delete\']}">
+<button onclick="deleteImage(${img.id})"
                                                                                 class="icon-btn delete" title="Xóa">
                                                                                 <i class="fa fa-trash"></i>
                                                                             </button>
+</c:if>
                                                                         </div>
                                                                     </td>
                                                                 </tr>

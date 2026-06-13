@@ -11,7 +11,7 @@
                 <title>Quản lý đơn hàng</title>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
             </head>
 
             <body>
@@ -102,10 +102,12 @@
                                                     </td>
                                                     <td>${o.createdAtFormatted}</td>
                                                     <td>
-                                                        <a href="${pageContext.request.contextPath}/orderAdmin?mode=view&id=${o.id}"
+                                                        <c:if test="${perms[\'view_detail\']}">
+<a href="${pageContext.request.contextPath}/orderAdmin?mode=view&id=${o.id}"
                                                             class="icon-btn view">
                                                             <i class="fa fa-eye"></i>
                                                         </a>
+</c:if>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

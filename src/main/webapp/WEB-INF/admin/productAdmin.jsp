@@ -161,10 +161,12 @@
                                                                     </a>
                                                                 </c:if>
 
-                                                                <a href="${pageContext.request.contextPath}/productAdmin?mode=view&id=${p.id}"
-                                                                    class="icon-btn view" title="Xem chi tiết">
-                                                                    <i class="fa fa-eye"></i>
-                                                                </a>
+                                                                <c:if test="${perms['view_detail']}">
+                                                                    <a href="${pageContext.request.contextPath}/productAdmin?mode=view&id=${p.id}"
+                                                                        class="icon-btn view" title="Xem chi tiết">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </a>
+                                                                </c:if>
 
 
 

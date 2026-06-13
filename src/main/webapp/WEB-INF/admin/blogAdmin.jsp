@@ -13,7 +13,7 @@
     <title>Admin Blog</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
 </head>
 <body>
 <div class="admin">
@@ -42,9 +42,11 @@
                 </div>
 
                 <div class="toolbar">
-                    <a href="${pageContext.request.contextPath}/blogAdmin?mode=add" class="btn-add">
+                    <c:if test="${perms[\'add\']}">
+<a href="${pageContext.request.contextPath}/blogAdmin?mode=add" class="btn-add">
                         <i class="fa fa-plus"></i> Thêm bài viết
                     </a>
+</c:if>
                 </div>
 
 
@@ -82,24 +84,30 @@
                                 </td>
                                 <td class="actions">
                                     <!-- XEM -->
-                                    <a href="${pageContext.request.contextPath}/blogAdmin?mode=view&id=${n.id}"
+                                    <c:if test="${perms[\'view_detail\']}">
+<a href="${pageContext.request.contextPath}/blogAdmin?mode=view&id=${n.id}"
                                        class="icon-btn view" title="Xem chi tiết">
                                         <i class="fa fa-eye"></i>
                                     </a>
+</c:if>
 
                                     <!-- SỬA -->
-                                    <a href="${pageContext.request.contextPath}/blogAdmin?mode=edit&id=${n.id}"
+                                    <c:if test="${perms[\'edit\']}">
+<a href="${pageContext.request.contextPath}/blogAdmin?mode=edit&id=${n.id}"
                                        class="icon-btn edit" title="Chỉnh sửa">
                                         <i class="fa fa-pen"></i>
                                     </a>
+</c:if>
 
                                     <!-- XÓA MỀM -->
-                                    <button type="button"
+                                    <c:if test="${perms[\'delete\']}">
+<button type="button"
                                             class="icon-btn delete"
                                             title="Xóa tin tức"
                                             onclick="openDeleteModal(${n.id}, '${n.title}')">
                                         <i class="fa fa-trash"></i>
                                     </button>
+</c:if>
                                 </td>
                             </tr>
                         </c:forEach>
