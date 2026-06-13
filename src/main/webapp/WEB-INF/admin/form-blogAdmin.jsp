@@ -9,7 +9,7 @@
     <title>Form Tin tức</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/banner-form.css">
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
 </head>
 <body>
 
