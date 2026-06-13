@@ -18,8 +18,12 @@ import java.util.Map;
 
 public class OrderService {
     private static final int PENDING_PAYMENT_HOLD_MINUTES = 30;
+    private static final int MAX_DEMO_DELIVERY_FAILURES = 3;
     private static final String DEMO_TRACKING_PREFIX = "DEMO-ORD-";
     private static final String DEMO_INITIAL_STATUS = "RECEIVED";
+    private static final String DEMO_DELIVERY_FAILED_STATUS = "DELIVERY_FAILED";
+    private static final String DEMO_RETURNED_STATUS = "RETURNED_TO_SHOP";
+    private static final String DEMO_RETURNED_STATUS_NAME = "Đã hoàn về shop";
     private static final String DEMO_INITIAL_STATUS_NAME = "Đã tiếp nhận đơn hàng";
     private static final DateTimeFormatter DEMO_CODE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     private static final Map<String, String> DEMO_TRACKING_STATUS_LABELS = createDemoTrackingStatusLabels();
@@ -233,7 +237,8 @@ public class OrderService {
             throw new IllegalStateException("Đơn hàng chưa có hành trình mô phỏng.");
         }
         if (OrderStatus.COMPLETED.equals(order.getOrderStatus())
-                || OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
+                || OrderStatus.CANCELLED.equals(order.getOrderStatus())
+                || OrderStatus.RETURNED.equals(order.getOrderStatus())) {
             throw new IllegalStateException("Hành trình của đơn hàng đã kết thúc, không thể cập nhật thêm.");
         }
 
@@ -243,15 +248,32 @@ public class OrderService {
             throw new IllegalArgumentException("Trạng thái vận chuyển mô phỏng không hợp lệ.");
         }
 
-        String newOrderStatus = "DELIVERED".equals(normalizedStatus) ? OrderStatus.COMPLETED : OrderStatus.SHIPPING;
+        boolean deliveryFailed = DEMO_DELIVERY_FAILED_STATUS.equals(normalizedStatus);
+        int deliveryFailureCount = deliveryFailed
+                ? trackingLogDao.countByStatusCode(orderId, DEMO_DELIVERY_FAILED_STATUS) + 1
+                : 0;
+        boolean shouldReturnToShop = deliveryFailureCount >= MAX_DEMO_DELIVERY_FAILURES;
+
+        String newOrderStatus = "DELIVERED".equals(normalizedStatus)
+                ? OrderStatus.COMPLETED
+                : shouldReturnToShop ? OrderStatus.RETURNED : OrderStatus.SHIPPING;
         String newPaymentStatus = "DELIVERED".equals(normalizedStatus)
                 && PaymentMethod.COD.equals(order.getPaymentMethods())
                         ? PaymentStatus.PAID
-                        : order.getPaymentStatuses();
+                        : resolvePaymentStatusAfterDemoReturn(order, shouldReturnToShop);
         String description = buildDemoTrackingDescription(statusName, location);
         LocalDateTime now = LocalDateTime.now();
 
-        dao.updateDemoTrackingStatus(orderId, normalizedStatus, statusName, newOrderStatus, newPaymentStatus);
+        if (shouldReturnToShop) {
+            restoreStockIfNeeded(order);
+        }
+
+        dao.updateDemoTrackingStatus(
+                orderId,
+                shouldReturnToShop ? DEMO_RETURNED_STATUS : normalizedStatus,
+                shouldReturnToShop ? DEMO_RETURNED_STATUS_NAME : statusName,
+                newOrderStatus,
+                newPaymentStatus);
         trackingLogDao.insert(
                 orderId,
                 "DEMO",
@@ -260,6 +282,16 @@ public class OrderService {
                 statusName,
                 description,
                 now);
+        if (shouldReturnToShop) {
+            trackingLogDao.insert(
+                    orderId,
+                    "DEMO",
+                    order.getGhnOrderCode(),
+                    DEMO_RETURNED_STATUS,
+                    DEMO_RETURNED_STATUS_NAME,
+                    "Đơn hàng đã giao thất bại 3 lần và được hoàn về shop.",
+                    now.plusSeconds(1));
+        }
     }
 
     public Map<String, String> getDemoTrackingStatusLabels() {
@@ -312,6 +344,16 @@ public class OrderService {
         statuses.put("DELIVERY_FAILED", "Giao hàng thất bại");
         statuses.put("DELIVERED", "Đã giao thành công");
         return Collections.unmodifiableMap(statuses);
+    }
+
+    private String resolvePaymentStatusAfterDemoReturn(Order order, boolean returnedToShop) {
+        if (!returnedToShop) {
+            return order.getPaymentStatuses();
+        }
+        if (needsRefund(order)) {
+            return PaymentStatus.REFUND_PENDING;
+        }
+        return order.getPaymentStatuses();
     }
 
     private String trimToEmpty(String value) {

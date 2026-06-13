@@ -130,6 +130,7 @@
 
                     <input type="hidden" name="shippingServiceId" id="shipping-service-id-input" value="53320">
                     <input type="hidden" name="shippingFee" id="shipping-fee-input" value="0">
+                    <input type="hidden" name="expectedDeliveryEpochSeconds" id="expected-delivery-epoch-input" value="">
                     <input type="hidden" id="cart-total" value="${total}">
 
                     <div>
@@ -202,9 +203,11 @@
         const toDistrictInput = document.getElementById('ghn-district-id');
         const displayElement = document.getElementById('shipping-fee-display');
         const leadTimeDisplay = document.getElementById('lead-time-display');
+        const expectedDeliveryInput = document.getElementById('expected-delivery-epoch-input');
         const submitBtn = document.getElementById('submit-btn');
 
         if (submitBtn) submitBtn.disabled = true;
+        if (expectedDeliveryInput) expectedDeliveryInput.value = "";
 
         if (!toDistrictInput || !toDistrictInput.value || toDistrictInput.value.trim() === '' || isNaN(parseInt(toDistrictInput.value))) {
             if (displayElement) displayElement.innerText = "Chưa có địa chỉ";
@@ -338,6 +341,7 @@
         const toDistrictId = parseInt(document.getElementById('ghn-district-id').value);
         const toWardCode = document.getElementById('ghn-ward-code').value;
         const leadTimeDisplay = document.getElementById('lead-time-display');
+        const expectedDeliveryInput = document.getElementById('expected-delivery-epoch-input');
 
         const payload = {
             "from_district_id": SHOP_DISTRICT_ID,
@@ -357,20 +361,25 @@
 
             if (result.code === 200 && result.data) {
                 if (result.data.leadtime > 0) {
-                    const leadTimeDate = new Date(result.data.leadtime * 1000);
+                    const leadTimeEpochSeconds = parseInt(result.data.leadtime);
+                    const leadTimeDate = new Date(leadTimeEpochSeconds * 1000);
                     const formattedDate = leadTimeDate.toLocaleDateString('vi-VN', {
                         day: '2-digit', month: '2-digit', year: 'numeric'
                     });
                     if (leadTimeDisplay) leadTimeDisplay.innerText = formattedDate;
+                    if (expectedDeliveryInput) expectedDeliveryInput.value = leadTimeEpochSeconds;
                 } else {
                     if (leadTimeDisplay) leadTimeDisplay.innerText = "Giao hàng nhanh";
+                    if (expectedDeliveryInput) expectedDeliveryInput.value = "";
                 }
             } else {
                 if (leadTimeDisplay) leadTimeDisplay.innerText = "Không xác định ngày";
+                if (expectedDeliveryInput) expectedDeliveryInput.value = "";
             }
         } catch (error) {
             console.error(error);
             if (leadTimeDisplay) leadTimeDisplay.innerText = "Lỗi kết nối";
+            if (expectedDeliveryInput) expectedDeliveryInput.value = "";
         }
     }
 

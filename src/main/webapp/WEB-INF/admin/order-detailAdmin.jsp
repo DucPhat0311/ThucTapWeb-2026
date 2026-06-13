@@ -147,7 +147,7 @@
                                     <p><b>Cập nhật lúc:</b> ${order.ghnLastUpdatedAtFormatted}</p>
                                 </c:if>
 
-                                <c:if test="${demoTracking && order.orderStatus != 'COMPLETED' && order.orderStatus != 'CANCELLED'}">
+                                <c:if test="${demoTracking && order.orderStatus != 'COMPLETED' && order.orderStatus != 'CANCELLED' && order.orderStatus != 'RETURNED'}">
                                     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
                                     <h3>Cập nhật chặng mô phỏng</h3>
                                     <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
