@@ -72,11 +72,10 @@
 
             <a href="${not empty sessionScope.userlogin ? contextPath.concat('/my-cart') : contextPath.concat('/login')}" class="iconCart">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <c:if test="${not empty sessionScope.userlogin and sessionScope.cartSize > 0}">
-                    <span class="cart-count" id="cartCountBadge" style="display: inline-block;">
-                            ${sessionScope.cartSize}
-                    </span>
-                </c:if>
+                <span class="cart-count" id="cartCountBadge"
+                      style="display: ${not empty sessionScope.userlogin and sessionScope.cartSize > 0 ? 'inline-block' : 'none'};">
+                    ${not empty sessionScope.cartSize ? sessionScope.cartSize : 0}
+                </span>
             </a>
 
             <div class="notification-wrapper">

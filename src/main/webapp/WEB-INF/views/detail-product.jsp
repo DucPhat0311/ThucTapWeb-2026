@@ -483,6 +483,58 @@
                 });
             });
 
+            const btnAddCart = document.querySelector(".btn-add-cart");
+            if (btnAddCart) {
+                btnAddCart.addEventListener("click", function() {
+                    if (!selectedColorId || !selectedSizeId || !window.currentVariantId) {
+                        alert("Vui lòng chọn đầy đủ Màu sắc và Size!");
+                        return;
+                    }
+
+                    const quantity = document.getElementById("quantity").value;
+
+                    const params = new URLSearchParams();
+                    params.append("variantId", window.currentVariantId);
+                    params.append("quantity", quantity);
+
+                    fetch(requestContextPath + "/add-cart", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: params.toString()
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error === "not_logged_in") {
+                                alert("Vui lòng đăng nhập để thực hiện chức năng này");
+                                window.location.href = requestContextPath + "/login";
+                                return;
+                            }
+
+                            if (data.success) {
+                                const badge = document.getElementById("cartCountBadge");
+                                if (badge) {
+                                    badge.innerText = data.totalQuantity;
+
+                                    if (data.totalQuantity > 0) {
+                                        badge.style.display = "inline-block";
+                                    } else {
+                                        badge.style.display = "none";
+                                    }
+                                }
+                                alert("Thêm vào giỏ hàng thành công");
+                            } else {
+                                alert(data.message || "Có lỗi xảy ra khi thêm vào giỏ hàng.");
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert("Không thể kết nối đến máy chủ!");
+                        });
+                });
+            }
+
 
             const faqQuestions = document.querySelectorAll(".faq-question");
             faqQuestions.forEach(question => {
