@@ -1,6 +1,15 @@
-function openConfirmModal(userId, textStatus, textBtn) {
+function openConfirmModal(userId, textStatus, textBtn, isSelf) {
     document.getElementById("confirmUserId").value = userId;
     document.getElementById("modalActionText").innerText = textBtn + " người dùng";
+
+    const warningEl = document.getElementById("selfLockWarning");
+    if (warningEl) {
+        if (isSelf && textBtn === 'khóa') {
+            warningEl.style.display = 'block';
+        } else {
+            warningEl.style.display = 'none';
+        }
+    }
 
     if (textBtn === 'khóa') {
          document.getElementById("formActionField").value = "block";

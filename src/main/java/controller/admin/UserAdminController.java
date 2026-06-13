@@ -215,8 +215,17 @@ public class UserAdminController extends HttpServlet {
         if ("block".equals(action)){
 
             int id = Integer.parseInt(request.getParameter("id"));
+            HttpSession session = request.getSession();
+            User currentUser = (User) session.getAttribute("userlogin");
 
             userService.blockUser(id);
+
+            if (currentUser != null && currentUser.getId() == id) {
+                // Tự khóa tài khoản của chính mình -> Đăng xuất
+                session.invalidate();
+                response.sendRedirect(request.getContextPath() + "/login?error=locked");
+                return;
+            }
 
             response.sendRedirect("userAdmin");
 
