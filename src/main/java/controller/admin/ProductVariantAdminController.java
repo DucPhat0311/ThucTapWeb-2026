@@ -97,6 +97,7 @@ public class ProductVariantAdminController extends HttpServlet {
                 String sizeNameParam = request.getParameter("sizeName");
                 String colorNameParam = request.getParameter("colorName");
                 String stockParam = request.getParameter("stock");
+                String priceParam = request.getParameter("price");
 
 
                 variant.setProductId(Integer.parseInt(productIdParam));
@@ -108,6 +109,8 @@ public class ProductVariantAdminController extends HttpServlet {
                 variant.setColorId(colorId);
                 variant.setStock(stockParam != null && !stockParam.isEmpty()
                     ? Integer.parseInt(stockParam) : 0);
+                variant.setPrice(priceParam != null && !priceParam.isEmpty()
+                    ? Double.parseDouble(priceParam) : 0);
 
                 productVariantService.createVariant(variant);
 
@@ -144,6 +147,10 @@ public class ProductVariantAdminController extends HttpServlet {
             String stockParam = request.getParameter("stock");
             variant.setStock(stockParam != null && !stockParam.isEmpty() 
                 ? Integer.parseInt(stockParam) : 0);
+            
+            String priceParam = request.getParameter("price");
+            variant.setPrice(priceParam != null && !priceParam.isEmpty()
+                ? Double.parseDouble(priceParam) : 0);
 
 
             productVariantService.updateVariant(variant);

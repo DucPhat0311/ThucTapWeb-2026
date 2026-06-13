@@ -61,6 +61,10 @@
             </div>
 
             <div class="row">
+                <div class="col">
+                    <label>Giá riêng</label>
+                    <input type="number" name="price" value="${mode == 'edit' ? variant.price : '0'}" min="0" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
                 <c:choose>
                     <c:when test="${mode == 'edit'}">
                         <div class="col">
