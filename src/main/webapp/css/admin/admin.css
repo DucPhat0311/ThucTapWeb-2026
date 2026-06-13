@@ -1718,5 +1718,60 @@ td.actions>*:last-child {
 
 .text-center { text-align: center !important; }
 
-.btn-success { background: #2b8a3e; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; } 
+.btn-success { background: #2b8a3e; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; }
 .btn-success:hover { background: #237032; transform: scale(1.05); }
+
+.modal-field {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.modal-field input {
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--bg-color);
+    color: var(--text-main);
+}
+
+.modal-field input:focus {
+    border-color: #8e44ad;
+    box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.12);
+}
+
+.modal-field-error {
+    color: #c0392b;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 16px;
+}
+
+.btn-primary-modal {
+    background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(142, 68, 173, 0.25);
+}
+
+.btn-primary-modal:hover {
+    background: linear-gradient(135deg, #9b59b6 0%, #7d3c98 100%);
+    transform: scale(1.04);
+    box-shadow: 0 6px 16px rgba(142, 68, 173, 0.35);
+}

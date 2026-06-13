@@ -225,12 +225,23 @@ public class UserAdminController extends HttpServlet {
 
         if ("unblock".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
-
             userService.unblockUser(id);
-
             response.sendRedirect("userAdmin");
-
             return;
+        }
+
+        if ("changePassword".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String newPassword = request.getParameter("newPassword");
+            String confirmNewPassword = request.getParameter("confirmNewPassword");
+
+            if (newPassword == null || newPassword.trim().isEmpty() || !newPassword.equals(confirmNewPassword)) {
+                response.sendRedirect("userAdmin");
+                return;
+            }
+
+            userService.adminChangePassword(id, newPassword.trim());
+            response.sendRedirect("userAdmin");
         }
 
     }

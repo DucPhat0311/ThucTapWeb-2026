@@ -395,6 +395,11 @@ public class UserService {
         userDaoAdmin.blockUser(id, "ACTIVE");
     }
 
+    public void adminChangePassword(int userId, String newPassword) {
+        String hashed = PassUtil.hash(newPassword);
+        userDao.updatePasss(userId, hashed);
+    }
+
     public record EmailChangeOldEmailVerification(
             String newEmail,
             String oldEmailOtp,
