@@ -259,14 +259,8 @@
 
                                 <c:when test="${order.orderStatus == 'PROCESSING'}">
                                     <p class="order-action-note">
-                                        Đơn đã được xác nhận. Tạo hành trình vận chuyển ở khối theo dõi phía trên hoặc chuyển trực tiếp sang đang giao khi cần kiểm thử nhanh.
+                                        Đơn đã được xác nhận. Tạo hành trình vận chuyển ở khối theo dõi phía trên để cập nhật các mốc giao hàng.
                                     </p>
-                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
-                                        <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="orderAction" value="markShipping">
-                                        <input type="hidden" name="id" value="${order.id}">
-                                        <button class="btn-primary">Chuyển sang đang giao</button>
-                                    </form>
                                     <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderAction" value="cancel">
@@ -276,18 +270,9 @@
                                 </c:when>
 
                                 <c:when test="${order.orderStatus == 'SHIPPING'}">
-                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
-                                        <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="orderAction" value="markCompleted">
-                                        <input type="hidden" name="id" value="${order.id}">
-                                        <button class="btn-primary">Giao thành công</button>
-                                    </form>
-                                    <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
-                                        <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="orderAction" value="cancel">
-                                        <input type="hidden" name="id" value="${order.id}">
-                                        <button class="btn-warning">Hủy vận đơn</button>
-                                    </form>
+                                    <p class="order-action-note">
+                                        Đơn đang ở luồng vận chuyển. Vui lòng cập nhật trạng thái giao hàng từ khối theo dõi vận chuyển phía trên.
+                                    </p>
                                 </c:when>
 
                                 <c:when test="${order.orderStatus == 'CANCELLED' && order.paymentStatuses == 'REFUND_PENDING'}">
