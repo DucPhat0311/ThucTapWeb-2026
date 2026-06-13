@@ -418,8 +418,25 @@
                                 tablinks[i].className = tablinks[i].className.replace(" active", "");
                             }
                             document.getElementById(tabName).style.display = "block";
-                            evt.currentTarget.className += " active";
+                            if (evt) {
+                                evt.currentTarget.className += " active";
+                            } else {
+                                for (i = 0; i < tablinks.length; i++) {
+                                    if (tablinks[i].getAttribute("onclick") && tablinks[i].getAttribute("onclick").includes("'" + tabName + "'")) {
+                                        tablinks[i].className += " active";
+                                        break;
+                                    }
+                                }
+                            }
+                            sessionStorage.setItem("warehouseActiveTab", tabName);
                         }
+
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const savedTab = sessionStorage.getItem("warehouseActiveTab");
+                            if (savedTab) {
+                                openTab(null, savedTab);
+                            }
+                        });
 
                         function filterStockTable() {
                             const input = document.getElementById("stockSearchInput");
