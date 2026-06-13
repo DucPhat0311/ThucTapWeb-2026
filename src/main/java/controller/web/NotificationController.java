@@ -1,5 +1,7 @@
 package controller.web;
 
+import dao.user.CartDao;
+import dao.user.CartItemDao;
 import dao.user.NotificationDao;
 import model.Notification;
 import model.User;
@@ -28,12 +30,11 @@ public class NotificationController extends HttpServlet {
         List<Notification> notes = notificationDao.findLatestForUser(userLog.getId());
         request.setAttribute("notes", notes);
 
-        notificationDao.markAllReadForUser(userLog.getId());
-
         List<Notification> allNotifications = notificationDao.findAllByUserId(userLog.getId());
         request.setAttribute("allNotifications", allNotifications);
-        request.setAttribute("pageTitle", "Thông báo của tôi");
 
+        request.setAttribute("unreadNotifCount", allNotifications.size());
+        request.setAttribute("pageTitle", "Thông báo của tôi");
         request.getRequestDispatcher("/WEB-INF/views/notification.jsp").forward(request, response);
     }
 }

@@ -1,50 +1,19 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="application" />
-<%@ page import="model.User" %>
-<%@ page import="model.Category" %>
-<%@ page import="dao.user.CartDao" %>
-<%@ page import="dao.user.CartItemDao" %>
-<%@ page import="dao.user.CategoryDao" %>
-<%@ page import="java.util.List" %>
-<%@ page import="dao.user.NotificationDao" %>
-<%@ page import="model.Notification" %>
-
-<%
-    String contextPath = request.getContextPath();
-    Object pageCss = request.getAttribute("pageCss");
-    Object pageTitle = request.getAttribute("pageTitle");
-
-    User userLog = (User) session.getAttribute("userlogin");
-    boolean loggedIn = userLog != null;
-    String displayName = "";
-    int cartSize = 0;
-
-    if (loggedIn) {
-        displayName = userLog.getFullName() != null && !userLog.getFullName().isBlank()
-                ? userLog.getFullName()
-                : userLog.getUsername();
-
-        CartDao cDao = new CartDao();
-        Integer cId = cDao.findCartIdByUser(userLog.getId());
-        if (cId != null) {
-            cartSize = new CartItemDao().countTotalQuantity(cId);
-            session.setAttribute("cartSize", cartSize);
-        }
-    }
-%>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title><%= pageTitle != null ? pageTitle : "AURA Studio" %></title>
+    <title>${not empty requestScope.pageTitle ? requestScope.pageTitle : 'AURA Studio'}</title>
 
-    <% if (pageCss != null && !pageCss.toString().isBlank()) { %>
-    <link rel="stylesheet" href="<%= contextPath %>/css/<%= pageCss %>">
-    <% } %>
-    <link rel="stylesheet" href="<%= contextPath %>/css/include/header.css">
-    <link rel="stylesheet" href="<%= contextPath %>/css/include/footer.css">
+    <c:if test="${not empty requestScope.pageCss and not requestScope.pageCss.toString().isBlank()}">
+        <link rel="stylesheet" href="${contextPath}/css/${requestScope.pageCss}">
+    </c:if>
+    <link rel="stylesheet" href="${contextPath}/css/include/header.css">
+    <link rel="stylesheet" href="${contextPath}/css/include/footer.css">
+    <link rel="stylesheet" href="${contextPath}/css/views/notification.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
@@ -53,12 +22,12 @@
 <header class="header" id="header">
     <div class="header-top">
         <div class="logo">
-            <a href="<%= contextPath %>/home" class="iconUser">
-                <img src="<%= contextPath %>/img/logo.png" alt="AURA Studio Logo">
+            <a href="${contextPath}/home" class="iconUser">
+                <img src="${contextPath}/img/logo.png" alt="AURA Studio Logo">
             </a>
         </div>
         <div class="search-bar" style="position: relative;">
-            <form action="<%= contextPath %>/search" method="get">
+            <form action="${contextPath}/search" method="get">
                 <input type="text"
                        id="headerSearchInput"
                        name="keyword"
@@ -75,85 +44,90 @@
         </div>
 
         <div class="actions">
-            <a href="<%= loggedIn ? contextPath + "/my-wishlist" : contextPath + "/login" %>" class="iconWishlist">
+            <a href="${not empty sessionScope.userlogin ? contextPath.concat('/my-wishlist') : contextPath.concat('/login')}" class="iconWishlist">
                 <i class="fa-regular fa-heart"></i>
             </a>
 
             <div class="user-menu">
                 <a href="#" class="iconUser">
                     <i class="fa-regular fa-user"></i>
-                    <%= loggedIn ? displayName : "" %>
+                    <c:if test="${not empty sessionScope.userlogin}">
+                        <c:out value="${not empty sessionScope.userlogin.fullName and not sessionScope.userlogin.fullName.isBlank() ? sessionScope.userlogin.fullName : sessionScope.userlogin.username}" />
+                    </c:if>
                 </a>
                 <ul class="user-dropdown">
-                    <% if (loggedIn) { %>
-                    <li><a href="<%= contextPath %>/profile">Thông tin cá nhân</a></li>
-                    <li><a href="<%= contextPath %>/order-user">Đơn hàng của tôi</a></li>
-                    <li><a href="<%= contextPath %>/logout">Đăng xuất</a></li>
-                    <% } else { %>
-                    <li><a href="<%= contextPath %>/login">Đăng nhập</a></li>
-                    <li><a href="<%= contextPath %>/register">Đăng ký</a></li>
-                    <% } %>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.userlogin}">
+                            <li><a href="${contextPath}/profile">Thông tin cá nhân</a></li>
+                            <li><a href="${contextPath}/order-user">Đơn hàng của tôi</a></li>
+                            <li><a href="${contextPath}/logout">Đăng xuất</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a href="${contextPath}/login">Đăng nhập</a></li>
+                            <li><a href="${contextPath}/register">Đăng ký</a></li>
+                        </c:otherwise>
+                    </c:choose>
                 </ul>
             </div>
 
-            <a href="<%= loggedIn ? contextPath + "/my-cart" : contextPath + "/login" %>" class="iconCart">
+            <a href="${not empty sessionScope.userlogin ? contextPath.concat('/my-cart') : contextPath.concat('/login')}" class="iconCart">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <% if (loggedIn) { %>
-                <span class="cart-count" id="cartCountBadge"
-                      style="<%= cartSize == 0 ? "display:none" : "display:inline-block" %>">
-                       <%= cartSize %>
-                   </span>
-                <% } %>
+                <c:if test="${not empty sessionScope.userlogin and sessionScope.cartSize > 0}">
+                    <span class="cart-count" id="cartCountBadge" style="display: inline-block;">
+                            ${sessionScope.cartSize}
+                    </span>
+                </c:if>
             </a>
 
             <div class="notification-wrapper">
                 <p id="thongBao" class="iconNotification">
                     <i class="fa-regular fa-bell"></i>
-                    <% if (loggedIn) {
-                        int unread = new NotificationDao().countUnreadForUser(userLog.getId());
-                        if (unread > 0) {
-                    %>
-                    <span class="notification-badge" id="notificationBadge" data-count="<%= unread %>"><%= unread %></span>
-                    <% } } %>
+                    <c:if test="${not empty sessionScope.userlogin and requestScope.unreadNotifCount > 0}">
+                        <span class="notification-badge" id="notificationBadge" data-count="${requestScope.unreadNotifCount}">${requestScope.unreadNotifCount}</span>
+                    </c:if>
                 </p>
 
                 <div id="notification-box">
-                    <% if (loggedIn) {
-                        List<Notification> notes = new NotificationDao().findLatestForUser(userLog.getId());
-                        request.setAttribute("notes", notes);
-                    %>
-                    <div class="notification-header">
-                        <span>Thông báo</span>
-                        <button type="button" id="closeNotifBoxBtn" class="close-btn" aria-label="Close">×</button>
-                    </div>
-                    <ul>
-                        <c:if test="${not empty notes}">
-                            <c:forEach var="n" items="${notes}">
-                                <li class="notification-item ${n.isRead() ? '' : 'unread'}">
-                                    <a class="notif-link"
-                                       href="${not empty n.url and not n.url.isBlank() ? n.url : '#'}"
-                                       data-id="${n.id}"
-                                       style="text-decoration: none; color: inherit; display: block; width: 100%;">
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.userlogin}">
+                            <div class="notification-header">
+                                <span>Thông báo</span>
+                                <button type="button" id="closeNotifBoxBtn" class="close-btn" aria-label="Close">×</button>
+                            </div>
+                            <ul>
+                                <c:choose>
+                                    <c:when test="${not empty requestScope.notes}">
+                                        <c:forEach var="n" items="${requestScope.notes}">
+                                            <li class="notification-item ${n.isRead()}">
+                                                <a class="notif-link"
+                                                   href="${not empty n.url and not n.url.isBlank() ? n.url : '#'}"
+                                                   data-id="${n.id}"
+                                                   style="text-decoration: none; color: inherit; display: block; width: 100%;">
+                                                    <div class="notif-title">${n.title}</div>
+                                                    <div class="notif-message">${n.message}</div>
+                                                </a>
+                                            </li>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li class="empty-message">Hiện không có thông báo nào.</li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </ul>
 
-
-                                        <div class="notif-title">${n.title}</div>
-                                        <div class="notif-message">${n.message}</div>
-                                    </a>
-                                </li>
-                            </c:forEach>
-                        </c:if>
-
-
-                        <c:if test="${empty notes}">
-                            <li class="empty-message">Hiện không có thông báo nào.</li>
-                        </c:if>
-                    </ul>
-                    <% } else { %>
-                    <ul>
-                        <li class="empty-message">Hiện không có thông báo nào.</li>
-                        <li class="empty-message">Đăng nhập để được nhận thêm nhiều ưu đãi.</li>
-                    </ul>
-                    <% } %>
+                            <div class="notification-footer">
+                                <a href="${contextPath}/my-notifications">
+                                    Xem tất cả thông báo
+                                </a>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <ul>
+                                <li class="empty-message">Hiện không có thông báo nào.</li>
+                                <li class="empty-message">Đăng nhập để được nhận thêm nhiều ưu đãi.</li>
+                            </ul>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>
@@ -329,7 +303,6 @@
             box.classList.toggle('active');
         });
 
-
         if (closeBtn) {
             closeBtn.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -338,7 +311,6 @@
             });
         }
 
-
         document.addEventListener('click', function (e) {
             if (!bell.contains(e.target) && !box.contains(e.target)) {
                 box.classList.remove('active');
@@ -346,3 +318,5 @@
         });
     })();
 </script>
+</body>
+</html>

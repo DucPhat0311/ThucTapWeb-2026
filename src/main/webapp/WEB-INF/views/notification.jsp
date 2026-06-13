@@ -19,20 +19,17 @@
     <ul class="notif-list">
         <c:if test="${not empty allNotifications}">
             <c:forEach var="n" items="${allNotifications}">
-                <li class="notif-page-item ${n.isRead() ? '' : 'unread'}">
+                <li class="notif-page-item ${n.isRead()}">
                     <a class="notif-link" href="${not empty n.url and not n.url.isBlank() ? n.url : '#'}" data-id="${n.id}">
                         <div class="notif-page-content">
                             <div class="notif-page-title-text">${n.title}</div>
                             <div class="notif-page-msg">${n.message}</div>
                             <div class="notif-page-time">
                                 <i class="fa-regular fa-clock"></i>
-                                <%
-                                    Notification notif = (Notification) pageContext.getAttribute("n");
-                                    if (notif.getCreatedAt() != null) {
-                                        String formattedDate = notif.getCreatedAt().format(DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy"));
-                                        out.print(formattedDate);
-                                    }
-                                %>
+                                <c:if test="${not empty n.createdAt}">
+                                    <fmt:parseDate value="${n.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+                                    <fmt:formatDate value="${parsedDateTime}" pattern="HH:mm - dd/MM/yyyy" />
+                                </c:if>
                             </div>
                         </div>
                     </a>
