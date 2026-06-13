@@ -71,7 +71,7 @@ public class ProductVariantDaoAdmin extends BaseDao {
 
     public ProductVariant getVariantById(int id) {
         return getJdbi().withHandle(handle -> handle.createQuery("""
-            SELECT pv.id, pv.product_id, pv.size_id, pv.color_id, pv.stock, pv.price,
+            SELECT pv.id, pv.product_id, pv.size_id, pv.color_id, pv.stock, pv.price, pv.sale_price AS salePrice,
                    s.code AS sizeName, c.name AS colorName
             FROM product_variants pv
             LEFT JOIN sizes s ON pv.size_id = s.id
@@ -84,8 +84,8 @@ public class ProductVariantDaoAdmin extends BaseDao {
 
     public void createVariant(ProductVariant variant) {
         getJdbi().useHandle(handle -> handle.createUpdate("""
-            INSERT INTO product_variants(product_id, size_id, color_id, stock, price)
-            VALUES (:productId, :sizeId, :colorId, :stock, :price)""")
+            INSERT INTO product_variants(product_id, size_id, color_id, stock, price, sale_price)
+            VALUES (:productId, :sizeId, :colorId, :stock, :price, :salePrice)""")
             .bindBean(variant)
             .execute());
     }
@@ -93,7 +93,7 @@ public class ProductVariantDaoAdmin extends BaseDao {
     public void updateVariant(ProductVariant variant) {
         getJdbi().useHandle(handle -> handle.createUpdate("""
                 UPDATE product_variants
-                SET size_id = :sizeId, color_id = :colorId, stock = :stock, price = :price
+                SET size_id = :sizeId, color_id = :colorId, stock = :stock, price = :price, sale_price = :salePrice
                 WHERE id = :id""")
             .bindBean(variant)
             .execute());
@@ -109,7 +109,7 @@ public class ProductVariantDaoAdmin extends BaseDao {
 
     public List<ProductVariant> getProductVariantByProductId(int productId) {
         return getJdbi().withHandle(handle -> handle.createQuery("""
-            SELECT pv.id, pv.product_id, pv.size_id, pv.color_id, pv.stock, pv.price, s.code AS sizeName, c.name AS colorName
+            SELECT pv.id, pv.product_id, pv.size_id, pv.color_id, pv.stock, pv.price, pv.sale_price AS salePrice, s.code AS sizeName, c.name AS colorName
             FROM product_variants pv
             JOIN sizes s ON pv.size_id = s.id
             JOIN colors c ON pv.color_id = c.id
@@ -122,7 +122,7 @@ public class ProductVariantDaoAdmin extends BaseDao {
 
     public List<ProductVariant> getAllVariantsWithDetails() {
         return getJdbi().withHandle(handle -> handle.createQuery("""
-            SELECT pv.id, pv.product_id, pv.size_id, pv.color_id, pv.stock, pv.price,
+            SELECT pv.id, pv.product_id, pv.size_id, pv.color_id, pv.stock, pv.price, pv.sale_price AS salePrice,
                    p.name AS productName, s.code AS sizeName, c.name AS colorName
             FROM product_variants pv
             JOIN products p ON pv.product_id = p.id
@@ -149,8 +149,8 @@ public class ProductVariantDaoAdmin extends BaseDao {
 
     public int createAndReturnId(ProductVariant variant) {
         return getJdbi().withHandle(handle -> handle.createUpdate("""
-            INSERT INTO product_variants(product_id, size_id, color_id, stock, price)
-            VALUES (:productId, :sizeId, :colorId, 0, :price)
+            INSERT INTO product_variants(product_id, size_id, color_id, stock, price, sale_price)
+            VALUES (:productId, :sizeId, :colorId, 0, :price, :salePrice)
             """)
             .bindBean(variant)
             .executeAndReturnGeneratedKeys("id")

@@ -227,6 +227,7 @@ public class ProductAdminController extends HttpServlet {
                 String[] colors = req.getParameterValues("variant_color[]");
                 String[] stocks = req.getParameterValues("variant_stock[]");
                 String[] prices = req.getParameterValues("variant_price[]");
+                String[] salePrices = req.getParameterValues("variant_sale_price[]");
 
                 if (sizes != null && colors != null) {
                     dao.admin.SizeDaoAdmin sizeDao = new dao.admin.SizeDaoAdmin();
@@ -252,6 +253,14 @@ public class ProductAdminController extends HttpServlet {
                                 priceVal = 0;
                             }
                         }
+                        double salePriceVal = 0;
+                        if (salePrices != null && salePrices.length > i) {
+                            try {
+                                salePriceVal = Double.parseDouble(salePrices[i]);
+                            } catch (NumberFormatException e) {
+                                salePriceVal = 0;
+                            }
+                        }
 
                         if (sVal != null && !sVal.trim().isEmpty() && cVal != null && !cVal.trim().isEmpty()) {
                             int sizeId = sizeDao.findOrCreateSize(sVal.trim());
@@ -263,6 +272,7 @@ public class ProductAdminController extends HttpServlet {
                             variant.setColorId(colorId);
                             variant.setStock(stVal);
                             variant.setPrice(priceVal);
+                            variant.setSalePrice(salePriceVal);
 
                             variantDao.createVariant(variant);
                         }

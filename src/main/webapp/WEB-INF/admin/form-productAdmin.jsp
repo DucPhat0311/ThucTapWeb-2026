@@ -142,6 +142,10 @@
                                 <label>Giá riêng</label>
                                 <input type="number" name="variant_price[]" placeholder="Giá..." value="0" min="0">
                             </div>
+                            <div class="col">
+                                <label>Giá sale riêng</label>
+                                <input type="number" name="variant_sale_price[]" placeholder="Sale..." value="0" min="0">
+                            </div>
                             <input type="hidden" name="variant_stock[]" value="0">
                             <div class="col" style="flex: 0 0 auto; min-width: 60px;">
                                 <button type="button" style="padding: 12px; background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 8px; font-weight: 600; height: 46px; display: inline-flex; align-items: center; justify-content: center;" onclick="removeVariantRow(this)">Xóa</button>
@@ -173,6 +177,10 @@
                             <div class="col">
                                 <label>Giá riêng</label>
                                 <input type="number" name="variant_price[]" placeholder="Giá..." value="0" min="0" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #dcd3cb; background-color: #fcfbf9; font-size: 15px;">
+                            </div>
+                            <div class="col">
+                                <label>Giá sale riêng</label>
+                                <input type="number" name="variant_sale_price[]" placeholder="Sale..." value="0" min="0" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #dcd3cb; background-color: #fcfbf9; font-size: 15px;">
                             </div>
                             <input type="hidden" name="variant_stock[]" value="0">
                             <div class="col" style="flex: 0 0 auto; min-width: 60px;">
