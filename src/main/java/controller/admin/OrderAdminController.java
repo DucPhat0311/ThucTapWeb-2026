@@ -213,8 +213,6 @@ public class OrderAdminController extends HttpServlet {
                 redirectWithMessage(resp, id, "cancel_not_allowed", cancellationCheck.message());
                 return;
             }
-        } else if (OrderStatus.COMPLETED.equals(newStatus)) {
-            orderService.completeOrder(id);
         } else {
             orderService.updateStatus(id, newStatus);
         }
@@ -238,8 +236,6 @@ public class OrderAdminController extends HttpServlet {
         return switch (orderAction.trim()) {
             case "confirm" -> OrderStatus.PENDING.equals(currentStatus) ? OrderStatus.PROCESSING : null;
             case "cancel" -> isCancellableFromAdminAction(currentStatus) ? OrderStatus.CANCELLED : null;
-            case "markShipping" -> OrderStatus.PROCESSING.equals(currentStatus) ? OrderStatus.SHIPPING : null;
-            case "markCompleted" -> OrderStatus.SHIPPING.equals(currentStatus) ? OrderStatus.COMPLETED : null;
             default -> null;
         };
     }
@@ -247,8 +243,7 @@ public class OrderAdminController extends HttpServlet {
     private boolean isCancellableFromAdminAction(String currentStatus) {
         return OrderStatus.PENDING.equals(currentStatus)
                 || OrderStatus.PENDING_PAYMENT.equals(currentStatus)
-                || OrderStatus.PROCESSING.equals(currentStatus)
-                || OrderStatus.SHIPPING.equals(currentStatus);
+                || OrderStatus.PROCESSING.equals(currentStatus);
     }
 
     private void createDemoTracking(HttpServletRequest req, HttpServletResponse resp) throws IOException {
