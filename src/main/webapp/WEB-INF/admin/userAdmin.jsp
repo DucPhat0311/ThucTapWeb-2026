@@ -139,7 +139,7 @@
                                                         <button type="button" class="icon-btn key"
                                                             title="Đổi mật khẩu"
                                                             onclick="openChangePassModal('${u.id}', '${u.username}')">
-                                                            <i class="fa fa-key" style="color: #8e44ad;"></i>
+                                                            <i class="fa fa-key" style="color: #f39c12;"></i>
                                                         </button>
 
                                                     </td>
@@ -222,7 +222,7 @@
 
                     <div id="changePassModal" class="modal-overlay">
                         <div class="modal">
-                            <h3><i class="fa fa-key" style="color:#8e44ad;margin-right:8px"></i>Đổi mật khẩu</h3>
+                            <h3><i class="fa fa-key" style="color:#a87c53;margin-right:8px"></i>Đổi mật khẩu</h3>
                             <p>Tài khoản: <b id="changePassUsername"></b></p>
                             <form id="changePassForm" method="post" action="${pageContext.request.contextPath}/userAdmin" onsubmit="return validateChangePass()">
                                 <input type="hidden" name="action" value="changePassword">
@@ -230,13 +230,13 @@
 
                                 <div class="modal-field">
                                     <label for="newPassword">Mật khẩu mới</label>
-                                    <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới" required>
+                                    <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới">
                                     <small id="newPasswordError" class="modal-field-error"></small>
                                 </div>
 
                                 <div class="modal-field">
                                     <label for="confirmNewPassword">Nhập lại mật khẩu mới</label>
-                                    <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Nhập lại mật khẩu mới" required>
+                                    <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
                                     <small id="confirmNewPasswordError" class="modal-field-error"></small>
                                 </div>
 
@@ -249,7 +249,6 @@
                     </div>
                 </div>
 
+                <script src="${pageContext.request.contextPath}/js/admin/adminUser.js"></script>
             </body>
-            <script src="${pageContext.request.contextPath}/js/admin/adminUser.js"></script>
-
             </html>
