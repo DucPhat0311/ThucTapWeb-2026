@@ -100,6 +100,21 @@ public class OrderTrackingLogDao extends BaseDao {
         );
     }
 
+    public int countByStatusCode(int orderId, String statusCode) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+                    SELECT COUNT(*)
+                    FROM order_tracking_logs
+                    WHERE order_id = :orderId
+                      AND UPPER(status_code) = UPPER(:statusCode)
+                """)
+                        .bind("orderId", orderId)
+                        .bind("statusCode", statusCode)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
     private String findLatestStatusCode(int orderId, String trackingCode) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
