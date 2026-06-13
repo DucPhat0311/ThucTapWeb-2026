@@ -56,6 +56,8 @@
                             <th>ID</th>
                             <th>Size</th>
                             <th>Màu</th>
+                            <th>Giá riêng</th>
+                            <th>Giá sale riêng</th>
                             <th>Tồn kho</th>
                             <th>Hoạt động</th>
                         </tr>
@@ -66,6 +68,12 @@
                                 <td>${v.id}</td>
                                 <td>${v.sizeName}</td>
                                 <td>${v.colorName}</td>
+                                <td>
+                                    <fmt:formatNumber value="${v.price}" pattern="#,###"/>₫
+                                </td>
+                                <td>
+                                    <fmt:formatNumber value="${v.salePrice}" pattern="#,###"/>₫
+                                </td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${v.stock == 0}">

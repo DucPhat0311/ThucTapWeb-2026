@@ -457,8 +457,8 @@
                 colorId: ${v.colorId},
                 sizeId: ${v.sizeId},
                 stock: ${v.stock},
-                price: ${v.price},
-                salePrice: ${v.salePrice},
+                price: ${v.price > 0 ? v.price : product.price},
+                salePrice: ${v.salePrice > 0 ? v.salePrice : product.sale_price},
             }<c:if test="${!st.last}">,</c:if>
             </c:forEach>
         ];

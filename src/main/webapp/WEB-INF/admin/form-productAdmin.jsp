@@ -126,6 +126,10 @@
             </div>
 
             <c:if test="${mode == 'add'}">
+                <style>
+                    .variant-row { flex-wrap: wrap !important; gap: 15px !important; }
+                    .variant-row .col { min-width: 180px; flex: 1; }
+                </style>
                 <div style="margin-top: 32px; border-top: 1px dashed #ccc; padding-top: 24px;">
                     <h3>Thêm biến thể</h3>
                     <div id="variant-list">
@@ -137,6 +141,14 @@
                             <div class="col">
                                 <label>Màu sắc</label>
                                 <input type="text" name="variant_color[]" placeholder="Nhập màu..." required>
+                            </div>
+                            <div class="col">
+                                <label>Giá riêng</label>
+                                <input type="number" name="variant_price[]" placeholder="Giá..." value="0" min="0">
+                            </div>
+                            <div class="col">
+                                <label>Giá sale riêng</label>
+                                <input type="number" name="variant_sale_price[]" placeholder="Sale..." value="0" min="0">
                             </div>
                             <input type="hidden" name="variant_stock[]" value="0">
                             <div class="col" style="flex: 0 0 auto; min-width: 60px;">
@@ -165,6 +177,14 @@
                             <div class="col">
                                 <label>Màu sắc</label>
                                 <input type="text" name="variant_color[]" placeholder="Nhập màu..." required style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #dcd3cb; background-color: #fcfbf9; font-size: 15px;">
+                            </div>
+                            <div class="col">
+                                <label>Giá riêng</label>
+                                <input type="number" name="variant_price[]" placeholder="Giá..." value="0" min="0" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #dcd3cb; background-color: #fcfbf9; font-size: 15px;">
+                            </div>
+                            <div class="col">
+                                <label>Giá sale riêng</label>
+                                <input type="number" name="variant_sale_price[]" placeholder="Sale..." value="0" min="0" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1.5px solid #dcd3cb; background-color: #fcfbf9; font-size: 15px;">
                             </div>
                             <input type="hidden" name="variant_stock[]" value="0">
                             <div class="col" style="flex: 0 0 auto; min-width: 60px;">
