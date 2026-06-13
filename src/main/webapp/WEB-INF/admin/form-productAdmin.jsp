@@ -126,6 +126,10 @@
             </div>
 
             <c:if test="${mode == 'add'}">
+                <style>
+                    .variant-row { flex-wrap: wrap !important; gap: 15px !important; }
+                    .variant-row .col { min-width: 180px; flex: 1; }
+                </style>
                 <div style="margin-top: 32px; border-top: 1px dashed #ccc; padding-top: 24px;">
                     <h3>Thêm biến thể</h3>
                     <div id="variant-list">
