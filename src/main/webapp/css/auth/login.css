@@ -212,6 +212,77 @@
     text-align: left;
 }
 
+/* Tài khoản bị khoá do hệ thống */
+.locked-message {
+    color: #6a0e0e;
+    background: linear-gradient(135deg, #fce4e4 0%, #fff0f0 100%);
+    border-left: 4px solid #c62828;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    animation: shake 0.4s ease;
+    box-shadow: 0 2px 8px rgba(198, 40, 40, 0.15);
+}
+
+/* Cảnh báo đăng nhập sai */
+.warning-message {
+    color: #6d4c00;
+    background: linear-gradient(135deg, #fff8e1 0%, #fffde7 100%);
+    border-left: 4px solid #f9a825;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(249, 168, 37, 0.15);
+}
+
+/* Thanh tiến trình số lần sai */
+.attempts-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0.6rem;
+}
+
+.attempt-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #e0d0a0;
+    border: 2px solid #c9a227;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.attempt-dot.filled {
+    background: #e65100;
+    border-color: #bf360c;
+    transform: scale(1.15);
+    box-shadow: 0 0 4px rgba(230, 81, 0, 0.5);
+}
+
+.attempts-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #bf360c;
+    margin-left: 4px;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+}
+
+
 .field-error {
     margin-top: 0.45rem;
     color: #b71c1c;
