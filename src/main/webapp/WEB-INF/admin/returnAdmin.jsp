@@ -82,7 +82,11 @@
                                     <c:out value="${returnRequest.returnStatusLabel}"/>
                                 </span>
                             </td>
-                            <td><c:out value="${returnRequest.refundStatusLabel}"/></td>
+                            <td>
+                                <span class="refund-status ${returnRequest.refundStatus}">
+                                    <c:out value="${returnRequest.refundStatusLabel}"/>
+                                </span>
+                            </td>
                             <td>
                                 <c:if test="${perms['view_detail']}">
                                     <a href="${pageContext.request.contextPath}/returnAdmin?mode=view&amp;id=${returnRequest.id}"

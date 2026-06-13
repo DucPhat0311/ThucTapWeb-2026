@@ -1637,6 +1637,12 @@ td.actions>*:last-child {
     border: 1px solid #ffcdd2;
 }
 
+.order-status.RETURNED {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
 .pay-status.UNPAID {
     background: #f8f9fa;
     color: #495057;

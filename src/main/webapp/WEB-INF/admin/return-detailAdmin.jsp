@@ -56,7 +56,7 @@
             <h3>Thông tin yêu cầu</h3>
             <div class="detail-line"><span>Ngày gửi</span><strong>${orderReturn.requestedAtFormatted}</strong></div>
             <div class="detail-line"><span>Lý do</span><strong><c:out value="${orderReturn.reasonLabel}"/></strong></div>
-            <div class="detail-line"><span>Hoàn tiền</span><strong><c:out value="${orderReturn.refundStatusLabel}"/></strong></div>
+            <div class="detail-line"><span>Hoàn tiền</span><strong><span class="refund-status ${orderReturn.refundStatus}"><c:out value="${orderReturn.refundStatusLabel}"/></span></strong></div>
             <c:if test="${orderReturn.returnStatus == 'RETURNED'}">
                 <div class="detail-line"><span>Ngày shop nhận lại</span><strong>${orderReturn.returnedAtFormatted}</strong></div>
                 <div class="detail-line"><span>Tồn kho</span><strong>${orderReturn.stockRestored ? 'Đã cộng lại kho' : 'Chưa cập nhật'}</strong></div>
