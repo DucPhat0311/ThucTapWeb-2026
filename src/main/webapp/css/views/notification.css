@@ -81,3 +81,13 @@
     border-radius: 8px;
     background: #FFFDF9;
 }
+
+.notification-footer{
+    border-top: 1px solid #eeeeeef2; text-align: center; padding: 10px 0;
+}
+
+.notification-footer a  {color: #A67B5B; text-decoration: none; font-size: 0.9rem; font-weight: bold; display: block;}
+
+.notification-footer a:hover {
+    color: #8B5E3C;
+}
