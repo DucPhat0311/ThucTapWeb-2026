@@ -1721,7 +1721,33 @@ td.actions>*:last-child {
 .btn-success { background: #2b8a3e; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; }
 .btn-success:hover { background: #237032; transform: scale(1.05); }
 
+.pass-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pass-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.pass-wrapper .toggle-password {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    color: #a87c53;
+    font-size: 15px;
+    transition: color 0.2s;
+    user-select: none;
+}
+
+.pass-wrapper .toggle-password:hover {
+    color: #6f4e37;
+}
+
 .modal-field {
+
     margin-bottom: 18px;
     display: flex;
     flex-direction: column;

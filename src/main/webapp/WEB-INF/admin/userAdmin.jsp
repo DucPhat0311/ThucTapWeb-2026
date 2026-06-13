@@ -230,13 +230,23 @@
 
                                 <div class="modal-field">
                                     <label for="newPassword">Mật khẩu mới</label>
-                                    <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới">
+                                    <div class="pass-wrapper">
+                                        <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới">
+                                        <span class="toggle-password" onclick="togglePassword('newPassword','eyeNew')">
+                                            <i class="fa fa-eye" id="eyeNew"></i>
+                                        </span>
+                                    </div>
                                     <small id="newPasswordError" class="modal-field-error"></small>
                                 </div>
 
                                 <div class="modal-field">
                                     <label for="confirmNewPassword">Nhập lại mật khẩu mới</label>
-                                    <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
+                                    <div class="pass-wrapper">
+                                        <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
+                                        <span class="toggle-password" onclick="togglePassword('confirmNewPassword','eyeConfirm')">
+                                            <i class="fa fa-eye" id="eyeConfirm"></i>
+                                        </span>
+                                    </div>
                                     <small id="confirmNewPasswordError" class="modal-field-error"></small>
                                 </div>
 
@@ -249,6 +259,7 @@
                     </div>
                 </div>
 
+                <script src="${pageContext.request.contextPath}/js/auth/register.js"></script>
                 <script src="${pageContext.request.contextPath}/js/admin/adminUser.js"></script>
             </body>
             </html>
