@@ -10,7 +10,7 @@
                 <title>Admin Dashboard</title>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=2">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/dashboard.css">
                 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
             </head>
