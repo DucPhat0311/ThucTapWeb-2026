@@ -37,9 +37,46 @@
             <h2 class="dangNhap">Đăng nhập</h2>
 
             <form id="loginForm" action="${pageContext.request.contextPath}/login" method="post" novalidate>
-                <% if (!error.isEmpty()) { %>
+                <%
+                    Boolean lockedBySystem = (Boolean) request.getAttribute("lockedBySystem");
+                    String warningMsg = (String) request.getAttribute("warning");
+                    Integer failedAttemptsAttr = (Integer) request.getAttribute("failedAttempts");
+
+                    if (lockedBySystem != null && lockedBySystem) {
+                %>
+                    <div class="error-message locked-message">
+                        <i class="fa-solid fa-lock" style="margin-right:6px;"></i>
+                        <%=error%>
+                    </div>
+                    <div class="contact-admin-box">
+                        <i class="fa-solid fa-headset"></i>
+                        <div>
+                            <strong>Tài khoản bị khoá do nhập sai mật khẩu quá 5 lần.</strong><br>
+                            Vui lòng liên hệ Admin để được hỗ trợ mở khoá tài khoản.
+                            <br>
+                            <a href="${pageContext.request.contextPath}/contact" class="contact-admin-link">
+                                <i class="fa-solid fa-envelope"></i> Gửi yêu cầu hỗ trợ
+                            </a>
+                        </div>
+                    </div>
+                <% } else if (!error.isEmpty()) { %>
                     <div class="error-message"><%=error%></div>
                 <% } %>
+
+                <% if (warningMsg != null && !warningMsg.isEmpty()) { %>
+                    <div class="warning-message">
+                        <i class="fa-solid fa-triangle-exclamation" style="margin-right:6px;"></i>
+                        <%=warningMsg%>
+                        <div class="attempts-bar">
+                            <% int attempts = failedAttemptsAttr != null ? failedAttemptsAttr : 0; %>
+                            <% for (int i = 1; i <= 5; i++) { %>
+                                <span class="attempt-dot <%= i <= attempts ? "filled" : "" %>"></span>
+                            <% } %>
+                            <span class="attempts-label"><%=attempts%>/5</span>
+                        </div>
+                    </div>
+                <% } %>
+
 
                 <div class="input-group">
                     <label for="username">Email/Tên đăng nhập</label>

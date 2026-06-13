@@ -1,13 +1,55 @@
 @charset "UTF-8";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap');
 
-.login-page, .register-page, .forget-page {
+/* ===================== Contact Admin Box ===================== */
+.contact-admin-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: linear-gradient(135deg, #fff3e0 0%, #fbe9e7 100%);
+    border: 1px solid #ffcc80;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: #5d2a00;
+    line-height: 1.55;
+    box-shadow: 0 2px 8px rgba(230, 81, 0, 0.1);
+}
+
+.contact-admin-box > i {
+    font-size: 1.4rem;
+    color: #e65100;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.contact-admin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 0.5rem;
+    color: #bf360c;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.contact-admin-link:hover {
+    color: #6a0e0e;
+    text-decoration: underline;
+}
+
+
+.login-page,
+.register-page,
+.forget-page {
     font-family: 'Inter', sans-serif;
     min-height: calc(100vh - 160px);
     display: flex;
     align-items: center;
-    justify-content: flex-end; 
-    background-color: #efebe9; 
+    justify-content: flex-end;
+    background-color: #efebe9;
     background-image: url('../../img/GiaoDien.png');
     background-size: cover;
     background-position: center;
@@ -18,11 +60,15 @@
     box-sizing: border-box;
 }
 
-.login-image, .register-image, .forget-image {
+.login-image,
+.register-image,
+.forget-image {
     display: none !important;
 }
 
-.login-container, .register-container, .forget-container {
+.login-container,
+.register-container,
+.forget-container {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -30,7 +76,9 @@
     background: transparent !important;
 }
 
-.login-box, .register-box, .forget-box {
+.login-box,
+.register-box,
+.forget-box {
     width: 100%;
     min-width: 400px;
     max-width: 450px;
@@ -42,11 +90,15 @@
     border: 1px solid rgba(139, 90, 43, 0.15);
 }
 
-.close-btn, .back-btn {
+.close-btn,
+.back-btn {
     display: none;
 }
 
-.dangNhap, .dangKy, .quenMatKhau, .form-title {
+.dangNhap,
+.dangKy,
+.quenMatKhau,
+.form-title {
     font-family: 'Playfair Display', serif;
     font-size: 2.3rem;
     font-weight: 700;
@@ -184,20 +236,26 @@
     background: #fdf8f6;
 }
 
-.form-links, .notAccount, .links {
+.form-links,
+.notAccount,
+.links {
     margin-top: 1.5rem;
     text-align: center;
     font-size: 0.95rem;
     color: #5c4033;
 }
 
-.form-links a, .notAccount a, .links a {
+.form-links a,
+.notAccount a,
+.links a {
     color: #3e2723;
     font-weight: 700;
     text-decoration: none;
 }
 
-.form-links a:hover, .notAccount a:hover, .links a:hover {
+.form-links a:hover,
+.notAccount a:hover,
+.links a:hover {
     text-decoration: underline;
 }
 
@@ -211,6 +269,90 @@
     font-size: 0.9rem;
     text-align: left;
 }
+
+.locked-message {
+    color: #6a0e0e;
+    background: linear-gradient(135deg, #fce4e4 0%, #fff0f0 100%);
+    border-left: 4px solid #c62828;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    animation: shake 0.4s ease;
+    box-shadow: 0 2px 8px rgba(198, 40, 40, 0.15);
+}
+
+.warning-message {
+    color: #6d4c00;
+    background: linear-gradient(135deg, #fff8e1 0%, #fffde7 100%);
+    border-left: 4px solid #f9a825;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(249, 168, 37, 0.15);
+}
+
+.attempts-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0.6rem;
+}
+
+.attempt-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #e0d0a0;
+    border: 2px solid #c9a227;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.attempt-dot.filled {
+    background: #e65100;
+    border-color: #bf360c;
+    transform: scale(1.15);
+    box-shadow: 0 0 4px rgba(230, 81, 0, 0.5);
+}
+
+.attempts-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #bf360c;
+    margin-left: 4px;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-4px);
+    }
+
+    80% {
+        transform: translateX(4px);
+    }
+}
+
 
 .field-error {
     margin-top: 0.45rem;
@@ -265,12 +407,17 @@
 
 
 @media (max-width: 768px) {
-    .login-page, .register-page, .forget-page {
+
+    .login-page,
+    .register-page,
+    .forget-page {
         justify-content: center;
         padding: 20px;
     }
-    
-    .login-box, .register-box, .forget-box {
+
+    .login-box,
+    .register-box,
+    .forget-box {
         min-width: unset;
         width: 100%;
     }
