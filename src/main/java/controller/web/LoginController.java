@@ -59,7 +59,6 @@ public class LoginController extends HttpServlet {
 
         UserService.LoginResult result = userService.loginWithAttempt(username, password);
 
-        // Tài khoản đã bị khoá từ trước (LOCKED_BY_SYSTEM) — không cho thử nữa
         if (result.alreadyLocked()) {
             request.setAttribute("lockedBySystem", true);
             request.setAttribute("error", "Tài khoản của bạn đã bị khoá do nhập sai mật khẩu quá 5 lần. Vui lòng liên hệ Admin để được hỗ trợ mở khoá.");
@@ -68,20 +67,16 @@ public class LoginController extends HttpServlet {
             return;
         }
 
-        // Đăng nhập thất bại (sai mật khẩu hoặc không tìm thấy user)
         if (result.user() == null) {
             if (result.justLocked()) {
-                // Vừa bị khoá ở lần thử này (đạt đúng 5 lần sai)
                 request.setAttribute("lockedBySystem", true);
                 request.setAttribute("error", "Tài khoản của bạn đã bị khoá do nhập sai mật khẩu quá 5 lần liên tiếp. Vui lòng liên hệ Admin để được hỗ trợ mở khoá.");
             } else if (result.failedAttempts() >= 2) {
-                // Cảnh báo: hiển thị số lần còn lại
                 int remaining = 5 - result.failedAttempts();
                 request.setAttribute("warning", "Mật khẩu không đúng! Bạn còn " + remaining + " lần thử. "
                         + "Tài khoản sẽ bị khoá tự động sau 5 lần nhập sai liên tiếp.");
                 request.setAttribute("failedAttempts", result.failedAttempts());
             } else {
-                // Lỗi thông thường (user không tồn tại hoặc sai lần đầu)
                 request.setAttribute("error", "Email/ tên đăng nhập hoặc mật khẩu không đúng");
             }
             request.setAttribute("username", username);

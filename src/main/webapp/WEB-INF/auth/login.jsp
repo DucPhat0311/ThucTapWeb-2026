@@ -48,6 +48,17 @@
                         <i class="fa-solid fa-lock" style="margin-right:6px;"></i>
                         <%=error%>
                     </div>
+                    <div class="contact-admin-box">
+                        <i class="fa-solid fa-headset"></i>
+                        <div>
+                            <strong>Tài khoản bị khoá do nhập sai mật khẩu quá 5 lần.</strong><br>
+                            Vui lòng liên hệ Admin để được hỗ trợ mở khoá tài khoản.
+                            <br>
+                            <a href="${pageContext.request.contextPath}/contact" class="contact-admin-link">
+                                <i class="fa-solid fa-envelope"></i> Gửi yêu cầu hỗ trợ
+                            </a>
+                        </div>
+                    </div>
                 <% } else if (!error.isEmpty()) { %>
                     <div class="error-message"><%=error%></div>
                 <% } %>
