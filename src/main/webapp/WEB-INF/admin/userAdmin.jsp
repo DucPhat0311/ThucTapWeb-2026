@@ -11,7 +11,7 @@
                 <title>Admin User</title>
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=2">
             </head>
 
             <body>
@@ -59,9 +59,11 @@
                                         </button>
                                     </form>
 
-                                    <a href="${pageContext.request.contextPath}/userAdmin?mode=add" class="btn-add">
-                                        <i class="fa fa-plus"></i> Thêm người dùng
-                                    </a>
+                                    <c:if test="${perms['add']}">
+                                        <a href="${pageContext.request.contextPath}/userAdmin?mode=add" class="btn-add">
+                                            <i class="fa fa-plus"></i> Thêm người dùng
+                                        </a>
+                                    </c:if>
                                 </div>
 
 
@@ -87,7 +89,8 @@
                                                     <td>${u.email}</td>
                                                     <td>
                                                         <c:choose>
-                                                            <c:when test="${u.role == 'admin'}">
+                                                            <c:when
+                                                                test="${u.role == 'admin' or u.role == 'Admin' or u.role == 'ADMIN'}">
                                                                 Quản trị
                                                             </c:when>
                                                             <c:otherwise>
@@ -107,40 +110,47 @@
                                                         </c:choose>
                                                     </td>
                                                     <td class="actions">
-                                                        <a href="${pageContext.request.contextPath}/userAdmin?mode=view&id=${u.id}"
-                                                            class="icon-btn view" title="Xem chi tiết">
-                                                            <i class="fa fa-eye"></i>
-                                                        </a>
+                                                        <c:if test="${perms['view_detail']}">
+                                                            <a href="${pageContext.request.contextPath}/userAdmin?mode=view&id=${u.id}"
+                                                                class="icon-btn view" title="Xem chi tiết">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+                                                        </c:if>
 
-                                                        <a href="${pageContext.request.contextPath}/userAdmin?mode=edit&id=${u.id}"
-                                                            class="icon-btn edit" title="Chỉnh sửa">
-                                                            <i class="fa fa-pen"></i>
-                                                        </a>
+                                                        <c:if test="${perms['edit']}">
+                                                            <a href="${pageContext.request.contextPath}/userAdmin?mode=edit&id=${u.id}"
+                                                                class="icon-btn edit" title="Chỉnh sửa">
+                                                                <i class="fa fa-pen"></i>
+                                                            </a>
+                                                        </c:if>
 
 
-                                                        <c:choose>
-                                                            <c:when test="${u.status == 'ACTIVE'}">
-                                                                <button type="button" class="icon-btn lock"
-                                                                    title="Khóa người dùng"
-                                                                    onclick="openConfirmModal('${u.id}', 'bị khóa', 'khóa')">
-                                                                    <i class="fa fa-lock" style="color: #e74c3c;"></i>
-                                                                </button>
-                                                            </c:when>
+                                                        <c:if test="${perms['lock']}">
+                                                            <c:choose>
+                                                                <c:when test="${u.status == 'ACTIVE'}">
+                                                                    <button type="button" class="icon-btn lock"
+                                                                        title="Khóa người dùng"
+                                                                        onclick="openConfirmModal('${u.id}', 'bị khóa', 'khóa', ${u.id == sessionScope.userlogin.id})">
+                                                                        <i class="fa fa-lock" style="color: #e74c3c;"></i>
+                                                                    </button>
+                                                                </c:when>
 
-                                                            <c:otherwise>
-                                                                <button type="button" class="icon-btn unlock"
-                                                                    title="Mở khóa người dùng"
-                                                                    onclick="openConfirmModal('${u.id}', 'được hoạt động lại', 'mở khóa')">
-                                                                    <i class="fa fa-unlock" style="color: #27ae60;"></i>
-                                                                </button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                                <c:otherwise>
+                                                                    <button type="button" class="icon-btn unlock"
+                                                                        title="Mở khóa người dùng"
+                                                                        onclick="openConfirmModal('${u.id}', 'được hoạt động lại', 'mở khóa', ${u.id == sessionScope.userlogin.id})">
+                                                                        <i class="fa fa-unlock" style="color: #27ae60;"></i>
+                                                                    </button>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:if>
 
-                                                        <button type="button" class="icon-btn key"
-                                                            title="Đổi mật khẩu"
-                                                            onclick="openChangePassModal('${u.id}', '${u.username}')">
-                                                            <i class="fa fa-key" style="color: #f39c12;"></i>
-                                                        </button>
+                                                        <c:if test="${perms['change_pass']}">
+                                                            <button type="button" class="icon-btn key" title="Đổi mật khẩu"
+                                                                onclick="openChangePassModal('${u.id}', '${u.username}')">
+                                                                <i class="fa fa-key" style="color: #f39c12;"></i>
+                                                            </button>
+                                                        </c:if>
 
                                                     </td>
                                                 </tr>
@@ -208,6 +218,9 @@
                         <div class="modal">
                             <h3>Xác nhận</h3>
                             <p>Bạn có chắc muốn <b id="modalActionText">khóa người dùng</b> này không?</p>
+                            <p id="selfLockWarning" style="color: #e74c3c; font-weight: bold; display: none; margin-bottom: 20px; font-size: 14px;">
+                                <i class="fa fa-exclamation-triangle"></i> CẢNH BÁO: Bạn đang thao tác khóa TÀI KHOẢN CỦA CHÍNH MÌNH. Nếu tiếp tục, bạn sẽ bị đăng xuất ngay lập tức và không thể tự đăng nhập lại!
+                            </p>
                             <form id="confirmForm" method="post" action="${pageContext.request.contextPath}/userAdmin">
                                 <input type="hidden" name="action" id="formActionField" value="block">
                                 <input type="hidden" name="id" id="confirmUserId">
@@ -224,14 +237,17 @@
                         <div class="modal">
                             <h3><i class="fa fa-key" style="color:#a87c53;margin-right:8px"></i>Đổi mật khẩu</h3>
                             <p>Tài khoản: <b id="changePassUsername"></b></p>
-                            <form id="changePassForm" method="post" action="${pageContext.request.contextPath}/userAdmin" onsubmit="return validateChangePass()">
+                            <form id="changePassForm" method="post"
+                                action="${pageContext.request.contextPath}/userAdmin"
+                                onsubmit="return validateChangePass()">
                                 <input type="hidden" name="action" value="changePassword">
                                 <input type="hidden" name="id" id="changePassUserId">
 
                                 <div class="modal-field">
                                     <label for="newPassword">Mật khẩu mới</label>
                                     <div class="pass-wrapper">
-                                        <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới">
+                                        <input type="password" id="newPassword" name="newPassword"
+                                            placeholder="Nhập mật khẩu mới">
                                         <span class="toggle-password" onclick="togglePassword('newPassword','eyeNew')">
                                             <i class="fa fa-eye" id="eyeNew"></i>
                                         </span>
@@ -242,8 +258,10 @@
                                 <div class="modal-field">
                                     <label for="confirmNewPassword">Nhập lại mật khẩu mới</label>
                                     <div class="pass-wrapper">
-                                        <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
-                                        <span class="toggle-password" onclick="togglePassword('confirmNewPassword','eyeConfirm')">
+                                        <input type="password" id="confirmNewPassword" name="confirmNewPassword"
+                                            placeholder="Nhập lại mật khẩu mới">
+                                        <span class="toggle-password"
+                                            onclick="togglePassword('confirmNewPassword','eyeConfirm')">
                                             <i class="fa fa-eye" id="eyeConfirm"></i>
                                         </span>
                                     </div>
@@ -251,7 +269,8 @@
                                 </div>
 
                                 <div class="modal-actions">
-                                    <button type="button" class="btn-secondary" onclick="closeChangePassModal()">Hủy</button>
+                                    <button type="button" class="btn-secondary"
+                                        onclick="closeChangePassModal()">Hủy</button>
                                     <button type="submit" class="btn-primary-modal">Xác nhận đổi</button>
                                 </div>
                             </form>
@@ -262,4 +281,5 @@
                 <script src="${pageContext.request.contextPath}/js/auth/register.js"></script>
                 <script src="${pageContext.request.contextPath}/js/admin/adminUser.js"></script>
             </body>
+
             </html>
