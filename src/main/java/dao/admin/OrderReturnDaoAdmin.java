@@ -73,7 +73,7 @@ public class OrderReturnDaoAdmin extends BaseDao {
             }
 
             List<ReturnedItem> returnedItems = h.createQuery("""
-                        SELECT variant_id, SUM(quantity) AS quantity
+                        SELECT variant_id, SUM(quantity) AS quantity, MAX(price) AS price
                         FROM order_items
                         WHERE order_id = :orderId
                         GROUP BY variant_id
@@ -82,11 +82,27 @@ public class OrderReturnDaoAdmin extends BaseDao {
                     .bind("orderId", returnedOrder.orderId())
                     .map((rs, ctx) -> new ReturnedItem(
                             rs.getInt("variant_id"),
-                            rs.getInt("quantity")))
+                            rs.getInt("quantity"),
+                            rs.getDouble("price")))
                     .list();
             if (returnedItems.isEmpty()) {
                 throw new IllegalStateException("Đơn hàng không có sản phẩm để hoàn lại tồn kho.");
             }
+
+            double totalAmount = returnedItems.stream()
+                    .mapToDouble(i -> i.price() * i.quantity())
+                    .sum();
+
+            int receiptId = h.createUpdate(
+                    "INSERT INTO inventory_receipts (user_id, type, note, total_amount, created_at, status, order_id) "
+                            + "VALUES (:userId, 'RETURN', :note, :totalAmount, NOW(), 'COMPLETED', :orderId)")
+                    .bind("userId", adminUserId)
+                    .bind("note", "Hoàn kho do khách trả hàng đơn #" + returnedOrder.orderId())
+                    .bind("totalAmount", totalAmount)
+                    .bind("orderId", returnedOrder.orderId())
+                    .executeAndReturnGeneratedKeys()
+                    .mapTo(Integer.class)
+                    .one();
 
             for (ReturnedItem item : returnedItems) {
                 int affectedRows = h.createUpdate("""
@@ -100,6 +116,16 @@ public class OrderReturnDaoAdmin extends BaseDao {
                 if (affectedRows == 0) {
                     throw new IllegalStateException("Không tìm thấy biến thể sản phẩm khi hoàn tồn kho.");
                 }
+
+                h.createUpdate(
+                        "INSERT INTO inventory_receipt_details " +
+                                "(receipt_id, product_variant_id, quantity, price, remaining_quantity) " +
+                                "VALUES (:receiptId, :variantId, :quantity, :price, :quantity)")
+                        .bind("receiptId", receiptId)
+                        .bind("variantId", item.variantId())
+                        .bind("quantity", item.quantity())
+                        .bind("price", item.price())
+                        .execute();
             }
 
             int affectedRows = h.createUpdate("""
@@ -206,7 +232,7 @@ public class OrderReturnDaoAdmin extends BaseDao {
         return note == null ? "" : note.trim();
     }
 
-    private record ReturnedItem(int variantId, int quantity) {
+    private record ReturnedItem(int variantId, int quantity, double price) {
     }
 
     private record ReturnedOrder(int orderId, String paymentStatus) {

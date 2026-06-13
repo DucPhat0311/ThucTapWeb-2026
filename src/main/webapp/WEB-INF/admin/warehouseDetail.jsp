@@ -19,11 +19,11 @@
 
                     <section class="content">
                         <header class="topbar">
-                            <div class="topbar-title-wrap">
-                                <a href="${pageContext.request.contextPath}/warehouseAdmin" class="back-to-product-btn">
+                            <div class="topbar-title-wrap" style="display: flex; align-items: center; gap: 15px;">
+                                <a href="${pageContext.request.contextPath}/warehouseAdmin" class="back-to-product-btn" style="margin-bottom: 0;">
                                     <i class="fa fa-arrow-left"></i>
                                 </a>
-                                <h1 class="topbar-title">Chi Tiết Phiếu Kho</h1>
+                                <h1 class="topbar-title" style="margin-bottom: 0;">Chi Tiết Phiếu Kho</h1>
                             </div>
                             <div class="actions">
                                 <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
