@@ -23,6 +23,8 @@ public class User {
     private String address;
     private String status;
     private Integer roleId;
+    private int failedLoginAttempts;
+    private LocalDateTime lockedAt;
 
     public User(int id, String username, String email, String password, String role, int isActive, LocalDateTime createdAt, String otpCode, String fullName, LocalDate birthday, String gender, String phone, String address, String status) {
         this.id = id;
@@ -216,6 +218,22 @@ public class User {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public LocalDateTime getLockedAt() {
+        return lockedAt;
+    }
+
+    public void setLockedAt(LocalDateTime lockedAt) {
+        this.lockedAt = lockedAt;
     }
 
     @Override

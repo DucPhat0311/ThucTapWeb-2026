@@ -30,21 +30,30 @@ public class UserService {
         boolean hasSpecial = false;
 
         for (char c : password.toCharArray()) {
-            if (Character.isUpperCase(c)) hasUpper = true;
-            else if (Character.isLowerCase(c)) hasLower = true;
-            else if (Character.isDigit(c)) hasDigit = true;
-            else hasSpecial = true;
+            if (Character.isUpperCase(c))
+                hasUpper = true;
+            else if (Character.isLowerCase(c))
+                hasLower = true;
+            else if (Character.isDigit(c))
+                hasDigit = true;
+            else
+                hasSpecial = true;
         }
 
-        if (!hasUpper) return "Mật khẩu phải có ít nhất 1 chữ hoa";
-        if (!hasLower) return "Mật khẩu phải có ít nhất 1 chữ thường";
-        if (!hasDigit) return "Mật khẩu phải có ít nhất 1 chữ số";
-        if (!hasSpecial) return "Mật khẩu phải có ít nhất 1 ký tự đặc biệt";
+        if (!hasUpper)
+            return "Mật khẩu phải có ít nhất 1 chữ hoa";
+        if (!hasLower)
+            return "Mật khẩu phải có ít nhất 1 chữ thường";
+        if (!hasDigit)
+            return "Mật khẩu phải có ít nhất 1 chữ số";
+        if (!hasSpecial)
+            return "Mật khẩu phải có ít nhất 1 ký tự đặc biệt";
 
-        return null; 
+        return null;
     }
 
-     public void registerSendOtp(String username, String email, String password, String fullName, String birthdayStr, String gender) {
+    public void registerSendOtp(String username, String email, String password, String fullName, String birthdayStr,
+            String gender) {
 
         if (userDao.existsByUsername(username)) {
             throw new RuntimeException("Tên đăng nhập đã tồn tại");
@@ -71,8 +80,7 @@ public class UserService {
             EmailService.sendEmail(
                     email,
                     "OTP xác nhận đăng ký ",
-                    "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
-            );
+                    "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>");
         } catch (EmailService.EmailDeliveryException e) {
             userDao.deletePendingUserByEmail(email);
             throw new RuntimeException("Không thể gửi OTP đến email này. Vui lòng kiểm tra email hoặc thử lại sau.", e);
@@ -82,11 +90,37 @@ public class UserService {
     public User login(String username, String password) {
         User user = userDao.finduser(username);
 
-        if (user == null) return null;
+        if (user == null)
+            return null;
 
-        if (!PassUtil.verify(password, user.getPassword())) return null;
+        if (!PassUtil.verify(password, user.getPassword()))
+            return null;
 
         return user;
+    }
+
+    public LoginResult loginWithAttempt(String username, String password) {
+        User user = userDao.finduser(username);
+
+        if (user == null) {
+            return new LoginResult(null, 0, false, false);
+        }
+
+        if ("LOCKED_BY_SYSTEM".equalsIgnoreCase(user.getStatus())) {
+            return new LoginResult(null, user.getFailedLoginAttempts(), false, true);
+        }
+
+        if (!PassUtil.verify(password, user.getPassword())) {
+            int newAttempts = userDao.incrementFailedAttempts(user.getId());
+            boolean justLocked = newAttempts >= 5;
+            if (justLocked) {
+                userDao.lockAccount(user.getId());
+            }
+            return new LoginResult(null, newAttempts, justLocked, false);
+        }
+
+        userDao.resetFailedAttempts(user.getId());
+        return new LoginResult(user, 0, false, false);
     }
 
     public User loginWithGoogle(GoogleUserInfo googleInfo) {
@@ -148,6 +182,7 @@ public class UserService {
         }
         return candidate;
     }
+
     public User findById(int id) {
         return userDao.findUserById(id);
     }
@@ -175,7 +210,8 @@ public class UserService {
     public void sendOtpResetPassword(String email) {
 
         User user = userDao.finduser(email);
-        if (user == null) {throw new RuntimeException("Email không tồn tại");
+        if (user == null) {
+            throw new RuntimeException("Email không tồn tại");
         }
 
         String otp = String.format("%06d", new Random().nextInt(1_000_000));
@@ -184,8 +220,7 @@ public class UserService {
         userDao.updateOtpForReset(email, otp, expiredAt);
 
         EmailService.sendEmail(
-                email, "OTP đặt lại mật khẩu", "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
-        );
+                email, "OTP đặt lại mật khẩu", "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>");
     }
 
     public void resendRegistrationOtp(String email) {
@@ -200,8 +235,7 @@ public class UserService {
         EmailService.sendEmail(
                 email,
                 "OTP xác nhận đăng ký",
-                "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>"
-        );
+                "<h3>Mã OTP của bạn: <b>" + otp + "</b></h3>");
 
         boolean updated = userDao.updateOtpForPendingRegistration(email, otp, expiredAt);
         if (!updated) {
@@ -210,8 +244,8 @@ public class UserService {
     }
 
     public EmailChangeOldEmailVerification createProfileEmailChangeOldEmailVerification(int userId,
-                                                                                        String currentEmail,
-                                                                                        String newEmail) {
+            String currentEmail,
+            String newEmail) {
         String normalizedNewEmail = normalizeEmail(newEmail);
         if (normalizedNewEmail.isBlank()) {
             throw new RuntimeException("Email mới không hợp lệ");
@@ -229,8 +263,7 @@ public class UserService {
                 currentEmail,
                 "OTP xác nhận thay đổi email",
                 "<h3>Mã OTP xác nhận email hiện tại của bạn: <b>" + otp + "</b></h3>"
-                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>"
-        );
+                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>");
 
         return new EmailChangeOldEmailVerification(normalizedNewEmail, otp, expiredAt);
     }
@@ -248,8 +281,7 @@ public class UserService {
                 normalizedNewEmail,
                 "OTP xác nhận email mới",
                 "<h3>Mã OTP xác nhận email mới của bạn: <b>" + otp + "</b></h3>"
-                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>"
-        );
+                        + "<p>Mã này sẽ hết hạn sau 5 phút.</p>");
 
         return new EmailChangeNewEmailVerification(otp, expiredAt);
     }
@@ -259,11 +291,11 @@ public class UserService {
     }
 
     public User completeProfileEmailChange(int userId,
-                                           String fullName,
-                                           String phone,
-                                           String newEmail,
-                                           LocalDate birthday,
-                                           String gender) {
+            String fullName,
+            String phone,
+            String newEmail,
+            LocalDate birthday,
+            String gender) {
         String normalizedNewEmail = normalizeEmail(newEmail);
         User existingUser = userDao.findByEmail(normalizedNewEmail);
         if (existingUser != null && existingUser.getId() != userId) {
@@ -334,13 +366,13 @@ public class UserService {
         if (userDao.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("Email đã được sử dụng bởi một tài khoản khác!");
         }
-        
+
         String pass = user.getPassword();
         String passwordError = checkPasswordStrength(pass);
         if (passwordError != null) {
             throw new RuntimeException(passwordError);
         }
-        
+
         String hashed = PassUtil.hash(pass);
         user.setPassword(hashed);
 
@@ -356,7 +388,7 @@ public class UserService {
     }
 
     public void blockUser(int id) {
-        userDaoAdmin.blockUser(id , "BLOCKED");
+        userDaoAdmin.blockUser(id, "BLOCKED");
     }
 
     public void unblockUser(int id) {
@@ -366,13 +398,18 @@ public class UserService {
     public record EmailChangeOldEmailVerification(
             String newEmail,
             String oldEmailOtp,
-            LocalDateTime oldEmailOtpExpiredAt
-    ) {
+            LocalDateTime oldEmailOtpExpiredAt) {
     }
 
     public record EmailChangeNewEmailVerification(
             String newEmailOtp,
-            LocalDateTime newEmailOtpExpiredAt
-    ) {
+            LocalDateTime newEmailOtpExpiredAt) {
+    }
+
+    public record LoginResult(
+            User user,
+            int failedAttempts,
+            boolean justLocked,
+            boolean alreadyLocked) {
     }
 }
