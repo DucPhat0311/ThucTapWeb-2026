@@ -33,12 +33,15 @@ public class CartItemDao extends BaseDao {
 
     public double getPriceByVariantId(int variantId) {
         String sql = """
-       SELECT COALESCE(
+       SELECT 
            CASE
-               WHEN v.sale_price > 0 AND v.sale_price < v.price THEN v.sale_price
-               ELSE v.price
-           END, 0.0)
+               WHEN v.sale_price > 0 THEN v.sale_price
+               WHEN v.price > 0 THEN v.price
+               WHEN p.sale_price > 0 THEN p.sale_price
+               ELSE p.price
+           END
        FROM product_variants v
+       JOIN products p ON v.product_id = p.id
        WHERE v.id = :vid
    """;
 
