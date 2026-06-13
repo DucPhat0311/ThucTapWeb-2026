@@ -35,7 +35,8 @@
     padding: 32px;
 }
 
-.return-status {
+.return-status,
+.refund-status {
     display: inline-flex;
     align-items: center;
     min-height: 28px;
@@ -44,6 +45,21 @@
     font-size: 12px;
     font-weight: 700;
     white-space: nowrap;
+}
+
+.refund-status.NOT_REQUIRED {
+    background: #f8f9fa;
+    color: #495057;
+}
+
+.refund-status.PENDING {
+    background: #fff4e6;
+    color: #b76a1f;
+}
+
+.refund-status.REFUNDED {
+    background: #e7f5ff;
+    color: #1c7ed6;
 }
 
 .return-status.REQUESTED {

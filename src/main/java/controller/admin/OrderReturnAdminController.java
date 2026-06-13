@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @WebServlet(name = "OrderReturnAdminController", value = "/returnAdmin")
 public class OrderReturnAdminController extends HttpServlet {
-    private static final int PAGE_SIZE = 8;
+    private static final int PAGE_SIZE = 6;
     private static final Set<String> FILTER_STATUSES = Set.of(
             OrderReturnStatus.REQUESTED,
             OrderReturnStatus.APPROVED,
