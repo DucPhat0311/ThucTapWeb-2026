@@ -34,9 +34,16 @@ public class ProductVariantDao extends BaseDao {
     public double getPriceByVariantId(int variantId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
-            SELECT COALESCE(sale_price, price)
-            FROM product_variants
-            WHERE id = :vid
+            SELECT 
+                CASE 
+                    WHEN pv.sale_price > 0 THEN pv.sale_price
+                    WHEN pv.price > 0 THEN pv.price
+                    WHEN p.sale_price > 0 THEN p.sale_price
+                    ELSE p.price
+                END
+            FROM product_variants pv
+            JOIN products p ON pv.product_id = p.id
+            WHERE pv.id = :vid
         """)
                         .bind("vid", variantId)
                         .mapTo(double.class)
