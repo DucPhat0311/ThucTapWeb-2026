@@ -13,7 +13,7 @@
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/admin.css">
                     <link rel="stylesheet"
                         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=2">
+                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/roleAdmin.css">
                 </head>
 
@@ -36,9 +36,11 @@
                                         <div class="role-list-panel">
                                             <div class="role-list-header">
                                                 <h3>Vai trò</h3>
-                                                <button type="button" class="btn-add-role" onclick="openCreateModal()">
-                                                    <i class="fa fa-plus"></i> Thêm
-                                                </button>
+                                                <c:if test="${perms['add']}">
+                                                    <button type="button" class="btn-add-role" onclick="openCreateModal()">
+                                                        <i class="fa fa-plus"></i> Thêm
+                                                    </button>
+                                                </c:if>
                                             </div>
 
                                             <div class="role-list">
@@ -69,14 +71,18 @@
 
                                                     <c:if test="${selectedRole.isSystem == 0}">
                                                         <div class="role-detail-actions">
-                                                            <button type="button" class="btn-edit-role"
-                                                                onclick="openEditModal('${selectedRole.id}', '${selectedRole.name}', '${selectedRole.description}')">
-                                                                <i class="fa fa-pen"></i> Sửa
-                                                            </button>
-                                                            <button type="button" class="btn-delete-role"
-                                                                onclick="openDeleteModal('${selectedRole.id}', '${selectedRole.name}')">
-                                                                <i class="fa fa-trash"></i> Xoá
-                                                            </button>
+                                                            <c:if test="${perms['edit']}">
+                                                                <button type="button" class="btn-edit-role"
+                                                                    onclick="openEditModal('${selectedRole.id}', '${selectedRole.name}', '${selectedRole.description}')">
+                                                                    <i class="fa fa-pen"></i> Sửa
+                                                                </button>
+                                                            </c:if>
+                                                            <c:if test="${perms['delete']}">
+                                                                <button type="button" class="btn-delete-role"
+                                                                    onclick="openDeleteModal('${selectedRole.id}', '${selectedRole.name}')">
+                                                                    <i class="fa fa-trash"></i> Xoá
+                                                                </button>
+                                                            </c:if>
                                                         </div>
                                                     </c:if>
                                                 </div>
@@ -251,9 +257,11 @@
 
                                                     <c:if test="${selectedRole.isSystem == 0}">
                                                         <div class="permission-footer">
-                                                            <button type="submit" class="btn-save-perm">
-                                                                <i class="fa fa-save"></i> Lưu quyền
-                                                            </button>
+                                                            <c:if test="${perms['edit']}">
+                                                                <button type="submit" class="btn-save-perm">
+                                                                    <i class="fa fa-save"></i> Lưu quyền
+                                                                </button>
+                                                            </c:if>
                                                         </div>
                                                     </c:if>
                                                 </form>
