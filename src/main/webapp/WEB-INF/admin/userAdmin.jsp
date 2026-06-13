@@ -136,6 +136,12 @@
                                                             </c:otherwise>
                                                         </c:choose>
 
+                                                        <button type="button" class="icon-btn key"
+                                                            title="Đổi mật khẩu"
+                                                            onclick="openChangePassModal('${u.id}', '${u.username}')">
+                                                            <i class="fa fa-key" style="color: #f39c12;"></i>
+                                                        </button>
+
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -213,9 +219,47 @@
                             </form>
                         </div>
                     </div>
+
+                    <div id="changePassModal" class="modal-overlay">
+                        <div class="modal">
+                            <h3><i class="fa fa-key" style="color:#a87c53;margin-right:8px"></i>Đổi mật khẩu</h3>
+                            <p>Tài khoản: <b id="changePassUsername"></b></p>
+                            <form id="changePassForm" method="post" action="${pageContext.request.contextPath}/userAdmin" onsubmit="return validateChangePass()">
+                                <input type="hidden" name="action" value="changePassword">
+                                <input type="hidden" name="id" id="changePassUserId">
+
+                                <div class="modal-field">
+                                    <label for="newPassword">Mật khẩu mới</label>
+                                    <div class="pass-wrapper">
+                                        <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới">
+                                        <span class="toggle-password" onclick="togglePassword('newPassword','eyeNew')">
+                                            <i class="fa fa-eye" id="eyeNew"></i>
+                                        </span>
+                                    </div>
+                                    <small id="newPasswordError" class="modal-field-error"></small>
+                                </div>
+
+                                <div class="modal-field">
+                                    <label for="confirmNewPassword">Nhập lại mật khẩu mới</label>
+                                    <div class="pass-wrapper">
+                                        <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
+                                        <span class="toggle-password" onclick="togglePassword('confirmNewPassword','eyeConfirm')">
+                                            <i class="fa fa-eye" id="eyeConfirm"></i>
+                                        </span>
+                                    </div>
+                                    <small id="confirmNewPasswordError" class="modal-field-error"></small>
+                                </div>
+
+                                <div class="modal-actions">
+                                    <button type="button" class="btn-secondary" onclick="closeChangePassModal()">Hủy</button>
+                                    <button type="submit" class="btn-primary-modal">Xác nhận đổi</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
+                <script src="${pageContext.request.contextPath}/js/auth/register.js"></script>
+                <script src="${pageContext.request.contextPath}/js/admin/adminUser.js"></script>
             </body>
-            <script src="${pageContext.request.contextPath}/js/admin/adminUser.js"></script>
-
             </html>

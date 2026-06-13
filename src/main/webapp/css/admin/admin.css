@@ -1718,5 +1718,93 @@ td.actions>*:last-child {
 
 .text-center { text-align: center !important; }
 
-.btn-success { background: #2b8a3e; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; } 
+.btn-success { background: #2b8a3e; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; }
 .btn-success:hover { background: #237032; transform: scale(1.05); }
+
+.pass-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pass-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.pass-wrapper .toggle-password {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    color: #a87c53;
+    font-size: 15px;
+    transition: color 0.2s;
+    user-select: none;
+}
+
+.pass-wrapper .toggle-password:hover {
+    color: #6f4e37;
+}
+
+.modal-field {
+
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.modal-field input {
+    padding: 11px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.25s ease;
+    background: var(--card-bg);
+    color: var(--text-main);
+}
+
+.modal-field input:focus {
+    border-color: #a87c53;
+    box-shadow: 0 0 0 3px rgba(168, 124, 83, 0.15);
+}
+
+.modal-field-error {
+    color: #c0392b;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 16px;
+}
+
+.btn-primary-modal {
+    background: linear-gradient(135deg, #a87c53 0%, #8c6239 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(168, 124, 83, 0.3);
+}
+
+.btn-primary-modal:hover {
+    background: linear-gradient(135deg, #b98e65 0%, #9e734a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(168, 124, 83, 0.4);
+}
+
+.btn-primary-modal:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(168, 124, 83, 0.2);
+}
