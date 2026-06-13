@@ -18,12 +18,12 @@ public class RoleService {
     };
 
     private static final String[] ACTIONS = {
-            "view_list", "view_detail", "add", "edit", "delete", "lock"
+            "view_list", "view_detail", "add", "edit", "delete", "lock", "change_pass"
     };
 
     public static boolean isActionApplicable(String module, String action) {
         return switch (module) {
-            case "user" -> action.matches("view_list|view_detail|add|edit|lock");
+            case "user" -> action.matches("view_list|view_detail|add|edit|lock|change_pass");
             case "category" -> action.matches("view_list|view_detail|add|edit|lock");
             case "product" -> action.matches("view_list|view_detail|add|edit|delete|lock");
             case "order" -> action.matches("view_list|view_detail|edit");
@@ -136,6 +136,7 @@ public class RoleService {
             case "edit" -> "Sửa";
             case "delete" -> "Xoá";
             case "lock" -> "Khoá";
+            case "change_pass" -> "Đổi MK";
             default -> action;
         };
     }

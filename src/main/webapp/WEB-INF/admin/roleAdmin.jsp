@@ -162,6 +162,18 @@
                                                                             </c:if>
                                                                         </div>
                                                                     </th>
+                                                                    <th class="action-col">
+                                                                        <div class="th-content">
+                                                                            <span>Đổi MK</span>
+                                                                            <c:if test="${selectedRole.isSystem == 0}">
+                                                                                <label class="check-all-col"
+                                                                                    title="Chọn tất cả cột">
+                                                                                    <input type="checkbox"
+                                                                                        onchange="toggleColumn('change_pass', this.checked)">
+                                                                                </label>
+                                                                            </c:if>
+                                                                        </div>
+                                                                    </th>
                                                                     <c:if test="${selectedRole.isSystem == 0}">
                                                                         <th class="toggle-col">Tất cả</th>
                                                                     </c:if>
@@ -173,7 +185,7 @@
                                                                 <c:set var="moduleLabels"
                                                                     value="Người dùng,Danh mục,Sản phẩm,Đơn hàng,Trả hàng,Banner,Bài viết,Liên hệ,Kho,Phân quyền" />
                                                                 <c:set var="actionNames"
-                                                                    value="view_list,view_detail,add,edit,delete,lock" />
+                                                                    value="view_list,view_detail,add,edit,delete,lock,change_pass" />
 
                                                                 <c:forTokens items="${moduleNames}" delims="," var="moduleName"
                                                                     varStatus="moduleIdx">
