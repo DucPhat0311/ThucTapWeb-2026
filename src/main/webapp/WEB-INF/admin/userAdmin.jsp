@@ -59,9 +59,11 @@
                                         </button>
                                     </form>
 
-                                    <a href="${pageContext.request.contextPath}/userAdmin?mode=add" class="btn-add">
-                                        <i class="fa fa-plus"></i> Thêm người dùng
-                                    </a>
+                                    <c:if test="${perms['add']}">
+                                        <a href="${pageContext.request.contextPath}/userAdmin?mode=add" class="btn-add">
+                                            <i class="fa fa-plus"></i> Thêm người dùng
+                                        </a>
+                                    </c:if>
                                 </div>
 
 
@@ -108,39 +110,47 @@
                                                         </c:choose>
                                                     </td>
                                                     <td class="actions">
-                                                        <a href="${pageContext.request.contextPath}/userAdmin?mode=view&id=${u.id}"
-                                                            class="icon-btn view" title="Xem chi tiết">
-                                                            <i class="fa fa-eye"></i>
-                                                        </a>
+                                                        <c:if test="${perms['view_detail']}">
+                                                            <a href="${pageContext.request.contextPath}/userAdmin?mode=view&id=${u.id}"
+                                                                class="icon-btn view" title="Xem chi tiết">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+                                                        </c:if>
 
-                                                        <a href="${pageContext.request.contextPath}/userAdmin?mode=edit&id=${u.id}"
-                                                            class="icon-btn edit" title="Chỉnh sửa">
-                                                            <i class="fa fa-pen"></i>
-                                                        </a>
+                                                        <c:if test="${perms['edit']}">
+                                                            <a href="${pageContext.request.contextPath}/userAdmin?mode=edit&id=${u.id}"
+                                                                class="icon-btn edit" title="Chỉnh sửa">
+                                                                <i class="fa fa-pen"></i>
+                                                            </a>
+                                                        </c:if>
 
 
-                                                        <c:choose>
-                                                            <c:when test="${u.status == 'ACTIVE'}">
-                                                                <button type="button" class="icon-btn lock"
-                                                                    title="Khóa người dùng"
-                                                                    onclick="openConfirmModal('${u.id}', 'bị khóa', 'khóa', ${u.id == sessionScope.userlogin.id})">
-                                                                    <i class="fa fa-lock" style="color: #e74c3c;"></i>
-                                                                </button>
-                                                            </c:when>
+                                                        <c:if test="${perms['lock']}">
+                                                            <c:choose>
+                                                                <c:when test="${u.status == 'ACTIVE'}">
+                                                                    <button type="button" class="icon-btn lock"
+                                                                        title="Khóa người dùng"
+                                                                        onclick="openConfirmModal('${u.id}', 'bị khóa', 'khóa', ${u.id == sessionScope.userlogin.id})">
+                                                                        <i class="fa fa-lock" style="color: #e74c3c;"></i>
+                                                                    </button>
+                                                                </c:when>
 
-                                                            <c:otherwise>
-                                                                <button type="button" class="icon-btn unlock"
-                                                                    title="Mở khóa người dùng"
-                                                                    onclick="openConfirmModal('${u.id}', 'được hoạt động lại', 'mở khóa', ${u.id == sessionScope.userlogin.id})">
-                                                                    <i class="fa fa-unlock" style="color: #27ae60;"></i>
-                                                                </button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                                <c:otherwise>
+                                                                    <button type="button" class="icon-btn unlock"
+                                                                        title="Mở khóa người dùng"
+                                                                        onclick="openConfirmModal('${u.id}', 'được hoạt động lại', 'mở khóa', ${u.id == sessionScope.userlogin.id})">
+                                                                        <i class="fa fa-unlock" style="color: #27ae60;"></i>
+                                                                    </button>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:if>
 
-                                                        <button type="button" class="icon-btn key" title="Đổi mật khẩu"
-                                                            onclick="openChangePassModal('${u.id}', '${u.username}')">
-                                                            <i class="fa fa-key" style="color: #f39c12;"></i>
-                                                        </button>
+                                                        <c:if test="${perms['change_pass']}">
+                                                            <button type="button" class="icon-btn key" title="Đổi mật khẩu"
+                                                                onclick="openChangePassModal('${u.id}', '${u.username}')">
+                                                                <i class="fa fa-key" style="color: #f39c12;"></i>
+                                                            </button>
+                                                        </c:if>
 
                                                     </td>
                                                 </tr>

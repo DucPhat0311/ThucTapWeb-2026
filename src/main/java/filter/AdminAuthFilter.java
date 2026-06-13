@@ -118,7 +118,7 @@ public class AdminAuthFilter implements Filter {
 
         if (roleService.hasPermission(user.getRoleId(), module, requiredAction)) {
             Map<String, Boolean> perms = new HashMap<>();
-            for (String action : new String[]{"view_list", "view_detail", "add", "edit", "delete", "lock"}) {
+            for (String action : new String[]{"view_list", "view_detail", "add", "edit", "delete", "lock", "change_pass"}) {
                 perms.put(action, roleService.hasPermission(user.getRoleId(), module, action));
             }
             req.setAttribute("perms", perms);
@@ -137,7 +137,7 @@ public class AdminAuthFilter implements Filter {
 
     private void setFullPerms(HttpServletRequest req) {
         Map<String, Boolean> perms = new HashMap<>();
-        for (String action : new String[]{"view_list", "view_detail", "add", "edit", "delete", "lock"}) {
+        for (String action : new String[]{"view_list", "view_detail", "add", "edit", "delete", "lock", "change_pass"}) {
             perms.put(action, true);
         }
         req.setAttribute("perms", perms);
@@ -161,6 +161,7 @@ public class AdminAuthFilter implements Filter {
                     "active", "inactive", "deactivate", "activate", "toggle-active", "toggle-status" ->
                 "lock";
             case "detail", "view" -> "view_detail";
+            case "changepassword" -> "change_pass";
             default -> "view_list";
         };
     }
