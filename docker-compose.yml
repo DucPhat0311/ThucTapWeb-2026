@@ -5,12 +5,14 @@ services:
     environment:
       MYSQL_DATABASE: aurastudio
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
+      TZ: Asia/Ho_Chi_Minh
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/aurastudio.sql:/docker-entrypoint-initdb.d/01-aurastudio.sql:ro
     command: >-
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
+      --default-time-zone=+07:00
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
       interval: 10s
@@ -33,7 +35,9 @@ services:
       DB_NAME: aurastudio
       DB_USER: root
       DB_PASS: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
-      CATALINA_OPTS: "-Dfile.encoding=UTF-8"
+      DB_OPTION: "?connectionTimeZone=Asia/Ho_Chi_Minh&forceConnectionTimeZoneToSession=true&useUnicode=true&characterEncoding=UTF-8"
+      TZ: Asia/Ho_Chi_Minh
+      CATALINA_OPTS: "-Duser.timezone=Asia/Ho_Chi_Minh -Dfile.encoding=UTF-8"
     ports:
       - "127.0.0.1:8080:8080"
 
