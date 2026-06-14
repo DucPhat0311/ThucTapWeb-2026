@@ -35,7 +35,7 @@ services:
       DB_NAME: aurastudio
       DB_USER: root
       DB_PASS: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
-      DB_OPTION: "?connectionTimeZone=Asia/Ho_Chi_Minh&forceConnectionTimeZoneToSession=true&useUnicode=true&characterEncoding=UTF-8"
+      DB_OPTION: "?connectionTimeZone=%2B07:00&forceConnectionTimeZoneToSession=true&useUnicode=true&characterEncoding=UTF-8"
       TZ: Asia/Ho_Chi_Minh
       CATALINA_OPTS: "-Duser.timezone=Asia/Ho_Chi_Minh -Dfile.encoding=UTF-8"
     ports:
