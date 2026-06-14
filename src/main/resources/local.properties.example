@@ -6,6 +6,7 @@ DB_PORT=3306
 DB_NAME=aurastudio
 DB_USER=root
 DB_PASS=
+DB_OPTION=?connectionTimeZone=Asia/Ho_Chi_Minh&forceConnectionTimeZoneToSession=true&useUnicode=true&characterEncoding=UTF-8
 
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
