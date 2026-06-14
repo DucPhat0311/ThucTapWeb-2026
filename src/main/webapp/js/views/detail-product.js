@@ -261,51 +261,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            fetch("add-cart", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams({
-                    variantId: foundVariant.id,
-                    quantity: quantity
-                })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.error === "not_logged_in") {
-                        window.location.href = "login";
-                        return;
-                    }
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = requestContextPath + "/buy-now";
 
-                    if (!data.success) {
-                        showToast(data.message || "Sản phẩm hiện không thể mua hàng!", true);
-                        return;
-                    }
+            const fields = {
+                variantId: foundVariant.id,
+                quantity: quantity,
+                productId: currentProductId
+            };
 
-                    const form = document.createElement("form");
-                    form.method = "POST";
-                    form.action = requestContextPath + "/buy-now";
+            for (const key in fields) {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
 
-                    const fields = {
-                        variantId: foundVariant.id,
-                        quantity: quantity,
-                        productId: currentProductId
-                    };
-
-                    for (const key in fields) {
-                        const input = document.createElement("input");
-                        input.type = "hidden";
-                        input.name = key;
-                        input.value = fields[key];
-                        form.appendChild(input);
-                    }
-
-                    document.body.appendChild(form);
-                    form.submit();
-                })
-                .catch(err => {
-                    console.error(err);
-                    showToast("Lỗi hệ thống khi kiểm tra sản phẩm", true);
-                });
+            document.body.appendChild(form);
+            form.submit();
         });
     }
 });
