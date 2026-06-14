@@ -11,7 +11,7 @@
  Target Server Version : 80043 (8.0.43)
  File Encoding         : 65001
 
- Date: 03/06/2026 16:03:20
+ Date: 14/06/2026 14:40:13
 */
 
 SET NAMES utf8mb4;
@@ -37,7 +37,7 @@ CREATE TABLE `addresses`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of addresses
@@ -45,6 +45,7 @@ CREATE TABLE `addresses`  (
 INSERT INTO `addresses` VALUES (1, 1, 'Đức Phát Nguyễn', '0982832647', 'Hồ Chí Minh', 202, 'Quận 9', 1451, 'Phường Long Thạnh Mỹ', '20904', 'a', 1);
 INSERT INTO `addresses` VALUES (4, 2, 'Nguyen Van Anh Han', '0900142141', 'Đà Nẵng', 203, 'Huyện đảo Hoàng Sa', 2112, 'Hoàng Sa', '541306', 'số 11 đường cộng hòa', 0);
 INSERT INTO `addresses` VALUES (5, 2, 'Nguyen Van Anh Han', '0365403194', 'Bình Thuận', 258, 'Huyện Hàm Tân', 3196, 'Xã Thắng Hải', '470610', 'số 12 đường bình lợi', 1);
+INSERT INTO `addresses` VALUES (6, 3, 'Nguyen Van Anh Han', '0365403194', 'Bạc Liêu', 253, 'Huyện Vĩnh Lợi', 2050, 'Xã Vĩnh Hưng A', '600208', 'số 11 đường cộng hòa', 1);
 
 -- ----------------------------
 -- Table structure for banners
@@ -102,11 +103,16 @@ CREATE TABLE `cart_items`  (
   INDEX `variant_id`(`variant_id` ASC) USING BTREE,
   CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of cart_items
 -- ----------------------------
+INSERT INTO `cart_items` VALUES (4, 2, 572, 3, 710504.00);
+INSERT INTO `cart_items` VALUES (5, 3, 572, 1, 710504.00);
+INSERT INTO `cart_items` VALUES (6, 2, 568, 1, 661434.00);
+INSERT INTO `cart_items` VALUES (7, 2, 204, 1, 580732.00);
+INSERT INTO `cart_items` VALUES (8, 2, 576, 1, 560549.00);
 
 -- ----------------------------
 -- Table structure for carts
@@ -251,37 +257,48 @@ CREATE TABLE `inventory_receipt_details`  (
   `quantity` int NOT NULL,
   `price` double NOT NULL,
   `remaining_quantity` int NOT NULL DEFAULT 0,
+  `cost_price` decimal(15, 2) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `receipt_id`(`receipt_id` ASC) USING BTREE,
   INDEX `product_variant_id`(`product_variant_id` ASC) USING BTREE,
   CONSTRAINT `inventory_receipt_details_ibfk_1` FOREIGN KEY (`receipt_id`) REFERENCES `inventory_receipts` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `inventory_receipt_details_ibfk_2` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variants` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of inventory_receipt_details
 -- ----------------------------
-INSERT INTO `inventory_receipt_details` VALUES (8, 8, 580, 4, 560549, 4);
-INSERT INTO `inventory_receipt_details` VALUES (9, 9, 570, 1, 690504, 1);
-INSERT INTO `inventory_receipt_details` VALUES (10, 10, 566, 1, 641434, 1);
-INSERT INTO `inventory_receipt_details` VALUES (11, 11, 568, 1, 661434, 1);
-INSERT INTO `inventory_receipt_details` VALUES (12, 12, 586, 1, 646986, 1);
-INSERT INTO `inventory_receipt_details` VALUES (13, 13, 566, 1, 641434, 0);
-INSERT INTO `inventory_receipt_details` VALUES (14, 14, 566, 1, 641434, 0);
-INSERT INTO `inventory_receipt_details` VALUES (15, 15, 566, 1, 641434, 0);
-INSERT INTO `inventory_receipt_details` VALUES (16, 16, 566, 1, 641434, 0);
-INSERT INTO `inventory_receipt_details` VALUES (17, 17, 566, 1, 641434, 0);
-INSERT INTO `inventory_receipt_details` VALUES (18, 18, 567, 1, 651434, 0);
-INSERT INTO `inventory_receipt_details` VALUES (19, 19, 192, 1, 593298, 0);
-INSERT INTO `inventory_receipt_details` VALUES (20, 20, 197, 1, 550732, 0);
-INSERT INTO `inventory_receipt_details` VALUES (21, 21, 568, 1, 661434, 0);
-INSERT INTO `inventory_receipt_details` VALUES (22, 22, 572, 1, 710504, 0);
-INSERT INTO `inventory_receipt_details` VALUES (23, 23, 572, 1, 710504, 0);
-INSERT INTO `inventory_receipt_details` VALUES (24, 24, 568, 1, 661434, 0);
-INSERT INTO `inventory_receipt_details` VALUES (25, 25, 572, 1, 710504, 0);
-INSERT INTO `inventory_receipt_details` VALUES (26, 26, 572, 1, 710504, 0);
-INSERT INTO `inventory_receipt_details` VALUES (27, 27, 564, 1, 405057, 0);
-INSERT INTO `inventory_receipt_details` VALUES (28, 28, 564, 1, 405057, 0);
+INSERT INTO `inventory_receipt_details` VALUES (8, 8, 580, 4, 560549, 4, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (9, 9, 570, 1, 690504, 1, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (10, 10, 566, 1, 641434, 1, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (11, 11, 568, 1, 661434, 1, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (12, 12, 586, 1, 646986, 1, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (13, 13, 566, 1, 641434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (14, 14, 566, 1, 641434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (15, 15, 566, 1, 641434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (16, 16, 566, 1, 641434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (17, 17, 566, 1, 641434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (18, 18, 567, 1, 651434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (19, 19, 192, 1, 593298, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (20, 20, 197, 1, 550732, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (21, 21, 568, 1, 661434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (22, 22, 572, 1, 710504, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (23, 23, 572, 1, 710504, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (24, 24, 568, 1, 661434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (25, 25, 572, 1, 710504, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (26, 26, 572, 1, 710504, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (27, 27, 564, 1, 405057, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (28, 28, 564, 1, 405057, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (29, 29, 568, 1, 661434, 0, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (30, 30, 572, 1, 710504, 0, 0.00);
+INSERT INTO `inventory_receipt_details` VALUES (31, 31, 572, 1, 710504, 0, 0.00);
+INSERT INTO `inventory_receipt_details` VALUES (32, 32, 568, 1, 661434, 0, 0.00);
+INSERT INTO `inventory_receipt_details` VALUES (33, 33, 572, 1, 710504, 0, 0.00);
+INSERT INTO `inventory_receipt_details` VALUES (34, 34, 572, 1, 710504, 1, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (35, 35, 204, 1, 580732, 0, 0.00);
+INSERT INTO `inventory_receipt_details` VALUES (36, 36, 204, 1, 580732, 1, NULL);
+INSERT INTO `inventory_receipt_details` VALUES (37, 37, 572, 1, 710504, 0, 0.00);
+INSERT INTO `inventory_receipt_details` VALUES (38, 38, 576, 1, 560549, 0, 0.00);
 
 -- ----------------------------
 -- Table structure for inventory_receipts
@@ -299,7 +316,7 @@ CREATE TABLE `inventory_receipts`  (
   `order_id` int NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_inventory_receipts_order_id`(`order_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of inventory_receipts
@@ -325,6 +342,41 @@ INSERT INTO `inventory_receipts` VALUES (25, 2, 'EXPORT', 'Xuất kho tự độ
 INSERT INTO `inventory_receipts` VALUES (26, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #27', NULL, 710504, '2026-05-31 20:47:10', 'COMPLETED', 27);
 INSERT INTO `inventory_receipts` VALUES (27, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #28', NULL, 405057, '2026-05-31 21:25:09', 'COMPLETED', 28);
 INSERT INTO `inventory_receipts` VALUES (28, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #29', NULL, 405057, '2026-05-31 21:55:26', 'COMPLETED', 29);
+INSERT INTO `inventory_receipts` VALUES (29, 3, 'EXPORT', 'Xuất kho tự động theo đơn hàng #30', NULL, 661434, '2026-06-03 17:14:04', 'COMPLETED', 30);
+INSERT INTO `inventory_receipts` VALUES (30, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #31', NULL, 710504, '2026-06-08 14:19:42', 'COMPLETED', 31);
+INSERT INTO `inventory_receipts` VALUES (31, 3, 'EXPORT', 'Xuất kho tự động theo đơn hàng #32', NULL, 710504, '2026-06-08 14:22:15', 'COMPLETED', 32);
+INSERT INTO `inventory_receipts` VALUES (32, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #33', NULL, 661434, '2026-06-11 20:45:05', 'COMPLETED', 33);
+INSERT INTO `inventory_receipts` VALUES (33, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #34', NULL, 710504, '2026-06-13 17:33:26', 'COMPLETED', 34);
+INSERT INTO `inventory_receipts` VALUES (34, 2, 'RETURN', 'Hoàn kho do huỷ đơn hàng #34', NULL, 710504, '2026-06-13 18:14:28', 'COMPLETED', 34);
+INSERT INTO `inventory_receipts` VALUES (35, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #35', NULL, 580732, '2026-06-13 18:15:27', 'COMPLETED', 35);
+INSERT INTO `inventory_receipts` VALUES (36, 2, 'RETURN', 'Hoàn kho do huỷ đơn hàng #35', NULL, 580732, '2026-06-13 18:16:15', 'COMPLETED', 35);
+INSERT INTO `inventory_receipts` VALUES (37, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #36', NULL, 710504, '2026-06-13 18:19:14', 'COMPLETED', 36);
+INSERT INTO `inventory_receipts` VALUES (38, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #37', NULL, 560549, '2026-06-13 18:26:27', 'COMPLETED', 37);
+
+-- ----------------------------
+-- Table structure for notifications
+-- ----------------------------
+DROP TABLE IF EXISTS `notifications`;
+CREATE TABLE `notifications`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NULL DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_user_created`(`user_id` ASC, `created_at` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of notifications
+-- ----------------------------
+INSERT INTO `notifications` VALUES (1, 2, 'Đặt hàng thành công #33', 'Đơn hàng của bạn đã được đặt thành công. Mã đơn: #33', '/order-user?orderId=33', 0, '2026-06-11 20:45:06');
+INSERT INTO `notifications` VALUES (2, 2, 'Đặt hàng thành công #34', 'Đơn hàng của bạn đã được đặt thành công. Mã đơn: #34', '/order-user?orderId=34', 0, '2026-06-13 17:33:27');
+INSERT INTO `notifications` VALUES (3, 2, 'Đặt hàng thành công #35', 'Đơn hàng của bạn đã được đặt thành công. Mã đơn: #35', '/order-user?orderId=35', 0, '2026-06-13 18:15:27');
+INSERT INTO `notifications` VALUES (4, 2, 'Thanh toán thành công #36', 'Thanh toán cho đơn hàng của bạn đã thành công. Mã đơn: #36', '/order-user?orderId=36', 0, '2026-06-13 18:21:32');
+INSERT INTO `notifications` VALUES (5, 2, 'Thanh toán thành công #37', 'Thanh toán cho đơn hàng của bạn đã thành công. Mã đơn: #37', '/order-user?orderId=37', 0, '2026-06-13 18:26:59');
 
 -- ----------------------------
 -- Table structure for order_items
@@ -350,7 +402,7 @@ CREATE TABLE `order_items`  (
   CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT,
   CONSTRAINT `order_items_ibfk_3` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of order_items
@@ -383,6 +435,42 @@ INSERT INTO `order_items` VALUES (26, 26, 572, 87, NULL, 'XL', 'Beige', NULL, 1,
 INSERT INTO `order_items` VALUES (27, 27, 572, 87, NULL, 'XL', 'Beige', NULL, 1, 710504.00, 710504.00, NULL);
 INSERT INTO `order_items` VALUES (28, 28, 564, 85, NULL, 'XL', 'Navy', NULL, 1, 405057.00, 405057.00, NULL);
 INSERT INTO `order_items` VALUES (29, 29, 564, 85, NULL, 'XL', 'Navy', NULL, 1, 405057.00, 405057.00, NULL);
+INSERT INTO `order_items` VALUES (30, 30, 568, 86, NULL, 'XL', 'Navy', NULL, 1, 661434.00, 661434.00, NULL);
+INSERT INTO `order_items` VALUES (31, 31, 572, 87, NULL, 'XL', 'Beige', NULL, 1, 710504.00, 710504.00, NULL);
+INSERT INTO `order_items` VALUES (32, 32, 572, 87, NULL, 'XL', 'Beige', NULL, 1, 710504.00, 710504.00, NULL);
+INSERT INTO `order_items` VALUES (33, 33, 568, 86, NULL, 'XL', 'Navy', NULL, 1, 661434.00, 661434.00, NULL);
+INSERT INTO `order_items` VALUES (34, 34, 572, 87, NULL, 'XL', 'Beige', NULL, 1, 710504.00, 710504.00, NULL);
+INSERT INTO `order_items` VALUES (35, 35, 204, 31, NULL, 'XL', 'Black', NULL, 1, 580732.00, 580732.00, NULL);
+INSERT INTO `order_items` VALUES (36, 36, 572, 87, NULL, 'XL', 'Beige', NULL, 1, 710504.00, 710504.00, NULL);
+INSERT INTO `order_items` VALUES (37, 37, 576, 88, NULL, 'XL', 'Blue', NULL, 1, 560549.00, 560549.00, NULL);
+
+-- ----------------------------
+-- Table structure for order_return_media
+-- ----------------------------
+DROP TABLE IF EXISTS `order_return_media`;
+CREATE TABLE `order_return_media`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_return_id` int NOT NULL,
+  `media_type` enum('IMAGE','VIDEO') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `media_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `original_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_order_return_media_return_id`(`order_return_id` ASC) USING BTREE,
+  INDEX `idx_order_return_media_type`(`media_type` ASC) USING BTREE,
+  CONSTRAINT `fk_order_return_media_return` FOREIGN KEY (`order_return_id`) REFERENCES `order_returns` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of order_return_media
+-- ----------------------------
+INSERT INTO `order_return_media` VALUES (1, 3, 'IMAGE', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1781186842/shopquanao/order-returns/w2yrjdrbzlf5ujq2h0vv.png', 'ChatGPT Image Feb 3, 2026, 11_26_36 PM.png', '2026-06-11 21:07:41');
+INSERT INTO `order_return_media` VALUES (2, 3, 'IMAGE', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1781186846/shopquanao/order-returns/ivkjbaworjkbe0phc9kg.png', 'ChatGPT Image Feb 3, 2026, 11_26_43 PM.png', '2026-06-11 21:07:41');
+INSERT INTO `order_return_media` VALUES (3, 3, 'IMAGE', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1781186850/shopquanao/order-returns/cxbbrq55j1f3zfgkmoba.png', 'ChatGPT Image Feb 3, 2026, 11_29_39 PM.png', '2026-06-11 21:07:41');
+INSERT INTO `order_return_media` VALUES (4, 3, 'VIDEO', 'https://res.cloudinary.com/dp8ttx3jh/video/upload/v1781186855/shopquanao/order-returns/zkrfmbzgwvzkypeyxy1l.mp4', 'Thu4_Ca3_Nhom5_23130087_NguyenVanAnhHan.mp4', '2026-06-11 21:07:41');
+INSERT INTO `order_return_media` VALUES (5, 4, 'IMAGE', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1781350109/shopquanao/order-returns/ybyllryc53kjyj2ut5c9.jpg', '1.jpg', '2026-06-13 18:28:38');
+INSERT INTO `order_return_media` VALUES (6, 4, 'IMAGE', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1781350111/shopquanao/order-returns/t3lyhnlzhby08sugikpt.jpg', '2.jpg', '2026-06-13 18:28:38');
+INSERT INTO `order_return_media` VALUES (7, 4, 'IMAGE', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1781350113/shopquanao/order-returns/modjkhffifpoc5ihc6x5.jpg', '3.jpg', '2026-06-13 18:28:38');
 
 -- ----------------------------
 -- Table structure for order_returns
@@ -415,33 +503,15 @@ CREATE TABLE `order_returns`  (
   CONSTRAINT `chk_order_returns_refund_status` CHECK (`refund_status` in (_utf8mb4'NOT_REQUIRED',_utf8mb4'PENDING',_utf8mb4'REFUNDED')),
   CONSTRAINT `chk_order_returns_source` CHECK (`request_source` in (_utf8mb4'CUSTOMER',_utf8mb4'DELIVERY_FAILED')),
   CONSTRAINT `chk_order_returns_status` CHECK (`return_status` in (_utf8mb4'REQUESTED',_utf8mb4'APPROVED',_utf8mb4'REJECTED',_utf8mb4'RETURNING',_utf8mb4'RETURNED'))
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of order_returns
 -- ----------------------------
-
--- ----------------------------
--- Table structure for order_return_media
--- ----------------------------
-DROP TABLE IF EXISTS `order_return_media`;
-CREATE TABLE `order_return_media`  (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `order_return_id` int NOT NULL,
-  `media_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `media_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `original_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_order_return_media_return_id`(`order_return_id` ASC) USING BTREE,
-  INDEX `idx_order_return_media_type`(`media_type` ASC) USING BTREE,
-  CONSTRAINT `fk_order_return_media_return` FOREIGN KEY (`order_return_id`) REFERENCES `order_returns` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT `chk_order_return_media_type` CHECK (`media_type` in (_utf8mb4'IMAGE',_utf8mb4'VIDEO'))
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'Luu bang chung anh va video cho yeu cau doi tra hoan hang' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of order_return_media
--- ----------------------------
+INSERT INTO `order_returns` VALUES (1, 31, 2, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Tôi muốn trả lại hàng', 'REQUESTED', 'NOT_REQUIRED', NULL, '2026-06-08 14:20:43', NULL, NULL, NULL, NULL, 0);
+INSERT INTO `order_returns` VALUES (2, 32, 3, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'trả lại hàng cho tôi', 'REJECTED', 'NOT_REQUIRED', 'không cho', '2026-06-08 14:23:24', '2026-06-11 20:22:29', NULL, NULL, NULL, 0);
+INSERT INTO `order_returns` VALUES (3, 33, 2, 'CUSTOMER', 'WRONG_PRODUCT', 'ảnh sản phẩm khác', 'RETURNED', 'REFUNDED', 'Đã trả tiền rồi', '2026-06-11 21:07:41', '2026-06-11 21:09:19', '2026-06-11 21:09:34', '2026-06-11 21:09:40', '2026-06-11 21:09:47', 1);
+INSERT INTO `order_returns` VALUES (4, 37, 2, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Tôi không thích', 'RETURNED', 'REFUNDED', 'ok', '2026-06-13 18:28:38', '2026-06-13 18:28:53', '2026-06-13 18:28:58', '2026-06-13 18:29:00', '2026-06-13 18:29:02', 1);
 
 -- ----------------------------
 -- Table structure for order_tracking
@@ -481,7 +551,7 @@ CREATE TABLE `order_tracking_logs`  (
   INDEX `idx_order_tracking_logs_order_id`(`order_id` ASC) USING BTREE,
   INDEX `idx_order_tracking_logs_tracking_code`(`tracking_code` ASC) USING BTREE,
   CONSTRAINT `fk_order_tracking_logs_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of order_tracking_logs
@@ -504,6 +574,39 @@ INSERT INTO `order_tracking_logs` VALUES (15, 25, 'DEMO', 'DEMO-ORD-25-202605311
 INSERT INTO `order_tracking_logs` VALUES (16, 25, 'DEMO', 'DEMO-ORD-25-20260531182647', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại tại giao hàng thất bại lần 5.', '2026-05-31 18:27:31', '2026-05-31 18:27:31');
 INSERT INTO `order_tracking_logs` VALUES (17, 27, 'DEMO', 'DEMO-ORD-27-20260531212727', 'RECEIVED', 'Đã tiếp nhận đơn hàng', 'Đơn hàng đã được tiếp nhận tại AURA Studio.', '2026-05-31 21:27:28', '2026-05-31 21:27:27');
 INSERT INTO `order_tracking_logs` VALUES (18, 29, 'DEMO', 'DEMO-ORD-29-20260531222013', 'RECEIVED', 'Đã tiếp nhận đơn hàng', 'Đơn hàng đã được tiếp nhận tại AURA Studio.', '2026-05-31 22:20:14', '2026-05-31 22:20:13');
+INSERT INTO `order_tracking_logs` VALUES (19, 31, 'DEMO', 'DEMO-ORD-31-20260608142002', 'RECEIVED', 'Đã tiếp nhận đơn hàng', 'Đơn hàng đã được tiếp nhận tại AURA Studio.', '2026-06-08 14:20:03', '2026-06-08 14:20:03');
+INSERT INTO `order_tracking_logs` VALUES (20, 31, 'DEMO', 'DEMO-ORD-31-20260608142002', 'SORTING', 'Đang ở kho phân loại', 'Đang ở kho phân loại.', '2026-06-08 14:20:06', '2026-06-08 14:20:06');
+INSERT INTO `order_tracking_logs` VALUES (21, 31, 'DEMO', 'DEMO-ORD-31-20260608142002', 'OUT_FOR_DELIVERY', 'Đang giao hàng', 'Đang giao hàng.', '2026-06-08 14:20:09', '2026-06-08 14:20:09');
+INSERT INTO `order_tracking_logs` VALUES (22, 31, 'DEMO', 'DEMO-ORD-31-20260608142002', 'DELIVERED', 'Đã giao thành công', 'Đã giao thành công.', '2026-06-08 14:20:13', '2026-06-08 14:20:13');
+INSERT INTO `order_tracking_logs` VALUES (23, 32, 'DEMO', 'DEMO-ORD-32-20260608142244', 'RECEIVED', 'Đã tiếp nhận đơn hàng', 'Đơn hàng đã được tiếp nhận tại AURA Studio.', '2026-06-08 14:22:45', '2026-06-08 14:22:44');
+INSERT INTO `order_tracking_logs` VALUES (24, 32, 'DEMO', 'DEMO-ORD-32-20260608142244', 'IN_TRANSIT', 'Đang vận chuyển', 'Đang vận chuyển.', '2026-06-08 14:22:49', '2026-06-08 14:22:48');
+INSERT INTO `order_tracking_logs` VALUES (25, 32, 'DEMO', 'DEMO-ORD-32-20260608142244', 'DELIVERED', 'Đã giao thành công', 'Đã giao thành công.', '2026-06-08 14:22:54', '2026-06-08 14:22:53');
+INSERT INTO `order_tracking_logs` VALUES (26, 33, 'DEMO', 'DEMO-ORD-33-20260611204529', 'RECEIVED', 'Đã tiếp nhận đơn hàng', 'Đơn hàng đã được tiếp nhận tại AURA Studio.', '2026-06-11 20:45:30', '2026-06-11 20:45:29');
+INSERT INTO `order_tracking_logs` VALUES (27, 33, 'DEMO', 'DEMO-ORD-33-20260611204529', 'HANDED_OVER', 'Đã bàn giao vận chuyển', 'Đã bàn giao vận chuyển.', '2026-06-11 20:45:39', '2026-06-11 20:45:38');
+INSERT INTO `order_tracking_logs` VALUES (28, 33, 'DEMO', 'DEMO-ORD-33-20260611204529', 'OUT_FOR_DELIVERY', 'Đang giao hàng', 'Đang giao hàng.', '2026-06-11 20:45:43', '2026-06-11 20:45:42');
+INSERT INTO `order_tracking_logs` VALUES (29, 33, 'DEMO', 'DEMO-ORD-33-20260611204529', 'DELIVERED', 'Đã giao thành công', 'Đã giao thành công.', '2026-06-11 20:45:47', '2026-06-11 20:45:47');
+INSERT INTO `order_tracking_logs` VALUES (30, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'RECEIVED', 'Đã tiếp nhận đơn hàng', 'Đơn hàng đã được tiếp nhận tại AURA Studio.', '2026-06-13 18:01:20', '2026-06-13 18:01:19');
+INSERT INTO `order_tracking_logs` VALUES (31, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'HANDED_OVER', 'Đã bàn giao vận chuyển', 'Đã bàn giao vận chuyển.', '2026-06-13 18:01:28', '2026-06-13 18:01:28');
+INSERT INTO `order_tracking_logs` VALUES (32, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'SORTING', 'Đang ở kho phân loại', 'Đang ở kho phân loại.', '2026-06-13 18:01:32', '2026-06-13 18:01:32');
+INSERT INTO `order_tracking_logs` VALUES (33, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'IN_TRANSIT', 'Đang vận chuyển', 'Đang vận chuyển.', '2026-06-13 18:01:38', '2026-06-13 18:01:37');
+INSERT INTO `order_tracking_logs` VALUES (34, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'OUT_FOR_DELIVERY', 'Đang giao hàng', 'Đang giao hàng.', '2026-06-13 18:01:41', '2026-06-13 18:01:41');
+INSERT INTO `order_tracking_logs` VALUES (35, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại.', '2026-06-13 18:01:46', '2026-06-13 18:01:45');
+INSERT INTO `order_tracking_logs` VALUES (36, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại.', '2026-06-13 18:01:52', '2026-06-13 18:01:52');
+INSERT INTO `order_tracking_logs` VALUES (37, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại.', '2026-06-13 18:01:58', '2026-06-13 18:01:57');
+INSERT INTO `order_tracking_logs` VALUES (38, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại tại giao thất bại 1.', '2026-06-13 18:02:14', '2026-06-13 18:02:13');
+INSERT INTO `order_tracking_logs` VALUES (39, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại tại giao thất bại 2.', '2026-06-13 18:02:21', '2026-06-13 18:02:20');
+INSERT INTO `order_tracking_logs` VALUES (40, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại tại giao thất bại 3.', '2026-06-13 18:02:24', '2026-06-13 18:02:24');
+INSERT INTO `order_tracking_logs` VALUES (41, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại tại giao thất bại 3.', '2026-06-13 18:14:28', '2026-06-13 18:14:28');
+INSERT INTO `order_tracking_logs` VALUES (42, 34, 'DEMO', 'DEMO-ORD-34-20260613180119', 'RETURNED_TO_SHOP', 'Đã hoàn về shop', 'Đơn hàng đã giao thất bại 3 lần và được hoàn về shop.', '2026-06-13 18:14:29', '2026-06-13 18:14:28');
+INSERT INTO `order_tracking_logs` VALUES (43, 35, 'DEMO', 'DEMO-ORD-35-20260613181600', 'RECEIVED', 'Đã tiếp nhận đơn hàng', 'Đơn hàng đã được tiếp nhận tại AURA Studio.', '2026-06-13 18:16:01', '2026-06-13 18:16:00');
+INSERT INTO `order_tracking_logs` VALUES (44, 35, 'DEMO', 'DEMO-ORD-35-20260613181600', 'SORTING', 'Đang ở kho phân loại', 'Đang ở kho phân loại.', '2026-06-13 18:16:04', '2026-06-13 18:16:04');
+INSERT INTO `order_tracking_logs` VALUES (45, 35, 'DEMO', 'DEMO-ORD-35-20260613181600', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại.', '2026-06-13 18:16:09', '2026-06-13 18:16:09');
+INSERT INTO `order_tracking_logs` VALUES (46, 35, 'DEMO', 'DEMO-ORD-35-20260613181600', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại.', '2026-06-13 18:16:13', '2026-06-13 18:16:12');
+INSERT INTO `order_tracking_logs` VALUES (47, 35, 'DEMO', 'DEMO-ORD-35-20260613181600', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại.', '2026-06-13 18:16:15', '2026-06-13 18:16:15');
+INSERT INTO `order_tracking_logs` VALUES (48, 35, 'DEMO', 'DEMO-ORD-35-20260613181600', 'RETURNED_TO_SHOP', 'Đã hoàn về shop', 'Đơn hàng đã giao thất bại 3 lần và được hoàn về shop.', '2026-06-13 18:16:16', '2026-06-13 18:16:15');
+INSERT INTO `order_tracking_logs` VALUES (49, 37, 'DEMO', 'DEMO-ORD-37-20260613182745', 'RECEIVED', 'Đã tiếp nhận đơn hàng', 'Đơn hàng đã được tiếp nhận tại AURA Studio.', '2026-06-13 18:27:46', '2026-06-13 18:27:45');
+INSERT INTO `order_tracking_logs` VALUES (50, 37, 'DEMO', 'DEMO-ORD-37-20260613182745', 'DELIVERY_FAILED', 'Giao hàng thất bại', 'Giao hàng thất bại.', '2026-06-13 18:27:52', '2026-06-13 18:27:52');
+INSERT INTO `order_tracking_logs` VALUES (51, 37, 'DEMO', 'DEMO-ORD-37-20260613182745', 'DELIVERED', 'Đã giao thành công', 'Đã giao thành công.', '2026-06-13 18:27:56', '2026-06-13 18:27:56');
 
 -- ----------------------------
 -- Table structure for orders
@@ -534,7 +637,7 @@ CREATE TABLE `orders`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of orders
@@ -567,6 +670,14 @@ INSERT INTO `orders` VALUES (26, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12
 INSERT INTO `orders` VALUES (27, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 710504.00, 0.00, 29000.00, 739504.00, 'VNPAY', 'PAID', 'SHIPPING', 'DEMO-ORD-27-20260531212727', 'RECEIVED', 'Đã tiếp nhận đơn hàng', NULL, '2026-05-31 21:27:27', NULL, NULL, '2026-05-31 20:47:10');
 INSERT INTO `orders` VALUES (28, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 405057.00, 0.00, 29000.00, 434057.00, 'VNPAY', 'FAILED', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-31 21:25:09');
 INSERT INTO `orders` VALUES (29, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 405057.00, 0.00, 29000.00, 434057.00, 'VNPAY', 'PAID', 'SHIPPING', 'DEMO-ORD-29-20260531222013', 'RECEIVED', 'Đã tiếp nhận đơn hàng', NULL, '2026-05-31 22:20:13', NULL, NULL, '2026-05-31 21:55:26');
+INSERT INTO `orders` VALUES (30, 3, 'Nguyen Van Anh Han', '0365403194', 'số 11 đường cộng hòa, Xã Vĩnh Hưng A, Huyện Vĩnh Lợi, Bạc Liêu', '', 661434.00, 0.00, 29000.00, 690434.00, 'VNPAY', 'PAID', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-03 17:14:04');
+INSERT INTO `orders` VALUES (31, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 710504.00, 0.00, 29000.00, 739504.00, 'COD', 'PAID', 'COMPLETED', 'DEMO-ORD-31-20260608142002', 'DELIVERED', 'Đã giao thành công', NULL, '2026-06-08 14:20:13', NULL, NULL, '2026-06-08 14:19:42');
+INSERT INTO `orders` VALUES (32, 3, 'Nguyen Van Anh Han', '0365403194', 'số 11 đường cộng hòa, Xã Vĩnh Hưng A, Huyện Vĩnh Lợi, Bạc Liêu', '', 710504.00, 0.00, 29000.00, 739504.00, 'COD', 'PAID', 'COMPLETED', 'DEMO-ORD-32-20260608142244', 'DELIVERED', 'Đã giao thành công', NULL, '2026-06-08 14:22:53', NULL, NULL, '2026-06-08 14:22:15');
+INSERT INTO `orders` VALUES (33, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 661434.00, 0.00, 29000.00, 690434.00, 'COD', 'PAID', 'COMPLETED', 'DEMO-ORD-33-20260611204529', 'DELIVERED', 'Đã giao thành công', NULL, '2026-06-11 20:45:47', NULL, NULL, '2026-06-11 20:45:05');
+INSERT INTO `orders` VALUES (34, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 710504.00, 0.00, 29000.00, 739504.00, 'COD', 'UNPAID', 'RETURNED', 'DEMO-ORD-34-20260613180119', 'RETURNED_TO_SHOP', 'Đã hoàn về shop', NULL, '2026-06-13 18:14:28', NULL, NULL, '2026-06-13 17:33:26');
+INSERT INTO `orders` VALUES (35, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 580732.00, 0.00, 29000.00, 609732.00, 'COD', 'UNPAID', 'RETURNED', 'DEMO-ORD-35-20260613181600', 'RETURNED_TO_SHOP', 'Đã hoàn về shop', NULL, '2026-06-13 18:16:15', NULL, NULL, '2026-06-13 18:15:27');
+INSERT INTO `orders` VALUES (36, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 710504.00, 0.00, 29000.00, 739504.00, 'VNPAY', 'PAID', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-13 18:19:14');
+INSERT INTO `orders` VALUES (37, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 560549.00, 0.00, 29000.00, 589549.00, 'VNPAY', 'PAID', 'RETURNED', 'DEMO-ORD-37-20260613182745', 'DELIVERED', 'Đã giao thành công', '2026-06-15 23:59:59', '2026-06-13 18:27:56', NULL, NULL, '2026-06-13 18:26:27');
 
 -- ----------------------------
 -- Table structure for payment_transactions
@@ -587,7 +698,7 @@ CREATE TABLE `payment_transactions`  (
   UNIQUE INDEX `uq_payment_transactions_txn_ref`(`txn_ref` ASC) USING BTREE,
   INDEX `idx_payment_transactions_order_id`(`order_id` ASC) USING BTREE,
   CONSTRAINT `fk_payment_transactions_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of payment_transactions
@@ -609,6 +720,10 @@ INSERT INTO `payment_transactions` VALUES (14, 26, 'VNPAY', 'ORD26_2026053118323
 INSERT INTO `payment_transactions` VALUES (15, 27, 'VNPAY', 'ORD27_20260531204710', '15563334', 739504.00, 'NCB', '00', 'SUCCESS', '2026-05-31 20:47:10');
 INSERT INTO `payment_transactions` VALUES (16, 28, 'VNPAY', 'ORD28_20260531212509', '0', 434057.00, 'VNPAY', '24', 'FAILED', '2026-05-31 21:25:09');
 INSERT INTO `payment_transactions` VALUES (17, 29, 'VNPAY', 'ORD29_20260531215526', '15563414', 434057.00, 'NCB', '00', 'SUCCESS', '2026-05-31 21:55:26');
+INSERT INTO `payment_transactions` VALUES (18, 30, 'VNPAY', 'ORD30_20260603171404', '15568101', 690434.00, 'NCB', '00', 'SUCCESS', '2026-06-03 17:14:04');
+INSERT INTO `payment_transactions` VALUES (19, 36, 'VNPAY', 'ORD36_20260613181914', NULL, 739504.00, NULL, NULL, 'INITIATED', '2026-06-13 18:19:14');
+INSERT INTO `payment_transactions` VALUES (20, 36, 'VNPAY', 'ORD36_20260613182101', '15581914', 739504.00, 'NCB', '00', 'SUCCESS', '2026-06-13 18:21:01');
+INSERT INTO `payment_transactions` VALUES (21, 37, 'VNPAY', 'ORD37_20260613182627', '15581918', 589549.00, 'NCB', '00', 'SUCCESS', '2026-06-13 18:26:27');
 
 -- ----------------------------
 -- Table structure for product_colors
@@ -1931,11 +2046,11 @@ INSERT INTO `product_variants` VALUES (564, 85, 4, 12, 'P85-NAVY-XL', 39, 455057
 INSERT INTO `product_variants` VALUES (565, 86, 1, 12, 'P86-NAVY-S', 16, 681434.00, 631434.00);
 INSERT INTO `product_variants` VALUES (566, 86, 2, 12, 'P86-NAVY-M', 29, 691434.00, 641434.00);
 INSERT INTO `product_variants` VALUES (567, 86, 3, 12, 'P86-NAVY-L', 80, 701434.00, 651434.00);
-INSERT INTO `product_variants` VALUES (568, 86, 4, 12, 'P86-NAVY-XL', 76, 711434.00, 661434.00);
+INSERT INTO `product_variants` VALUES (568, 86, 4, 12, 'P86-NAVY-XL', 75, 711434.00, 661434.00);
 INSERT INTO `product_variants` VALUES (569, 87, 1, 5, 'P87-BEIGE-S', 62, 730504.00, 680504.00);
 INSERT INTO `product_variants` VALUES (570, 87, 2, 5, 'P87-BEIGE-M', 24, 740504.00, 690504.00);
 INSERT INTO `product_variants` VALUES (571, 87, 3, 5, 'P87-BEIGE-L', 47, 750504.00, 700504.00);
-INSERT INTO `product_variants` VALUES (572, 87, 4, 5, 'P87-BEIGE-XL', 17, 760504.00, 710504.00);
+INSERT INTO `product_variants` VALUES (572, 87, 4, 5, 'P87-BEIGE-XL', 14, 760504.00, 710504.00);
 INSERT INTO `product_variants` VALUES (573, 88, 1, 11, 'P88-BLUE-S', 32, 580549.00, 530549.00);
 INSERT INTO `product_variants` VALUES (574, 88, 2, 11, 'P88-BLUE-M', 24, 590549.00, 540549.00);
 INSERT INTO `product_variants` VALUES (575, 88, 3, 11, 'P88-BLUE-L', 24, 600549.00, 550549.00);
@@ -2268,6 +2383,24 @@ CREATE TABLE `tags`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for user_search_history
+-- ----------------------------
+DROP TABLE IF EXISTS `user_search_history`;
+CREATE TABLE `user_search_history`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `keyword` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `user_id`(`user_id` ASC) USING BTREE,
+  CONSTRAINT `user_search_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user_search_history
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for users
 -- ----------------------------
 DROP TABLE IF EXISTS `users`;
@@ -2291,6 +2424,8 @@ CREATE TABLE `users`  (
   `otp_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `otp_expired_at` datetime NULL DEFAULT NULL,
   `role_id` int NULL DEFAULT NULL,
+  `failed_login_attempts` int NOT NULL DEFAULT 0,
+  `locked_at` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE,
   UNIQUE INDEX `email`(`email` ASC) USING BTREE,
@@ -2302,9 +2437,9 @@ CREATE TABLE `users`  (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, 'fb_2034905854124248', NULL, 'ducphat0311@gmail.com', '109760483312715635930', 'GOOGLE', 'USER', 'Nguyễn Phát', 'media/avatar/avatar_user_1_1779627163032.webp', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-24 17:48:38', NULL, NULL, NULL, NULL);
-INSERT INTO `users` VALUES (2, 'handeptrai', '$2a$12$yiqmyWfn2XxcRQO9teONNecOEUN95unxjeRsuMeO2pEeeiA9H5V5u', 'anhhandeptrai555@gmail.com', NULL, NULL, 'ADMIN', 'Nguyễn Hàn', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780223572/shopquanao/avatars/n6bpfhx8iauwzly7c6b2.png', '2026-04-30', 'male', '', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `users` VALUES (3, 'nguyenvananhhan555', '$2a$12$drPLaRU6SBQ.BGIxrcEyOOtLaIEnEbpmf2tWD3YESPy.DrSjwcMMi', 'nguyenvananhhan555@gmail.com', '110404817350622964648', 'GOOGLE', 'USER', 'Hàn Nguyễn Văn Anh', 'https://lh3.googleusercontent.com/a/ACg8ocJvoz9MGvwKsJSMquUHROpc7A5DEPpEHbGMiOLTcvoHKu8MRqU=s96-c', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-31 14:48:29', NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (1, 'fb_2034905854124248', NULL, 'ducphat0311@gmail.com', '109760483312715635930', 'GOOGLE', 'USER', 'Nguyễn Phát', 'media/avatar/avatar_user_1_1779627163032.webp', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-24 17:48:38', NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `users` VALUES (2, 'handeptrai', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'nguyenhan.be.dev@gmail.com', NULL, NULL, 'ADMIN', 'Nguyễn Hàn', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780223572/shopquanao/avatars/n6bpfhx8iauwzly7c6b2.png', '2026-04-30', 'male', '', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `users` VALUES (3, 'nguyenvananhhan555', '$2a$12$drPLaRU6SBQ.BGIxrcEyOOtLaIEnEbpmf2tWD3YESPy.DrSjwcMMi', 'nguyenvananhhan555@gmail.com', '110404817350622964648', 'GOOGLE', 'USER', 'Hàn Nguyễn Văn Anh', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780479053/shopquanao/avatars/ahyykblipcsvlafyrllv.png', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-31 14:48:29', NULL, NULL, NULL, NULL, 0, NULL);
 
 -- ----------------------------
 -- Table structure for wishlists

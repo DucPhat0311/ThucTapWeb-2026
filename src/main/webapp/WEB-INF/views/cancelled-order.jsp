@@ -121,7 +121,7 @@
                 </div>
 
                 <div class="cancel-actions">
-                    <a href="order-detail.jsp" class="btn-back">Quay lại</a>
+                    <a href="${pageContext.request.contextPath}/order-user" class="btn-back">Quay lại</a>
                     <button type="button" class="btn-confirm-cancel">Xác nhận hủy đơn</button>
                 </div>
             </form>
