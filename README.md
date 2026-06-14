@@ -1,107 +1,177 @@
 # Aura Studio - Fashion E-commerce Website
 
-## Tóm tắt
+Aura Studio là website thương mại điện tử thời trang được xây dựng bằng Java Web truyền thống. Dự án sử dụng Jakarta Servlet/JSP, JSTL, JDBI, MySQL và được chuẩn hóa để triển khai bằng Docker Compose trên Ubuntu, chạy sau Cloudflare Tunnel.
 
-Aura Studio là một website thương mại điện tử thời trang được xây dựng theo kiến trúc Java Web truyền thống với `Jakarta Servlet/JSP`, `JSTL`, `JDBI` và `MySQL`. Hệ thống hỗ trợ các nghiệp vụ chính của một cửa hàng trực tuyến như quản lý sản phẩm, giỏ hàng, đặt hàng, thanh toán VNPay, theo dõi vận chuyển GHN, quản lý yêu cầu trả hàng/hoàn tiền, quản trị nội dung và triển khai bằng Docker.
+Production domain:
 
-**Keywords:** Java Web, Jakarta Servlet, JSP, MVC, DAO, JDBI, MySQL, Docker, VNPay, GHN, E-commerce.
+```text
+https://shop.nguyenhandeptrai.id.vn/
+```
 
-## 1. Giới thiệu
+Ứng dụng được build thành `ROOT.war`, vì vậy khi deploy production các đường dẫn chạy ở context root:
 
-### 1.1. Mục tiêu
+```text
+https://shop.nguyenhandeptrai.id.vn/home
+https://shop.nguyenhandeptrai.id.vn/product
+https://shop.nguyenhandeptrai.id.vn/order-user
+```
 
-Dự án được phát triển nhằm mô phỏng một hệ thống e-commerce hoàn chỉnh cho cửa hàng thời trang, bao gồm cả phía người dùng và phía quản trị. Trọng tâm của hệ thống là xử lý đúng vòng đời đơn hàng, đồng bộ tồn kho, tích hợp thanh toán trực tuyến và hỗ trợ vận hành qua môi trường Docker.
+Không dùng context cũ kiểu `/ShopQuanAo_war`.
 
-### 1.2. Phạm vi
+## Mục Lục
 
-Hệ thống bao gồm:
+- [Tổng quan](#tổng-quan)
+- [Tính năng chính](#tính-năng-chính)
+- [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+- [Kiến trúc hệ thống](#kiến-trúc-hệ-thống)
+- [Cấu trúc thư mục](#cấu-trúc-thư-mục)
+- [Cấu hình môi trường](#cấu-hình-môi-trường)
+- [Chạy local bằng IntelliJ/Tomcat](#chạy-local-bằng-intellijtomcat)
+- [Chạy bằng Docker Compose](#chạy-bằng-docker-compose)
+- [Deploy Ubuntu + Cloudflare Tunnel](#deploy-ubuntu--cloudflare-tunnel)
+- [Database](#database)
+- [Build và kiểm tra](#build-và-kiểm-tra)
+- [Ghi chú vận hành](#ghi-chú-vận-hành)
 
-- Website mua sắm cho khách hàng.
-- Admin dashboard để quản lý sản phẩm, danh mục, đơn hàng, người dùng, blog, banner, liên hệ và yêu cầu trả hàng.
-- Tích hợp dịch vụ bên ngoài gồm VNPay, GHN, Google OAuth, Facebook Login, Cloudinary và email OTP.
-- Cấu hình triển khai bằng Docker, Docker Compose, Tomcat và MySQL.
+## Tổng Quan
 
-## 2. Thông tin dự án
+Aura Studio mô phỏng một hệ thống e-commerce hoàn chỉnh cho cửa hàng thời trang, gồm website khách hàng và trang quản trị. Dự án tập trung vào các nghiệp vụ quan trọng như quản lý sản phẩm, biến thể sản phẩm, giỏ hàng, checkout, tồn kho, thanh toán, vận chuyển, đổi trả và phân quyền admin.
+
+Repository:
+
+```text
+https://github.com/DucPhat0311/ThucTapWeb-2026
+```
+
+Thông tin chính:
 
 | Mục | Nội dung |
 | --- | --- |
-| Tên dự án | Aura Studio - Fashion E-commerce Website |
+| Tên dự án | Aura Studio |
 | Loại dự án | Java Web Application |
-| Ngôn ngữ chính | Java 17 |
-| Kiến trúc | MVC, Service Layer, DAO Pattern |
-| Build tools | Gradle, Maven |
-| Runtime | Apache Tomcat 10.1 |
+| Java | Java 17 |
+| Web stack | Jakarta Servlet, JSP, JSTL |
 | Database | MySQL 8.4 |
-| Deployment | Docker, Docker Compose |
-| Repository | https://github.com/DucPhat0311/ThucTapWeb-2026 |
+| Data access | JDBC, JDBI |
+| Build chính | Gradle Wrapper |
+| Artifact deploy | `build/libs/ROOT.war` |
+| Runtime production | Tomcat 10.1 JRE 17 |
+| Deploy | Docker Compose |
+| Public access | Cloudflare Tunnel |
 
-## 3. Tech Stack
+## Tính Năng Chính
 
-### 3.1. Backend
+### Khách Hàng
+
+- Đăng ký, đăng nhập, đăng xuất.
+- Xác thực OTP qua email.
+- Đăng nhập bằng Google OAuth và Facebook Login.
+- Quản lý hồ sơ cá nhân, avatar, email, mật khẩu.
+- Quản lý địa chỉ giao hàng.
+- Xem danh sách sản phẩm, tìm kiếm, lọc sản phẩm, xem chi tiết sản phẩm.
+- Chọn màu, size, số lượng theo biến thể sản phẩm.
+- Thêm vào giỏ hàng, mua ngay, wishlist.
+- Checkout bằng COD hoặc VNPay.
+- Xem lịch sử đơn hàng và chi tiết đơn hàng.
+- Theo dõi trạng thái vận chuyển.
+- Hủy đơn theo điều kiện hợp lệ.
+- Mua lại đơn hàng.
+- Gửi đánh giá sản phẩm.
+- Gửi yêu cầu trả hàng/hoàn tiền kèm hình ảnh hoặc video minh chứng.
+- Nhận thông báo trong hệ thống.
+
+### Quản Trị
+
+- Dashboard thống kê doanh thu, đơn hàng và lợi nhuận.
+- Quản lý sản phẩm, biến thể, hình ảnh, danh mục, màu sắc, kích thước.
+- Quản lý người dùng, vai trò và quyền truy cập.
+- Quản lý đơn hàng và trạng thái thanh toán.
+- Tạo và cập nhật hành trình vận chuyển mô phỏng.
+- Quản lý yêu cầu trả hàng, hoàn hàng và hoàn tiền.
+- Quản lý nhập kho, xuất kho, hoàn kho.
+- Quản lý banner, blog và liên hệ khách hàng.
+- Bảo vệ route admin bằng `AdminAuthFilter`.
+
+### Tích Hợp Bên Ngoài
+
+- VNPay sandbox payment.
+- GHN shipping API.
+- Google OAuth.
+- Facebook Login.
+- Cloudinary upload ảnh/video.
+- Gmail SMTP/Jakarta Mail cho OTP và email đơn hàng.
+
+## Công Nghệ Sử Dụng
+
+Backend:
 
 - Java 17
 - Jakarta Servlet 6
-- Jakarta Server Pages
-- JSTL
+- JSP/JSTL
 - JDBI 3
+- MySQL Connector/J
 - Jackson Databind
 - Jakarta Mail
 - BCrypt
+- RestFB
+- Cloudinary SDK
 - Logback
 
-### 3.2. Frontend
+Frontend:
 
 - JSP/JSTL
-- HTML5
-- CSS3
-- JavaScript
-- Admin/User JSP views
+- HTML, CSS, JavaScript
+- Font Awesome
+- Swiper
 
-### 3.3. Database
+DevOps:
 
-- MySQL 8.4
-- SQL schema và seed data trong `database/aurastudio.sql`
-- DAO Pattern với JDBI/JDBC
-
-### 3.4. Third-party Integrations
-
-- VNPay sandbox payment
-- GHN shipping API
-- Google OAuth
-- Facebook Login thông qua RestFB
-- Cloudinary image upload
-- Email OTP thông qua Jakarta Mail
-
-### 3.5. DevOps
-
-- Docker
+- Gradle Wrapper
+- Dockerfile multi-stage build
 - Docker Compose
-- Tomcat 10.1 JRE 17
-- WAR deployment
-- Environment variables
-- Gradle SSH deploy task
+- Tomcat 10.1
+- MySQL 8.4
+- Cloudflare Tunnel
 
-## 4. Kiến trúc hệ thống
+## Kiến Trúc Hệ Thống
 
-Hệ thống được tổ chức theo mô hình nhiều lớp. `Controller` tiếp nhận request từ client, gọi `Service` để xử lý business logic, sau đó truy cập dữ liệu thông qua `DAO`. View được render bằng JSP/JSTL.
+Luồng xử lý chính:
 
 ```mermaid
 flowchart TD
-    Client[Browser] --> Controller[Jakarta Servlet Controllers]
+    Browser[Browser] --> Filter[Servlet Filters]
+    Filter --> Controller[Servlet Controllers]
     Controller --> Service[Service Layer]
     Service --> DAO[DAO Layer - JDBI/JDBC]
-    DAO --> DB[(MySQL Database)]
-    Controller --> JSP[JSP/JSTL Views]
-    JSP --> Client
+    DAO --> MySQL[(MySQL)]
+    Controller --> JSP[JSP Views]
+    JSP --> Browser
 
-    Service --> VNPay[VNPay API]
-    Service --> GHN[GHN API]
+    Service --> VNPay[VNPay]
+    Service --> GHN[GHN]
     Service --> Cloudinary[Cloudinary]
-    Service --> Mail[Jakarta Mail SMTP]
-    Service --> OAuth[Google/Facebook OAuth]
+    Service --> Mail[SMTP Mail]
+    Controller --> OAuth[Google/Facebook OAuth]
 ```
 
-## 5. Cấu trúc thư mục
+Mô hình production:
+
+```mermaid
+flowchart TD
+    User[User Browser] --> Cloudflare[Cloudflare DNS + Tunnel]
+    Cloudflare --> Cloudflared[cloudflared on Ubuntu]
+    Cloudflared --> Tomcat[Docker app: Tomcat 10.1]
+    Tomcat --> MySQL[Docker mysql: MySQL 8.4]
+    Tomcat --> External[VNPay / GHN / Cloudinary / OAuth / SMTP]
+```
+
+Cloudflare Tunnel trỏ về:
+
+```text
+http://localhost:8080
+```
+
+## Cấu Trúc Thư Mục
 
 ```text
 .
@@ -118,299 +188,442 @@ flowchart TD
 │       │   └── util/
 │       ├── resources/
 │       │   ├── db.properties
-│       │   ├── local.properties.example
 │       │   ├── google-oauth.properties
+│       │   ├── local.properties.example
 │       │   └── vnpay.properties
 │       └── webapp/
 │           ├── WEB-INF/
 │           │   ├── admin/
 │           │   ├── auth/
 │           │   ├── include/
+│           │   ├── tlds/
 │           │   └── views/
 │           ├── css/
-│           ├── js/
-│           └── img/
+│           ├── img/
+│           └── js/
+├── .dockerignore
+├── .env.example
 ├── Dockerfile
 ├── docker-compose.yml
 ├── build.gradle
+├── gradlew
+├── gradlew.bat
 ├── pom.xml
 └── README.md
 ```
 
-## 6. Các chức năng chính
+## Cấu Hình Môi Trường
 
-### 6.1. Người dùng
+Không commit file `.env` hoặc `src/main/resources/local.properties`.
 
-- Đăng ký, đăng nhập, đăng xuất.
-- Xác thực OTP qua email.
-- Đăng nhập bằng Google và Facebook.
-- Cập nhật thông tin cá nhân, avatar, email và mật khẩu.
-- Quản lý địa chỉ giao hàng.
-- Xem danh sách sản phẩm, tìm kiếm, lọc và xem chi tiết sản phẩm.
-- Quản lý giỏ hàng và wishlist.
-- Checkout bằng COD hoặc VNPay.
-- Xem lịch sử đơn hàng và chi tiết đơn hàng.
-- Thanh toán lại đơn VNPay còn hạn.
-- Hủy đơn hàng theo điều kiện hợp lệ.
-- Mua lại đơn hàng đã hủy hoặc đã hoàn thành.
-- Gửi yêu cầu trả hàng trong thời hạn hợp lệ.
-
-### 6.2. Quản trị
-
-- Quản lý sản phẩm, biến thể sản phẩm, hình ảnh, danh mục, màu sắc và kích thước.
-- Quản lý người dùng, vai trò và quyền truy cập.
-- Quản lý đơn hàng và trạng thái đơn hàng.
-- Tạo và đồng bộ vận đơn GHN.
-- Theo dõi hành trình vận chuyển mô phỏng.
-- Quản lý yêu cầu trả hàng và trạng thái hoàn tiền.
-- Quản lý tồn kho, nhập kho, xuất kho và hoàn kho.
-- Quản lý banner, blog và liên hệ khách hàng.
-- Dashboard thống kê doanh thu, đơn hàng và lợi nhuận.
-
-### 6.3. Thanh toán và vận chuyển
-
-- Tạo payment URL cho VNPay sandbox.
-- Xử lý VNPay callback tại endpoint `/vnpay-return`.
-- Kiểm tra trạng thái đơn VNPay đang chờ thanh toán.
-- Hoàn kho khi đơn VNPay hết hạn hoặc bị hủy.
-- Tạo vận đơn GHN từ trang quản trị.
-- Đồng bộ trạng thái giao hàng từ GHN.
-- Hủy vận đơn GHN khi đơn hàng bị hủy.
-
-## 7. Luồng nghiệp vụ tiêu biểu
-
-### 7.1. Luồng checkout
-
-```mermaid
-sequenceDiagram
-    actor User
-    participant Cart as Cart/Checkout Page
-    participant Controller as PlaceOrderController
-    participant Service as OrderPlacementService
-    participant DAO as DAO Layer
-    participant DB as MySQL
-    participant VNPay as VNPay
-
-    User->>Cart: Chọn sản phẩm và địa chỉ giao hàng
-    Cart->>Controller: Submit checkout
-    Controller->>Service: Validate và tạo đơn hàng
-    Service->>DAO: Kiểm tra tồn kho
-    DAO->>DB: Query product_variants
-    Service->>DAO: Tạo order, order_items, trừ tồn kho
-    DAO->>DB: Commit transaction
-    alt VNPay
-        Service->>VNPay: Tạo payment URL
-        VNPay-->>User: Redirect sang cổng thanh toán
-    else COD
-        Controller-->>User: Hiển thị checkout success
-    end
-```
-
-### 7.2. Luồng trả hàng/hoàn tiền
-
-```mermaid
-flowchart LR
-    A[User gửi yêu cầu trả hàng] --> B[OrderReturnController]
-    B --> C[OrderReturnDao]
-    C --> D[(order_returns)]
-    D --> E[Admin xem yêu cầu]
-    E --> F{Duyệt yêu cầu?}
-    F -- Không --> G[Cập nhật trạng thái từ chối]
-    F -- Có --> H[Cập nhật trạng thái xử lý]
-    H --> I[Nhận lại sản phẩm]
-    I --> J[Cập nhật tồn kho]
-    J --> K[Cập nhật refund status]
-```
-
-## 8. Database
-
-Database chính được định nghĩa tại `database/aurastudio.sql`. Một số nhóm bảng quan trọng:
-
-- User/Auth: `users`, `roles`, `role_permissions`
-- Product catalog: `products`, `product_variants`, `product_images`, `categories`, `colors`, `sizes`, `tags`
-- Cart/Order: `carts`, `cart_items`, `orders`, `order_items`
-- Payment/Shipping: `payment_transactions`, `order_tracking`, `order_tracking_logs`
-- Return/Refund: `order_returns`
-- Inventory: `inventory_receipts`, `inventory_receipt_details`
-- Content: `blogs`, `banners`, `contacts`, `reviews`, `wishlists`
-
-## 9. Cài đặt và chạy dự án
-
-### 9.1. Yêu cầu môi trường
-
-- JDK 17
-- Docker và Docker Compose
-- MySQL 8.4 nếu chạy thủ công không qua Docker
-- Apache Tomcat 10.1 nếu deploy WAR thủ công
-- Gradle Wrapper hoặc Maven Wrapper có sẵn trong repository
-
-### 9.2. Chạy bằng Docker Compose
-
-1. Tạo file `.env` từ `.env.example`.
+Production dùng `.env` ở root project trên Ubuntu. Có thể tạo từ `.env.example`:
 
 ```bash
 cp .env.example .env
 ```
 
-2. Cập nhật tối thiểu biến sau trong `.env`.
+Các biến chính:
+
+| Biến | Bắt buộc | Mục đích |
+| --- | --- | --- |
+| `MYSQL_ROOT_PASSWORD` | Có | Mật khẩu root MySQL container |
+| `DB_OPTION` | Nên có | Ép JDBC session dùng timezone Việt Nam và UTF-8 |
+| `CLOUDINARY_CLOUD_NAME` | Khi upload | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Khi upload | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Khi upload | Cloudinary API secret |
+| `GOOGLE_CLIENT_ID` | Khi dùng Google Login | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Khi dùng Google Login | Google OAuth client secret |
+| `VNPAY_TMN_CODE` | Khi dùng VNPay | VNPay terminal code |
+| `VNPAY_HASH_SECRET` | Khi dùng VNPay | VNPay hash secret |
+| `VNPAY_PAY_URL` | Khi dùng VNPay | VNPay payment endpoint |
+| `VNPAY_RETURN_URL` | Khi dùng VNPay | URL callback VNPay |
+| `FACEBOOK_APP_ID` | Khi dùng Facebook Login | Facebook app ID |
+| `FACEBOOK_APP_SECRET` | Khi dùng Facebook Login | Facebook app secret |
+| `FACEBOOK_REDIRECT_URL` | Khi dùng Facebook Login | Facebook OAuth redirect URL |
+| `FACEBOOK_API_VERSION` | Không | Facebook API version |
+| `GHN_TOKEN` | Khi dùng GHN thật | GHN token |
+| `GHN_BASE_URL` | Không | GHN API base URL |
+| `GHN_SHOP_ID` | Khi dùng GHN thật | GHN shop ID |
+
+Production domain nên cấu hình:
 
 ```env
-MYSQL_ROOT_PASSWORD=your_password
+VNPAY_RETURN_URL=https://shop.nguyenhandeptrai.id.vn/vnpay-return
+FACEBOOK_REDIRECT_URL=https://shop.nguyenhandeptrai.id.vn/auth/facebook
 ```
 
-3. Khởi động hệ thống.
+Timezone production:
 
-```bash
-docker compose up --build
+```env
+DB_OPTION=?connectionTimeZone=Asia/Ho_Chi_Minh&forceConnectionTimeZoneToSession=true&useUnicode=true&characterEncoding=UTF-8
 ```
 
-4. Truy cập ứng dụng.
+Docker Compose cũng ép timezone cho MySQL và Tomcat:
 
 ```text
-http://localhost:8080
+TZ=Asia/Ho_Chi_Minh
+--default-time-zone=+07:00
+-Duser.timezone=Asia/Ho_Chi_Minh
 ```
 
-Docker Compose sẽ tự khởi tạo MySQL, import `database/aurastudio.sql`, build WAR và chạy ứng dụng trên Tomcat.
+## Chạy Local Bằng IntelliJ/Tomcat
 
-### 9.3. Chạy local bằng IDE
+Yêu cầu:
 
-1. Tạo database MySQL tên `aurastudio`.
-2. Import file `database/aurastudio.sql`.
-3. Copy file cấu hình local.
+- JDK 17.
+- Tomcat 10.1.
+- MySQL local.
+- Gradle Wrapper.
+
+Tạo database:
+
+```sql
+CREATE DATABASE aurastudio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Import dữ liệu:
+
+```bash
+mysql -u root -p aurastudio < database/aurastudio.sql
+```
+
+Tạo cấu hình local:
 
 ```bash
 cp src/main/resources/local.properties.example src/main/resources/local.properties
 ```
 
-4. Cập nhật thông tin database và các integration key nếu cần.
+Ví dụ `src/main/resources/local.properties`:
 
 ```properties
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=aurastudio
 DB_USER=root
-DB_PASS=your_password
+DB_PASS=your_mysql_password
+DB_OPTION=?connectionTimeZone=Asia/Ho_Chi_Minh&forceConnectionTimeZoneToSession=true&useUnicode=true&characterEncoding=UTF-8
 ```
 
-5. Build project.
+Build WAR:
 
 ```bash
 ./gradlew clean war
 ```
 
-Hoặc trên Windows:
+Windows:
 
 ```powershell
 .\gradlew.bat clean war
 ```
 
-6. Deploy file WAR trong `build/libs/ROOT.war` lên Tomcat 10.1.
+File build ra:
 
-## 10. Cấu hình môi trường
+```text
+build/libs/ROOT.war
+```
 
-Các biến môi trường quan trọng:
+Trong IntelliJ, cấu hình Tomcat artifact với application context:
 
-| Biến | Mô tả |
-| --- | --- |
-| `MYSQL_ROOT_PASSWORD` | Mật khẩu root cho MySQL container |
-| `DB_HOST` | Host database |
-| `DB_PORT` | Port database |
-| `DB_NAME` | Tên database |
-| `DB_USER` | Database user |
-| `DB_PASS` | Database password |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
-| `CLOUDINARY_API_KEY` | Cloudinary API key |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
-| `VNPAY_TMN_CODE` | VNPay terminal code |
-| `VNPAY_HASH_SECRET` | VNPay hash secret |
-| `VNPAY_PAY_URL` | VNPay payment endpoint |
-| `VNPAY_RETURN_URL` | VNPay callback URL |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
-| `FACEBOOK_APP_ID` | Facebook app ID |
-| `FACEBOOK_APP_SECRET` | Facebook app secret |
-| `FACEBOOK_REDIRECT_URL` | Facebook OAuth redirect URL |
-| `GHN_TOKEN` | GHN API token |
-| `GHN_BASE_URL` | GHN API base URL |
-| `GHN_SHOP_ID` | GHN shop ID |
+```text
+/
+```
 
-## 11. Build và kiểm thử
+Truy cập local:
 
-### 11.1. Build bằng Gradle
+```text
+http://localhost:8080/home
+```
+
+## Chạy Bằng Docker Compose
+
+Tạo `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Cập nhật tối thiểu:
+
+```env
+MYSQL_ROOT_PASSWORD=your_password
+```
+
+Chạy:
+
+```bash
+docker compose up -d --build
+```
+
+Kiểm tra container:
+
+```bash
+docker compose ps
+docker compose logs -f app
+docker compose logs -f mysql
+```
+
+Truy cập:
+
+```text
+http://localhost:8080/home
+```
+
+Nếu cần import lại `database/aurastudio.sql` từ đầu, phải xóa volume MySQL cũ:
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+Lưu ý: `docker compose down -v` sẽ xóa toàn bộ dữ liệu database trong volume hiện tại.
+
+## Deploy Ubuntu + Cloudflare Tunnel
+
+### 1. SSH vào server
+
+```bash
+ssh han@192.168.100.117
+```
+
+### 2. Cài Docker và Git
+
+```bash
+sudo apt update
+sudo apt install -y docker.io docker-compose-plugin git curl
+sudo usermod -aG docker han
+exit
+```
+
+SSH lại để group Docker có hiệu lực:
+
+```bash
+ssh han@192.168.100.117
+```
+
+Kiểm tra:
+
+```bash
+docker --version
+docker compose version
+git --version
+```
+
+### 3. Clone hoặc cập nhật source
+
+Nếu server chưa có source:
+
+```bash
+cd ~
+git clone https://github.com/DucPhat0311/ThucTapWeb-2026.git app
+cd app
+```
+
+Nếu server đã có source:
+
+```bash
+cd ~/app
+git checkout main
+git pull origin main
+```
+
+### 4. Tạo `.env` trên Ubuntu
+
+```bash
+cd ~/app
+nano .env
+```
+
+Mẫu tối thiểu:
+
+```env
+MYSQL_ROOT_PASSWORD=your_mysql_password
+DB_OPTION=?connectionTimeZone=Asia/Ho_Chi_Minh&forceConnectionTimeZoneToSession=true&useUnicode=true&characterEncoding=UTF-8
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+VNPAY_TMN_CODE=your_vnpay_tmn_code
+VNPAY_HASH_SECRET=your_vnpay_hash_secret
+VNPAY_PAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+VNPAY_RETURN_URL=https://shop.nguyenhandeptrai.id.vn/vnpay-return
+
+FACEBOOK_APP_ID=your_facebook_app_id
+FACEBOOK_APP_SECRET=your_facebook_app_secret
+FACEBOOK_REDIRECT_URL=https://shop.nguyenhandeptrai.id.vn/auth/facebook
+FACEBOOK_API_VERSION=v19.0
+
+GHN_TOKEN=your_ghn_token
+GHN_BASE_URL=https://online-gateway.ghn.vn/shiip/public-api
+GHN_SHOP_ID=your_ghn_shop_id
+```
+
+Kiểm tra `.env` không bị Git tracking:
+
+```bash
+git status --short .env
+```
+
+Nếu `.env` hiện trong Git status, không commit file đó.
+
+### 5. Build và chạy production
+
+```bash
+docker compose up -d --build
+```
+
+Kiểm tra:
+
+```bash
+docker compose ps
+docker compose logs -f app
+docker compose logs -f mysql
+```
+
+Test nội bộ trên Ubuntu:
+
+```bash
+curl -I http://localhost:8080/home
+```
+
+### 6. Cấu hình Cloudflare Tunnel
+
+Trong Cloudflare Zero Trust:
+
+```text
+Networks -> Tunnels -> Create tunnel
+```
+
+Public hostname:
+
+```text
+Domain: shop.nguyenhandeptrai.id.vn
+Type: HTTP
+Service URL: http://localhost:8080
+```
+
+Sau khi lưu, test:
+
+```bash
+curl -I https://shop.nguyenhandeptrai.id.vn/home
+```
+
+### 7. Deploy lại khi có code mới
+
+```bash
+cd ~/app
+git checkout main
+git pull origin main
+docker compose up -d --build
+```
+
+Nếu chỉ sửa code Java/JSP/CSS/JS, không cần xóa volume DB.
+
+Nếu sửa `database/aurastudio.sql` và muốn server import lại dữ liệu mới:
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+## Database
+
+File dữ liệu chính:
+
+```text
+database/aurastudio.sql
+```
+
+Các nhóm bảng chính:
+
+- User/Auth: `users`, `roles`, `role_permissions`
+- Product catalog: `products`, `product_variants`, `product_images`, `categories`, `colors`, `sizes`, `tags`
+- Cart/Order: `carts`, `cart_items`, `orders`, `order_items`
+- Payment: `payment_transactions`
+- Shipping/Tracking: `order_tracking_logs`
+- Return/Refund: `order_returns`, `order_return_media`
+- Inventory: `inventory_receipts`, `inventory_receipt_details`
+- Content: `blogs`, `banners`, `contacts`, `reviews`, `notifications`, `wishlists`
+
+Lưu ý Docker MySQL:
+
+- SQL chỉ tự import khi volume MySQL được tạo lần đầu.
+- Nếu volume đã tồn tại, thay đổi trong `aurastudio.sql` sẽ không tự chạy lại.
+- Dùng `docker compose down -v` khi muốn reset DB theo file SQL mới.
+
+## Build Và Kiểm Tra
+
+Build bằng Gradle:
 
 ```bash
 ./gradlew clean war
 ```
 
-### 11.2. Build bằng Maven
+Windows:
 
-```bash
-./mvnw clean package
+```powershell
+.\gradlew.bat clean war
 ```
 
-### 11.3. Chạy test
+Chạy test:
 
 ```bash
 ./gradlew test
 ```
 
-Repository đã cấu hình JUnit 5. Nếu chưa có test case trong `src/test`, lệnh test chủ yếu dùng để xác nhận cấu hình build.
+Kiểm tra Docker Compose config:
 
-## 12. Deployment
-
-Ứng dụng được đóng gói thành `ROOT.war` để deploy tại context root của Tomcat.
-
-Dockerfile sử dụng multi-stage build:
-
-1. Stage build: dùng `eclipse-temurin:17-jdk` để build WAR bằng Gradle.
-2. Stage runtime: dùng `tomcat:10.1-jre17-temurin` để chạy ứng dụng.
-
-```mermaid
-flowchart LR
-    Source[Source Code] --> Build[eclipse-temurin:17-jdk]
-    Build --> WAR[ROOT.war]
-    WAR --> Tomcat[tomcat:10.1-jre17-temurin]
-    Tomcat --> App[Application on port 8080]
-    MySQL[(MySQL 8.4)] --> App
+```bash
+docker compose --env-file .env.example config
 ```
 
-## 13. Bảo mật và độ tin cậy
+Build Docker image:
+
+```bash
+docker compose build
+```
+
+## Ghi Chú Vận Hành
+
+- App chạy production tại context root vì WAR được build là `ROOT.war`.
+- Cloudflare Tunnel chỉ trỏ về `http://localhost:8080`; code không phụ thuộc Cloudflare.
+- Không commit `.env`, `src/main/resources/local.properties` hoặc secret thật.
+- Khi đổi domain production, cập nhật các URL callback OAuth/VNPay trong `.env` và trong dashboard của nhà cung cấp.
+- Nếu thời gian đơn hàng lệch giờ, kiểm tra timezone:
+
+```bash
+docker compose exec mysql sh -lc 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SELECT NOW(), @@global.time_zone, @@session.time_zone;"'
+```
+
+Kết quả đúng nên dùng giờ Việt Nam và timezone `+07:00`.
+
+- Nếu app không kết nối được DB, kiểm tra:
+
+```bash
+docker compose logs mysql
+docker compose logs app
+```
+
+- Nếu upload ảnh/video lỗi, kiểm tra Cloudinary trong `.env`.
+- Nếu VNPay/Facebook/Google callback lỗi, kiểm tra domain callback phải là `https://shop.nguyenhandeptrai.id.vn/...`.
+
+## Bảo Mật
 
 - Mật khẩu người dùng được hash bằng BCrypt.
-- Cấu hình nhạy cảm được tách sang environment variables hoặc `local.properties`.
-- Admin routes được bảo vệ bằng `AdminAuthFilter`.
-- Checkout sử dụng transaction để giảm rủi ro tạo đơn lỗi hoặc trừ tồn kho sai.
-- Có xử lý hoàn kho cho các trường hợp hủy đơn, thanh toán VNPay hết hạn hoặc hoàn hàng.
-- Tích hợp status constants cho order/payment/return để tránh sai lệch trạng thái.
+- Các cấu hình production nên đặt bằng environment variables.
+- Admin routes được bảo vệ qua filter.
+- Checkout và đặt hàng dùng transaction để giảm rủi ro sai tồn kho.
+- Không public secret, token, app password hoặc file `.env`.
 
-## 14. Đóng góp nổi bật
+## Hướng Phát Triển
 
-Một số nhóm đóng góp kỹ thuật quan trọng trong repository:
-
-- Khởi tạo schema database và model cho domain e-commerce.
-- Xây dựng các module user profile, address, checkout, order history và order detail.
-- Tích hợp VNPay payment lifecycle gồm tạo payment URL, callback, failed payment, retry payment và expired payment handling.
-- Tích hợp GHN shipping lifecycle gồm tạo vận đơn, theo dõi trạng thái, hủy vận đơn và demo tracking.
-- Phát triển return/refund workflow cho người dùng và admin.
-- Cải thiện tính nhất quán dữ liệu bằng transaction, stock validation và stock restoration.
-- Chuẩn hóa deploy config bằng Docker, Docker Compose và environment variables.
-
-## 15. Hạn chế và hướng phát triển
-
-- Bổ sung automated test cho service và DAO layer.
-- Tách REST API rõ hơn nếu phát triển frontend độc lập.
-- Bổ sung CI/CD pipeline trên GitHub Actions.
-- Bổ sung logging/auditing chi tiết cho nghiệp vụ thanh toán và hoàn tiền.
-- Bổ sung migration tool như Flyway hoặc Liquibase.
-- Nâng cấp phân quyền chi tiết hơn theo permission-based authorization.
-
-## 16. Tài liệu tham khảo
-
-[1] Oracle, "Java Platform, Standard Edition Documentation."  
-[2] Eclipse Foundation, "Jakarta Servlet Specification."  
-[3] Apache Tomcat, "Tomcat 10 Documentation."  
-[4] JDBI, "JDBI 3 Developer Guide."  
-[5] Docker, "Docker and Docker Compose Documentation."  
-[6] VNPay, "VNPay Payment Gateway Integration Documentation."  
-[7] GHN, "GHN Open API Documentation."
+- Bổ sung test cho Service/DAO.
+- Tách migration database bằng Flyway hoặc Liquibase.
+- Bổ sung CI/CD bằng GitHub Actions.
+- Chuẩn hóa toàn bộ secret sang environment variables.
+- Tăng logging/auditing cho thanh toán, hoàn tiền và thay đổi trạng thái đơn hàng.
+- Tối ưu quyền admin theo permission chi tiết hơn.
 
