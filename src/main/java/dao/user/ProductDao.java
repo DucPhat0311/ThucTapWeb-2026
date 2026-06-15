@@ -358,7 +358,7 @@ public class ProductDao extends BaseDao {
             sql.append(" AND CONCAT(' ', LOWER(p.name), ' ') LIKE :word").append(i);
         }
 
-        sql.append(" ORDER BY p.id DESC LIMIT :limit OFFSET :offset");
+        sql.append(" ORDER BY p.created_at DESC LIMIT :limit OFFSET :offset");
         return getJdbi().withHandle(handle -> {
             var query = handle.createQuery(sql.toString());
 
