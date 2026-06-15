@@ -44,7 +44,7 @@
                 <c:forEach var="related" items="${relatedBlogs}" varStatus="status">
                     <c:if test="${status.index < 3}">
                         <div class="related-item">
-                            <a href="${pageContext.request.contextPath}/blogs?id=${related.id}">
+                            <a href="${pageContext.request.contextPath}/blog?id=${related.id}">
                                 <div class="related-img-wrapper">
                                     <img src="${aura:resolve(pageContext.request.contextPath, '', related.img, '')}" alt="${related.title}">
                                 </div>
