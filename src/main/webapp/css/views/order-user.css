@@ -469,17 +469,22 @@
 }
 
 .btn-review {
-    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
     box-sizing: border-box;
-    padding: 8px 18px;
+    padding: 0 18px;
     background: #fff7e8;
     border: 1px solid #ecd1a6;
     color: #a67c52;
-    border-radius: 20px;
+    border-radius: 24px;
     font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     text-align: center;
+    white-space: nowrap;
 }
 
 .btn-review:hover {
