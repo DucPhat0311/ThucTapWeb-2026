@@ -142,23 +142,6 @@
                                                                             ${MyOrderController.getPaymentStatusLabel(o.paymentStatuses)}
                                                                         </p>
                                                                     </div>
-
-                                                                    <div class="review-section">
-                                                                        <c:if
-                                                                            test="${!i.reviewed && o.orderStatus == 'COMPLETED' && o.paymentStatuses == 'PAID'}">
-                                                                            <button class="btn-review"
-                                                                                onclick="openReviewModal(${i.productId}, ${i.id})">
-                                                                                Đánh giá
-                                                                            </button>
-                                                                        </c:if>
-
-                                                                        <c:if test="${i.reviewed}">
-                                                                            <button class="btn-review disabled"
-                                                                                disabled>
-                                                                                Đã đánh giá
-                                                                            </button>
-                                                                        </c:if>
-                                                                    </div>
                                                                 </div>
                                                             </c:forEach>
                                                         </c:otherwise>
@@ -186,6 +169,22 @@
                                                 </div>
                                             </div>
                                             <div class="order-actions">
+                                                <c:if test="${o.orderStatus == 'COMPLETED' && o.paymentStatuses == 'PAID'}">
+                                                    <c:forEach var="i" items="${o.items}">
+                                                        <c:if test="${!i.reviewed}">
+                                                            <button type="button" class="btn-order-action btn-review js-open-review-btn"
+                                                                    data-product-id="${i.productId}"
+                                                                    data-item-id="${i.id}">
+                                                                Đánh giá
+                                                            </button>
+                                                        </c:if>
+                                                        <c:if test="${i.reviewed}">
+                                                            <button type="button" class="btn-order-action btn-review disabled" disabled style="background-color: #ccc; cursor: not-allowed;">
+                                                                Đã đánh giá
+                                                            </button>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:if>
                                                 <c:if
                                                     test="${o.orderStatus == 'PENDING_PAYMENT' && o.paymentMethods == 'VNPAY' && o.paymentStatuses != 'PAID'}">
                                                     <form method="post" action="${pageContext.request.contextPath}/payment-failed" class="retry-payment-form">
@@ -308,6 +307,21 @@
                                     const ratingText = document.getElementById("rating-text");
                                     const fileInput = document.getElementById("reviewImages");
                                     const previewContainer = document.getElementById("image-preview-container");
+                                    const cancelModal = document.getElementById("cancelOrderModal");
+                                    const cancelForms = document.querySelectorAll(".cancel-order-form");
+                                    const cancelOrderIdInput = document.getElementById("cancelOrderId");
+                                    const reviewModalEl = document.getElementById("reviewModal");
+                                    const reviewForm = document.getElementById("reviewForm");
+
+                                    document.body.addEventListener("click", function(e) {
+                                        if (e.target && e.target.classList.contains("js-open-review-btn")) {
+                                            e.preventDefault();
+                                            const productId = e.target.getAttribute("data-product-id");
+                                            const orderItemId = e.target.getAttribute("data-item-id");
+
+                                            window.openReviewModal(productId, orderItemId);
+                                        }
+                                    });
                                     const renderStars = (rating) => {
                                         stars.forEach(star => {
                                             star.classList.toggle("selected", star.dataset.value <= rating);
@@ -331,7 +345,6 @@
                                         fileInput.addEventListener("change", function () {
                                             const files = this.files;
                                             if (files.length === 0) return;
-
                                             Array.from(files).forEach((file) => {
                                                 if (!file.type.startsWith("image/")) {
                                                     alert("Vui lòng chỉ chọn các tệp tin hình ảnh!");
@@ -343,24 +356,18 @@
                                                 }
                                                 selectedFiles.push(file);
                                             });
-
                                             renderPreviews();
-
                                             this.value = "";
                                         });
                                     }
-
                                     function renderPreviews() {
                                         if (!previewContainer) return;
                                         previewContainer.innerHTML = "";
-
                                         previewContainer.style.cssText = "display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; margin-top: 12px !important; width: 100% !important; clear: both !important;";
-
                                         selectedFiles.forEach((file, index) => {
                                             const fileRow = document.createElement("div");
                                             fileRow.className = "single-image-preview-item";
                                             fileRow.style.cssText = "position: relative !important; width: 75px !important; height: 75px !important; border: 1px solid #ddd !important; border-radius: 6px !important; background: #fafafa !important; display: block !important; overflow: visible !important;";
-
                                             const imgEl = document.createElement("img");
                                             imgEl.style.cssText = "width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 5px !important; display: block !important;";
                                             const removeBtn = document.createElement("span");
@@ -368,81 +375,58 @@
                                             removeBtn.setAttribute("data-index", index);
                                             removeBtn.innerHTML = "&times;";
                                             removeBtn.style.cssText = "position: absolute !important; top: -6px !important; right: -6px !important; width: 18px !important; height: 18px !important; background: #c62828 !important; color: #fff !important; border-radius: 50% !important; font-weight: bold !important; font-size: 14px !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important; z-index: 9999 !important;";
-
                                             const reader = new FileReader();
                                             reader.onload = function (e) {
                                                 imgEl.src = e.target.result;
                                             };
                                             reader.readAsDataURL(file);
-
                                             fileRow.appendChild(imgEl);
                                             fileRow.appendChild(removeBtn);
                                             previewContainer.appendChild(fileRow);
                                         });
                                     }
-                                    previewContainer.addEventListener("click", function (e) {
-                                        if (e.target.classList.contains("remove-img-btn")) {
-                                            const indexToRemove = parseInt(e.target.getAttribute("data-index"));
-                                            selectedFiles.splice(indexToRemove, 1);
-                                            renderPreviews();
-                                        }
-                                    });
 
-                                    previewContainer.addEventListener("click", function (e) {
-                                        if (e.target.classList.contains("remove-img-btn")) {
-                                            const indexToRemove = parseInt(e.target.getAttribute("data-index"));
-                                            const imgEl = e.target.parentElement.querySelector("img");
-                                            if (imgEl && imgEl.src.startsWith("blob:")) {
-                                                const originalBlob = imgEl.src.split("#")[0];
-                                                URL.revokeObjectURL(originalBlob);
+                                    if (previewContainer) {
+                                        previewContainer.addEventListener("click", function (e) {
+                                            if (e.target.classList.contains("remove-img-btn")) {
+                                                const indexToRemove = parseInt(e.target.getAttribute("data-index"));
+                                                selectedFiles.splice(indexToRemove, 1);
+                                                renderPreviews();
                                             }
-                                            selectedFiles.splice(indexToRemove, 1);
-                                            renderPreviews();
-                                        }
-                                    });
+                                        });}
 
-                                    const reviewForm = document.getElementById("reviewForm");
                                     if (reviewForm) {
                                         reviewForm.addEventListener("submit", async (e) => {
                                             e.preventDefault();
-
                                             const rating = ratingInput ? ratingInput.value : "0";
                                             if (!rating || rating === "0") {
                                                 alert("Vui lòng chọn số sao để đánh giá!");
                                                 return;
                                             }
-
                                             const submitBtn = reviewForm.querySelector(".btn-submit-review");
                                             if (submitBtn.disabled) return;
-
                                             const originalBtnText = submitBtn.innerText;
                                             submitBtn.disabled = true;
                                             submitBtn.innerText = "Đang gửi...";
-
                                             try {
                                                 const formData = new FormData();
                                                 formData.append("product_id", document.getElementById("popup_product_id").value);
                                                 formData.append("order_item_id", document.getElementById("popup_order_item_id").value);
                                                 formData.append("rating", rating);
                                                 formData.append("comment", document.getElementById("review-comment").value);
-
                                                 selectedFiles.forEach((file) => {
                                                     formData.append("reviewImages", file);
                                                 });
-
                                                 const response = await fetch("review", {
                                                     method: "POST",
                                                     body: formData
                                                 });
-
                                                 if (!response.ok) {
                                                     throw new Error("Lỗi Server: " + response.status);
                                                 }
-
                                                 alert("Cảm ơn bạn đã đánh giá sản phẩm!");
-                                                closeReviewModal();
+                                                window.closeReviewModal();
                                                 window.location.reload();
-
                                             } catch (error) {
                                                 console.error("Chi tiết lỗi: ", error);
                                                 alert("Không thể gửi đánh giá. Vui lòng kiểm tra lại!");
@@ -450,10 +434,6 @@
                                                 submitBtn.innerText = originalBtnText;
                                             }
                                         });}
-                                    const cancelModal = document.getElementById("cancelOrderModal");
-                                    const cancelForms = document.querySelectorAll(".cancel-order-form");
-                                    const cancelOrderIdInput = document.getElementById("cancelOrderId");
-
                                     cancelForms.forEach(form => {
                                         form.addEventListener("submit", (e) => {
                                             e.preventDefault();
@@ -461,13 +441,13 @@
                                             cancelModal.style.display = "flex";
                                         });
                                     });
-                                    const reviewModalEl = document.getElementById("reviewModal");
+
                                     window.addEventListener("click", (e) => {
                                         if (e.target === reviewModalEl) {
-                                            closeReviewModal();
+                                            window.closeReviewModal();
                                         }
                                         if (e.target === cancelModal) {
-                                            closeCancelOrderModal();
+                                            window.closeCancelOrderModal();
                                         }
                                     });
                                 });
