@@ -190,7 +190,7 @@ public class OrderDaoAdmin extends BaseDao {
                         .bind("ghnStatus", ghnStatus)
                         .bind("ghnStatusName", ghnStatusName)
                         .bind("expectedDeliveryTime", expectedDeliveryTime)
-                        .bind("orderStatus", model.constant.OrderStatus.SHIPPING)
+                        .bind("orderStatus", model.constant.OrderStatus.PROCESSING)
                         .bind("id", id)
                         .execute()
         );
