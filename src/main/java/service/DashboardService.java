@@ -1,8 +1,10 @@
 package service;
 
 import dao.admin.DashboardDao;
+import model.ProductSaleStatDto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class DashboardService {
 
@@ -55,5 +57,14 @@ public class DashboardService {
 
     public java.util.Map<String, Double> profitByDateRange(String startDateStr, String endDateStr) {
         return dao.profitByDateRange(startDateStr, endDateStr);
+    }
+
+    public double totalImportCost() {
+        return dao.totalImportCost();
+    }
+
+    public List<ProductSaleStatDto> getTopSellingProducts(
+            Integer year, Integer month, String startDate, String endDate, int limit) {
+        return dao.getTopSellingProducts(year, month, startDate, endDate, limit);
     }
 }
