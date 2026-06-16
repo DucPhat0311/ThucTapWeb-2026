@@ -42,9 +42,6 @@ public class GhnOrderTrackingService {
             Map.entry("cancel", "Đã hủy")
     );
     private static final Set<String> SHIPPING_STATUSES = Set.of(
-            "ready_to_pick",
-            "picking",
-            "money_collect_picking",
             "picked",
             "storing",
             "transporting",
