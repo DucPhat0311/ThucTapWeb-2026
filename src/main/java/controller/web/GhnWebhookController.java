@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ApiConstant;
+import service.GhnWebhookService;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -18,10 +19,12 @@ import java.util.stream.Collectors;
 @WebServlet(name = "GhnWebhookController", value = "/api/ghn/webhook/order-status")
 public class GhnWebhookController extends HttpServlet {
     private ObjectMapper objectMapper;
+    private GhnWebhookService ghnWebhookService;
 
     @Override
     public void init() {
         objectMapper = new ObjectMapper();
+        ghnWebhookService = new GhnWebhookService();
     }
 
     @Override
@@ -74,15 +77,27 @@ public class GhnWebhookController extends HttpServlet {
             return;
         }
 
+        GhnWebhookService.SyncResult syncResult = ghnWebhookService.syncOrderStatus(
+                payload.orderCode(),
+                payload.statusCode(),
+                payload.statusName()
+        );
+
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("orderCode", payload.orderCode());
         data.put("statusCode", payload.statusCode());
-        data.put("statusName", payload.statusName());
+        data.put("statusName", syncResult.statusName().isBlank() ? payload.statusName() : syncResult.statusName());
         data.put("eventTime", payload.eventTime());
+        data.put("orderFound", syncResult.orderFound());
+        data.put("orderUpdated", syncResult.updated());
+        data.put("orderId", syncResult.orderId());
+        data.put("orderStatus", syncResult.orderStatus());
 
         writeJson(response, HttpServletResponse.SC_OK, Map.of(
                 "success", true,
-                "message", "GHN webhook payload accepted",
+                "message", syncResult.orderFound()
+                        ? "GHN webhook payload synced"
+                        : "GHN webhook payload accepted but order was not found",
                 "data", data
         ));
     }

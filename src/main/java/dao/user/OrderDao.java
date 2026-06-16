@@ -273,6 +273,90 @@ public class OrderDao extends BaseDao {
         );
     }
 
+    public Order getByGhnOrderCode(String ghnOrderCode) {
+        String normalizedCode = ghnOrderCode == null ? "" : ghnOrderCode.trim();
+        if (normalizedCode.isBlank()) {
+            return null;
+        }
+
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT
+                id,
+                user_id,
+                name,
+                phone,
+                shipping_address,
+                total_price,
+                discount,
+                shipping_fee,
+                note,
+                final_amount,
+                payment_methods,
+                payment_statuses,
+                order_status,
+                ghn_order_code,
+                ghn_status,
+                ghn_status_name,
+                ghn_expected_delivery_time,
+                ghn_last_updated_at,
+                created_at
+            FROM orders
+            WHERE ghn_order_code = :ghnOrderCode
+            LIMIT 1
+        """)
+                        .bind("ghnOrderCode", normalizedCode)
+                        .map((rs, ctx) -> {
+                            Order o = new Order();
+                            o.setId(rs.getInt("id"));
+                            o.setUserId(rs.getInt("user_id"));
+                            o.setName(rs.getString("name"));
+                            o.setPhone(rs.getString("phone"));
+                            o.setShippingAddress(rs.getString("shipping_address"));
+                            o.setNote(rs.getString("note"));
+                            o.setTotalPrice(rs.getDouble("total_price"));
+                            o.setDiscount(rs.getDouble("discount"));
+                            o.setShippingFee(rs.getDouble("shipping_fee"));
+                            o.setFinalAmount(rs.getDouble("final_amount"));
+                            o.setPaymentMethods(rs.getString("payment_methods"));
+                            o.setPaymentStatuses(rs.getString("payment_statuses"));
+                            o.setOrderStatus(rs.getString("order_status"));
+                            o.setGhnOrderCode(rs.getString("ghn_order_code"));
+                            o.setGhnStatus(rs.getString("ghn_status"));
+                            o.setGhnStatusName(rs.getString("ghn_status_name"));
+                            var expectedDeliveryTime = rs.getTimestamp("ghn_expected_delivery_time");
+                            var lastUpdatedAt = rs.getTimestamp("ghn_last_updated_at");
+                            o.setGhnExpectedDeliveryTime(expectedDeliveryTime == null ? null : expectedDeliveryTime.toLocalDateTime());
+                            o.setGhnLastUpdatedAt(lastUpdatedAt == null ? null : lastUpdatedAt.toLocalDateTime());
+                            o.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                            return o;
+                        })
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public void updateGhnWebhookStatus(int orderId,
+                                       String ghnStatus,
+                                       String ghnStatusName,
+                                       String orderStatus) {
+        getJdbi().useHandle(h ->
+                h.createUpdate("""
+            UPDATE orders
+            SET ghn_status = :ghnStatus,
+                ghn_status_name = :ghnStatusName,
+                order_status = :orderStatus,
+                ghn_last_updated_at = NOW()
+            WHERE id = :orderId
+        """)
+                        .bind("ghnStatus", ghnStatus)
+                        .bind("ghnStatusName", ghnStatusName)
+                        .bind("orderStatus", orderStatus)
+                        .bind("orderId", orderId)
+                        .execute()
+        );
+    }
+
     public List<Order> getByUserId(int userId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
