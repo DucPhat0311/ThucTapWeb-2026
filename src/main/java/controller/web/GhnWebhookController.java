@@ -80,7 +80,9 @@ public class GhnWebhookController extends HttpServlet {
         GhnWebhookService.SyncResult syncResult = ghnWebhookService.syncOrderStatus(
                 payload.orderCode(),
                 payload.statusCode(),
-                payload.statusName()
+                payload.statusName(),
+                payload.eventTime(),
+                payload.description()
         );
 
         Map<String, Object> data = new LinkedHashMap<>();
@@ -90,8 +92,10 @@ public class GhnWebhookController extends HttpServlet {
         data.put("eventTime", payload.eventTime());
         data.put("orderFound", syncResult.orderFound());
         data.put("orderUpdated", syncResult.updated());
+        data.put("trackingLogged", syncResult.trackingLogged());
         data.put("orderId", syncResult.orderId());
         data.put("orderStatus", syncResult.orderStatus());
+        data.put("paymentStatus", syncResult.paymentStatus());
 
         writeJson(response, HttpServletResponse.SC_OK, Map.of(
                 "success", true,
@@ -148,9 +152,23 @@ public class GhnWebhookController extends HttpServlet {
                         textAt(root, "updated_date"),
                         textAt(root, "UpdatedDate"),
                         textAt(root, "event_time"),
+                        textAt(root, "EventTime"),
                         textAt(data, "updated_date"),
                         textAt(data, "UpdatedDate"),
-                        textAt(data, "event_time")
+                        textAt(data, "event_time"),
+                        textAt(data, "EventTime")
+                ),
+                firstNonBlank(
+                        textAt(root, "description"),
+                        textAt(root, "Description"),
+                        textAt(root, "reason"),
+                        textAt(root, "Reason"),
+                        textAt(root, "message"),
+                        textAt(data, "description"),
+                        textAt(data, "Description"),
+                        textAt(data, "reason"),
+                        textAt(data, "Reason"),
+                        textAt(data, "message")
                 )
         );
     }
@@ -193,7 +211,8 @@ public class GhnWebhookController extends HttpServlet {
             String orderCode,
             String statusCode,
             String statusName,
-            String eventTime
+            String eventTime,
+            String description
     ) {
     }
 }

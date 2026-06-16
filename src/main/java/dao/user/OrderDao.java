@@ -339,19 +339,22 @@ public class OrderDao extends BaseDao {
     public void updateGhnWebhookStatus(int orderId,
                                        String ghnStatus,
                                        String ghnStatusName,
-                                       String orderStatus) {
+                                       String orderStatus,
+                                       String paymentStatus) {
         getJdbi().useHandle(h ->
                 h.createUpdate("""
             UPDATE orders
             SET ghn_status = :ghnStatus,
                 ghn_status_name = :ghnStatusName,
                 order_status = :orderStatus,
+                payment_statuses = :paymentStatus,
                 ghn_last_updated_at = NOW()
             WHERE id = :orderId
         """)
                         .bind("ghnStatus", ghnStatus)
                         .bind("ghnStatusName", ghnStatusName)
                         .bind("orderStatus", orderStatus)
+                        .bind("paymentStatus", paymentStatus)
                         .bind("orderId", orderId)
                         .execute()
         );
