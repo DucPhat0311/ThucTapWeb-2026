@@ -61,6 +61,29 @@ public class OrderTrackingLogDao extends BaseDao {
         insert(orderId, provider, trackingCode, statusCode, statusName, description, eventTime);
     }
 
+    public boolean insertIfNewEvent(int orderId,
+                                    String provider,
+                                    String trackingCode,
+                                    String statusCode,
+                                    String statusName,
+                                    String description,
+                                    LocalDateTime eventTime) {
+        if (eventTime == null) {
+            String latestStatusCode = findLatestStatusCode(orderId, trackingCode);
+            if (statusCode != null && statusCode.equals(latestStatusCode)) {
+                return false;
+            }
+            insert(orderId, provider, trackingCode, statusCode, statusName, description, null);
+            return true;
+        }
+
+        if (existsByEvent(orderId, provider, trackingCode, statusCode, eventTime)) {
+            return false;
+        }
+        insert(orderId, provider, trackingCode, statusCode, statusName, description, eventTime);
+        return true;
+    }
+
     public List<OrderTrackingLog> getByOrderId(int orderId) {
         return getJdbi().withHandle(h ->
                 h.createQuery("""
@@ -130,6 +153,31 @@ public class OrderTrackingLogDao extends BaseDao {
                         .mapTo(String.class)
                         .findOne()
                         .orElse(null)
+        );
+    }
+
+    private boolean existsByEvent(int orderId,
+                                  String provider,
+                                  String trackingCode,
+                                  String statusCode,
+                                  LocalDateTime eventTime) {
+        return getJdbi().withHandle(h ->
+                h.createQuery("""
+            SELECT COUNT(*)
+            FROM order_tracking_logs
+            WHERE order_id = :orderId
+              AND provider = :provider
+              AND status_code = :statusCode
+              AND event_time = :eventTime
+              AND (tracking_code = :trackingCode OR (:trackingCode IS NULL AND tracking_code IS NULL))
+        """)
+                        .bind("orderId", orderId)
+                        .bind("provider", provider)
+                        .bind("trackingCode", trackingCode)
+                        .bind("statusCode", statusCode)
+                        .bind("eventTime", eventTime)
+                        .mapTo(Integer.class)
+                        .one() > 0
         );
     }
 }

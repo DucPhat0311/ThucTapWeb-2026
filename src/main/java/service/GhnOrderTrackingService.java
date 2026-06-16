@@ -55,10 +55,8 @@ public class GhnOrderTrackingService {
             "waiting_to_return",
             "return"
     );
-    private static final Set<String> CANCELLED_STATUSES = Set.of(
-            "cancel",
-            "returned"
-    );
+    private static final Set<String> CANCELLED_STATUSES = Set.of("cancel");
+    private static final Set<String> RETURNED_STATUSES = Set.of("returned");
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -82,7 +80,7 @@ public class GhnOrderTrackingService {
         try {
             String payload = objectMapper.writeValueAsString(Map.of("order_code", normalizedOrderCode));
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(trimBaseUrl(ApiConstant.GHN_BASE_URL) + "/v2/shipping-order/detail"))
+                    .uri(URI.create(ApiConstant.ghnApiUrl("/v2/shipping-order/detail")))
                     .timeout(REQUEST_TIMEOUT)
                     .header("Content-Type", "application/json")
                     .header("Token", ApiConstant.GHN_TOKEN)
@@ -137,6 +135,9 @@ public class GhnOrderTrackingService {
         if (OrderStatus.CANCELLED.equals(normalizedOrderStatus)) {
             return OrderStatus.CANCELLED;
         }
+        if (OrderStatus.RETURNED.equals(normalizedOrderStatus)) {
+            return OrderStatus.RETURNED;
+        }
         if (OrderStatus.COMPLETED.equals(normalizedOrderStatus)) {
             return OrderStatus.COMPLETED;
         }
@@ -145,6 +146,9 @@ public class GhnOrderTrackingService {
         }
         if (CANCELLED_STATUSES.contains(normalizedGhnStatusCode)) {
             return OrderStatus.CANCELLED;
+        }
+        if (RETURNED_STATUSES.contains(normalizedGhnStatusCode)) {
+            return OrderStatus.RETURNED;
         }
         if (SHIPPING_STATUSES.contains(normalizedGhnStatusCode)) {
             return OrderStatus.SHIPPING;
@@ -176,14 +180,6 @@ public class GhnOrderTrackingService {
                 return null;
             }
         }
-    }
-
-    private String trimBaseUrl(String baseUrl) {
-        String normalizedBaseUrl = trimToEmpty(baseUrl);
-        while (normalizedBaseUrl.endsWith("/")) {
-            normalizedBaseUrl = normalizedBaseUrl.substring(0, normalizedBaseUrl.length() - 1);
-        }
-        return normalizedBaseUrl;
     }
 
     private static String trimToEmpty(String value) {

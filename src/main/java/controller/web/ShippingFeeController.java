@@ -20,7 +20,7 @@ public class ShippingFeeController extends HttpServlet {
 
         String payloadJson = request.getReader().lines().collect(java.util.stream.Collectors.joining(System.lineSeparator()));
 
-        String apiUrl = "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+        String apiUrl = ApiConstant.ghnApiUrl("/v2/shipping-order/fee");
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest ghnRequest = HttpRequest.newBuilder()
