@@ -26,7 +26,7 @@ public class ShippingServicesController extends HttpServlet {
         String payloadJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
 
-        String apiUrl = "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services";
+        String apiUrl = ApiConstant.ghnApiUrl("/v2/shipping-order/available-services");
         HttpClient client = HttpClient.newHttpClient();
 
 

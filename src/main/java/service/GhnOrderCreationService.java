@@ -50,7 +50,7 @@ public class GhnOrderCreationService {
             String payloadJson = objectMapper.writeValueAsString(payload);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(trimBaseUrl(ApiConstant.GHN_BASE_URL) + "/v2/shipping-order/create"))
+                    .uri(URI.create(ApiConstant.ghnApiUrl("/v2/shipping-order/create")))
                     .timeout(REQUEST_TIMEOUT)
                     .header("Content-Type", "application/json")
                     .header("Token", ApiConstant.GHN_TOKEN)
@@ -195,14 +195,6 @@ public class GhnOrderCreationService {
                 return null;
             }
         }
-    }
-
-    private String trimBaseUrl(String baseUrl) {
-        String normalizedBaseUrl = trimToEmpty(baseUrl);
-        while (normalizedBaseUrl.endsWith("/")) {
-            normalizedBaseUrl = normalizedBaseUrl.substring(0, normalizedBaseUrl.length() - 1);
-        }
-        return normalizedBaseUrl;
     }
 
     private static String trimToEmpty(String value) {

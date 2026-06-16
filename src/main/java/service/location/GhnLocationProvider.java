@@ -18,7 +18,6 @@ import java.util.List;
 
 public class GhnLocationProvider implements LocationProvider {
     private static final String PROVIDER_KEY = "ghn";
-    private static final String BASE_URL = "https://online-gateway.ghn.vn/shiip/public-api/master-data";
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
     private static final ProxySelector NO_PROXY_SELECTOR = new ProxySelector() {
         @Override
@@ -72,7 +71,7 @@ public class GhnLocationProvider implements LocationProvider {
         }
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + path))
+                .uri(URI.create(ApiConstant.ghnApiUrl("/master-data" + path)))
                 .timeout(REQUEST_TIMEOUT)
                 .header("Token", token)
                 .header("Accept", "application/json")
