@@ -58,8 +58,11 @@ public class DashboardAdminController extends HttpServlet {
         List<ProductSaleStatDto> topSelling = service.getTopSellingProducts(
                 statYear, hotMonth, hotStartDate, hotEndDate, 20);
 
+        List<ProductSaleStatDto> unsold = service.getUnsoldProducts(
+                statYear, coldMonth, coldStartDate, coldEndDate);
 
         request.setAttribute("topSellingProducts", topSelling);
+        request.setAttribute("unsoldProducts", unsold);
 
         request.setAttribute("hotMonth", hotMonthParam);
         request.setAttribute("hotStartDate", hotStartDate);

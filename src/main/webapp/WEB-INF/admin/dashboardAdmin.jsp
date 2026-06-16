@@ -183,6 +183,79 @@
                                 </table>
                             </div>
                         </div>
+
+                            <%-- bảng sp ko baán đc --%>
+                            <div class="stat-table-card stat-table-card--cold">
+                                <div class="stat-table-header">
+                                    <h3><i class="fa-solid fa-box-open"></i> Thống kê sản phẩm không bán được</h3>
+                                </div>
+                                <div class="stat-search-bar">
+                                    <input type="text" id="coldSearchInput"
+
+                                           placeholder="Tìm kiếm sản phẩm...">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </div>
+                                <div class="stat-table-wrapper">
+                                    <table class="stat-table" id="coldTable">
+                                        <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã sản phẩm</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Danh mục</th>
+                                            <th>Giá</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Đã bán</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <c:choose>
+                                            <c:when
+                                                    test="${not empty unsoldProducts}">
+                                                <c:forEach var="p"
+                                                           items="${unsoldProducts}"
+                                                           varStatus="st">
+                                                    <tr>
+                                                        <td>${st.index + 1}
+                                                        </td>
+                                                        <td><span
+                                                                class="product-code-badge">${p.productCode}</span>
+                                                        </td>
+                                                        <td
+                                                                class="product-name-cell">
+                                                                ${p.productName}
+                                                        </td>
+                                                        <td>${p.categoryName}
+                                                        </td>
+                                                        <td>
+                                                            <fmt:formatNumber
+                                                                    value="${p.price}"
+                                                                    maxFractionDigits="0" />
+                                                        </td>
+                                                        <td>${p.createdAt}
+                                                        </td>
+                                                        <td><span
+                                                                class="sold-badge sold-badge--zero">0</span>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <tr>
+                                                    <td colspan="7"
+                                                        class="stat-empty">
+                                                        Không có dữ liệu
+                                                    </td>
+                                                </tr>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                    </div>
+
+                    </div>
             </section>
         </main>
     </section>

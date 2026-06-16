@@ -67,4 +67,9 @@ public class DashboardService {
             Integer year, Integer month, String startDate, String endDate, int limit) {
         return dao.getTopSellingProducts(year, month, startDate, endDate, limit);
     }
+
+    public List<ProductSaleStatDto> getUnsoldProducts(
+            Integer year, Integer month, String startDate, String endDate) {
+        return dao.getUnsoldProducts(year, month, startDate, endDate);
+    }
 }

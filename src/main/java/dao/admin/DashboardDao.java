@@ -387,6 +387,74 @@ public class DashboardDao extends BaseDao {
         });
     }
 
+    public List<ProductSaleStatDto> getUnsoldProducts(
+            Integer year, Integer month, String startDate, String endDate) {
+        String soldSubquery;
+        if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+            soldSubquery = """
+                    SELECT DISTINCT pv2.product_id
+                    FROM order_items oi2
+                    JOIN orders o2 ON oi2.order_id = o2.id
+                    JOIN product_variants pv2 ON oi2.variant_id = pv2.id
+                    WHERE o2.order_status = 'COMPLETED'
+                      AND DATE(o2.created_at) >= :startDate
+                      AND DATE(o2.created_at) <= :endDate
+                    """;
+        } else if (month != null && month > 0 && year != null && year > 0) {
+            soldSubquery = """
+                    SELECT DISTINCT pv2.product_id
+                    FROM order_items oi2
+                    JOIN orders o2 ON oi2.order_id = o2.id
+                    JOIN product_variants pv2 ON oi2.variant_id = pv2.id
+                    WHERE o2.order_status = 'COMPLETED'
+                      AND YEAR(o2.created_at) = :year
+                      AND MONTH(o2.created_at) = :month
+                    """;
+        } else {
+            soldSubquery = """
+                    SELECT DISTINCT pv2.product_id
+                    FROM order_items oi2
+                    JOIN orders o2 ON oi2.order_id = o2.id
+                    JOIN product_variants pv2 ON oi2.variant_id = pv2.id
+                    WHERE o2.order_status = 'COMPLETED'
+                    """;
+        }
+
+        String sql = """
+                SELECT p.id AS productId,
+                       CONCAT('SP', p.id) AS productCode,
+                       p.name AS productName,
+                       c.name AS categoryName,
+                       p.price AS price,
+                       DATE_FORMAT(p.created_at, '%d-%m-%Y') AS createdAt,
+                       0 AS totalSold
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                WHERE p.status <> 'Đã xoá'
+                  AND p.id NOT IN (""" + soldSubquery + """
+                )
+                """;
+
+        if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+            sql += "  AND DATE(p.created_at) <= :endDate \n";
+        } else if (month != null && month > 0 && year != null && year > 0) {
+            sql += "  AND p.created_at < DATE_ADD(STR_TO_DATE(CONCAT(:year, '-', :month, '-01'), '%Y-%m-%d'), INTERVAL 1 MONTH) \n";
+        }
+
+        sql += " ORDER BY p.created_at DESC ";
+
+        final String finalSql = sql;
+        return getJdbi().withHandle(h -> {
+            var q = h.createQuery(finalSql);
+            if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+                q.bind("startDate", startDate).bind("endDate", endDate);
+            } else if (month != null && month > 0 && year != null && year > 0) {
+                q.bind("year", year).bind("month", month);
+            }
+            return q.mapToBean(model.ProductSaleStatDto.class).list();
+        });
+    }
+
     public Map<String, Double> revenueByDateRange(String startDateStr, String endDateStr) {
        LocalDate start = LocalDate.parse(startDateStr);
         LocalDate end = LocalDate.parse(endDateStr);
