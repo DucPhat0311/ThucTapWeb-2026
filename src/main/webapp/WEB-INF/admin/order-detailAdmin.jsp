@@ -62,12 +62,6 @@
                             <p>Tạo vận đơn GHN thành công.</p>
                         </div>
                     </c:if>
-                    <c:if test="${param.error == 'ghn_disabled'}">
-                        <div class="card" style="border-left: 4px solid #dc3545;">
-                            <p>Chế độ kiểm thử chỉ tạo hành trình mô phỏng, không tạo vận đơn thật trên GHN.</p>
-                        </div>
-                    </c:if>
-
                     <c:if test="${param.error == 'demo_not_allowed'}">
                         <div class="card" style="border-left: 4px solid #dc3545;">
                             <p>Đơn hàng này không thể tạo hành trình mô phỏng hoặc đã có mã theo dõi.</p>
@@ -173,9 +167,15 @@
                             </c:when>
                             <c:otherwise>
                                 <p>Đơn hàng chưa có hành trình theo dõi.</p>
-                                <p>Chế độ mô phỏng phục vụ kiểm thử, không gửi yêu cầu tạo vận đơn đến GHN.</p>
                                 <c:choose>
                                     <c:when test="${order.orderStatus == 'PROCESSING'}">
+                                        <p>Tạo vận đơn GHN thật để gửi dữ liệu sang 5sao.ghn.dev và lưu mã vận đơn vào hệ thống.</p>
+                                        <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
+                                            <input type="hidden" name="action" value="createGhnOrder">
+                                            <input type="hidden" name="id" value="${order.id}">
+                                            <button class="btn-primary">Tạo vận đơn GHN</button>
+                                        </form>
+                                        <p style="margin-top: 16px; color: #8a6238;">Hoặc tạo hành trình mô phỏng nếu chỉ cần kiểm thử nội bộ.</p>
                                         <form method="post" action="${pageContext.request.contextPath}/orderAdmin" class="status-form">
                                             <input type="hidden" name="action" value="createDemoTracking">
                                             <input type="hidden" name="id" value="${order.id}">

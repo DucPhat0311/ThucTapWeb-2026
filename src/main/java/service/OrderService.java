@@ -189,7 +189,7 @@ public class OrderService {
     public GhnOrderCreationService.CreateOrderResult createGhnShippingOrder(int orderId) {
         Order order = dao.findById(orderId);
         List<OrderItem> items = dao.getItems(orderId);
-        Address address = order == null ? null : addressService.getPrimaryByUser(order.getUserId());
+        Address address = resolveShippingAddress(order);
         var result = ghnOrderCreationService.createOrder(order, items, address);
         String statusCode = "ready_to_pick";
         String statusName = ghnOrderTrackingService.resolveStatusName(statusCode);
@@ -209,6 +209,21 @@ public class OrderService {
                 "Tạo vận đơn GHN thành công.",
                 java.time.LocalDateTime.now());
         return result;
+    }
+
+    private Address resolveShippingAddress(Order order) {
+        if (order == null) {
+            return null;
+        }
+
+        String orderAddress = normalizeAddress(order.getShippingAddress());
+        for (Address address : addressService.getByUser(order.getUserId())) {
+            if (normalizeAddress(formatAddress(address)).equals(orderAddress)) {
+                return address;
+            }
+        }
+
+        return addressService.getPrimaryByUser(order.getUserId());
     }
 
     public String createDemoTracking(int orderId) {
@@ -358,6 +373,24 @@ public class OrderService {
 
     private String trimToEmpty(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private String normalizeAddress(String value) {
+        return trimToEmpty(value)
+                .replaceAll("\\s*,\\s*", ", ")
+                .replaceAll("\\s+", " ")
+                .toLowerCase();
+    }
+
+    private String formatAddress(Address address) {
+        if (address == null) {
+            return "";
+        }
+        return String.join(", ",
+                trimToEmpty(address.getDetailAddress()),
+                trimToEmpty(address.getWard()),
+                trimToEmpty(address.getDistrict()),
+                trimToEmpty(address.getCity()));
     }
 
     private void restoreStockIfNeeded(Order order) {

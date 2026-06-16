@@ -157,8 +157,7 @@ public class OrderAdminController extends HttpServlet {
         }
 
         if ("createGhnOrder".equals(action)) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=ghn_disabled");
+            createGhnOrder(req, resp);
             return;
         }
 
@@ -272,6 +271,35 @@ public class OrderAdminController extends HttpServlet {
         } catch (RuntimeException e) {
             String message = e.getMessage() == null ? "Không thể tạo hành trình mô phỏng." : e.getMessage();
             redirectWithMessage(resp, id, "demo_create_failed", message);
+        }
+    }
+
+    private void createGhnOrder(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        var order = orderService.findById(id);
+        if (order == null) {
+            resp.sendRedirect("orderAdmin");
+            return;
+        }
+
+        boolean unpaidOnlineOrder = PaymentMethod.VNPAY.equals(order.getPaymentMethods())
+                && !PaymentStatus.PAID.equals(order.getPaymentStatuses());
+        if (unpaidOnlineOrder) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=unpaid_online_order");
+            return;
+        }
+
+        if (!orderService.canCreateGhnShippingOrder(order)) {
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&error=ghn_not_allowed");
+            return;
+        }
+
+        try {
+            orderService.createGhnShippingOrder(id);
+            resp.sendRedirect("orderAdmin?mode=view&id=" + id + "&success=ghn_created");
+        } catch (RuntimeException e) {
+            String message = e.getMessage() == null ? "Không thể tạo vận đơn GHN." : e.getMessage();
+            redirectWithMessage(resp, id, "ghn_create_failed", message);
         }
     }
 
