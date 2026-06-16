@@ -197,4 +197,318 @@
     color: #fff;
     border-color: #16a34a;
     box-shadow: 0 3px 10px rgba(22,163,74,0.25);
-}
+}
+
+.stat-tables-section {
+    margin-top: 32px;
+}
+
+.stat-filter-bar {
+    background: #FFFDF9;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(163, 121, 82, 0.06);
+    padding: 20px 24px;
+    border: 1px solid #EAE3DC;
+    margin-bottom: 24px;
+}
+
+.stat-filter-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #8F6641;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-filter-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.stat-tables-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+.stat-table-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #EAE3DC;
+    overflow: hidden;
+}
+
+.stat-table-header {
+    padding: 16px 20px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.stat-table-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inline-filter-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.inline-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+}
+
+.inline-filter-group select,
+.inline-filter-group input {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #e0d8d0;
+    font-size: 12px;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.inline-filter-group select:focus,
+.inline-filter-group input:focus {
+    border-color: #A37952;
+}
+
+.btn-inline-filter {
+    padding: 6px 12px;
+    background: #A37952;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-inline-filter:hover {
+    background: #8F6641;
+}
+
+.btn-inline-reset {
+    padding: 6px 12px;
+    background: #f0ece6;
+    color: #555;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-inline-reset:hover {
+    background: #e0d8d0;
+    color: #333;
+}
+
+.stat-table-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-table-card--hot .stat-table-header {
+    background: linear-gradient(135deg, #fff8f2 0%, #fff3e8 100%);
+    border-bottom: 2px solid #f5dfc0;
+}
+
+.stat-table-card--hot .stat-table-header h3 {
+    color: #b85c00;
+}
+
+.stat-table-card--hot .stat-table-header h3 i {
+    color: #e06f00;
+}
+
+.stat-table-card--cold .stat-table-header {
+    background: linear-gradient(135deg, #f0f5ff 0%, #e8f0fe 100%);
+    border-bottom: 2px solid #c3d4f7;
+}
+
+.stat-table-card--cold .stat-table-header h3 {
+    color: #1a4abf;
+}
+
+.stat-table-card--cold .stat-table-header h3 i {
+    color: #3b63d4;
+}
+
+.stat-search-bar {
+    position: relative;
+    padding: 10px 20px 8px;
+    background: #fafafa;
+    border-bottom: 1px solid #f0ece6;
+}
+
+.stat-search-bar input {
+    width: 100%;
+    height: 36px;
+    padding: 0 36px 0 12px;
+    border-radius: 8px;
+    border: 1px solid #e0d8d0;
+    font-size: 13px;
+    background: #fff;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.stat-search-bar input:focus {
+    border-color: #A37952;
+    box-shadow: 0 0 0 3px rgba(163, 121, 82, 0.12);
+}
+
+.stat-search-bar i {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b0a090;
+    font-size: 13px;
+}
+
+.stat-table-wrapper {
+    max-height: 420px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.stat-table-wrapper::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.stat-table-wrapper::-webkit-scrollbar-thumb {
+    background: #d4c5b2;
+    border-radius: 10px;
+}
+
+.stat-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.stat-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.stat-table thead th {
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.stat-table-card--hot .stat-table thead {
+    background: #fde8cc;
+    color: #8a4a00;
+}
+
+.stat-table-card--cold .stat-table thead {
+    background: #dce8fb;
+    color: #1a3a9c;
+}
+
+.stat-table tbody tr {
+    border-bottom: 1px solid #f5f0eb;
+    transition: background 0.15s;
+}
+
+.stat-table tbody tr:hover {
+    background: #fdf9f5;
+}
+
+.stat-table-card--cold .stat-table tbody tr:hover {
+    background: #f5f8ff;
+}
+
+.stat-table tbody td {
+    padding: 9px 12px;
+    vertical-align: middle;
+    color: #444;
+}
+
+.product-name-cell {
+    max-width: 220px;
+    white-space: normal;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.product-code-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #f0ece6;
+    color: #7a5535;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sold-badge {
+    display: inline-block;
+    min-width: 32px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.sold-badge--hot {
+    background: linear-gradient(135deg, #ff8c00, #e06f00);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(224, 111, 0, 0.3);
+}
+
+.sold-badge--zero {
+    background: #e8ecf5;
+    color: #6b7a99;
+}
+
+.stat-empty {
+    text-align: center;
+    padding: 28px !important;
+    color: #aaa;
+    font-style: italic;
+    font-size: 13px;
+}

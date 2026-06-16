@@ -2,8 +2,12 @@ package dao.admin;
 
 import dao.core.BaseDao;
 import model.Order;
+import model.ProductSaleStatDto;
 import model.constant.OrderStatus;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -198,13 +202,13 @@ public class DashboardDao extends BaseDao {
         return result;
     }
 
-    public java.util.Map<String, Double> profitByDateRange(String startDateStr, String endDateStr) {
-        java.time.LocalDate start = java.time.LocalDate.parse(startDateStr);
-        java.time.LocalDate end = java.time.LocalDate.parse(endDateStr);
+    public Map<String, Double> profitByDateRange(String startDateStr, String endDateStr) {
+        LocalDate start = java.time.LocalDate.parse(startDateStr);
+        LocalDate end = java.time.LocalDate.parse(endDateStr);
 
-        java.util.Map<String, Double> result = new java.util.LinkedHashMap<>();
-        java.time.LocalDate current = start;
-        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        Map<String, Double> result = new java.util.LinkedHashMap<>();
+        LocalDate current = start;
+        DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
         while (!current.isAfter(end)) {
             result.put(current.format(formatter), 0.0);
             current = current.plusDays(1);
@@ -270,7 +274,7 @@ public class DashboardDao extends BaseDao {
 
     /**
      * Doanh thu từng tháng trong năm chỉ định (chỉ tính đơn COMPLETED).
-     * 
+     *
      * @return double[12] – index 0 = Tháng 1, ..., index 11 = Tháng 12
      */
     public double[] revenueByMonth(int year) {
@@ -328,13 +332,136 @@ public class DashboardDao extends BaseDao {
         return result;
     }
 
-    public java.util.Map<String, Double> revenueByDateRange(String startDateStr, String endDateStr) {
-        java.time.LocalDate start = java.time.LocalDate.parse(startDateStr);
-        java.time.LocalDate end = java.time.LocalDate.parse(endDateStr);
+    public double totalImportCost() {
+        return getJdbi().withHandle(h -> h.createQuery("""
+                    SELECT COALESCE(SUM(r.total_amount), 0)
+                    FROM inventory_receipts r
+                    WHERE r.type = 'IMPORT'
+                      AND r.status = 'COMPLETED'
+                """)
+                .mapTo(double.class)
+                .one());
+    }
 
-        java.util.Map<String, Double> result = new java.util.LinkedHashMap<>();
-        java.time.LocalDate current = start;
-        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public List<ProductSaleStatDto> getTopSellingProducts(
+            Integer year, Integer month, String startDate, String endDate, int limit) {
+        StringBuilder sql = new StringBuilder("""
+                SELECT p.id AS productId,
+                       CONCAT('AUR-', p.id) AS productCode,
+                       p.name AS productName,
+                       c.name AS categoryName,
+                       p.price AS price,
+                       DATE_FORMAT(p.created_at, '%d-%m-%Y') AS createdAt,
+                       COALESCE(SUM(oi.quantity), 0) AS totalSold
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                JOIN product_variants pv ON pv.product_id = p.id
+                JOIN order_items oi ON oi.variant_id = pv.id
+                JOIN orders o ON oi.order_id = o.id
+                WHERE p.status <> 'Đã xoá'
+                  AND o.order_status = 'COMPLETED'
+                """);
+
+        if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+            sql.append("    AND DATE(o.created_at) >= :startDate AND DATE(o.created_at) <= :endDate\n");
+        } else if (month != null && month > 0 && year != null && year > 0) {
+            sql.append("    AND YEAR(o.created_at) = :year AND MONTH(o.created_at) = :month\n");
+        }
+
+        sql.append("""
+                GROUP BY p.id, p.name, c.name, p.price, p.created_at
+                HAVING totalSold > 0
+                ORDER BY totalSold DESC
+                LIMIT :limit
+                """);
+
+        return getJdbi().withHandle(h -> {
+            var q = h.createQuery(sql.toString());
+            if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+                q.bind("startDate", startDate).bind("endDate", endDate);
+            } else if (month != null && month > 0 && year != null && year > 0) {
+                q.bind("year", year).bind("month", month);
+            }
+            q.bind("limit", limit);
+            return q.mapToBean(model.ProductSaleStatDto.class).list();
+        });
+    }
+
+    public List<ProductSaleStatDto> getUnsoldProducts(
+            Integer year, Integer month, String startDate, String endDate) {
+        String soldSubquery;
+        if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+            soldSubquery = """
+                    SELECT DISTINCT pv2.product_id
+                    FROM order_items oi2
+                    JOIN orders o2 ON oi2.order_id = o2.id
+                    JOIN product_variants pv2 ON oi2.variant_id = pv2.id
+                    WHERE o2.order_status = 'COMPLETED'
+                      AND DATE(o2.created_at) >= :startDate
+                      AND DATE(o2.created_at) <= :endDate
+                    """;
+        } else if (month != null && month > 0 && year != null && year > 0) {
+            soldSubquery = """
+                    SELECT DISTINCT pv2.product_id
+                    FROM order_items oi2
+                    JOIN orders o2 ON oi2.order_id = o2.id
+                    JOIN product_variants pv2 ON oi2.variant_id = pv2.id
+                    WHERE o2.order_status = 'COMPLETED'
+                      AND YEAR(o2.created_at) = :year
+                      AND MONTH(o2.created_at) = :month
+                    """;
+        } else {
+            soldSubquery = """
+                    SELECT DISTINCT pv2.product_id
+                    FROM order_items oi2
+                    JOIN orders o2 ON oi2.order_id = o2.id
+                    JOIN product_variants pv2 ON oi2.variant_id = pv2.id
+                    WHERE o2.order_status = 'COMPLETED'
+                    """;
+        }
+
+        String sql = """
+                SELECT p.id AS productId,
+                       CONCAT('AUR-', p.id) AS productCode,
+                       p.name AS productName,
+                       c.name AS categoryName,
+                       p.price AS price,
+                       DATE_FORMAT(p.created_at, '%d-%m-%Y') AS createdAt,
+                       0 AS totalSold
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                WHERE p.status <> 'Đã xoá'
+                  AND p.id NOT IN (""" + soldSubquery + """
+                )
+                """;
+
+        if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+            sql += "  AND DATE(p.created_at) <= :endDate \n";
+        } else if (month != null && month > 0 && year != null && year > 0) {
+            sql += "  AND p.created_at < DATE_ADD(STR_TO_DATE(CONCAT(:year, '-', :month, '-01'), '%Y-%m-%d'), INTERVAL 1 MONTH) \n";
+        }
+
+        sql += " ORDER BY p.created_at DESC ";
+
+        final String finalSql = sql;
+        return getJdbi().withHandle(h -> {
+            var q = h.createQuery(finalSql);
+            if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+                q.bind("startDate", startDate).bind("endDate", endDate);
+            } else if (month != null && month > 0 && year != null && year > 0) {
+                q.bind("year", year).bind("month", month);
+            }
+            return q.mapToBean(model.ProductSaleStatDto.class).list();
+        });
+    }
+
+    public Map<String, Double> revenueByDateRange(String startDateStr, String endDateStr) {
+       LocalDate start = LocalDate.parse(startDateStr);
+        LocalDate end = LocalDate.parse(endDateStr);
+
+        Map<String, Double> result = new LinkedHashMap<>();
+        LocalDate current = start;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         while (!current.isAfter(end)) {
             result.put(current.format(formatter), 0.0);
             current = current.plusDays(1);
@@ -358,13 +485,13 @@ public class DashboardDao extends BaseDao {
                     .mapToMap()
                     .forEach(row -> {
                         Object dateObj = row.get("order_date");
-                        java.time.LocalDate date;
+                        LocalDate date;
                         if (dateObj instanceof java.sql.Date) {
                             date = ((java.sql.Date) dateObj).toLocalDate();
                         } else if (dateObj instanceof java.time.LocalDate) {
-                            date = (java.time.LocalDate) dateObj;
+                            date = (LocalDate) dateObj;
                         } else {
-                            date = java.time.LocalDate.parse(dateObj.toString());
+                            date = LocalDate.parse(dateObj.toString());
                         }
                         double rev = ((Number) row.get("revenue")).doubleValue();
                         result.put(date.format(formatter), rev);

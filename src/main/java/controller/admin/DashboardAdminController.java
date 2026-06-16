@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.ProductSaleStatDto;
 import model.constant.OrderStatusLabel;
 import service.DashboardService;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @WebServlet(name = "DashboardAdminController", value = "/dashboardAdmin")
 public class DashboardAdminController extends HttpServlet {
@@ -26,14 +28,49 @@ public class DashboardAdminController extends HttpServlet {
         request.setAttribute("totalOrders", service.countOrders());
         request.setAttribute("totalRevenue", service.totalRevenue());
         request.setAttribute("totalProfit", service.totalProfit());
-        request.setAttribute("totalProducts", service.countProducts());
-        request.setAttribute("totalUsers", service.countUsers());
+        request.setAttribute("totalImportCost", service.totalImportCost());
 
-        // Get filter parameters
         String yearParam = request.getParameter("year");
         String monthParam = request.getParameter("month");
         String startDateParam = request.getParameter("startDate");
         String endDateParam = request.getParameter("endDate");
+
+        String hotMonthParam = request.getParameter("hotMonth");
+        String hotStartDate = request.getParameter("hotStartDate");
+        String hotEndDate = request.getParameter("hotEndDate");
+
+        String coldMonthParam = request.getParameter("coldMonth");
+        String coldStartDate = request.getParameter("coldStartDate");
+        String coldEndDate = request.getParameter("coldEndDate");
+
+        Integer statYear = LocalDate.now().getYear();
+
+        Integer hotMonth = null;
+        if (hotMonthParam != null && !hotMonthParam.trim().isEmpty()) {
+            try { hotMonth = Integer.parseInt(hotMonthParam); } catch (NumberFormatException ignored) {}
+        }
+
+        Integer coldMonth = null;
+        if (coldMonthParam != null && !coldMonthParam.trim().isEmpty()) {
+            try { coldMonth = Integer.parseInt(coldMonthParam); } catch (NumberFormatException ignored) {}
+        }
+
+        List<ProductSaleStatDto> topSelling = service.getTopSellingProducts(
+                statYear, hotMonth, hotStartDate, hotEndDate, 20);
+
+        List<ProductSaleStatDto> unsold = service.getUnsoldProducts(
+                statYear, coldMonth, coldStartDate, coldEndDate);
+
+        request.setAttribute("topSellingProducts", topSelling);
+        request.setAttribute("unsoldProducts", unsold);
+
+        request.setAttribute("hotMonth", hotMonthParam);
+        request.setAttribute("hotStartDate", hotStartDate);
+        request.setAttribute("hotEndDate", hotEndDate);
+
+        request.setAttribute("coldMonth", coldMonthParam);
+        request.setAttribute("coldStartDate", coldStartDate);
+        request.setAttribute("coldEndDate", coldEndDate);
 
         Object chartData = null;
         Object chartLabels = null;
