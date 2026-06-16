@@ -13,6 +13,8 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
+import java.util.Set;
 
 public class GhnWebhookService {
     private static final String PROVIDER = "GHN";
@@ -23,6 +25,12 @@ public class GhnWebhookService {
     private static final String STATUS_DELIVERED = "delivered";
     private static final String STATUS_CANCELLED = "cancel";
     private static final String STATUS_RETURNED = "returned";
+    private static final Set<String> GHN_CANCELLABLE_STATUSES = Set.of(
+            "",
+            "ready_to_pick",
+            "picking",
+            "money_collect_picking"
+    );
 
     private final OrderDao orderDao;
     private final OrderTrackingLogDao trackingLogDao;
@@ -40,7 +48,7 @@ public class GhnWebhookService {
                                       String eventTime,
                                       String description) {
         String normalizedOrderCode = trimToEmpty(orderCode);
-        String normalizedStatusCode = trimToEmpty(statusCode);
+        String normalizedStatusCode = normalizeStatusCode(statusCode);
         if (normalizedOrderCode.isBlank() || normalizedStatusCode.isBlank()) {
             return SyncResult.invalid();
         }
@@ -121,7 +129,16 @@ public class GhnWebhookService {
 
     private TerminalConflict resolveTerminalConflict(Order order, String ghnStatusCode) {
         String currentOrderStatus = trimToEmpty(order.getOrderStatus());
-        String normalizedGhnStatusCode = trimToEmpty(ghnStatusCode);
+        String currentGhnStatus = normalizeStatusCode(order.getGhnStatus());
+        String normalizedGhnStatusCode = normalizeStatusCode(ghnStatusCode);
+
+        if (STATUS_CANCELLED.equals(normalizedGhnStatusCode)
+                && !OrderStatus.CANCELLED.equals(currentOrderStatus)
+                && !canAcceptCancelWebhook(currentOrderStatus, currentGhnStatus)) {
+            return TerminalConflict.conflicted(
+                    "Đơn hàng đã qua bước GHN cho phép hủy, bỏ qua trạng thái GHN đến sau: " + normalizedGhnStatusCode + "."
+            );
+        }
 
         if (OrderStatus.COMPLETED.equals(currentOrderStatus)
                 && !STATUS_DELIVERED.equals(normalizedGhnStatusCode)) {
@@ -230,6 +247,17 @@ public class GhnWebhookService {
 
     private String trimToEmpty(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private String normalizeStatusCode(String value) {
+        return trimToEmpty(value).toLowerCase(Locale.ROOT);
+    }
+
+    private boolean canAcceptCancelWebhook(String currentOrderStatus, String currentGhnStatus) {
+        if (GHN_CANCELLABLE_STATUSES.contains(currentGhnStatus)) {
+            return !OrderStatus.SHIPPING.equals(currentOrderStatus);
+        }
+        return false;
     }
 
     public record SyncResult(
