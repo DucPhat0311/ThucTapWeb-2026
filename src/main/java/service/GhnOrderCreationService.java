@@ -117,7 +117,7 @@ public class GhnOrderCreationService {
         payload.put("width", DEFAULT_WIDTH);
         payload.put("height", DEFAULT_HEIGHT);
         payload.put("insurance_value", Math.min(toMoney(order.getTotalPrice()), 5_000_000));
-        payload.put("service_type_id", 2);
+        payload.put("service_type_id", defaultServiceTypeId());
         payload.put("items", buildItems(items));
         return payload;
     }
@@ -179,6 +179,14 @@ public class GhnOrderCreationService {
 
     private int toMoney(double amount) {
         return Math.max(0, (int) Math.round(amount));
+    }
+
+    private int defaultServiceTypeId() {
+        try {
+            return Integer.parseInt(ApiConstant.GHN_DEFAULT_SERVICE_TYPE_ID);
+        } catch (NumberFormatException e) {
+            return 2;
+        }
     }
 
     private LocalDateTime parseDateTime(String value) {

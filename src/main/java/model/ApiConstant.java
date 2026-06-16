@@ -7,7 +7,7 @@ public class ApiConstant {
     public static final String GHN_BASE_URL = normalizeBaseUrl(envOrDefault("GHN_BASE_URL", DEFAULT_GHN_BASE_URL));
     public static final String GHN_CLIENT_ID = envOrDefault("GHN_CLIENT_ID", "");
     public static final String GHN_WEBHOOK_SECRET = envOrDefault("GHN_WEBHOOK_SECRET", "");
-    public static final String GHN_SHOP_ID = envOrDefault("GHN_SHOP_ID", "6412985");
+    public static final String GHN_SHOP_ID = envOrDefault("GHN_SHOP_ID", "200719");
     public static final String GHN_FROM_NAME = envOrDefault("GHN_FROM_NAME", "AURA Studio");
     public static final String GHN_FROM_PHONE = envOrDefault("GHN_FROM_PHONE", "0365403194");
     public static final String GHN_FROM_ADDRESS = envOrDefault(
@@ -17,6 +17,9 @@ public class ApiConstant {
     public static final String GHN_FROM_WARD_NAME = envOrDefault("GHN_FROM_WARD_NAME", "Phường Linh Trung");
     public static final String GHN_FROM_DISTRICT_NAME = envOrDefault("GHN_FROM_DISTRICT_NAME", "TP. Thủ Đức");
     public static final String GHN_FROM_PROVINCE_NAME = envOrDefault("GHN_FROM_PROVINCE_NAME", "TP. Hồ Chí Minh");
+    public static final String GHN_FROM_DISTRICT_ID = envOrDefault("GHN_FROM_DISTRICT_ID", "3695");
+    public static final String GHN_FROM_WARD_CODE = envOrDefault("GHN_FROM_WARD_CODE", "90737");
+    public static final String GHN_DEFAULT_SERVICE_TYPE_ID = envOrDefault("GHN_DEFAULT_SERVICE_TYPE_ID", "2");
 
     public static String ghnApiUrl(String path) {
         String normalizedPath = path == null ? "" : path.trim();

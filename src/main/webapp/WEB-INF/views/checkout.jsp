@@ -128,7 +128,7 @@
                     <input type="hidden" id="total-width" value="${totalWidth}">
                     <input type="hidden" id="total-height" value="${totalHeight}">
 
-                    <input type="hidden" name="shippingServiceId" id="shipping-service-id-input" value="53320">
+                    <input type="hidden" name="shippingServiceId" id="shipping-service-id-input" value="">
                     <input type="hidden" name="shippingFee" id="shipping-fee-input" value="0">
                     <input type="hidden" name="expectedDeliveryEpochSeconds" id="expected-delivery-epoch-input" value="">
                     <input type="hidden" id="cart-total" value="${total}">
@@ -187,14 +187,13 @@
 </jsp:include>
 
 <script>
-    const SHOP_DISTRICT_ID = 1442;
-    const SHOP_WARD_ID = "20110";
-    const SHOP_ID = 6412985;
+    const GHN_SHOP_ID = parseInt('${ghnShopId}', 10);
+    const GHN_FROM_DISTRICT_ID = parseInt('${ghnFromDistrictId}', 10);
+    const GHN_FROM_WARD_CODE = '${ghnFromWardCode}';
+    const GHN_DEFAULT_SERVICE_TYPE_ID = parseInt('${ghnDefaultServiceTypeId}', 10) || 2;
 
-    // service id mac dinh
-    let currentServiceId = 53320;
-    // service type  mac dinh
-    let currentServiceTypeId = 2;
+    let currentServiceId = null;
+    let currentServiceTypeId = GHN_DEFAULT_SERVICE_TYPE_ID;
 
     window.APP_CONTEXT_PATH = '${pageContext.request.contextPath}';
 
@@ -212,6 +211,12 @@
         if (!toDistrictInput || !toDistrictInput.value || toDistrictInput.value.trim() === '' || isNaN(parseInt(toDistrictInput.value))) {
             if (displayElement) displayElement.innerText = "Chưa có địa chỉ";
             if (leadTimeDisplay) leadTimeDisplay.innerText = "Chưa có địa chỉ";
+            return;
+        }
+
+        if (!GHN_SHOP_ID || !GHN_FROM_DISTRICT_ID || !GHN_FROM_WARD_CODE) {
+            if (displayElement) displayElement.innerText = "Thiếu cấu hình GHN";
+            if (leadTimeDisplay) leadTimeDisplay.innerText = "Thiếu cấu hình";
             return;
         }
 
@@ -239,8 +244,8 @@
 
     async function getAvailableService(toDistrictId) {
         const payload = {
-            "shop_id": SHOP_ID,
-            "from_district": SHOP_DISTRICT_ID,
+            "shop_id": GHN_SHOP_ID,
+            "from_district": GHN_FROM_DISTRICT_ID,
             "to_district": toDistrictId
         };
 
@@ -253,10 +258,8 @@
             const result = await response.json();
 
             if (result.code === 200 && result.data && result.data.length > 0) {
-                // tìm 2 (Goi dv chuẩn)
-                let selectedService = result.data.find(s => s.service_type_id === 2) || result.data[0];
+                let selectedService = result.data.find(s => s.service_type_id === GHN_DEFAULT_SERVICE_TYPE_ID) || result.data[0];
 
-                // gan cai moi
                 currentServiceId = selectedService.service_id;
                 currentServiceTypeId = selectedService.service_type_id;
 
@@ -266,16 +269,9 @@
                 }
                 return true;
             }
+            console.error("GHN không trả về gói dịch vụ hợp lệ:", result);
         } catch (error) {
             console.error("Lỗi lấy gói dịch vụ GHN phù hợp:", error);
-        }
-
-        // mang rot
-        if(toDistrictId !== SHOP_DISTRICT_ID) {
-            // dat tam
-            currentServiceId = 53321;
-            currentServiceTypeId = 2;
-            return true;
         }
         return false;
     }
@@ -291,6 +287,11 @@
         const feeInput = document.getElementById('shipping-fee-input');
         const submitBtn = document.getElementById('submit-btn');
 
+        if (!serviceId || !serviceTypeId) {
+            if (displayElement) displayElement.innerText = "Không có gói giao hàng";
+            return;
+        }
+
         const weight = parseInt(document.getElementById('total-weight').value || 100);
         const length = parseInt(document.getElementById('total-length').value || 10);
         const width = parseInt(document.getElementById('total-width').value || 10);
@@ -301,7 +302,7 @@
             "service_type_id": serviceTypeId,
             "insurance_value": Math.min(cartTotal, 20000000),
             "coupon": null,
-            "from_district_id": SHOP_DISTRICT_ID,
+            "from_district_id": GHN_FROM_DISTRICT_ID,
             "to_district_id": toDistrictId,
             "to_ward_code": toWardCode,
             "weight": weight,
@@ -328,6 +329,7 @@
 
                 if (submitBtn) submitBtn.disabled = false;
             } else {
+                console.error("GHN không tính được phí:", result);
                 if (displayElement) displayElement.innerText = "Không tính được phí";
             }
         } catch (error) {
@@ -343,9 +345,15 @@
         const leadTimeDisplay = document.getElementById('lead-time-display');
         const expectedDeliveryInput = document.getElementById('expected-delivery-epoch-input');
 
+        if (!validServiceId) {
+            if (leadTimeDisplay) leadTimeDisplay.innerText = "Không có gói giao hàng";
+            if (expectedDeliveryInput) expectedDeliveryInput.value = "";
+            return;
+        }
+
         const payload = {
-            "from_district_id": SHOP_DISTRICT_ID,
-            "from_ward_code": SHOP_WARD_ID,
+            "from_district_id": GHN_FROM_DISTRICT_ID,
+            "from_ward_code": GHN_FROM_WARD_CODE,
             "to_district_id": toDistrictId,
             "to_ward_code": toWardCode,
             "service_id": validServiceId
@@ -373,6 +381,7 @@
                     if (expectedDeliveryInput) expectedDeliveryInput.value = "";
                 }
             } else {
+                console.error("GHN không tính được ngày giao:", result);
                 if (leadTimeDisplay) leadTimeDisplay.innerText = "Không xác định ngày";
                 if (expectedDeliveryInput) expectedDeliveryInput.value = "";
             }
