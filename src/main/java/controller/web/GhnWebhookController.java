@@ -93,17 +93,27 @@ public class GhnWebhookController extends HttpServlet {
         data.put("orderFound", syncResult.orderFound());
         data.put("orderUpdated", syncResult.updated());
         data.put("trackingLogged", syncResult.trackingLogged());
+        data.put("ignored", syncResult.ignored());
+        data.put("ignoreReason", syncResult.ignoreReason());
         data.put("orderId", syncResult.orderId());
         data.put("orderStatus", syncResult.orderStatus());
         data.put("paymentStatus", syncResult.paymentStatus());
 
         writeJson(response, HttpServletResponse.SC_OK, Map.of(
                 "success", true,
-                "message", syncResult.orderFound()
-                        ? "GHN webhook payload synced"
-                        : "GHN webhook payload accepted but order was not found",
+                "message", resolveResponseMessage(syncResult),
                 "data", data
         ));
+    }
+
+    private String resolveResponseMessage(GhnWebhookService.SyncResult syncResult) {
+        if (!syncResult.orderFound()) {
+            return "GHN webhook payload accepted but order was not found";
+        }
+        if (syncResult.ignored()) {
+            return "GHN webhook payload ignored because order is already terminal";
+        }
+        return "GHN webhook payload synced";
     }
 
     private boolean isAuthorized(HttpServletRequest request) {
