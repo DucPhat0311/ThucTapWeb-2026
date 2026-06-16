@@ -75,6 +75,12 @@ public class InventoryReceipt implements Serializable {
         return createdAt;
     }
 
+    public String getCreatedAtFormatted() {
+        if (createdAt == null) return "";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return createdAt.format(formatter);
+    }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
