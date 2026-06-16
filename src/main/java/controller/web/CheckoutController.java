@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Address;
+import model.ApiConstant;
 import model.CartItem;
 import model.User;
 import service.AddressService;
@@ -185,6 +186,10 @@ public class CheckoutController extends HttpServlet {
 
         req.setAttribute("selectedAddress", selectedAddress);
         req.setAttribute("checkoutItems", checkoutItems);
+        req.setAttribute("ghnShopId", ApiConstant.GHN_SHOP_ID);
+        req.setAttribute("ghnFromDistrictId", ApiConstant.GHN_FROM_DISTRICT_ID);
+        req.setAttribute("ghnFromWardCode", ApiConstant.GHN_FROM_WARD_CODE);
+        req.setAttribute("ghnDefaultServiceTypeId", ApiConstant.GHN_DEFAULT_SERVICE_TYPE_ID);
         req.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(req, resp);
     }
 
