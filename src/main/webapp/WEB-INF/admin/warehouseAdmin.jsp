@@ -85,7 +85,7 @@
                                                                 <fmt:formatNumber value="${r.totalAmount}" type="number"
                                                                     maxFractionDigits="0" /> ₫
                                                             </td>
-                                                            <td>${r.createdAt}</td>
+                                                            <td>${r.createdAtFormatted}</td>
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.status == 'COMPLETED'}">
@@ -167,7 +167,7 @@
                                                                 <fmt:formatNumber value="${r.totalAmount}" type="number"
                                                                     maxFractionDigits="0" /> ₫
                                                             </td>
-                                                            <td>${r.createdAt}</td>
+                                                            <td>${r.createdAtFormatted}</td>
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.status == 'COMPLETED'}">
@@ -265,7 +265,7 @@
                                                                 <fmt:formatNumber value="${r.totalAmount}" type="number"
                                                                     maxFractionDigits="0" /> ₫
                                                             </td>
-                                                            <td>${r.createdAt}</td>
+                                                            <td>${r.createdAtFormatted}</td>
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${r.status == 'COMPLETED'}">
@@ -353,7 +353,9 @@
                                                         <td class="text-center">
                                                             <c:if test="${perms['view_detail']}">
                                                                 <button type="button" class="icon-btn view"
-                                                                    onclick="showStockDetails(${s.id}, '${fn:escapeXml(s.productName)} - Màu: ${s.colorName} - Size: ${s.sizeName}')"
+                                                                    data-variant-id="${s.id}"
+                                                                    data-variant-label="${fn:escapeXml(s.productName)} - Màu: ${s.colorName} - Size: ${s.sizeName}"
+                                                                    onclick="showStockDetails(this)"
                                                                     title="Xem chi tiết các đợt nhập kho">
                                                                     <i class="fa fa-eye"></i>
                                                                 </button>
@@ -454,7 +456,9 @@
                             }
                         }
 
-                        function showStockDetails(variantId, variantLabel) {
+                        function showStockDetails(btn) {
+                            const variantId = btn.getAttribute('data-variant-id');
+                            const variantLabel = btn.getAttribute('data-variant-label');
                             document.getElementById("modalStockTitle").innerText = "Chi tiết đợt nhập: " + variantLabel;
                             const tableBody = document.getElementById("stockBatchTableBody");
                             tableBody.innerHTML = '<tr><td colspan="5" class="stock-loading-container"><i class="fa fa-spinner fa-spin stock-loading-icon"></i> Đang tải dữ liệu...</td></tr>';
