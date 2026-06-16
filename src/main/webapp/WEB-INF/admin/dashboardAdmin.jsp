@@ -136,82 +136,80 @@
                     <div class="stat-tables-grid">
 
                         <%-- bảng sp bán chạy --%>
-                        <div class="stat-table-card stat-table-card--hot">
-                            <div class="stat-table-header">
-                                <h3><i class="fa-solid fa-fire"></i> Thống kê sản phẩm bán chạy</h3>
-                                <form class="inline-filter-form" method="GET" action="${pageContext.request.contextPath}/dashboardAdmin">
-                                    <div class="inline-filter-group">
-                                        <label>Tháng</label>
-                                        <select name="hotMonth">
-                                            <option value="" ${empty hotMonth ? 'selected' : ''}>Tất cả</option>
-                                            <c:forEach var="m" begin="1" end="12">
-                                                <option value="${m}" ${hotMonth==m ? 'selected' : ''}>${m}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="inline-filter-group">
-                                        <label>Từ</label>
-                                        <input type="date" name="hotStartDate" value="${hotStartDate}">
-                                    </div>
-                                    <div class="inline-filter-group">
-                                        <label>Đến</label>
-                                        <input type="date" name="hotEndDate" value="${hotEndDate}">
-                                    </div>
-                                    <input type="hidden" name="coldMonth" value="${coldMonth}">
-                                    <input type="hidden" name="coldStartDate" value="${coldStartDate}">
-                                    <input type="hidden" name="coldEndDate" value="${coldEndDate}">
-                                    <button type="submit" class="btn-inline-filter">Lọc</button>
-                                    <a href="${pageContext.request.contextPath}/dashboardAdmin?coldMonth=${coldMonth}&coldStartDate=${coldStartDate}&coldEndDate=${coldEndDate}" class="btn-inline-reset">Đặt lại</a>
-                                </form>
-                            </div>
-                            <div class="stat-search-bar">
-                                <input type="text" id="hotSearchInput"
-                                       onkeyup="filterTable('hotTable','hotSearchInput')"
-                                       placeholder="Tìm kiếm sản phẩm...">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </div>
-                            <div class="stat-table-wrapper">
-                                <table class="stat-table" id="hotTable">
-                                    <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Mã sản phẩm</th>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Danh mục</th>
-                                        <th>Giá</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Đã bán</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <c:choose>
-                                        <c:when test="${not empty topSellingProducts}">
-                                            <c:forEach var="p" items="${topSellingProducts}" varStatus="st">
+                            <div class="stat-table-card stat-table-card--hot">
+                                <div class="stat-table-header">
+                                    <h3><i class="fa-solid fa-fire"></i> Thống kê sản phẩm bán chạy</h3>
+                                    <form class="inline-filter-form" method="GET" action="${pageContext.request.contextPath}/dashboardAdmin">
+                                        <div class="inline-filter-group">
+                                            <label>Tháng</label>
+                                            <select name="hotMonth">
+                                                <option value="" ${empty hotMonth ? 'selected' : ''}>Tất cả</option>
+                                                <c:forEach var="m" begin="1" end="12">
+                                                    <option value="${m}" ${hotMonth==m ? 'selected' : ''}>${m}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <div class="inline-filter-group">
+                                            <label>Từ</label>
+                                            <input type="date" name="hotStartDate" value="${hotStartDate}">
+                                        </div>
+                                        <div class="inline-filter-group">
+                                            <label>Đến</label>
+                                            <input type="date" name="hotEndDate" value="${hotEndDate}">
+                                        </div>
+                                        <input type="hidden" name="coldMonth" value="${coldMonth}">
+                                        <input type="hidden" name="coldStartDate" value="${coldStartDate}">
+                                        <input type="hidden" name="coldEndDate" value="${coldEndDate}">
+                                        <button type="submit" class="btn-inline-filter">Lọc</button>
+                                        <a href="${pageContext.request.contextPath}/dashboardAdmin?coldMonth=${coldMonth}&coldStartDate=${coldStartDate}&coldEndDate=${coldEndDate}" class="btn-inline-reset">Đặt lại</a>
+                                    </form>
+                                </div>
+                                <div class="stat-search-bar">
+                                    <input type="text" id="hotSearchInput"
+                                           onkeyup="filterTable('hotTable','hotSearchInput')"
+                                           placeholder="Tìm kiếm sản phẩm...">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </div>
+                                <div class="stat-table-wrapper">
+                                    <table class="stat-table" id="hotTable">
+                                        <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã sản phẩm</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Danh mục</th>
+                                            <th>Giá</th>
+                                            <th>Đã bán</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <c:choose>
+                                            <c:when test="${not empty topSellingProducts}">
+                                                <c:forEach var="p" items="${topSellingProducts}" varStatus="st">
+                                                    <tr>
+                                                        <td>${st.index + 1}</td>
+                                                        <td><span class="product-code-badge">${p.productCode}</span></td>
+                                                        <td class="product-name-cell">${p.productName}</td>
+                                                        <td>${p.categoryName}</td>
+                                                        <td><fmt:formatNumber value="${p.price}" maxFractionDigits="0" /></td>
+                                                        <td><span class="sold-badge sold-badge--hot">${p.totalSold}</span></td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
                                                 <tr>
-                                                    <td>${st.index + 1}</td>
-                                                    <td><span class="product-code-badge">${p.productCode}</span></td>
-                                                    <td class="product-name-cell">${p.productName}</td>
-                                                    <td>${p.categoryName}</td>
-                                                    <td><fmt:formatNumber value="${p.price}" maxFractionDigits="0" /></td>
-                                                    <td>${p.createdAt}</td>
-                                                    <td><span class="sold-badge sold-badge--hot">${p.totalSold}</span></td>
+                                                    <td colspan="7" class="stat-empty">Không có dữ liệu</td>
                                                 </tr>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <tr>
-                                                <td colspan="7" class="stat-empty">Không có dữ liệu</td>
-                                            </tr>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    </tbody>
-                                </table>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
 
                             <%-- bảng sp ko baán đc --%>
                             <div class="stat-table-card stat-table-card--cold">
-                                <div class="stat-table-header"  >
+                                <div class="stat-table-header">
                                     <h3><i class="fa-solid fa-box-open"></i> Thống kê sản phẩm không bán được</h3>
                                     <form class="inline-filter-form" method="GET" action="${pageContext.request.contextPath}/dashboardAdmin">
                                         <input type="hidden" name="hotMonth" value="${hotMonth}">
@@ -253,7 +251,6 @@
                                             <th>Tên sản phẩm</th>
                                             <th>Danh mục</th>
                                             <th>Giá</th>
-                                            <th>Ngày tạo</th>
                                             <th>Đã bán</th>
                                         </tr>
                                         </thead>
@@ -281,8 +278,6 @@
                                                                     value="${p.price}"
                                                                     maxFractionDigits="0" />
                                                         </td>
-                                                        <td>${p.createdAt}
-                                                        </td>
                                                         <td><span
                                                                 class="sold-badge sold-badge--zero">0</span>
                                                         </td>
@@ -302,6 +297,8 @@
                                     </table>
                                 </div>
                             </div>
+
+                    </div>
                     </div>
 
                     </div>
