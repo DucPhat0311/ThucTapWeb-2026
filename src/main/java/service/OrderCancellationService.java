@@ -3,7 +3,16 @@ package service;
 import model.Order;
 import model.constant.OrderStatus;
 
+import java.util.Set;
+
 public class OrderCancellationService {
+    private static final String DEMO_TRACKING_PREFIX = "DEMO-ORD-";
+    private static final Set<String> GHN_CANCELLABLE_STATUSES = Set.of(
+            "ready_to_pick",
+            "picking",
+            "money_collect_picking"
+    );
+
     public CancellationCheck checkUserCancellation(Order order, int userId) {
         CancellationCheck baseCheck = checkBaseCancellation(order);
         if (!baseCheck.cancellable()) {
@@ -24,16 +33,32 @@ public class OrderCancellationService {
         if (!baseCheck.cancellable()) {
             return baseCheck;
         }
+
         String status = trimToEmpty(order.getOrderStatus());
-        if (OrderStatus.PENDING.equals(status)
-                || OrderStatus.PENDING_PAYMENT.equals(status)
-                || OrderStatus.PROCESSING.equals(status)) {
+        String trackingCode = trimToEmpty(order.getGhnOrderCode());
+        String ghnStatus = trimToEmpty(order.getGhnStatus());
+
+        if (OrderStatus.PENDING.equals(status) || OrderStatus.PENDING_PAYMENT.equals(status)) {
             return CancellationCheck.accepted();
         }
-        if (OrderStatus.SHIPPING.equals(status) && !trimToEmpty(order.getGhnOrderCode()).isBlank()) {
+
+        if (OrderStatus.PROCESSING.equals(status) && trackingCode.isBlank()) {
             return CancellationCheck.accepted();
         }
-        return CancellationCheck.rejected("Admin chỉ có thể hủy đơn chưa giao hoặc đơn có vận đơn GHN còn được GHN cho phép hủy.");
+
+        if (!trackingCode.isBlank() && isDemoTrackingCode(trackingCode) && OrderStatus.SHIPPING.equals(status)) {
+            return CancellationCheck.accepted();
+        }
+
+        if (!trackingCode.isBlank() && GHN_CANCELLABLE_STATUSES.contains(ghnStatus)) {
+            return CancellationCheck.accepted();
+        }
+
+        if (!trackingCode.isBlank()) {
+            return CancellationCheck.rejected("Đơn đã có vận đơn và GHN đã qua bước cho phép hủy. Vui lòng xử lý theo luồng giao thất bại, hoàn hàng hoặc đổi trả.");
+        }
+
+        return CancellationCheck.rejected("Admin chỉ có thể hủy đơn chưa xác nhận, đang chuẩn bị hàng hoặc vận đơn GHN còn chờ lấy hàng.");
     }
 
     private CancellationCheck checkBaseCancellation(Order order) {
@@ -47,11 +72,18 @@ public class OrderCancellationService {
         if (OrderStatus.COMPLETED.equals(status)) {
             return CancellationCheck.rejected("Đơn hàng đã hoàn thành nên không thể hủy.");
         }
+        if (OrderStatus.RETURNED.equals(status)) {
+            return CancellationCheck.rejected("Đơn hàng đã hoàn trả nên không thể hủy.");
+        }
         return CancellationCheck.accepted();
     }
 
     private String trimToEmpty(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private boolean isDemoTrackingCode(String trackingCode) {
+        return trackingCode.startsWith(DEMO_TRACKING_PREFIX);
     }
 
     public record CancellationCheck(boolean cancellable, String message) {

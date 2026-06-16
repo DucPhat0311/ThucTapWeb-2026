@@ -20,6 +20,9 @@ public class GhnWebhookService {
     private static final DateTimeFormatter SPACE_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter VIETNAMESE_DATE_TIME = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     private static final DateTimeFormatter VIETNAMESE_MINUTE_TIME = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private static final String STATUS_DELIVERED = "delivered";
+    private static final String STATUS_CANCELLED = "cancel";
+    private static final String STATUS_RETURNED = "returned";
 
     private final OrderDao orderDao;
     private final OrderTrackingLogDao trackingLogDao;
@@ -50,6 +53,19 @@ public class GhnWebhookService {
         String resolvedStatusName = trimToEmpty(statusName);
         if (resolvedStatusName.isBlank()) {
             resolvedStatusName = ghnOrderTrackingService.resolveStatusName(normalizedStatusCode);
+        }
+
+        TerminalConflict terminalConflict = resolveTerminalConflict(order, normalizedStatusCode);
+        if (terminalConflict.conflicted()) {
+            return SyncResult.ignored(
+                    order.getId(),
+                    normalizedOrderCode,
+                    normalizedStatusCode,
+                    resolvedStatusName,
+                    trimToEmpty(order.getOrderStatus()),
+                    trimToEmpty(order.getPaymentStatuses()),
+                    terminalConflict.reason()
+            );
         }
 
         String resolvedOrderStatus = ghnOrderTrackingService.resolveOrderStatus(
@@ -101,6 +117,32 @@ public class GhnWebhookService {
 
     public SyncResult syncOrderStatus(String orderCode, String statusCode, String statusName) {
         return syncOrderStatus(orderCode, statusCode, statusName, "", "");
+    }
+
+    private TerminalConflict resolveTerminalConflict(Order order, String ghnStatusCode) {
+        String currentOrderStatus = trimToEmpty(order.getOrderStatus());
+        String normalizedGhnStatusCode = trimToEmpty(ghnStatusCode);
+
+        if (OrderStatus.COMPLETED.equals(currentOrderStatus)
+                && !STATUS_DELIVERED.equals(normalizedGhnStatusCode)) {
+            return TerminalConflict.conflicted(
+                    "Đơn hàng đã hoàn thành, bỏ qua trạng thái GHN đến sau: " + normalizedGhnStatusCode + "."
+            );
+        }
+        if (OrderStatus.CANCELLED.equals(currentOrderStatus)
+                && !STATUS_CANCELLED.equals(normalizedGhnStatusCode)) {
+            return TerminalConflict.conflicted(
+                    "Đơn hàng đã hủy, bỏ qua trạng thái GHN đến sau: " + normalizedGhnStatusCode + "."
+            );
+        }
+        if (OrderStatus.RETURNED.equals(currentOrderStatus)
+                && !STATUS_RETURNED.equals(normalizedGhnStatusCode)) {
+            return TerminalConflict.conflicted(
+                    "Đơn hàng đã hoàn trả, bỏ qua trạng thái GHN đến sau: " + normalizedGhnStatusCode + "."
+            );
+        }
+
+        return TerminalConflict.allowed();
     }
 
     private String buildDescription(String statusName, String description) {
@@ -200,14 +242,27 @@ public class GhnWebhookService {
             String statusName,
             String orderStatus,
             String paymentStatus,
-            boolean trackingLogged
+            boolean trackingLogged,
+            boolean ignored,
+            String ignoreReason
     ) {
         private static SyncResult invalid() {
-            return new SyncResult(false, false, false, null, "", "", "", "", "", false);
+            return new SyncResult(false, false, false, null, "", "", "", "", "", false, false, "");
         }
 
         private static SyncResult notFound(String orderCode, String statusCode) {
-            return new SyncResult(true, false, false, null, orderCode, statusCode, "", "", "", false);
+            return new SyncResult(true, false, false, null, orderCode, statusCode, "", "", "", false, false, "");
+        }
+
+        private static SyncResult ignored(int orderId,
+                                          String orderCode,
+                                          String statusCode,
+                                          String statusName,
+                                          String orderStatus,
+                                          String paymentStatus,
+                                          String ignoreReason) {
+            return new SyncResult(true, true, false, orderId, orderCode, statusCode, statusName, orderStatus,
+                    paymentStatus, false, true, ignoreReason);
         }
 
         private static SyncResult synced(int orderId,
@@ -218,7 +273,18 @@ public class GhnWebhookService {
                                          String paymentStatus,
                                          boolean updated,
                                          boolean trackingLogged) {
-            return new SyncResult(true, true, updated, orderId, orderCode, statusCode, statusName, orderStatus, paymentStatus, trackingLogged);
+            return new SyncResult(true, true, updated, orderId, orderCode, statusCode, statusName, orderStatus,
+                    paymentStatus, trackingLogged, false, "");
+        }
+    }
+
+    private record TerminalConflict(boolean conflicted, String reason) {
+        private static TerminalConflict allowed() {
+            return new TerminalConflict(false, "");
+        }
+
+        private static TerminalConflict conflicted(String reason) {
+            return new TerminalConflict(true, reason);
         }
     }
 }
