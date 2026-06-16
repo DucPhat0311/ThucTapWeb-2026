@@ -1,17 +1,17 @@
 /*
- Navicat Premium Dump SQL
+ Navicat Premium Data Transfer
 
- Source Server         : ClotheStore_conn
+ Source Server         : py
  Source Server Type    : MySQL
- Source Server Version : 80407 (8.4.7)
+ Source Server Version : 100432 (10.4.32-MariaDB)
  Source Host           : localhost:3306
  Source Schema         : aurastudio
 
  Target Server Type    : MySQL
- Target Server Version : 80407 (8.4.7)
+ Target Server Version : 100432 (10.4.32-MariaDB)
  File Encoding         : 65001
 
- Date: 15/06/2026 11:38:43
+ Date: 16/06/2026 22:45:59
 */
 
 SET NAMES utf8mb4;
@@ -22,21 +22,21 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `addresses`;
 CREATE TABLE `addresses`  (
-                              `id` int NOT NULL AUTO_INCREMENT,
-                              `user_id` int NOT NULL,
-                              `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                              `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                              `city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                              `province_code` int NULL DEFAULT NULL,
-                              `district` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                              `district_code` int NULL DEFAULT NULL,
-                              `ward` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                              `ward_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                              `detailAddress` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                              `is_default` tinyint NULL DEFAULT NULL,
-                              PRIMARY KEY (`id`) USING BTREE,
-                              INDEX `user_id`(`user_id` ASC) USING BTREE,
-                              CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `province_code` int NULL DEFAULT NULL,
+  `district` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `district_code` int NULL DEFAULT NULL,
+  `ward` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `ward_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `detailAddress` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `is_default` tinyint NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `user_id`(`user_id` ASC) USING BTREE,
+  CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -52,36 +52,41 @@ INSERT INTO `addresses` VALUES (6, 3, 'Nguyen Van Anh Han', '0365403194', 'Bạc
 -- ----------------------------
 DROP TABLE IF EXISTS `banners`;
 CREATE TABLE `banners`  (
-                            `id` int NOT NULL AUTO_INCREMENT,
-                            `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                            `navigate_to` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                            `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                            `status` tinyint NULL DEFAULT NULL,
-                            `created_at` datetime NULL DEFAULT NULL,
-                            PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `navigate_to` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `status` tinyint NULL DEFAULT NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of banners
 -- ----------------------------
+INSERT INTO `banners` VALUES (1, 'https://res.cloudinary.com/do3y0ygcj/image/upload/v1781623474/shopquanao/banners/lrhakwvflb0i4f3pxvmd.jpg', '', 'Sale Mùa Thu', 0, '2026-06-16 22:12:57');
+INSERT INTO `banners` VALUES (2, 'https://res.cloudinary.com/do3y0ygcj/image/upload/v1781623496/shopquanao/banners/wb0bliujms1bgsrcl8vj.jpg', '', 'Thời trang nữ', 0, '2026-06-16 22:13:19');
+INSERT INTO `banners` VALUES (3, 'https://res.cloudinary.com/do3y0ygcj/image/upload/v1781623521/shopquanao/banners/trb90cmvaeb16awgdufd.png', '', 'Thời trang nam', 0, '2026-06-16 22:13:44');
+INSERT INTO `banners` VALUES (4, 'https://res.cloudinary.com/do3y0ygcj/image/upload/v1781623566/shopquanao/banners/sopgdk4bqahurrfj7408.webp', '', 'Shop', 0, '2026-06-16 22:14:28');
+INSERT INTO `banners` VALUES (5, 'https://res.cloudinary.com/do3y0ygcj/image/upload/v1781623592/shopquanao/banners/mwdllvlwoiiljafmbjyj.webp', '', 'Nâu Ấm', 0, '2026-06-16 22:14:55');
 
 -- ----------------------------
 -- Table structure for blogs
 -- ----------------------------
 DROP TABLE IF EXISTS `blogs`;
 CREATE TABLE `blogs`  (
-                          `id` int NOT NULL AUTO_INCREMENT,
-                          `author_id` int NULL DEFAULT NULL,
-                          `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                          `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                          `status` int NULL DEFAULT NULL,
-                          `created_at` datetime NULL DEFAULT NULL,
-                          `updated_at` datetime NULL DEFAULT NULL,
-                          PRIMARY KEY (`id`) USING BTREE,
-                          INDEX `author_id`(`author_id` ASC) USING BTREE,
-                          CONSTRAINT `blogs_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `author_id` int NULL DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `status` int NULL DEFAULT NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  `updated_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `author_id`(`author_id` ASC) USING BTREE,
+  CONSTRAINT `blogs_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -102,16 +107,16 @@ INSERT INTO `blogs` VALUES (9, 3, 'Bí Quyết Phối Đồ Nữ Đẹp Và Than
 -- ----------------------------
 DROP TABLE IF EXISTS `cart_items`;
 CREATE TABLE `cart_items`  (
-                               `id` int NOT NULL AUTO_INCREMENT,
-                               `cart_id` int NULL DEFAULT NULL,
-                               `variant_id` int NULL DEFAULT NULL,
-                               `quantity` int NULL DEFAULT NULL,
-                               `price` decimal(10, 2) NULL DEFAULT 0.00,
-                               PRIMARY KEY (`id`) USING BTREE,
-                               INDEX `cart_id`(`cart_id` ASC) USING BTREE,
-                               INDEX `variant_id`(`variant_id` ASC) USING BTREE,
-                               CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                               CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `cart_id` int NULL DEFAULT NULL,
+  `variant_id` int NULL DEFAULT NULL,
+  `quantity` int NULL DEFAULT NULL,
+  `price` decimal(10, 2) NULL DEFAULT 0.00,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `cart_id`(`cart_id` ASC) USING BTREE,
+  INDEX `variant_id`(`variant_id` ASC) USING BTREE,
+  CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -130,13 +135,13 @@ INSERT INTO `cart_items` VALUES (10, 1, 507, 2, 407714.00);
 -- ----------------------------
 DROP TABLE IF EXISTS `carts`;
 CREATE TABLE `carts`  (
-                          `id` int NOT NULL AUTO_INCREMENT,
-                          `user_id` int NULL DEFAULT NULL,
-                          `created_at` datetime NULL DEFAULT NULL,
-                          PRIMARY KEY (`id`) USING BTREE,
-                          INDEX `user_id`(`user_id` ASC) USING BTREE,
-                          CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NULL DEFAULT NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `user_id`(`user_id` ASC) USING BTREE,
+  CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of carts
@@ -144,21 +149,22 @@ CREATE TABLE `carts`  (
 INSERT INTO `carts` VALUES (1, 1, '2026-05-24 18:03:22');
 INSERT INTO `carts` VALUES (2, 2, '2026-05-31 14:46:15');
 INSERT INTO `carts` VALUES (3, 3, '2026-05-31 14:48:29');
+INSERT INTO `carts` VALUES (4, 4, '2026-06-16 18:08:41');
 
 -- ----------------------------
 -- Table structure for categories
 -- ----------------------------
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories`  (
-                               `id` int NOT NULL AUTO_INCREMENT,
-                               `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                               `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                               `parent_id` int NULL DEFAULT NULL,
-                               `status` int NULL DEFAULT NULL,
-                               `size_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                               PRIMARY KEY (`id`) USING BTREE,
-                               INDEX `parent_id`(`parent_id` ASC) USING BTREE,
-                               CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `parent_id` int NULL DEFAULT NULL,
+  `status` int NULL DEFAULT NULL,
+  `size_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `parent_id`(`parent_id` ASC) USING BTREE,
+  CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -167,22 +173,22 @@ CREATE TABLE `categories`  (
 INSERT INTO `categories` VALUES (1, 'Thời Trang Nam', 'nam', NULL, 1, NULL);
 INSERT INTO `categories` VALUES (2, 'Thời Trang Nữ', 'nu', NULL, 1, NULL);
 INSERT INTO `categories` VALUES (3, 'Phụ Kiện', 'phukien', NULL, 1, NULL);
-INSERT INTO `categories` VALUES (4, 'Áo Khoác Nam', 'ao-khoac-nam', 23, 1, '/ao-khoac-nam/pic1.png');
-INSERT INTO `categories` VALUES (5, 'Áo Polo Nam', 'ao-polo', 23, 1, '/ao-polo-nam/pic1.png');
-INSERT INTO `categories` VALUES (6, 'Áo Sơ Mi Nam', 'ao-so-mi', 23, 1, '/ao-so-mi-nam/pic1.jpg');
-INSERT INTO `categories` VALUES (7, 'Áo Thun Nam', 'ao-thun', 23, 1, '/ao-thun-nam/pic1.jpg');
-INSERT INTO `categories` VALUES (8, 'Quần Jean Nam', 'quan-jean-nam', 24, 1, '/quan-jean-nam/pic1.jpg');
-INSERT INTO `categories` VALUES (9, 'Quần Kaki Nam', 'quan-kaki', 24, 1, '/quan-kaki-nam/pic1.jpg');
-INSERT INTO `categories` VALUES (10, 'Quần Short Nam', 'quan-short-nam', 24, 1, '/quan-short-nam/pic1.png');
-INSERT INTO `categories` VALUES (11, 'Quần Tây Nam', 'quan-tay', 24, 1, '/quan-tay-nam/pic1.png');
-INSERT INTO `categories` VALUES (12, 'Áo Khoác Nữ', 'ao-khoac-nu', 25, 1, '/ao-khoac-nu/pic1.png');
-INSERT INTO `categories` VALUES (13, 'Áo Sơ Mi Nữ', 'ao-so-mi-nu', 25, 1, '/ao-so-mi-nu/pic1.jpg');
-INSERT INTO `categories` VALUES (14, 'Áo Tank Top', 'ao-tank-top', 25, 1, '/ao-tank-top/pic1.png');
-INSERT INTO `categories` VALUES (15, 'Áo Thun Nữ', 'ao-thun-nu', 25, 1, '/ao-thun-nu/pic1.jpg');
+INSERT INTO `categories` VALUES (4, 'Áo Khoác Nam', 'ao-khoac-nam', 1, 1, '/ao-khoac-nam/pic1.png');
+INSERT INTO `categories` VALUES (5, 'Áo Polo Nam', 'ao-polo', 1, 1, '/ao-polo-nam/pic1.png');
+INSERT INTO `categories` VALUES (6, 'Áo Sơ Mi Nam', 'ao-so-mi', 1, 1, '/ao-so-mi-nam/pic1.jpg');
+INSERT INTO `categories` VALUES (7, 'Áo Thun Nam', 'ao-thun', 1, 1, '/ao-thun-nam/pic1.jpg');
+INSERT INTO `categories` VALUES (8, 'Quần Jean Nam', 'quan-jean-nam', 1, 1, '/quan-jean-nam/pic1.jpg');
+INSERT INTO `categories` VALUES (9, 'Quần Kaki Nam', 'quan-kaki', 1, 1, '/quan-kaki-nam/pic1.jpg');
+INSERT INTO `categories` VALUES (10, 'Quần Short Nam', 'quan-short-nam', 1, 1, '/quan-short-nam/pic1.png');
+INSERT INTO `categories` VALUES (11, 'Quần Tây Nam', 'quan-tay', 1, 1, '/quan-tay-nam/pic1.png');
+INSERT INTO `categories` VALUES (12, 'Áo Khoác Nữ', 'ao-khoac-nu', 2, 1, '/ao-khoac-nu/pic1.png');
+INSERT INTO `categories` VALUES (13, 'Áo Sơ Mi Nữ', 'ao-so-mi-nu', 2, 1, '/ao-so-mi-nu/pic1.jpg');
+INSERT INTO `categories` VALUES (14, 'Áo Tank Top', 'ao-tank-top', 2, 1, '/ao-tank-top/pic1.png');
+INSERT INTO `categories` VALUES (15, 'Áo Thun Nữ', 'ao-thun-nu', 2, 1, '/ao-thun-nu/pic1.jpg');
 INSERT INTO `categories` VALUES (16, 'Chân Váy', 'chan-vay', 2, 1, '/chan-vay/pic1.jfif');
 INSERT INTO `categories` VALUES (17, 'Đầm', 'dam', 2, 1, '/dam/pic1.jpg');
-INSERT INTO `categories` VALUES (18, 'Quần Jean Nữ', 'quan-jean-nu', 26, 1, '/quan-jean-nu/pic1.jpg');
-INSERT INTO `categories` VALUES (19, 'Quần Short Nữ', 'quan-short-nu', 26, 1, '/quan-short-nu/pic1.png');
+INSERT INTO `categories` VALUES (18, 'Quần Jean Nữ', 'quan-jean-nu', 2, 1, '/quan-jean-nu/pic1.jpg');
+INSERT INTO `categories` VALUES (19, 'Quần Short Nữ', 'quan-short-nu', 2, 1, '/quan-short-nu/pic1.png');
 INSERT INTO `categories` VALUES (20, 'Khăn', 'khan', 3, 1, NULL);
 INSERT INTO `categories` VALUES (21, 'Nón', 'non', 3, 1, NULL);
 INSERT INTO `categories` VALUES (22, 'Túi Balo', 'tui-balo', 3, 1, NULL);
@@ -196,10 +202,10 @@ INSERT INTO `categories` VALUES (26, 'Quần Nữ', 'quan-nu', 2, 1, NULL);
 -- ----------------------------
 DROP TABLE IF EXISTS `colors`;
 CREATE TABLE `colors`  (
-                           `id` int NOT NULL AUTO_INCREMENT,
-                           `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           PRIMARY KEY (`id`) USING BTREE
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -240,147 +246,1182 @@ INSERT INTO `colors` VALUES (29, 'Đỏ sẫm', '#800020');
 -- ----------------------------
 DROP TABLE IF EXISTS `contacts`;
 CREATE TABLE `contacts`  (
-                             `id` int NOT NULL AUTO_INCREMENT,
-                             `user_id` int NULL DEFAULT NULL,
-                             `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                             `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                             `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                             `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                             `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                             `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                             `created_at` datetime NULL DEFAULT NULL,
-                             PRIMARY KEY (`id`) USING BTREE,
-                             INDEX `user_id`(`user_id` ASC) USING BTREE,
-                             CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `user_id`(`user_id` ASC) USING BTREE,
+  CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of contacts
 -- ----------------------------
+INSERT INTO `contacts` VALUES (1, NULL, 'Nguyễn Văn An', 'vanan@gmail.com', '0901234567', 'Hà Nội', 'Tôi cần hỗ trợ kiểm tra lịch trình đơn hàng.', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (2, 1, 'Đức Phát Nguyễn', 'phatnguyen@gmail.com', '0982832647', 'Hồ Chí Minh', 'Shop tư vấn giúp mình size áo khoác nam người 1m75 nặng 70kg nhé.', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (3, 2, 'Nguyen Van Anh Han', 'anhhan@gmail.com', '0900142141', 'Đà Nẵng', 'Mình muốn đổi địa chỉ nhận hàng cho đơn vừa đặt.', 'PROCESSED', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (4, NULL, 'Trần Thị Bình', 'thibinh99@gmail.com', '0912345678', 'Hải Phòng', 'Cho mình hỏi mẫu đầm mã SKU-106 còn màu trắng không?', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (5, NULL, 'Lê Hoàng Long', 'longle.dev@gmail.com', '0923456789', 'Cần Thơ', 'Website của shop giao diện rất đẹp và dễ sử dụng!', 'PROCESSED', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (6, 3, 'Nguyen Van Anh Han', 'hannguyen3@gmail.com', '0365403194', 'Bạc Liêu', 'Tôi nhận được hàng rồi, sản phẩm đóng gói rất cẩn thận.', 'PROCESSED', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (7, NULL, 'Phạm Minh Đức', 'ducpham@gmail.com', '0934567890', 'Đồng Nai', 'Lỗi thanh toán VNPAY, tôi bị trừ tiền nhưng báo lỗi.', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (8, NULL, 'Vũ Thùy Dương', 'duongvu@gmail.com', '0945678901', 'Bình Dương', 'Bên mình có nhận sỉ quần áo số lượng lớn không shop?', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (9, NULL, 'Bùi Quốc Bảo', 'baobui@gmail.com', '0956789012', 'Nha Trang', 'Cho mình xin bảng size chart chi tiết của áo thun unisex.', 'PROCESSED', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (10, NULL, 'Hoàng Quỳnh Như', 'quynhnhu@gmail.com', '0967890123', 'Vũng Tàu', 'Tôi muốn hoàn trả sản phẩm do không vừa size.', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (11, NULL, 'Đỗ Tấn Phát', 'tanphat.do@gmail.com', '0978901234', 'Huế', 'Shop có cửa hàng offline tại Huế không ạ?', 'PROCESSED', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (12, 1, 'Đức Phát Nguyễn', 'phatnguyen@gmail.com', '0982832647', 'Hồ Chí Minh', 'Hàng rất chất lượng, sẽ ủng hộ shop dài dài.', 'PROCESSED', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (13, NULL, 'Ngô Thanh Trà', 'thanhthra@gmail.com', '0989012345', 'Đà Lạt', 'Thời gian giao hàng ra Đà Lạt mất khoảng bao lâu?', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (14, NULL, 'Dương Gia Bảo', 'giabao@gmail.com', '0990123456', 'Hà Nội', 'Mẫu áo polo màu đen có về thêm size XL không shop?', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (15, NULL, 'Lý Thảo My', 'thuymy@gmail.com', '0801234567', 'Tây Ninh', 'Mã giảm giá cho khách hàng mới sử dụng như thế nào?', 'PROCESSED', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (16, 2, 'Nguyen Van Anh Han', 'anhhan@gmail.com', '0900142141', 'Bình Thuận', 'Shop check giúp mình xem đơn hàng đã được giao cho đơn vị vận chuyển chưa.', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (17, NULL, 'Châu Gia Kiệt', 'giakiet@gmail.com', '0812345678', 'Quảng Nam', 'Cho tôi hỏi quy định đổi trả hàng của shop trong mấy ngày?', 'PROCESSED', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (18, NULL, 'Đinh Ngọc Diệp', 'ngocdiep@gmail.com', '0823456789', 'Gia Lai', 'Tôi muốn thay đổi số điện thoại nhận hàng.', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (19, NULL, 'Trịnh Công Sơn', 'congson@gmail.com', '0834567890', 'Lâm Đồng', 'Sản phẩm bên mình có cho xem hàng trước khi thanh toán không?', 'PENDING', '2026-06-16 21:21:34');
+INSERT INTO `contacts` VALUES (20, NULL, 'Lâm Tuyết Nhi', 'tuyetnhi@gmail.com', '0845678901', 'Hồ Chí Minh', 'Giao hàng rất nhanh hỏa tốc, shipper nhiệt tình. 5 sao!', 'PROCESSED', '2026-06-16 21:21:34');
 
 -- ----------------------------
 -- Table structure for inventory_receipt_details
 -- ----------------------------
 DROP TABLE IF EXISTS `inventory_receipt_details`;
 CREATE TABLE `inventory_receipt_details`  (
-                                              `id` int NOT NULL AUTO_INCREMENT,
-                                              `receipt_id` int NOT NULL,
-                                              `product_variant_id` int NOT NULL,
-                                              `quantity` int NOT NULL,
-                                              `price` double NOT NULL,
-                                              `remaining_quantity` int NOT NULL DEFAULT 0,
-                                              `cost_price` decimal(15, 2) NULL DEFAULT NULL,
-                                              PRIMARY KEY (`id`) USING BTREE,
-                                              INDEX `receipt_id`(`receipt_id` ASC) USING BTREE,
-                                              INDEX `product_variant_id`(`product_variant_id` ASC) USING BTREE,
-                                              CONSTRAINT `inventory_receipt_details_ibfk_1` FOREIGN KEY (`receipt_id`) REFERENCES `inventory_receipts` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                              CONSTRAINT `inventory_receipt_details_ibfk_2` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variants` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `receipt_id` int NOT NULL,
+  `product_variant_id` int NOT NULL,
+  `quantity` int NOT NULL,
+  `price` double NOT NULL,
+  `remaining_quantity` int NOT NULL DEFAULT 0,
+  `cost_price` decimal(15, 2) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `receipt_id`(`receipt_id` ASC) USING BTREE,
+  INDEX `product_variant_id`(`product_variant_id` ASC) USING BTREE,
+  CONSTRAINT `inventory_receipt_details_ibfk_1` FOREIGN KEY (`receipt_id`) REFERENCES `inventory_receipts` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `inventory_receipt_details_ibfk_2` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variants` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1663 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of inventory_receipt_details
 -- ----------------------------
-INSERT INTO `inventory_receipt_details` VALUES (8, 8, 580, 4, 560549, 4, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (9, 9, 570, 1, 690504, 1, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (10, 10, 566, 1, 641434, 1, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (11, 11, 568, 1, 661434, 1, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (12, 12, 586, 1, 646986, 1, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (13, 13, 566, 1, 641434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (14, 14, 566, 1, 641434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (15, 15, 566, 1, 641434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (16, 16, 566, 1, 641434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (17, 17, 566, 1, 641434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (18, 18, 567, 1, 651434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (19, 19, 192, 1, 593298, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (20, 20, 197, 1, 550732, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (21, 21, 568, 1, 661434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (22, 22, 572, 1, 710504, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (23, 23, 572, 1, 710504, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (24, 24, 568, 1, 661434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (25, 25, 572, 1, 710504, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (26, 26, 572, 1, 710504, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (27, 27, 564, 1, 405057, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (28, 28, 564, 1, 405057, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (29, 29, 568, 1, 661434, 0, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (30, 30, 572, 1, 710504, 0, 0.00);
-INSERT INTO `inventory_receipt_details` VALUES (31, 31, 572, 1, 710504, 0, 0.00);
-INSERT INTO `inventory_receipt_details` VALUES (32, 32, 568, 1, 661434, 0, 0.00);
-INSERT INTO `inventory_receipt_details` VALUES (33, 33, 572, 1, 710504, 0, 0.00);
-INSERT INTO `inventory_receipt_details` VALUES (34, 34, 572, 1, 710504, 1, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (35, 35, 204, 1, 580732, 0, 0.00);
-INSERT INTO `inventory_receipt_details` VALUES (36, 36, 204, 1, 580732, 1, NULL);
-INSERT INTO `inventory_receipt_details` VALUES (37, 37, 572, 1, 710504, 0, 0.00);
-INSERT INTO `inventory_receipt_details` VALUES (38, 38, 576, 1, 560549, 0, 0.00);
-INSERT INTO `inventory_receipt_details` VALUES (39, 39, 183, 1, 337296, 0, 0.00);
+INSERT INTO `inventory_receipt_details` VALUES (8, 8, 580, 4, 560549, 4, 392384.00);
+INSERT INTO `inventory_receipt_details` VALUES (9, 9, 570, 1, 690504, 1, 483353.00);
+INSERT INTO `inventory_receipt_details` VALUES (10, 10, 566, 1, 641434, 1, 449004.00);
+INSERT INTO `inventory_receipt_details` VALUES (11, 11, 568, 1, 661434, 1, 463004.00);
+INSERT INTO `inventory_receipt_details` VALUES (12, 12, 586, 1, 646986, 1, 452890.00);
+INSERT INTO `inventory_receipt_details` VALUES (13, 13, 566, 1, 641434, 0, 449004.00);
+INSERT INTO `inventory_receipt_details` VALUES (14, 14, 566, 1, 641434, 0, 449004.00);
+INSERT INTO `inventory_receipt_details` VALUES (15, 15, 566, 1, 641434, 0, 449004.00);
+INSERT INTO `inventory_receipt_details` VALUES (16, 16, 566, 1, 641434, 0, 449004.00);
+INSERT INTO `inventory_receipt_details` VALUES (17, 17, 566, 1, 641434, 0, 449004.00);
+INSERT INTO `inventory_receipt_details` VALUES (18, 18, 567, 1, 651434, 0, 456004.00);
+INSERT INTO `inventory_receipt_details` VALUES (19, 19, 192, 1, 593298, 0, 415309.00);
+INSERT INTO `inventory_receipt_details` VALUES (20, 20, 197, 1, 550732, 0, 385512.00);
+INSERT INTO `inventory_receipt_details` VALUES (21, 21, 568, 1, 661434, 0, 463004.00);
+INSERT INTO `inventory_receipt_details` VALUES (22, 22, 572, 1, 710504, 0, 497353.00);
+INSERT INTO `inventory_receipt_details` VALUES (23, 23, 572, 1, 710504, 0, 497353.00);
+INSERT INTO `inventory_receipt_details` VALUES (24, 24, 568, 1, 661434, 0, 463004.00);
+INSERT INTO `inventory_receipt_details` VALUES (25, 25, 572, 1, 710504, 0, 497353.00);
+INSERT INTO `inventory_receipt_details` VALUES (26, 26, 572, 1, 710504, 0, 497353.00);
+INSERT INTO `inventory_receipt_details` VALUES (27, 27, 564, 1, 405057, 0, 283540.00);
+INSERT INTO `inventory_receipt_details` VALUES (28, 28, 564, 1, 405057, 0, 283540.00);
+INSERT INTO `inventory_receipt_details` VALUES (29, 29, 568, 1, 661434, 0, 463004.00);
+INSERT INTO `inventory_receipt_details` VALUES (30, 30, 572, 1, 710504, 0, 497353.00);
+INSERT INTO `inventory_receipt_details` VALUES (31, 31, 572, 1, 710504, 0, 497353.00);
+INSERT INTO `inventory_receipt_details` VALUES (32, 32, 568, 1, 661434, 0, 463004.00);
+INSERT INTO `inventory_receipt_details` VALUES (33, 33, 572, 1, 710504, 0, 497353.00);
+INSERT INTO `inventory_receipt_details` VALUES (34, 34, 572, 1, 710504, 1, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (35, 35, 204, 1, 580732, 0, 406512.00);
+INSERT INTO `inventory_receipt_details` VALUES (36, 36, 204, 1, 580732, 1, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (37, 37, 572, 1, 710504, 0, 497353.00);
+INSERT INTO `inventory_receipt_details` VALUES (38, 38, 576, 1, 560549, 0, 392384.00);
+INSERT INTO `inventory_receipt_details` VALUES (39, 39, 183, 1, 337296, 0, 236107.00);
+INSERT INTO `inventory_receipt_details` VALUES (40, 40, 3, 92, 436458, 42, 436458.00);
+INSERT INTO `inventory_receipt_details` VALUES (41, 40, 6, 140, 436458, 90, 436458.00);
+INSERT INTO `inventory_receipt_details` VALUES (42, 40, 9, 89, 366810, 39, 366810.00);
+INSERT INTO `inventory_receipt_details` VALUES (43, 40, 12, 130, 366810, 80, 366810.00);
+INSERT INTO `inventory_receipt_details` VALUES (44, 40, 15, 92, 366810, 42, 366810.00);
+INSERT INTO `inventory_receipt_details` VALUES (45, 40, 18, 82, 250541, 32, 250541.00);
+INSERT INTO `inventory_receipt_details` VALUES (46, 40, 21, 126, 207865, 76, 207865.00);
+INSERT INTO `inventory_receipt_details` VALUES (47, 40, 24, 100, 207865, 50, 207865.00);
+INSERT INTO `inventory_receipt_details` VALUES (48, 40, 27, 80, 326599, 30, 326599.00);
+INSERT INTO `inventory_receipt_details` VALUES (49, 40, 30, 90, 342605, 40, 342605.00);
+INSERT INTO `inventory_receipt_details` VALUES (50, 40, 33, 110, 342605, 60, 342605.00);
+INSERT INTO `inventory_receipt_details` VALUES (51, 40, 36, 115, 342605, 65, 342605.00);
+INSERT INTO `inventory_receipt_details` VALUES (52, 40, 39, 150, 268707, 100, 268707.00);
+INSERT INTO `inventory_receipt_details` VALUES (53, 40, 42, 147, 268707, 97, 268707.00);
+INSERT INTO `inventory_receipt_details` VALUES (54, 40, 45, 87, 406456, 37, 406456.00);
+INSERT INTO `inventory_receipt_details` VALUES (55, 40, 48, 113, 406456, 63, 406456.00);
+INSERT INTO `inventory_receipt_details` VALUES (56, 40, 51, 93, 256412, 43, 256412.00);
+INSERT INTO `inventory_receipt_details` VALUES (57, 40, 54, 91, 221459, 41, 221459.00);
+INSERT INTO `inventory_receipt_details` VALUES (58, 40, 57, 123, 211059, 73, 211059.00);
+INSERT INTO `inventory_receipt_details` VALUES (59, 40, 60, 71, 211059, 21, 211059.00);
+INSERT INTO `inventory_receipt_details` VALUES (60, 40, 63, 106, 211059, 56, 211059.00);
+INSERT INTO `inventory_receipt_details` VALUES (61, 40, 66, 111, 187061, 61, 187061.00);
+INSERT INTO `inventory_receipt_details` VALUES (62, 40, 69, 77, 187061, 27, 187061.00);
+INSERT INTO `inventory_receipt_details` VALUES (63, 40, 72, 72, 187061, 22, 187061.00);
+INSERT INTO `inventory_receipt_details` VALUES (64, 40, 75, 140, 348169, 90, 348169.00);
+INSERT INTO `inventory_receipt_details` VALUES (65, 40, 78, 83, 335084, 33, 335084.00);
+INSERT INTO `inventory_receipt_details` VALUES (66, 40, 81, 146, 335084, 96, 335084.00);
+INSERT INTO `inventory_receipt_details` VALUES (67, 40, 84, 83, 335084, 33, 335084.00);
+INSERT INTO `inventory_receipt_details` VALUES (68, 40, 87, 125, 215297, 75, 215297.00);
+INSERT INTO `inventory_receipt_details` VALUES (69, 40, 90, 77, 215297, 27, 215297.00);
+INSERT INTO `inventory_receipt_details` VALUES (70, 40, 93, 82, 332881, 32, 332881.00);
+INSERT INTO `inventory_receipt_details` VALUES (71, 40, 96, 86, 332881, 36, 332881.00);
+INSERT INTO `inventory_receipt_details` VALUES (72, 40, 99, 98, 349008, 48, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (73, 40, 102, 74, 349008, 24, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (74, 40, 105, 112, 349008, 62, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (75, 40, 108, 104, 349008, 54, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (76, 40, 111, 135, 349008, 85, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (77, 40, 114, 94, 383285, 44, 383285.00);
+INSERT INTO `inventory_receipt_details` VALUES (78, 40, 117, 149, 438886, 99, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (79, 40, 120, 147, 438886, 97, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (80, 40, 123, 96, 438886, 46, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (81, 40, 126, 127, 438886, 77, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (82, 40, 129, 90, 219232, 40, 219232.00);
+INSERT INTO `inventory_receipt_details` VALUES (83, 40, 132, 73, 219232, 23, 219232.00);
+INSERT INTO `inventory_receipt_details` VALUES (84, 40, 135, 112, 321339, 62, 321339.00);
+INSERT INTO `inventory_receipt_details` VALUES (85, 40, 138, 148, 260415, 98, 260415.00);
+INSERT INTO `inventory_receipt_details` VALUES (86, 40, 141, 105, 260415, 55, 260415.00);
+INSERT INTO `inventory_receipt_details` VALUES (87, 40, 144, 71, 260415, 21, 260415.00);
+INSERT INTO `inventory_receipt_details` VALUES (88, 40, 147, 110, 415175, 60, 415175.00);
+INSERT INTO `inventory_receipt_details` VALUES (89, 40, 150, 123, 209433, 73, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (90, 40, 153, 138, 209433, 88, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (91, 40, 156, 88, 209433, 38, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (92, 40, 159, 75, 209433, 25, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (93, 40, 162, 125, 287734, 75, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (94, 40, 165, 72, 287734, 22, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (95, 40, 168, 104, 287734, 54, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (96, 40, 171, 81, 287734, 31, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (97, 40, 174, 149, 372751, 99, 372751.00);
+INSERT INTO `inventory_receipt_details` VALUES (98, 40, 177, 104, 372751, 54, 372751.00);
+INSERT INTO `inventory_receipt_details` VALUES (99, 40, 180, 126, 372751, 76, 372751.00);
+INSERT INTO `inventory_receipt_details` VALUES (100, 40, 183, 148, 286702, 98, 286702.00);
+INSERT INTO `inventory_receipt_details` VALUES (101, 40, 186, 94, 286702, 44, 286702.00);
+INSERT INTO `inventory_receipt_details` VALUES (102, 40, 189, 72, 316593, 22, 316593.00);
+INSERT INTO `inventory_receipt_details` VALUES (103, 40, 192, 143, 316593, 93, 316593.00);
+INSERT INTO `inventory_receipt_details` VALUES (104, 40, 195, 79, 316593, 29, 316593.00);
+INSERT INTO `inventory_receipt_details` VALUES (105, 40, 198, 87, 316304, 37, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (106, 40, 201, 147, 316304, 97, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (107, 40, 204, 94, 316304, 44, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (108, 40, 207, 136, 248795, 86, 248795.00);
+INSERT INTO `inventory_receipt_details` VALUES (109, 40, 210, 124, 248795, 74, 248795.00);
+INSERT INTO `inventory_receipt_details` VALUES (110, 40, 213, 103, 342498, 53, 342498.00);
+INSERT INTO `inventory_receipt_details` VALUES (111, 40, 216, 127, 342498, 77, 342498.00);
+INSERT INTO `inventory_receipt_details` VALUES (112, 40, 219, 107, 342498, 57, 342498.00);
+INSERT INTO `inventory_receipt_details` VALUES (113, 40, 222, 136, 397894, 86, 397894.00);
+INSERT INTO `inventory_receipt_details` VALUES (114, 40, 225, 72, 397894, 22, 397894.00);
+INSERT INTO `inventory_receipt_details` VALUES (115, 40, 228, 92, 397894, 42, 397894.00);
+INSERT INTO `inventory_receipt_details` VALUES (116, 40, 231, 72, 323320, 22, 323320.00);
+INSERT INTO `inventory_receipt_details` VALUES (117, 40, 234, 110, 334384, 60, 334384.00);
+INSERT INTO `inventory_receipt_details` VALUES (118, 40, 237, 139, 555308, 89, 555308.00);
+INSERT INTO `inventory_receipt_details` VALUES (119, 40, 240, 107, 555308, 57, 555308.00);
+INSERT INTO `inventory_receipt_details` VALUES (120, 40, 243, 78, 332013, 28, 332013.00);
+INSERT INTO `inventory_receipt_details` VALUES (121, 40, 246, 104, 449343, 54, 449343.00);
+INSERT INTO `inventory_receipt_details` VALUES (122, 40, 249, 106, 479080, 56, 479080.00);
+INSERT INTO `inventory_receipt_details` VALUES (123, 40, 252, 105, 479080, 55, 479080.00);
+INSERT INTO `inventory_receipt_details` VALUES (124, 40, 255, 111, 475626, 61, 475626.00);
+INSERT INTO `inventory_receipt_details` VALUES (125, 40, 258, 119, 475626, 69, 475626.00);
+INSERT INTO `inventory_receipt_details` VALUES (126, 40, 261, 150, 392505, 100, 392505.00);
+INSERT INTO `inventory_receipt_details` VALUES (127, 40, 264, 140, 392505, 90, 392505.00);
+INSERT INTO `inventory_receipt_details` VALUES (128, 40, 267, 120, 261197, 70, 261197.00);
+INSERT INTO `inventory_receipt_details` VALUES (129, 40, 270, 116, 456000, 66, 456000.00);
+INSERT INTO `inventory_receipt_details` VALUES (130, 40, 273, 135, 456000, 85, 456000.00);
+INSERT INTO `inventory_receipt_details` VALUES (131, 40, 276, 113, 456000, 63, 456000.00);
+INSERT INTO `inventory_receipt_details` VALUES (132, 40, 279, 135, 690291, 85, 690291.00);
+INSERT INTO `inventory_receipt_details` VALUES (133, 40, 282, 86, 608698, 36, 608698.00);
+INSERT INTO `inventory_receipt_details` VALUES (134, 40, 285, 81, 608698, 31, 608698.00);
+INSERT INTO `inventory_receipt_details` VALUES (135, 40, 288, 107, 608698, 57, 608698.00);
+INSERT INTO `inventory_receipt_details` VALUES (136, 40, 291, 73, 595672, 23, 595672.00);
+INSERT INTO `inventory_receipt_details` VALUES (137, 40, 294, 149, 595672, 99, 595672.00);
+INSERT INTO `inventory_receipt_details` VALUES (138, 40, 297, 82, 665155, 32, 665155.00);
+INSERT INTO `inventory_receipt_details` VALUES (139, 40, 300, 135, 665155, 85, 665155.00);
+INSERT INTO `inventory_receipt_details` VALUES (140, 40, 303, 137, 391080, 87, 391080.00);
+INSERT INTO `inventory_receipt_details` VALUES (141, 40, 306, 124, 331130, 74, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (142, 40, 309, 114, 331130, 64, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (143, 40, 312, 98, 331130, 48, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (144, 40, 315, 139, 331130, 89, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (145, 40, 318, 107, 343569, 57, 343569.00);
+INSERT INTO `inventory_receipt_details` VALUES (146, 40, 321, 136, 332419, 86, 332419.00);
+INSERT INTO `inventory_receipt_details` VALUES (147, 40, 324, 145, 332419, 95, 332419.00);
+INSERT INTO `inventory_receipt_details` VALUES (148, 40, 327, 98, 634218, 48, 634218.00);
+INSERT INTO `inventory_receipt_details` VALUES (149, 40, 330, 108, 634218, 58, 634218.00);
+INSERT INTO `inventory_receipt_details` VALUES (150, 40, 333, 129, 411250, 79, 411250.00);
+INSERT INTO `inventory_receipt_details` VALUES (151, 40, 336, 74, 411250, 24, 411250.00);
+INSERT INTO `inventory_receipt_details` VALUES (152, 40, 339, 86, 623444, 36, 623444.00);
+INSERT INTO `inventory_receipt_details` VALUES (153, 40, 342, 91, 329863, 41, 329863.00);
+INSERT INTO `inventory_receipt_details` VALUES (154, 40, 345, 123, 242807, 73, 242807.00);
+INSERT INTO `inventory_receipt_details` VALUES (155, 40, 348, 73, 242807, 23, 242807.00);
+INSERT INTO `inventory_receipt_details` VALUES (156, 40, 351, 117, 242807, 67, 242807.00);
+INSERT INTO `inventory_receipt_details` VALUES (157, 40, 354, 135, 579640, 85, 579640.00);
+INSERT INTO `inventory_receipt_details` VALUES (158, 40, 357, 127, 413114, 77, 413114.00);
+INSERT INTO `inventory_receipt_details` VALUES (159, 40, 360, 144, 413114, 94, 413114.00);
+INSERT INTO `inventory_receipt_details` VALUES (160, 40, 363, 148, 413114, 98, 413114.00);
+INSERT INTO `inventory_receipt_details` VALUES (161, 40, 366, 123, 404994, 73, 404994.00);
+INSERT INTO `inventory_receipt_details` VALUES (162, 40, 369, 149, 404994, 99, 404994.00);
+INSERT INTO `inventory_receipt_details` VALUES (163, 40, 372, 97, 404994, 47, 404994.00);
+INSERT INTO `inventory_receipt_details` VALUES (164, 40, 375, 73, 273926, 23, 273926.00);
+INSERT INTO `inventory_receipt_details` VALUES (165, 40, 378, 126, 577333, 76, 577333.00);
+INSERT INTO `inventory_receipt_details` VALUES (166, 40, 381, 102, 577333, 52, 577333.00);
+INSERT INTO `inventory_receipt_details` VALUES (167, 40, 384, 83, 577333, 33, 577333.00);
+INSERT INTO `inventory_receipt_details` VALUES (168, 40, 387, 108, 674165, 58, 674165.00);
+INSERT INTO `inventory_receipt_details` VALUES (169, 40, 390, 95, 575280, 45, 575280.00);
+INSERT INTO `inventory_receipt_details` VALUES (170, 40, 393, 91, 454974, 41, 454974.00);
+INSERT INTO `inventory_receipt_details` VALUES (171, 40, 396, 91, 454974, 41, 454974.00);
+INSERT INTO `inventory_receipt_details` VALUES (172, 40, 399, 96, 454974, 46, 454974.00);
+INSERT INTO `inventory_receipt_details` VALUES (173, 40, 402, 130, 639834, 80, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (174, 40, 405, 98, 639834, 48, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (175, 40, 408, 101, 639834, 51, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (176, 40, 411, 105, 639834, 55, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (177, 40, 414, 126, 172305, 76, 172305.00);
+INSERT INTO `inventory_receipt_details` VALUES (178, 40, 417, 117, 212095, 67, 212095.00);
+INSERT INTO `inventory_receipt_details` VALUES (179, 40, 420, 120, 212095, 70, 212095.00);
+INSERT INTO `inventory_receipt_details` VALUES (180, 40, 423, 126, 310253, 76, 310253.00);
+INSERT INTO `inventory_receipt_details` VALUES (181, 40, 426, 136, 310253, 86, 310253.00);
+INSERT INTO `inventory_receipt_details` VALUES (182, 40, 429, 89, 292233, 39, 292233.00);
+INSERT INTO `inventory_receipt_details` VALUES (183, 40, 432, 82, 292233, 32, 292233.00);
+INSERT INTO `inventory_receipt_details` VALUES (184, 40, 435, 111, 386514, 61, 386514.00);
+INSERT INTO `inventory_receipt_details` VALUES (185, 40, 438, 114, 386514, 64, 386514.00);
+INSERT INTO `inventory_receipt_details` VALUES (186, 40, 441, 116, 302895, 66, 302895.00);
+INSERT INTO `inventory_receipt_details` VALUES (187, 40, 444, 137, 302895, 87, 302895.00);
+INSERT INTO `inventory_receipt_details` VALUES (188, 40, 447, 119, 302895, 69, 302895.00);
+INSERT INTO `inventory_receipt_details` VALUES (189, 40, 450, 149, 240804, 99, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (190, 40, 453, 72, 240804, 22, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (191, 40, 456, 76, 240804, 26, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (192, 40, 459, 73, 240804, 23, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (193, 40, 462, 134, 241217, 84, 241217.00);
+INSERT INTO `inventory_receipt_details` VALUES (194, 40, 465, 91, 241217, 41, 241217.00);
+INSERT INTO `inventory_receipt_details` VALUES (195, 40, 468, 100, 241217, 50, 241217.00);
+INSERT INTO `inventory_receipt_details` VALUES (196, 40, 471, 131, 369672, 81, 369672.00);
+INSERT INTO `inventory_receipt_details` VALUES (197, 40, 474, 135, 416735, 85, 416735.00);
+INSERT INTO `inventory_receipt_details` VALUES (198, 40, 477, 86, 416735, 36, 416735.00);
+INSERT INTO `inventory_receipt_details` VALUES (199, 40, 480, 116, 416735, 66, 416735.00);
+INSERT INTO `inventory_receipt_details` VALUES (200, 40, 483, 114, 259709, 64, 259709.00);
+INSERT INTO `inventory_receipt_details` VALUES (201, 40, 486, 138, 185526, 88, 185526.00);
+INSERT INTO `inventory_receipt_details` VALUES (202, 40, 489, 97, 185526, 47, 185526.00);
+INSERT INTO `inventory_receipt_details` VALUES (203, 40, 492, 132, 185526, 82, 185526.00);
+INSERT INTO `inventory_receipt_details` VALUES (204, 40, 495, 122, 369330, 72, 369330.00);
+INSERT INTO `inventory_receipt_details` VALUES (205, 40, 498, 129, 296918, 79, 296918.00);
+INSERT INTO `inventory_receipt_details` VALUES (206, 40, 501, 148, 346557, 98, 346557.00);
+INSERT INTO `inventory_receipt_details` VALUES (207, 40, 504, 112, 346557, 62, 346557.00);
+INSERT INTO `inventory_receipt_details` VALUES (208, 40, 507, 80, 346557, 30, 346557.00);
+INSERT INTO `inventory_receipt_details` VALUES (209, 40, 510, 121, 229202, 71, 229202.00);
+INSERT INTO `inventory_receipt_details` VALUES (210, 40, 513, 147, 369405, 97, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (211, 40, 516, 104, 369405, 54, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (212, 40, 519, 106, 369405, 56, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (213, 40, 522, 143, 369405, 93, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (214, 40, 525, 139, 369405, 89, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (215, 40, 528, 98, 369405, 48, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (216, 40, 531, 98, 169138, 48, 169138.00);
+INSERT INTO `inventory_receipt_details` VALUES (217, 40, 534, 74, 169138, 24, 169138.00);
+INSERT INTO `inventory_receipt_details` VALUES (218, 40, 537, 107, 249011, 57, 249011.00);
+INSERT INTO `inventory_receipt_details` VALUES (219, 40, 540, 101, 249011, 51, 249011.00);
+INSERT INTO `inventory_receipt_details` VALUES (220, 40, 543, 104, 234495, 54, 234495.00);
+INSERT INTO `inventory_receipt_details` VALUES (221, 40, 546, 91, 397016, 41, 397016.00);
+INSERT INTO `inventory_receipt_details` VALUES (222, 40, 549, 102, 397016, 52, 397016.00);
+INSERT INTO `inventory_receipt_details` VALUES (223, 40, 552, 109, 397016, 59, 397016.00);
+INSERT INTO `inventory_receipt_details` VALUES (224, 40, 555, 76, 404317, 26, 404317.00);
+INSERT INTO `inventory_receipt_details` VALUES (225, 40, 558, 72, 262403, 22, 262403.00);
+INSERT INTO `inventory_receipt_details` VALUES (226, 40, 561, 137, 286976, 87, 286976.00);
+INSERT INTO `inventory_receipt_details` VALUES (227, 40, 564, 119, 286976, 69, 286976.00);
+INSERT INTO `inventory_receipt_details` VALUES (228, 40, 567, 137, 286976, 87, 286976.00);
+INSERT INTO `inventory_receipt_details` VALUES (229, 40, 570, 120, 391525, 70, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (230, 40, 573, 87, 391525, 37, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (231, 40, 576, 126, 391525, 76, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (232, 40, 579, 130, 369693, 80, 369693.00);
+INSERT INTO `inventory_receipt_details` VALUES (233, 40, 582, 99, 356554, 49, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (234, 40, 585, 126, 356554, 76, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (235, 40, 588, 133, 356554, 83, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (236, 40, 591, 105, 356554, 55, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (237, 40, 594, 91, 215784, 41, 215784.00);
+INSERT INTO `inventory_receipt_details` VALUES (238, 40, 597, 129, 406717, 79, 406717.00);
+INSERT INTO `inventory_receipt_details` VALUES (239, 40, 600, 75, 406717, 25, 406717.00);
+INSERT INTO `inventory_receipt_details` VALUES (240, 40, 603, 144, 406717, 94, 406717.00);
+INSERT INTO `inventory_receipt_details` VALUES (241, 40, 606, 141, 245963, 91, 245963.00);
+INSERT INTO `inventory_receipt_details` VALUES (242, 40, 609, 76, 245963, 26, 245963.00);
+INSERT INTO `inventory_receipt_details` VALUES (243, 40, 612, 135, 245963, 85, 245963.00);
+INSERT INTO `inventory_receipt_details` VALUES (244, 40, 615, 99, 213904, 49, 213904.00);
+INSERT INTO `inventory_receipt_details` VALUES (245, 40, 618, 97, 213904, 47, 213904.00);
+INSERT INTO `inventory_receipt_details` VALUES (246, 40, 621, 133, 364295, 83, 364295.00);
+INSERT INTO `inventory_receipt_details` VALUES (247, 40, 624, 121, 364295, 71, 364295.00);
+INSERT INTO `inventory_receipt_details` VALUES (248, 40, 627, 127, 304292, 77, 304292.00);
+INSERT INTO `inventory_receipt_details` VALUES (249, 40, 630, 144, 255677, 94, 255677.00);
+INSERT INTO `inventory_receipt_details` VALUES (250, 40, 633, 98, 323355, 48, 323355.00);
+INSERT INTO `inventory_receipt_details` VALUES (251, 40, 636, 78, 323355, 28, 323355.00);
+INSERT INTO `inventory_receipt_details` VALUES (252, 40, 639, 137, 317865, 87, 317865.00);
+INSERT INTO `inventory_receipt_details` VALUES (253, 40, 642, 103, 317865, 53, 317865.00);
+INSERT INTO `inventory_receipt_details` VALUES (254, 40, 645, 124, 338748, 74, 338748.00);
+INSERT INTO `inventory_receipt_details` VALUES (255, 40, 648, 137, 338748, 87, 338748.00);
+INSERT INTO `inventory_receipt_details` VALUES (256, 40, 651, 115, 343492, 65, 343492.00);
+INSERT INTO `inventory_receipt_details` VALUES (257, 40, 654, 73, 343492, 23, 343492.00);
+INSERT INTO `inventory_receipt_details` VALUES (258, 40, 657, 142, 306150, 92, 306150.00);
+INSERT INTO `inventory_receipt_details` VALUES (259, 40, 660, 89, 306150, 39, 306150.00);
+INSERT INTO `inventory_receipt_details` VALUES (260, 40, 663, 138, 394172, 88, 394172.00);
+INSERT INTO `inventory_receipt_details` VALUES (261, 40, 666, 113, 263072, 63, 263072.00);
+INSERT INTO `inventory_receipt_details` VALUES (262, 40, 669, 128, 537821, 78, 537821.00);
+INSERT INTO `inventory_receipt_details` VALUES (263, 40, 672, 88, 537821, 38, 537821.00);
+INSERT INTO `inventory_receipt_details` VALUES (264, 40, 675, 72, 403605, 22, 403605.00);
+INSERT INTO `inventory_receipt_details` VALUES (265, 40, 678, 123, 403605, 73, 403605.00);
+INSERT INTO `inventory_receipt_details` VALUES (266, 40, 681, 82, 562002, 32, 562002.00);
+INSERT INTO `inventory_receipt_details` VALUES (267, 40, 684, 108, 562002, 58, 562002.00);
+INSERT INTO `inventory_receipt_details` VALUES (268, 40, 687, 137, 562002, 87, 562002.00);
+INSERT INTO `inventory_receipt_details` VALUES (269, 40, 690, 105, 412739, 55, 412739.00);
+INSERT INTO `inventory_receipt_details` VALUES (270, 40, 693, 125, 412739, 75, 412739.00);
+INSERT INTO `inventory_receipt_details` VALUES (271, 40, 696, 93, 412739, 43, 412739.00);
+INSERT INTO `inventory_receipt_details` VALUES (272, 40, 699, 76, 324458, 26, 324458.00);
+INSERT INTO `inventory_receipt_details` VALUES (273, 40, 702, 107, 304059, 57, 304059.00);
+INSERT INTO `inventory_receipt_details` VALUES (274, 40, 705, 140, 304059, 90, 304059.00);
+INSERT INTO `inventory_receipt_details` VALUES (275, 40, 708, 87, 304059, 37, 304059.00);
+INSERT INTO `inventory_receipt_details` VALUES (276, 40, 711, 142, 295155, 92, 295155.00);
+INSERT INTO `inventory_receipt_details` VALUES (277, 40, 714, 73, 295155, 23, 295155.00);
+INSERT INTO `inventory_receipt_details` VALUES (278, 40, 717, 118, 498236, 68, 498236.00);
+INSERT INTO `inventory_receipt_details` VALUES (279, 40, 720, 75, 498236, 25, 498236.00);
+INSERT INTO `inventory_receipt_details` VALUES (280, 40, 723, 120, 260587, 70, 260587.00);
+INSERT INTO `inventory_receipt_details` VALUES (281, 40, 726, 142, 324204, 92, 324204.00);
+INSERT INTO `inventory_receipt_details` VALUES (282, 40, 729, 115, 619352, 65, 619352.00);
+INSERT INTO `inventory_receipt_details` VALUES (283, 40, 732, 73, 619352, 23, 619352.00);
+INSERT INTO `inventory_receipt_details` VALUES (284, 40, 735, 103, 533574, 53, 533574.00);
+INSERT INTO `inventory_receipt_details` VALUES (285, 40, 738, 145, 533574, 95, 533574.00);
+INSERT INTO `inventory_receipt_details` VALUES (286, 40, 741, 73, 412905, 23, 412905.00);
+INSERT INTO `inventory_receipt_details` VALUES (287, 40, 744, 71, 412905, 21, 412905.00);
+INSERT INTO `inventory_receipt_details` VALUES (288, 40, 747, 115, 621394, 65, 621394.00);
+INSERT INTO `inventory_receipt_details` VALUES (289, 40, 750, 81, 456774, 31, 456774.00);
+INSERT INTO `inventory_receipt_details` VALUES (290, 40, 753, 114, 284478, 64, 284478.00);
+INSERT INTO `inventory_receipt_details` VALUES (291, 40, 756, 72, 284478, 22, 284478.00);
+INSERT INTO `inventory_receipt_details` VALUES (292, 40, 759, 71, 684514, 21, 684514.00);
+INSERT INTO `inventory_receipt_details` VALUES (293, 40, 762, 104, 684514, 54, 684514.00);
+INSERT INTO `inventory_receipt_details` VALUES (294, 40, 765, 96, 359921, 46, 359921.00);
+INSERT INTO `inventory_receipt_details` VALUES (295, 40, 768, 103, 359921, 53, 359921.00);
+INSERT INTO `inventory_receipt_details` VALUES (296, 40, 771, 147, 414000, 97, 414000.00);
+INSERT INTO `inventory_receipt_details` VALUES (297, 40, 774, 79, 414000, 29, 414000.00);
+INSERT INTO `inventory_receipt_details` VALUES (298, 40, 777, 83, 326291, 33, 326291.00);
+INSERT INTO `inventory_receipt_details` VALUES (299, 40, 780, 135, 326291, 85, 326291.00);
+INSERT INTO `inventory_receipt_details` VALUES (300, 40, 783, 111, 326291, 61, 326291.00);
+INSERT INTO `inventory_receipt_details` VALUES (301, 40, 786, 80, 450043, 30, 450043.00);
+INSERT INTO `inventory_receipt_details` VALUES (302, 40, 789, 109, 450043, 59, 450043.00);
+INSERT INTO `inventory_receipt_details` VALUES (303, 40, 792, 97, 450043, 47, 450043.00);
+INSERT INTO `inventory_receipt_details` VALUES (304, 40, 795, 142, 656547, 92, 656547.00);
+INSERT INTO `inventory_receipt_details` VALUES (305, 40, 798, 80, 656547, 30, 656547.00);
+INSERT INTO `inventory_receipt_details` VALUES (306, 40, 801, 140, 308858, 90, 308858.00);
+INSERT INTO `inventory_receipt_details` VALUES (307, 40, 804, 107, 308858, 57, 308858.00);
+INSERT INTO `inventory_receipt_details` VALUES (308, 40, 807, 71, 308858, 21, 308858.00);
+INSERT INTO `inventory_receipt_details` VALUES (309, 40, 810, 90, 449170, 40, 449170.00);
+INSERT INTO `inventory_receipt_details` VALUES (310, 40, 813, 141, 449170, 91, 449170.00);
+INSERT INTO `inventory_receipt_details` VALUES (311, 40, 816, 110, 449170, 60, 449170.00);
+INSERT INTO `inventory_receipt_details` VALUES (312, 40, 819, 138, 77469, 88, 77469.00);
+INSERT INTO `inventory_receipt_details` VALUES (313, 40, 822, 127, 141742, 77, 141742.00);
+INSERT INTO `inventory_receipt_details` VALUES (314, 40, 825, 89, 110163, 39, 110163.00);
+INSERT INTO `inventory_receipt_details` VALUES (315, 40, 828, 83, 50983, 33, 50983.00);
+INSERT INTO `inventory_receipt_details` VALUES (316, 40, 831, 105, 133399, 55, 133399.00);
+INSERT INTO `inventory_receipt_details` VALUES (551, 41, 1, 89, 436458, 39, 436458.00);
+INSERT INTO `inventory_receipt_details` VALUES (552, 41, 4, 149, 436458, 99, 436458.00);
+INSERT INTO `inventory_receipt_details` VALUES (553, 41, 7, 110, 436458, 60, 436458.00);
+INSERT INTO `inventory_receipt_details` VALUES (554, 41, 10, 110, 366810, 60, 366810.00);
+INSERT INTO `inventory_receipt_details` VALUES (555, 41, 13, 129, 366810, 79, 366810.00);
+INSERT INTO `inventory_receipt_details` VALUES (556, 41, 16, 114, 366810, 64, 366810.00);
+INSERT INTO `inventory_receipt_details` VALUES (557, 41, 19, 128, 250541, 78, 250541.00);
+INSERT INTO `inventory_receipt_details` VALUES (558, 41, 22, 80, 207865, 30, 207865.00);
+INSERT INTO `inventory_receipt_details` VALUES (559, 41, 25, 118, 326599, 68, 326599.00);
+INSERT INTO `inventory_receipt_details` VALUES (560, 41, 28, 99, 326599, 49, 326599.00);
+INSERT INTO `inventory_receipt_details` VALUES (561, 41, 31, 114, 342605, 64, 342605.00);
+INSERT INTO `inventory_receipt_details` VALUES (562, 41, 34, 130, 342605, 80, 342605.00);
+INSERT INTO `inventory_receipt_details` VALUES (563, 41, 37, 103, 268707, 53, 268707.00);
+INSERT INTO `inventory_receipt_details` VALUES (564, 41, 40, 96, 268707, 46, 268707.00);
+INSERT INTO `inventory_receipt_details` VALUES (565, 41, 43, 110, 268707, 60, 268707.00);
+INSERT INTO `inventory_receipt_details` VALUES (566, 41, 46, 72, 406456, 22, 406456.00);
+INSERT INTO `inventory_receipt_details` VALUES (567, 41, 49, 86, 256412, 36, 256412.00);
+INSERT INTO `inventory_receipt_details` VALUES (568, 41, 52, 137, 256412, 87, 256412.00);
+INSERT INTO `inventory_receipt_details` VALUES (569, 41, 55, 89, 221459, 39, 221459.00);
+INSERT INTO `inventory_receipt_details` VALUES (570, 41, 58, 114, 211059, 64, 211059.00);
+INSERT INTO `inventory_receipt_details` VALUES (571, 41, 61, 139, 211059, 89, 211059.00);
+INSERT INTO `inventory_receipt_details` VALUES (572, 41, 64, 121, 211059, 71, 211059.00);
+INSERT INTO `inventory_receipt_details` VALUES (573, 41, 67, 104, 187061, 54, 187061.00);
+INSERT INTO `inventory_receipt_details` VALUES (574, 41, 70, 100, 187061, 50, 187061.00);
+INSERT INTO `inventory_receipt_details` VALUES (575, 41, 73, 78, 348169, 28, 348169.00);
+INSERT INTO `inventory_receipt_details` VALUES (576, 41, 76, 131, 348169, 81, 348169.00);
+INSERT INTO `inventory_receipt_details` VALUES (577, 41, 79, 134, 335084, 84, 335084.00);
+INSERT INTO `inventory_receipt_details` VALUES (578, 41, 82, 149, 335084, 99, 335084.00);
+INSERT INTO `inventory_receipt_details` VALUES (579, 41, 85, 120, 215297, 70, 215297.00);
+INSERT INTO `inventory_receipt_details` VALUES (580, 41, 88, 85, 215297, 35, 215297.00);
+INSERT INTO `inventory_receipt_details` VALUES (581, 41, 91, 74, 215297, 24, 215297.00);
+INSERT INTO `inventory_receipt_details` VALUES (582, 41, 94, 134, 332881, 84, 332881.00);
+INSERT INTO `inventory_receipt_details` VALUES (583, 41, 97, 91, 349008, 41, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (584, 41, 100, 81, 349008, 31, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (585, 41, 103, 138, 349008, 88, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (586, 41, 106, 120, 349008, 70, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (587, 41, 109, 81, 349008, 31, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (588, 41, 112, 148, 349008, 98, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (589, 41, 115, 141, 383285, 91, 383285.00);
+INSERT INTO `inventory_receipt_details` VALUES (590, 41, 118, 121, 438886, 71, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (591, 41, 121, 92, 438886, 42, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (592, 41, 124, 123, 438886, 73, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (593, 41, 127, 114, 438886, 64, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (594, 41, 130, 72, 219232, 22, 219232.00);
+INSERT INTO `inventory_receipt_details` VALUES (595, 41, 133, 144, 321339, 94, 321339.00);
+INSERT INTO `inventory_receipt_details` VALUES (596, 41, 136, 122, 321339, 72, 321339.00);
+INSERT INTO `inventory_receipt_details` VALUES (597, 41, 139, 81, 260415, 31, 260415.00);
+INSERT INTO `inventory_receipt_details` VALUES (598, 41, 142, 86, 260415, 36, 260415.00);
+INSERT INTO `inventory_receipt_details` VALUES (599, 41, 145, 110, 415175, 60, 415175.00);
+INSERT INTO `inventory_receipt_details` VALUES (600, 41, 148, 89, 415175, 39, 415175.00);
+INSERT INTO `inventory_receipt_details` VALUES (601, 41, 151, 111, 209433, 61, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (602, 41, 154, 130, 209433, 80, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (603, 41, 157, 111, 209433, 61, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (604, 41, 160, 90, 209433, 40, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (605, 41, 163, 106, 287734, 56, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (606, 41, 166, 114, 287734, 64, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (607, 41, 169, 117, 287734, 67, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (608, 41, 172, 128, 287734, 78, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (609, 41, 175, 147, 372751, 97, 372751.00);
+INSERT INTO `inventory_receipt_details` VALUES (610, 41, 178, 118, 372751, 68, 372751.00);
+INSERT INTO `inventory_receipt_details` VALUES (611, 41, 181, 125, 286702, 75, 286702.00);
+INSERT INTO `inventory_receipt_details` VALUES (612, 41, 184, 88, 286702, 38, 286702.00);
+INSERT INTO `inventory_receipt_details` VALUES (613, 41, 187, 138, 286702, 88, 286702.00);
+INSERT INTO `inventory_receipt_details` VALUES (614, 41, 190, 150, 316593, 100, 316593.00);
+INSERT INTO `inventory_receipt_details` VALUES (615, 41, 193, 141, 316593, 91, 316593.00);
+INSERT INTO `inventory_receipt_details` VALUES (616, 41, 196, 108, 316593, 58, 316593.00);
+INSERT INTO `inventory_receipt_details` VALUES (617, 41, 199, 86, 316304, 36, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (618, 41, 202, 140, 316304, 90, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (619, 41, 205, 131, 248795, 81, 248795.00);
+INSERT INTO `inventory_receipt_details` VALUES (620, 41, 208, 105, 248795, 55, 248795.00);
+INSERT INTO `inventory_receipt_details` VALUES (621, 41, 211, 70, 248795, 20, 248795.00);
+INSERT INTO `inventory_receipt_details` VALUES (622, 41, 214, 138, 342498, 88, 342498.00);
+INSERT INTO `inventory_receipt_details` VALUES (623, 41, 217, 105, 342498, 55, 342498.00);
+INSERT INTO `inventory_receipt_details` VALUES (624, 41, 220, 141, 342498, 91, 342498.00);
+INSERT INTO `inventory_receipt_details` VALUES (625, 41, 223, 106, 397894, 56, 397894.00);
+INSERT INTO `inventory_receipt_details` VALUES (626, 41, 226, 101, 397894, 51, 397894.00);
+INSERT INTO `inventory_receipt_details` VALUES (627, 41, 229, 110, 323320, 60, 323320.00);
+INSERT INTO `inventory_receipt_details` VALUES (628, 41, 232, 136, 323320, 86, 323320.00);
+INSERT INTO `inventory_receipt_details` VALUES (629, 41, 235, 88, 334384, 38, 334384.00);
+INSERT INTO `inventory_receipt_details` VALUES (630, 41, 238, 70, 555308, 20, 555308.00);
+INSERT INTO `inventory_receipt_details` VALUES (631, 41, 241, 91, 332013, 41, 332013.00);
+INSERT INTO `inventory_receipt_details` VALUES (632, 41, 244, 79, 332013, 29, 332013.00);
+INSERT INTO `inventory_receipt_details` VALUES (633, 41, 247, 94, 449343, 44, 449343.00);
+INSERT INTO `inventory_receipt_details` VALUES (634, 41, 250, 71, 479080, 21, 479080.00);
+INSERT INTO `inventory_receipt_details` VALUES (635, 41, 253, 136, 475626, 86, 475626.00);
+INSERT INTO `inventory_receipt_details` VALUES (636, 41, 256, 115, 475626, 65, 475626.00);
+INSERT INTO `inventory_receipt_details` VALUES (637, 41, 259, 137, 475626, 87, 475626.00);
+INSERT INTO `inventory_receipt_details` VALUES (638, 41, 262, 144, 392505, 94, 392505.00);
+INSERT INTO `inventory_receipt_details` VALUES (639, 41, 265, 79, 261197, 29, 261197.00);
+INSERT INTO `inventory_receipt_details` VALUES (640, 41, 268, 149, 261197, 99, 261197.00);
+INSERT INTO `inventory_receipt_details` VALUES (641, 41, 271, 105, 456000, 55, 456000.00);
+INSERT INTO `inventory_receipt_details` VALUES (642, 41, 274, 80, 456000, 30, 456000.00);
+INSERT INTO `inventory_receipt_details` VALUES (643, 41, 277, 141, 690291, 91, 690291.00);
+INSERT INTO `inventory_receipt_details` VALUES (644, 41, 280, 94, 690291, 44, 690291.00);
+INSERT INTO `inventory_receipt_details` VALUES (645, 41, 283, 143, 608698, 93, 608698.00);
+INSERT INTO `inventory_receipt_details` VALUES (646, 41, 286, 109, 608698, 59, 608698.00);
+INSERT INTO `inventory_receipt_details` VALUES (647, 41, 289, 131, 595672, 81, 595672.00);
+INSERT INTO `inventory_receipt_details` VALUES (648, 41, 292, 79, 595672, 29, 595672.00);
+INSERT INTO `inventory_receipt_details` VALUES (649, 41, 295, 146, 595672, 96, 595672.00);
+INSERT INTO `inventory_receipt_details` VALUES (650, 41, 298, 144, 665155, 94, 665155.00);
+INSERT INTO `inventory_receipt_details` VALUES (651, 41, 301, 99, 391080, 49, 391080.00);
+INSERT INTO `inventory_receipt_details` VALUES (652, 41, 304, 93, 391080, 43, 391080.00);
+INSERT INTO `inventory_receipt_details` VALUES (653, 41, 307, 75, 331130, 25, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (654, 41, 310, 116, 331130, 66, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (655, 41, 313, 92, 331130, 42, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (656, 41, 316, 91, 331130, 41, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (657, 41, 319, 84, 343569, 34, 343569.00);
+INSERT INTO `inventory_receipt_details` VALUES (658, 41, 322, 88, 332419, 38, 332419.00);
+INSERT INTO `inventory_receipt_details` VALUES (659, 41, 325, 114, 634218, 64, 634218.00);
+INSERT INTO `inventory_receipt_details` VALUES (660, 41, 328, 81, 634218, 31, 634218.00);
+INSERT INTO `inventory_receipt_details` VALUES (661, 41, 331, 148, 634218, 98, 634218.00);
+INSERT INTO `inventory_receipt_details` VALUES (662, 41, 334, 102, 411250, 52, 411250.00);
+INSERT INTO `inventory_receipt_details` VALUES (663, 41, 337, 105, 623444, 55, 623444.00);
+INSERT INTO `inventory_receipt_details` VALUES (664, 41, 340, 75, 623444, 25, 623444.00);
+INSERT INTO `inventory_receipt_details` VALUES (665, 41, 343, 89, 329863, 39, 329863.00);
+INSERT INTO `inventory_receipt_details` VALUES (666, 41, 346, 119, 242807, 69, 242807.00);
+INSERT INTO `inventory_receipt_details` VALUES (667, 41, 349, 116, 242807, 66, 242807.00);
+INSERT INTO `inventory_receipt_details` VALUES (668, 41, 352, 87, 242807, 37, 242807.00);
+INSERT INTO `inventory_receipt_details` VALUES (669, 41, 355, 91, 579640, 41, 579640.00);
+INSERT INTO `inventory_receipt_details` VALUES (670, 41, 358, 103, 413114, 53, 413114.00);
+INSERT INTO `inventory_receipt_details` VALUES (671, 41, 361, 141, 413114, 91, 413114.00);
+INSERT INTO `inventory_receipt_details` VALUES (672, 41, 364, 119, 413114, 69, 413114.00);
+INSERT INTO `inventory_receipt_details` VALUES (673, 41, 367, 122, 404994, 72, 404994.00);
+INSERT INTO `inventory_receipt_details` VALUES (674, 41, 370, 92, 404994, 42, 404994.00);
+INSERT INTO `inventory_receipt_details` VALUES (675, 41, 373, 113, 273926, 63, 273926.00);
+INSERT INTO `inventory_receipt_details` VALUES (676, 41, 376, 131, 273926, 81, 273926.00);
+INSERT INTO `inventory_receipt_details` VALUES (677, 41, 379, 138, 577333, 88, 577333.00);
+INSERT INTO `inventory_receipt_details` VALUES (678, 41, 382, 100, 577333, 50, 577333.00);
+INSERT INTO `inventory_receipt_details` VALUES (679, 41, 385, 117, 674165, 67, 674165.00);
+INSERT INTO `inventory_receipt_details` VALUES (680, 41, 388, 72, 674165, 22, 674165.00);
+INSERT INTO `inventory_receipt_details` VALUES (681, 41, 391, 92, 575280, 42, 575280.00);
+INSERT INTO `inventory_receipt_details` VALUES (682, 41, 394, 114, 454974, 64, 454974.00);
+INSERT INTO `inventory_receipt_details` VALUES (683, 41, 397, 81, 454974, 31, 454974.00);
+INSERT INTO `inventory_receipt_details` VALUES (684, 41, 400, 145, 454974, 95, 454974.00);
+INSERT INTO `inventory_receipt_details` VALUES (685, 41, 403, 72, 639834, 22, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (686, 41, 406, 75, 639834, 25, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (687, 41, 409, 83, 639834, 33, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (688, 41, 412, 85, 639834, 35, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (689, 41, 415, 118, 172305, 68, 172305.00);
+INSERT INTO `inventory_receipt_details` VALUES (690, 41, 418, 73, 212095, 23, 212095.00);
+INSERT INTO `inventory_receipt_details` VALUES (691, 41, 421, 128, 310253, 78, 310253.00);
+INSERT INTO `inventory_receipt_details` VALUES (692, 41, 424, 133, 310253, 83, 310253.00);
+INSERT INTO `inventory_receipt_details` VALUES (693, 41, 427, 120, 310253, 70, 310253.00);
+INSERT INTO `inventory_receipt_details` VALUES (694, 41, 430, 74, 292233, 24, 292233.00);
+INSERT INTO `inventory_receipt_details` VALUES (695, 41, 433, 113, 386514, 63, 386514.00);
+INSERT INTO `inventory_receipt_details` VALUES (696, 41, 436, 112, 386514, 62, 386514.00);
+INSERT INTO `inventory_receipt_details` VALUES (697, 41, 439, 145, 386514, 95, 386514.00);
+INSERT INTO `inventory_receipt_details` VALUES (698, 41, 442, 106, 302895, 56, 302895.00);
+INSERT INTO `inventory_receipt_details` VALUES (699, 41, 445, 94, 302895, 44, 302895.00);
+INSERT INTO `inventory_receipt_details` VALUES (700, 41, 448, 114, 302895, 64, 302895.00);
+INSERT INTO `inventory_receipt_details` VALUES (701, 41, 451, 115, 240804, 65, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (702, 41, 454, 79, 240804, 29, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (703, 41, 457, 129, 240804, 79, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (704, 41, 460, 129, 240804, 79, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (705, 41, 463, 117, 241217, 67, 241217.00);
+INSERT INTO `inventory_receipt_details` VALUES (706, 41, 466, 82, 241217, 32, 241217.00);
+INSERT INTO `inventory_receipt_details` VALUES (707, 41, 469, 115, 369672, 65, 369672.00);
+INSERT INTO `inventory_receipt_details` VALUES (708, 41, 472, 87, 369672, 37, 369672.00);
+INSERT INTO `inventory_receipt_details` VALUES (709, 41, 475, 102, 416735, 52, 416735.00);
+INSERT INTO `inventory_receipt_details` VALUES (710, 41, 478, 83, 416735, 33, 416735.00);
+INSERT INTO `inventory_receipt_details` VALUES (711, 41, 481, 135, 259709, 85, 259709.00);
+INSERT INTO `inventory_receipt_details` VALUES (712, 41, 484, 138, 259709, 88, 259709.00);
+INSERT INTO `inventory_receipt_details` VALUES (713, 41, 487, 94, 185526, 44, 185526.00);
+INSERT INTO `inventory_receipt_details` VALUES (714, 41, 490, 148, 185526, 98, 185526.00);
+INSERT INTO `inventory_receipt_details` VALUES (715, 41, 493, 124, 369330, 74, 369330.00);
+INSERT INTO `inventory_receipt_details` VALUES (716, 41, 496, 138, 369330, 88, 369330.00);
+INSERT INTO `inventory_receipt_details` VALUES (717, 41, 499, 102, 296918, 52, 296918.00);
+INSERT INTO `inventory_receipt_details` VALUES (718, 41, 502, 135, 346557, 85, 346557.00);
+INSERT INTO `inventory_receipt_details` VALUES (719, 41, 505, 145, 346557, 95, 346557.00);
+INSERT INTO `inventory_receipt_details` VALUES (720, 41, 508, 141, 346557, 91, 346557.00);
+INSERT INTO `inventory_receipt_details` VALUES (721, 41, 511, 127, 229202, 77, 229202.00);
+INSERT INTO `inventory_receipt_details` VALUES (722, 41, 514, 114, 369405, 64, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (723, 41, 517, 99, 369405, 49, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (724, 41, 520, 90, 369405, 40, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (725, 41, 523, 147, 369405, 97, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (726, 41, 526, 92, 369405, 42, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (727, 41, 529, 103, 169138, 53, 169138.00);
+INSERT INTO `inventory_receipt_details` VALUES (728, 41, 532, 72, 169138, 22, 169138.00);
+INSERT INTO `inventory_receipt_details` VALUES (729, 41, 535, 119, 169138, 69, 169138.00);
+INSERT INTO `inventory_receipt_details` VALUES (730, 41, 538, 111, 249011, 61, 249011.00);
+INSERT INTO `inventory_receipt_details` VALUES (731, 41, 541, 93, 234495, 43, 234495.00);
+INSERT INTO `inventory_receipt_details` VALUES (732, 41, 544, 150, 234495, 100, 234495.00);
+INSERT INTO `inventory_receipt_details` VALUES (733, 41, 547, 107, 397016, 57, 397016.00);
+INSERT INTO `inventory_receipt_details` VALUES (734, 41, 550, 147, 397016, 97, 397016.00);
+INSERT INTO `inventory_receipt_details` VALUES (735, 41, 553, 142, 404317, 92, 404317.00);
+INSERT INTO `inventory_receipt_details` VALUES (736, 41, 556, 131, 404317, 81, 404317.00);
+INSERT INTO `inventory_receipt_details` VALUES (737, 41, 559, 143, 262403, 93, 262403.00);
+INSERT INTO `inventory_receipt_details` VALUES (738, 41, 562, 146, 286976, 96, 286976.00);
+INSERT INTO `inventory_receipt_details` VALUES (739, 41, 565, 118, 286976, 68, 286976.00);
+INSERT INTO `inventory_receipt_details` VALUES (740, 41, 568, 146, 286976, 96, 286976.00);
+INSERT INTO `inventory_receipt_details` VALUES (741, 41, 571, 147, 391525, 97, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (742, 41, 574, 123, 391525, 73, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (743, 41, 577, 96, 369693, 46, 369693.00);
+INSERT INTO `inventory_receipt_details` VALUES (744, 41, 580, 70, 369693, 20, 369693.00);
+INSERT INTO `inventory_receipt_details` VALUES (745, 41, 583, 137, 356554, 87, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (746, 41, 586, 117, 356554, 67, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (747, 41, 589, 109, 356554, 59, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (748, 41, 592, 73, 356554, 23, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (749, 41, 595, 142, 215784, 92, 215784.00);
+INSERT INTO `inventory_receipt_details` VALUES (750, 41, 598, 135, 406717, 85, 406717.00);
+INSERT INTO `inventory_receipt_details` VALUES (751, 41, 601, 99, 406717, 49, 406717.00);
+INSERT INTO `inventory_receipt_details` VALUES (752, 41, 604, 97, 406717, 47, 406717.00);
+INSERT INTO `inventory_receipt_details` VALUES (753, 41, 607, 108, 245963, 58, 245963.00);
+INSERT INTO `inventory_receipt_details` VALUES (754, 41, 610, 149, 245963, 99, 245963.00);
+INSERT INTO `inventory_receipt_details` VALUES (755, 41, 613, 141, 213904, 91, 213904.00);
+INSERT INTO `inventory_receipt_details` VALUES (756, 41, 616, 96, 213904, 46, 213904.00);
+INSERT INTO `inventory_receipt_details` VALUES (757, 41, 619, 126, 213904, 76, 213904.00);
+INSERT INTO `inventory_receipt_details` VALUES (758, 41, 622, 71, 364295, 21, 364295.00);
+INSERT INTO `inventory_receipt_details` VALUES (759, 41, 625, 133, 304292, 83, 304292.00);
+INSERT INTO `inventory_receipt_details` VALUES (760, 41, 628, 86, 304292, 36, 304292.00);
+INSERT INTO `inventory_receipt_details` VALUES (761, 41, 631, 78, 255677, 28, 255677.00);
+INSERT INTO `inventory_receipt_details` VALUES (762, 41, 634, 147, 323355, 97, 323355.00);
+INSERT INTO `inventory_receipt_details` VALUES (763, 41, 637, 135, 317865, 85, 317865.00);
+INSERT INTO `inventory_receipt_details` VALUES (764, 41, 640, 144, 317865, 94, 317865.00);
+INSERT INTO `inventory_receipt_details` VALUES (765, 41, 643, 114, 317865, 64, 317865.00);
+INSERT INTO `inventory_receipt_details` VALUES (766, 41, 646, 97, 338748, 47, 338748.00);
+INSERT INTO `inventory_receipt_details` VALUES (767, 41, 649, 134, 343492, 84, 343492.00);
+INSERT INTO `inventory_receipt_details` VALUES (768, 41, 652, 123, 343492, 73, 343492.00);
+INSERT INTO `inventory_receipt_details` VALUES (769, 41, 655, 130, 343492, 80, 343492.00);
+INSERT INTO `inventory_receipt_details` VALUES (770, 41, 658, 125, 306150, 75, 306150.00);
+INSERT INTO `inventory_receipt_details` VALUES (771, 41, 661, 82, 394172, 32, 394172.00);
+INSERT INTO `inventory_receipt_details` VALUES (772, 41, 664, 87, 394172, 37, 394172.00);
+INSERT INTO `inventory_receipt_details` VALUES (773, 41, 667, 130, 263072, 80, 263072.00);
+INSERT INTO `inventory_receipt_details` VALUES (774, 41, 670, 85, 537821, 35, 537821.00);
+INSERT INTO `inventory_receipt_details` VALUES (775, 41, 673, 111, 403605, 61, 403605.00);
+INSERT INTO `inventory_receipt_details` VALUES (776, 41, 676, 76, 403605, 26, 403605.00);
+INSERT INTO `inventory_receipt_details` VALUES (777, 41, 679, 104, 403605, 54, 403605.00);
+INSERT INTO `inventory_receipt_details` VALUES (778, 41, 682, 124, 562002, 74, 562002.00);
+INSERT INTO `inventory_receipt_details` VALUES (779, 41, 685, 106, 562002, 56, 562002.00);
+INSERT INTO `inventory_receipt_details` VALUES (780, 41, 688, 84, 562002, 34, 562002.00);
+INSERT INTO `inventory_receipt_details` VALUES (781, 41, 691, 147, 412739, 97, 412739.00);
+INSERT INTO `inventory_receipt_details` VALUES (782, 41, 694, 72, 412739, 22, 412739.00);
+INSERT INTO `inventory_receipt_details` VALUES (783, 41, 697, 139, 324458, 89, 324458.00);
+INSERT INTO `inventory_receipt_details` VALUES (784, 41, 700, 132, 324458, 82, 324458.00);
+INSERT INTO `inventory_receipt_details` VALUES (785, 41, 703, 92, 304059, 42, 304059.00);
+INSERT INTO `inventory_receipt_details` VALUES (786, 41, 706, 79, 304059, 29, 304059.00);
+INSERT INTO `inventory_receipt_details` VALUES (787, 41, 709, 112, 295155, 62, 295155.00);
+INSERT INTO `inventory_receipt_details` VALUES (788, 41, 712, 139, 295155, 89, 295155.00);
+INSERT INTO `inventory_receipt_details` VALUES (789, 41, 715, 114, 295155, 64, 295155.00);
+INSERT INTO `inventory_receipt_details` VALUES (790, 41, 718, 118, 498236, 68, 498236.00);
+INSERT INTO `inventory_receipt_details` VALUES (791, 41, 721, 81, 260587, 31, 260587.00);
+INSERT INTO `inventory_receipt_details` VALUES (792, 41, 724, 76, 260587, 26, 260587.00);
+INSERT INTO `inventory_receipt_details` VALUES (793, 41, 727, 98, 324204, 48, 324204.00);
+INSERT INTO `inventory_receipt_details` VALUES (794, 41, 730, 130, 619352, 80, 619352.00);
+INSERT INTO `inventory_receipt_details` VALUES (795, 41, 733, 116, 533574, 66, 533574.00);
+INSERT INTO `inventory_receipt_details` VALUES (796, 41, 736, 140, 533574, 90, 533574.00);
+INSERT INTO `inventory_receipt_details` VALUES (797, 41, 739, 146, 533574, 96, 533574.00);
+INSERT INTO `inventory_receipt_details` VALUES (798, 41, 742, 148, 412905, 98, 412905.00);
+INSERT INTO `inventory_receipt_details` VALUES (799, 41, 745, 71, 621394, 21, 621394.00);
+INSERT INTO `inventory_receipt_details` VALUES (800, 41, 748, 122, 621394, 72, 621394.00);
+INSERT INTO `inventory_receipt_details` VALUES (801, 41, 751, 103, 456774, 53, 456774.00);
+INSERT INTO `inventory_receipt_details` VALUES (802, 41, 754, 136, 284478, 86, 284478.00);
+INSERT INTO `inventory_receipt_details` VALUES (803, 41, 757, 148, 684514, 98, 684514.00);
+INSERT INTO `inventory_receipt_details` VALUES (804, 41, 760, 108, 684514, 58, 684514.00);
+INSERT INTO `inventory_receipt_details` VALUES (805, 41, 763, 101, 684514, 51, 684514.00);
+INSERT INTO `inventory_receipt_details` VALUES (806, 41, 766, 102, 359921, 52, 359921.00);
+INSERT INTO `inventory_receipt_details` VALUES (807, 41, 769, 86, 414000, 36, 414000.00);
+INSERT INTO `inventory_receipt_details` VALUES (808, 41, 772, 107, 414000, 57, 414000.00);
+INSERT INTO `inventory_receipt_details` VALUES (809, 41, 775, 129, 414000, 79, 414000.00);
+INSERT INTO `inventory_receipt_details` VALUES (810, 41, 778, 147, 326291, 97, 326291.00);
+INSERT INTO `inventory_receipt_details` VALUES (811, 41, 781, 80, 326291, 30, 326291.00);
+INSERT INTO `inventory_receipt_details` VALUES (812, 41, 784, 75, 326291, 25, 326291.00);
+INSERT INTO `inventory_receipt_details` VALUES (813, 41, 787, 142, 450043, 92, 450043.00);
+INSERT INTO `inventory_receipt_details` VALUES (814, 41, 790, 86, 450043, 36, 450043.00);
+INSERT INTO `inventory_receipt_details` VALUES (815, 41, 793, 103, 656547, 53, 656547.00);
+INSERT INTO `inventory_receipt_details` VALUES (816, 41, 796, 142, 656547, 92, 656547.00);
+INSERT INTO `inventory_receipt_details` VALUES (817, 41, 799, 101, 656547, 51, 656547.00);
+INSERT INTO `inventory_receipt_details` VALUES (818, 41, 802, 96, 308858, 46, 308858.00);
+INSERT INTO `inventory_receipt_details` VALUES (819, 41, 805, 113, 308858, 63, 308858.00);
+INSERT INTO `inventory_receipt_details` VALUES (820, 41, 808, 145, 308858, 95, 308858.00);
+INSERT INTO `inventory_receipt_details` VALUES (821, 41, 811, 137, 449170, 87, 449170.00);
+INSERT INTO `inventory_receipt_details` VALUES (822, 41, 814, 101, 449170, 51, 449170.00);
+INSERT INTO `inventory_receipt_details` VALUES (823, 41, 817, 100, 77469, 50, 77469.00);
+INSERT INTO `inventory_receipt_details` VALUES (824, 41, 820, 146, 222025, 96, 222025.00);
+INSERT INTO `inventory_receipt_details` VALUES (825, 41, 823, 144, 44884, 94, 44884.00);
+INSERT INTO `inventory_receipt_details` VALUES (826, 41, 826, 102, 110163, 52, 110163.00);
+INSERT INTO `inventory_receipt_details` VALUES (827, 41, 829, 134, 169183, 84, 169183.00);
+INSERT INTO `inventory_receipt_details` VALUES (828, 41, 832, 78, 214386, 28, 214386.00);
+INSERT INTO `inventory_receipt_details` VALUES (1062, 42, 2, 100, 436458, 50, 436458.00);
+INSERT INTO `inventory_receipt_details` VALUES (1063, 42, 5, 143, 436458, 93, 436458.00);
+INSERT INTO `inventory_receipt_details` VALUES (1064, 42, 8, 109, 436458, 59, 436458.00);
+INSERT INTO `inventory_receipt_details` VALUES (1065, 42, 11, 142, 366810, 92, 366810.00);
+INSERT INTO `inventory_receipt_details` VALUES (1066, 42, 14, 91, 366810, 41, 366810.00);
+INSERT INTO `inventory_receipt_details` VALUES (1067, 42, 17, 92, 250541, 42, 250541.00);
+INSERT INTO `inventory_receipt_details` VALUES (1068, 42, 20, 82, 250541, 32, 250541.00);
+INSERT INTO `inventory_receipt_details` VALUES (1069, 42, 23, 75, 207865, 25, 207865.00);
+INSERT INTO `inventory_receipt_details` VALUES (1070, 42, 26, 100, 326599, 50, 326599.00);
+INSERT INTO `inventory_receipt_details` VALUES (1071, 42, 29, 128, 342605, 78, 342605.00);
+INSERT INTO `inventory_receipt_details` VALUES (1072, 42, 32, 73, 342605, 23, 342605.00);
+INSERT INTO `inventory_receipt_details` VALUES (1073, 42, 35, 113, 342605, 63, 342605.00);
+INSERT INTO `inventory_receipt_details` VALUES (1074, 42, 38, 146, 268707, 96, 268707.00);
+INSERT INTO `inventory_receipt_details` VALUES (1075, 42, 41, 119, 268707, 69, 268707.00);
+INSERT INTO `inventory_receipt_details` VALUES (1076, 42, 44, 89, 268707, 39, 268707.00);
+INSERT INTO `inventory_receipt_details` VALUES (1077, 42, 47, 108, 406456, 58, 406456.00);
+INSERT INTO `inventory_receipt_details` VALUES (1078, 42, 50, 138, 256412, 88, 256412.00);
+INSERT INTO `inventory_receipt_details` VALUES (1079, 42, 53, 79, 221459, 29, 221459.00);
+INSERT INTO `inventory_receipt_details` VALUES (1080, 42, 56, 149, 221459, 99, 221459.00);
+INSERT INTO `inventory_receipt_details` VALUES (1081, 42, 59, 77, 211059, 27, 211059.00);
+INSERT INTO `inventory_receipt_details` VALUES (1082, 42, 62, 106, 211059, 56, 211059.00);
+INSERT INTO `inventory_receipt_details` VALUES (1083, 42, 65, 118, 187061, 68, 187061.00);
+INSERT INTO `inventory_receipt_details` VALUES (1084, 42, 68, 145, 187061, 95, 187061.00);
+INSERT INTO `inventory_receipt_details` VALUES (1085, 42, 71, 120, 187061, 70, 187061.00);
+INSERT INTO `inventory_receipt_details` VALUES (1086, 42, 74, 107, 348169, 57, 348169.00);
+INSERT INTO `inventory_receipt_details` VALUES (1087, 42, 77, 143, 335084, 93, 335084.00);
+INSERT INTO `inventory_receipt_details` VALUES (1088, 42, 80, 107, 335084, 57, 335084.00);
+INSERT INTO `inventory_receipt_details` VALUES (1089, 42, 83, 83, 335084, 33, 335084.00);
+INSERT INTO `inventory_receipt_details` VALUES (1090, 42, 86, 108, 215297, 58, 215297.00);
+INSERT INTO `inventory_receipt_details` VALUES (1091, 42, 89, 128, 215297, 78, 215297.00);
+INSERT INTO `inventory_receipt_details` VALUES (1092, 42, 92, 148, 215297, 98, 215297.00);
+INSERT INTO `inventory_receipt_details` VALUES (1093, 42, 95, 90, 332881, 40, 332881.00);
+INSERT INTO `inventory_receipt_details` VALUES (1094, 42, 98, 74, 349008, 24, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (1095, 42, 101, 93, 349008, 43, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (1096, 42, 104, 79, 349008, 29, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (1097, 42, 107, 149, 349008, 99, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (1098, 42, 110, 85, 349008, 35, 349008.00);
+INSERT INTO `inventory_receipt_details` VALUES (1099, 42, 113, 142, 383285, 92, 383285.00);
+INSERT INTO `inventory_receipt_details` VALUES (1100, 42, 116, 125, 383285, 75, 383285.00);
+INSERT INTO `inventory_receipt_details` VALUES (1101, 42, 119, 145, 438886, 95, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (1102, 42, 122, 94, 438886, 44, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (1103, 42, 125, 111, 438886, 61, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (1104, 42, 128, 79, 438886, 29, 438886.00);
+INSERT INTO `inventory_receipt_details` VALUES (1105, 42, 131, 129, 219232, 79, 219232.00);
+INSERT INTO `inventory_receipt_details` VALUES (1106, 42, 134, 81, 321339, 31, 321339.00);
+INSERT INTO `inventory_receipt_details` VALUES (1107, 42, 137, 124, 260415, 74, 260415.00);
+INSERT INTO `inventory_receipt_details` VALUES (1108, 42, 140, 90, 260415, 40, 260415.00);
+INSERT INTO `inventory_receipt_details` VALUES (1109, 42, 143, 121, 260415, 71, 260415.00);
+INSERT INTO `inventory_receipt_details` VALUES (1110, 42, 146, 120, 415175, 70, 415175.00);
+INSERT INTO `inventory_receipt_details` VALUES (1111, 42, 149, 150, 209433, 100, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (1112, 42, 152, 124, 209433, 74, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (1113, 42, 155, 85, 209433, 35, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (1114, 42, 158, 138, 209433, 88, 209433.00);
+INSERT INTO `inventory_receipt_details` VALUES (1115, 42, 161, 136, 287734, 86, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (1116, 42, 164, 114, 287734, 64, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (1117, 42, 167, 142, 287734, 92, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (1118, 42, 170, 99, 287734, 49, 287734.00);
+INSERT INTO `inventory_receipt_details` VALUES (1119, 42, 173, 131, 372751, 81, 372751.00);
+INSERT INTO `inventory_receipt_details` VALUES (1120, 42, 176, 94, 372751, 44, 372751.00);
+INSERT INTO `inventory_receipt_details` VALUES (1121, 42, 179, 138, 372751, 88, 372751.00);
+INSERT INTO `inventory_receipt_details` VALUES (1122, 42, 182, 105, 286702, 55, 286702.00);
+INSERT INTO `inventory_receipt_details` VALUES (1123, 42, 185, 90, 286702, 40, 286702.00);
+INSERT INTO `inventory_receipt_details` VALUES (1124, 42, 188, 142, 286702, 92, 286702.00);
+INSERT INTO `inventory_receipt_details` VALUES (1125, 42, 191, 83, 316593, 33, 316593.00);
+INSERT INTO `inventory_receipt_details` VALUES (1126, 42, 194, 72, 316593, 22, 316593.00);
+INSERT INTO `inventory_receipt_details` VALUES (1127, 42, 197, 133, 316304, 83, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (1128, 42, 200, 145, 316304, 95, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (1129, 42, 203, 95, 316304, 45, 316304.00);
+INSERT INTO `inventory_receipt_details` VALUES (1130, 42, 206, 125, 248795, 75, 248795.00);
+INSERT INTO `inventory_receipt_details` VALUES (1131, 42, 209, 113, 248795, 63, 248795.00);
+INSERT INTO `inventory_receipt_details` VALUES (1132, 42, 212, 90, 248795, 40, 248795.00);
+INSERT INTO `inventory_receipt_details` VALUES (1133, 42, 215, 139, 342498, 89, 342498.00);
+INSERT INTO `inventory_receipt_details` VALUES (1134, 42, 218, 137, 342498, 87, 342498.00);
+INSERT INTO `inventory_receipt_details` VALUES (1135, 42, 221, 125, 397894, 75, 397894.00);
+INSERT INTO `inventory_receipt_details` VALUES (1136, 42, 224, 147, 397894, 97, 397894.00);
+INSERT INTO `inventory_receipt_details` VALUES (1137, 42, 227, 99, 397894, 49, 397894.00);
+INSERT INTO `inventory_receipt_details` VALUES (1138, 42, 230, 78, 323320, 28, 323320.00);
+INSERT INTO `inventory_receipt_details` VALUES (1139, 42, 233, 115, 334384, 65, 334384.00);
+INSERT INTO `inventory_receipt_details` VALUES (1140, 42, 236, 118, 334384, 68, 334384.00);
+INSERT INTO `inventory_receipt_details` VALUES (1141, 42, 239, 131, 555308, 81, 555308.00);
+INSERT INTO `inventory_receipt_details` VALUES (1142, 42, 242, 72, 332013, 22, 332013.00);
+INSERT INTO `inventory_receipt_details` VALUES (1143, 42, 245, 136, 449343, 86, 449343.00);
+INSERT INTO `inventory_receipt_details` VALUES (1144, 42, 248, 86, 449343, 36, 449343.00);
+INSERT INTO `inventory_receipt_details` VALUES (1145, 42, 251, 149, 479080, 99, 479080.00);
+INSERT INTO `inventory_receipt_details` VALUES (1146, 42, 254, 117, 475626, 67, 475626.00);
+INSERT INTO `inventory_receipt_details` VALUES (1147, 42, 257, 112, 475626, 62, 475626.00);
+INSERT INTO `inventory_receipt_details` VALUES (1148, 42, 260, 105, 475626, 55, 475626.00);
+INSERT INTO `inventory_receipt_details` VALUES (1149, 42, 263, 85, 392505, 35, 392505.00);
+INSERT INTO `inventory_receipt_details` VALUES (1150, 42, 266, 91, 261197, 41, 261197.00);
+INSERT INTO `inventory_receipt_details` VALUES (1151, 42, 269, 95, 456000, 45, 456000.00);
+INSERT INTO `inventory_receipt_details` VALUES (1152, 42, 272, 115, 456000, 65, 456000.00);
+INSERT INTO `inventory_receipt_details` VALUES (1153, 42, 275, 131, 456000, 81, 456000.00);
+INSERT INTO `inventory_receipt_details` VALUES (1154, 42, 278, 78, 690291, 28, 690291.00);
+INSERT INTO `inventory_receipt_details` VALUES (1155, 42, 281, 132, 608698, 82, 608698.00);
+INSERT INTO `inventory_receipt_details` VALUES (1156, 42, 284, 116, 608698, 66, 608698.00);
+INSERT INTO `inventory_receipt_details` VALUES (1157, 42, 287, 73, 608698, 23, 608698.00);
+INSERT INTO `inventory_receipt_details` VALUES (1158, 42, 290, 88, 595672, 38, 595672.00);
+INSERT INTO `inventory_receipt_details` VALUES (1159, 42, 293, 124, 595672, 74, 595672.00);
+INSERT INTO `inventory_receipt_details` VALUES (1160, 42, 296, 99, 595672, 49, 595672.00);
+INSERT INTO `inventory_receipt_details` VALUES (1161, 42, 299, 78, 665155, 28, 665155.00);
+INSERT INTO `inventory_receipt_details` VALUES (1162, 42, 302, 73, 391080, 23, 391080.00);
+INSERT INTO `inventory_receipt_details` VALUES (1163, 42, 305, 114, 331130, 64, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (1164, 42, 308, 129, 331130, 79, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (1165, 42, 311, 114, 331130, 64, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (1166, 42, 314, 114, 331130, 64, 331130.00);
+INSERT INTO `inventory_receipt_details` VALUES (1167, 42, 317, 132, 343569, 82, 343569.00);
+INSERT INTO `inventory_receipt_details` VALUES (1168, 42, 320, 134, 343569, 84, 343569.00);
+INSERT INTO `inventory_receipt_details` VALUES (1169, 42, 323, 119, 332419, 69, 332419.00);
+INSERT INTO `inventory_receipt_details` VALUES (1170, 42, 326, 141, 634218, 91, 634218.00);
+INSERT INTO `inventory_receipt_details` VALUES (1171, 42, 329, 95, 634218, 45, 634218.00);
+INSERT INTO `inventory_receipt_details` VALUES (1172, 42, 332, 94, 634218, 44, 634218.00);
+INSERT INTO `inventory_receipt_details` VALUES (1173, 42, 335, 101, 411250, 51, 411250.00);
+INSERT INTO `inventory_receipt_details` VALUES (1174, 42, 338, 89, 623444, 39, 623444.00);
+INSERT INTO `inventory_receipt_details` VALUES (1175, 42, 341, 134, 329863, 84, 329863.00);
+INSERT INTO `inventory_receipt_details` VALUES (1176, 42, 344, 134, 329863, 84, 329863.00);
+INSERT INTO `inventory_receipt_details` VALUES (1177, 42, 347, 118, 242807, 68, 242807.00);
+INSERT INTO `inventory_receipt_details` VALUES (1178, 42, 350, 148, 242807, 98, 242807.00);
+INSERT INTO `inventory_receipt_details` VALUES (1179, 42, 353, 114, 579640, 64, 579640.00);
+INSERT INTO `inventory_receipt_details` VALUES (1180, 42, 356, 90, 579640, 40, 579640.00);
+INSERT INTO `inventory_receipt_details` VALUES (1181, 42, 359, 104, 413114, 54, 413114.00);
+INSERT INTO `inventory_receipt_details` VALUES (1182, 42, 362, 78, 413114, 28, 413114.00);
+INSERT INTO `inventory_receipt_details` VALUES (1183, 42, 365, 122, 404994, 72, 404994.00);
+INSERT INTO `inventory_receipt_details` VALUES (1184, 42, 368, 127, 404994, 77, 404994.00);
+INSERT INTO `inventory_receipt_details` VALUES (1185, 42, 371, 108, 404994, 58, 404994.00);
+INSERT INTO `inventory_receipt_details` VALUES (1186, 42, 374, 81, 273926, 31, 273926.00);
+INSERT INTO `inventory_receipt_details` VALUES (1187, 42, 377, 137, 577333, 87, 577333.00);
+INSERT INTO `inventory_receipt_details` VALUES (1188, 42, 380, 119, 577333, 69, 577333.00);
+INSERT INTO `inventory_receipt_details` VALUES (1189, 42, 383, 103, 577333, 53, 577333.00);
+INSERT INTO `inventory_receipt_details` VALUES (1190, 42, 386, 95, 674165, 45, 674165.00);
+INSERT INTO `inventory_receipt_details` VALUES (1191, 42, 389, 144, 575280, 94, 575280.00);
+INSERT INTO `inventory_receipt_details` VALUES (1192, 42, 392, 94, 575280, 44, 575280.00);
+INSERT INTO `inventory_receipt_details` VALUES (1193, 42, 395, 112, 454974, 62, 454974.00);
+INSERT INTO `inventory_receipt_details` VALUES (1194, 42, 398, 74, 454974, 24, 454974.00);
+INSERT INTO `inventory_receipt_details` VALUES (1195, 42, 401, 95, 639834, 45, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (1196, 42, 404, 130, 639834, 80, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (1197, 42, 407, 84, 639834, 34, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (1198, 42, 410, 93, 639834, 43, 639834.00);
+INSERT INTO `inventory_receipt_details` VALUES (1199, 42, 413, 128, 172305, 78, 172305.00);
+INSERT INTO `inventory_receipt_details` VALUES (1200, 42, 416, 112, 172305, 62, 172305.00);
+INSERT INTO `inventory_receipt_details` VALUES (1201, 42, 419, 129, 212095, 79, 212095.00);
+INSERT INTO `inventory_receipt_details` VALUES (1202, 42, 422, 95, 310253, 45, 310253.00);
+INSERT INTO `inventory_receipt_details` VALUES (1203, 42, 425, 148, 310253, 98, 310253.00);
+INSERT INTO `inventory_receipt_details` VALUES (1204, 42, 428, 149, 310253, 99, 310253.00);
+INSERT INTO `inventory_receipt_details` VALUES (1205, 42, 431, 70, 292233, 20, 292233.00);
+INSERT INTO `inventory_receipt_details` VALUES (1206, 42, 434, 80, 386514, 30, 386514.00);
+INSERT INTO `inventory_receipt_details` VALUES (1207, 42, 437, 109, 386514, 59, 386514.00);
+INSERT INTO `inventory_receipt_details` VALUES (1208, 42, 440, 146, 386514, 96, 386514.00);
+INSERT INTO `inventory_receipt_details` VALUES (1209, 42, 443, 90, 302895, 40, 302895.00);
+INSERT INTO `inventory_receipt_details` VALUES (1210, 42, 446, 140, 302895, 90, 302895.00);
+INSERT INTO `inventory_receipt_details` VALUES (1211, 42, 449, 115, 240804, 65, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (1212, 42, 452, 142, 240804, 92, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (1213, 42, 455, 103, 240804, 53, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (1214, 42, 458, 112, 240804, 62, 240804.00);
+INSERT INTO `inventory_receipt_details` VALUES (1215, 42, 461, 132, 241217, 82, 241217.00);
+INSERT INTO `inventory_receipt_details` VALUES (1216, 42, 464, 78, 241217, 28, 241217.00);
+INSERT INTO `inventory_receipt_details` VALUES (1217, 42, 467, 105, 241217, 55, 241217.00);
+INSERT INTO `inventory_receipt_details` VALUES (1218, 42, 470, 144, 369672, 94, 369672.00);
+INSERT INTO `inventory_receipt_details` VALUES (1219, 42, 473, 131, 416735, 81, 416735.00);
+INSERT INTO `inventory_receipt_details` VALUES (1220, 42, 476, 74, 416735, 24, 416735.00);
+INSERT INTO `inventory_receipt_details` VALUES (1221, 42, 479, 98, 416735, 48, 416735.00);
+INSERT INTO `inventory_receipt_details` VALUES (1222, 42, 482, 136, 259709, 86, 259709.00);
+INSERT INTO `inventory_receipt_details` VALUES (1223, 42, 485, 115, 185526, 65, 185526.00);
+INSERT INTO `inventory_receipt_details` VALUES (1224, 42, 488, 80, 185526, 30, 185526.00);
+INSERT INTO `inventory_receipt_details` VALUES (1225, 42, 491, 124, 185526, 74, 185526.00);
+INSERT INTO `inventory_receipt_details` VALUES (1226, 42, 494, 128, 369330, 78, 369330.00);
+INSERT INTO `inventory_receipt_details` VALUES (1227, 42, 497, 133, 296918, 83, 296918.00);
+INSERT INTO `inventory_receipt_details` VALUES (1228, 42, 500, 116, 296918, 66, 296918.00);
+INSERT INTO `inventory_receipt_details` VALUES (1229, 42, 503, 115, 346557, 65, 346557.00);
+INSERT INTO `inventory_receipt_details` VALUES (1230, 42, 506, 143, 346557, 93, 346557.00);
+INSERT INTO `inventory_receipt_details` VALUES (1231, 42, 509, 143, 229202, 93, 229202.00);
+INSERT INTO `inventory_receipt_details` VALUES (1232, 42, 512, 139, 229202, 89, 229202.00);
+INSERT INTO `inventory_receipt_details` VALUES (1233, 42, 515, 113, 369405, 63, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (1234, 42, 518, 117, 369405, 67, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (1235, 42, 521, 142, 369405, 92, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (1236, 42, 524, 130, 369405, 80, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (1237, 42, 527, 138, 369405, 88, 369405.00);
+INSERT INTO `inventory_receipt_details` VALUES (1238, 42, 530, 75, 169138, 25, 169138.00);
+INSERT INTO `inventory_receipt_details` VALUES (1239, 42, 533, 126, 169138, 76, 169138.00);
+INSERT INTO `inventory_receipt_details` VALUES (1240, 42, 536, 94, 169138, 44, 169138.00);
+INSERT INTO `inventory_receipt_details` VALUES (1241, 42, 539, 118, 249011, 68, 249011.00);
+INSERT INTO `inventory_receipt_details` VALUES (1242, 42, 542, 122, 234495, 72, 234495.00);
+INSERT INTO `inventory_receipt_details` VALUES (1243, 42, 545, 119, 397016, 69, 397016.00);
+INSERT INTO `inventory_receipt_details` VALUES (1244, 42, 548, 150, 397016, 100, 397016.00);
+INSERT INTO `inventory_receipt_details` VALUES (1245, 42, 551, 106, 397016, 56, 397016.00);
+INSERT INTO `inventory_receipt_details` VALUES (1246, 42, 554, 72, 404317, 22, 404317.00);
+INSERT INTO `inventory_receipt_details` VALUES (1247, 42, 557, 79, 262403, 29, 262403.00);
+INSERT INTO `inventory_receipt_details` VALUES (1248, 42, 560, 128, 262403, 78, 262403.00);
+INSERT INTO `inventory_receipt_details` VALUES (1249, 42, 563, 141, 286976, 91, 286976.00);
+INSERT INTO `inventory_receipt_details` VALUES (1250, 42, 566, 71, 286976, 21, 286976.00);
+INSERT INTO `inventory_receipt_details` VALUES (1251, 42, 569, 147, 391525, 97, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (1252, 42, 572, 75, 391525, 25, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (1253, 42, 575, 150, 391525, 100, 391525.00);
+INSERT INTO `inventory_receipt_details` VALUES (1254, 42, 578, 131, 369693, 81, 369693.00);
+INSERT INTO `inventory_receipt_details` VALUES (1255, 42, 581, 118, 356554, 68, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (1256, 42, 584, 111, 356554, 61, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (1257, 42, 587, 112, 356554, 62, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (1258, 42, 590, 133, 356554, 83, 356554.00);
+INSERT INTO `inventory_receipt_details` VALUES (1259, 42, 593, 141, 215784, 91, 215784.00);
+INSERT INTO `inventory_receipt_details` VALUES (1260, 42, 596, 138, 215784, 88, 215784.00);
+INSERT INTO `inventory_receipt_details` VALUES (1261, 42, 599, 134, 406717, 84, 406717.00);
+INSERT INTO `inventory_receipt_details` VALUES (1262, 42, 602, 99, 406717, 49, 406717.00);
+INSERT INTO `inventory_receipt_details` VALUES (1263, 42, 605, 73, 245963, 23, 245963.00);
+INSERT INTO `inventory_receipt_details` VALUES (1264, 42, 608, 94, 245963, 44, 245963.00);
+INSERT INTO `inventory_receipt_details` VALUES (1265, 42, 611, 131, 245963, 81, 245963.00);
+INSERT INTO `inventory_receipt_details` VALUES (1266, 42, 614, 131, 213904, 81, 213904.00);
+INSERT INTO `inventory_receipt_details` VALUES (1267, 42, 617, 90, 213904, 40, 213904.00);
+INSERT INTO `inventory_receipt_details` VALUES (1268, 42, 620, 128, 213904, 78, 213904.00);
+INSERT INTO `inventory_receipt_details` VALUES (1269, 42, 623, 139, 364295, 89, 364295.00);
+INSERT INTO `inventory_receipt_details` VALUES (1270, 42, 626, 130, 304292, 80, 304292.00);
+INSERT INTO `inventory_receipt_details` VALUES (1271, 42, 629, 137, 255677, 87, 255677.00);
+INSERT INTO `inventory_receipt_details` VALUES (1272, 42, 632, 91, 255677, 41, 255677.00);
+INSERT INTO `inventory_receipt_details` VALUES (1273, 42, 635, 79, 323355, 29, 323355.00);
+INSERT INTO `inventory_receipt_details` VALUES (1274, 42, 638, 77, 317865, 27, 317865.00);
+INSERT INTO `inventory_receipt_details` VALUES (1275, 42, 641, 70, 317865, 20, 317865.00);
+INSERT INTO `inventory_receipt_details` VALUES (1276, 42, 644, 131, 317865, 81, 317865.00);
+INSERT INTO `inventory_receipt_details` VALUES (1277, 42, 647, 147, 338748, 97, 338748.00);
+INSERT INTO `inventory_receipt_details` VALUES (1278, 42, 650, 138, 343492, 88, 343492.00);
+INSERT INTO `inventory_receipt_details` VALUES (1279, 42, 653, 128, 343492, 78, 343492.00);
+INSERT INTO `inventory_receipt_details` VALUES (1280, 42, 656, 113, 343492, 63, 343492.00);
+INSERT INTO `inventory_receipt_details` VALUES (1281, 42, 659, 141, 306150, 91, 306150.00);
+INSERT INTO `inventory_receipt_details` VALUES (1282, 42, 662, 77, 394172, 27, 394172.00);
+INSERT INTO `inventory_receipt_details` VALUES (1283, 42, 665, 139, 263072, 89, 263072.00);
+INSERT INTO `inventory_receipt_details` VALUES (1284, 42, 668, 90, 263072, 40, 263072.00);
+INSERT INTO `inventory_receipt_details` VALUES (1285, 42, 671, 107, 537821, 57, 537821.00);
+INSERT INTO `inventory_receipt_details` VALUES (1286, 42, 674, 120, 403605, 70, 403605.00);
+INSERT INTO `inventory_receipt_details` VALUES (1287, 42, 677, 84, 403605, 34, 403605.00);
+INSERT INTO `inventory_receipt_details` VALUES (1288, 42, 680, 93, 403605, 43, 403605.00);
+INSERT INTO `inventory_receipt_details` VALUES (1289, 42, 683, 117, 562002, 67, 562002.00);
+INSERT INTO `inventory_receipt_details` VALUES (1290, 42, 686, 95, 562002, 45, 562002.00);
+INSERT INTO `inventory_receipt_details` VALUES (1291, 42, 689, 106, 412739, 56, 412739.00);
+INSERT INTO `inventory_receipt_details` VALUES (1292, 42, 692, 121, 412739, 71, 412739.00);
+INSERT INTO `inventory_receipt_details` VALUES (1293, 42, 695, 96, 412739, 46, 412739.00);
+INSERT INTO `inventory_receipt_details` VALUES (1294, 42, 698, 92, 324458, 42, 324458.00);
+INSERT INTO `inventory_receipt_details` VALUES (1295, 42, 701, 103, 304059, 53, 304059.00);
+INSERT INTO `inventory_receipt_details` VALUES (1296, 42, 704, 116, 304059, 66, 304059.00);
+INSERT INTO `inventory_receipt_details` VALUES (1297, 42, 707, 101, 304059, 51, 304059.00);
+INSERT INTO `inventory_receipt_details` VALUES (1298, 42, 710, 122, 295155, 72, 295155.00);
+INSERT INTO `inventory_receipt_details` VALUES (1299, 42, 713, 140, 295155, 90, 295155.00);
+INSERT INTO `inventory_receipt_details` VALUES (1300, 42, 716, 73, 295155, 23, 295155.00);
+INSERT INTO `inventory_receipt_details` VALUES (1301, 42, 719, 87, 498236, 37, 498236.00);
+INSERT INTO `inventory_receipt_details` VALUES (1302, 42, 722, 102, 260587, 52, 260587.00);
+INSERT INTO `inventory_receipt_details` VALUES (1303, 42, 725, 106, 324204, 56, 324204.00);
+INSERT INTO `inventory_receipt_details` VALUES (1304, 42, 728, 109, 324204, 59, 324204.00);
+INSERT INTO `inventory_receipt_details` VALUES (1305, 42, 731, 75, 619352, 25, 619352.00);
+INSERT INTO `inventory_receipt_details` VALUES (1306, 42, 734, 133, 533574, 83, 533574.00);
+INSERT INTO `inventory_receipt_details` VALUES (1307, 42, 737, 129, 533574, 79, 533574.00);
+INSERT INTO `inventory_receipt_details` VALUES (1308, 42, 740, 112, 533574, 62, 533574.00);
+INSERT INTO `inventory_receipt_details` VALUES (1309, 42, 743, 95, 412905, 45, 412905.00);
+INSERT INTO `inventory_receipt_details` VALUES (1310, 42, 746, 75, 621394, 25, 621394.00);
+INSERT INTO `inventory_receipt_details` VALUES (1311, 42, 749, 113, 456774, 63, 456774.00);
+INSERT INTO `inventory_receipt_details` VALUES (1312, 42, 752, 75, 456774, 25, 456774.00);
+INSERT INTO `inventory_receipt_details` VALUES (1313, 42, 755, 119, 284478, 69, 284478.00);
+INSERT INTO `inventory_receipt_details` VALUES (1314, 42, 758, 107, 684514, 57, 684514.00);
+INSERT INTO `inventory_receipt_details` VALUES (1315, 42, 761, 80, 684514, 30, 684514.00);
+INSERT INTO `inventory_receipt_details` VALUES (1316, 42, 764, 89, 684514, 39, 684514.00);
+INSERT INTO `inventory_receipt_details` VALUES (1317, 42, 767, 144, 359921, 94, 359921.00);
+INSERT INTO `inventory_receipt_details` VALUES (1318, 42, 770, 108, 414000, 58, 414000.00);
+INSERT INTO `inventory_receipt_details` VALUES (1319, 42, 773, 122, 414000, 72, 414000.00);
+INSERT INTO `inventory_receipt_details` VALUES (1320, 42, 776, 145, 414000, 95, 414000.00);
+INSERT INTO `inventory_receipt_details` VALUES (1321, 42, 779, 150, 326291, 100, 326291.00);
+INSERT INTO `inventory_receipt_details` VALUES (1322, 42, 782, 98, 326291, 48, 326291.00);
+INSERT INTO `inventory_receipt_details` VALUES (1323, 42, 785, 94, 450043, 44, 450043.00);
+INSERT INTO `inventory_receipt_details` VALUES (1324, 42, 788, 117, 450043, 67, 450043.00);
+INSERT INTO `inventory_receipt_details` VALUES (1325, 42, 791, 100, 450043, 50, 450043.00);
+INSERT INTO `inventory_receipt_details` VALUES (1326, 42, 794, 88, 656547, 38, 656547.00);
+INSERT INTO `inventory_receipt_details` VALUES (1327, 42, 797, 99, 656547, 49, 656547.00);
+INSERT INTO `inventory_receipt_details` VALUES (1328, 42, 800, 137, 656547, 87, 656547.00);
+INSERT INTO `inventory_receipt_details` VALUES (1329, 42, 803, 137, 308858, 87, 308858.00);
+INSERT INTO `inventory_receipt_details` VALUES (1330, 42, 806, 89, 308858, 39, 308858.00);
+INSERT INTO `inventory_receipt_details` VALUES (1331, 42, 809, 73, 449170, 23, 449170.00);
+INSERT INTO `inventory_receipt_details` VALUES (1332, 42, 812, 117, 449170, 67, 449170.00);
+INSERT INTO `inventory_receipt_details` VALUES (1333, 42, 815, 77, 449170, 27, 449170.00);
+INSERT INTO `inventory_receipt_details` VALUES (1334, 42, 818, 86, 77469, 36, 77469.00);
+INSERT INTO `inventory_receipt_details` VALUES (1335, 42, 821, 110, 141742, 60, 141742.00);
+INSERT INTO `inventory_receipt_details` VALUES (1336, 42, 824, 107, 44884, 57, 44884.00);
+INSERT INTO `inventory_receipt_details` VALUES (1337, 42, 827, 117, 174995, 67, 174995.00);
+INSERT INTO `inventory_receipt_details` VALUES (1338, 42, 830, 118, 213444, 68, 213444.00);
+INSERT INTO `inventory_receipt_details` VALUES (1573, 43, 442, 3, 356347, 0, 249443.00);
+INSERT INTO `inventory_receipt_details` VALUES (1574, 44, 260, 1, 559560, 0, 391692.00);
+INSERT INTO `inventory_receipt_details` VALUES (1575, 45, 365, 3, 476463, 0, 333524.00);
+INSERT INTO `inventory_receipt_details` VALUES (1576, 46, 788, 2, 529462, 0, 370623.00);
+INSERT INTO `inventory_receipt_details` VALUES (1577, 47, 682, 2, 661179, 0, 462825.00);
+INSERT INTO `inventory_receipt_details` VALUES (1578, 48, 612, 2, 289368, 0, 202558.00);
+INSERT INTO `inventory_receipt_details` VALUES (1579, 49, 321, 1, 391081, 0, 273757.00);
+INSERT INTO `inventory_receipt_details` VALUES (1580, 50, 638, 1, 373959, 0, 261771.00);
+INSERT INTO `inventory_receipt_details` VALUES (1581, 51, 213, 1, 402939, 0, 282057.00);
+INSERT INTO `inventory_receipt_details` VALUES (1582, 52, 812, 2, 528435, 0, 369904.00);
+INSERT INTO `inventory_receipt_details` VALUES (1583, 53, 753, 1, 334680, 0, 234276.00);
+INSERT INTO `inventory_receipt_details` VALUES (1584, 54, 101, 3, 410598, 0, 287419.00);
+INSERT INTO `inventory_receipt_details` VALUES (1585, 55, 84, 2, 394217, 0, 275952.00);
+INSERT INTO `inventory_receipt_details` VALUES (1586, 56, 61, 3, 248305, 0, 173814.00);
+INSERT INTO `inventory_receipt_details` VALUES (1587, 57, 416, 3, 202712, 0, 141898.00);
+INSERT INTO `inventory_receipt_details` VALUES (1588, 58, 70, 1, 220072, 0, 154050.00);
+INSERT INTO `inventory_receipt_details` VALUES (1589, 59, 628, 1, 357991, 0, 250594.00);
+INSERT INTO `inventory_receipt_details` VALUES (1590, 60, 375, 2, 322266, 0, 225586.00);
+INSERT INTO `inventory_receipt_details` VALUES (1591, 61, 2, 2, 513480, 0, 359436.00);
+INSERT INTO `inventory_receipt_details` VALUES (1592, 62, 550, 1, 467078, 0, 326955.00);
+INSERT INTO `inventory_receipt_details` VALUES (1593, 63, 768, 2, 423436, 0, 296405.00);
+INSERT INTO `inventory_receipt_details` VALUES (1594, 64, 497, 3, 349315, 0, 244520.00);
+INSERT INTO `inventory_receipt_details` VALUES (1595, 65, 711, 2, 347241, 0, 243069.00);
+INSERT INTO `inventory_receipt_details` VALUES (1596, 66, 390, 2, 676800, 0, 473760.00);
+INSERT INTO `inventory_receipt_details` VALUES (1597, 67, 173, 2, 438531, 0, 306972.00);
+INSERT INTO `inventory_receipt_details` VALUES (1598, 68, 73, 3, 409611, 0, 286728.00);
+INSERT INTO `inventory_receipt_details` VALUES (1599, 69, 638, 2, 373959, 0, 261771.00);
+INSERT INTO `inventory_receipt_details` VALUES (1600, 70, 619, 1, 251652, 0, 176156.00);
+INSERT INTO `inventory_receipt_details` VALUES (1601, 71, 546, 1, 467078, 0, 326955.00);
+INSERT INTO `inventory_receipt_details` VALUES (1602, 72, 153, 2, 246392, 0, 172474.00);
+INSERT INTO `inventory_receipt_details` VALUES (1603, 73, 448, 3, 356347, 0, 249443.00);
+INSERT INTO `inventory_receipt_details` VALUES (1604, 74, 184, 1, 337296, 0, 236107.00);
+INSERT INTO `inventory_receipt_details` VALUES (1605, 75, 120, 3, 516336, 0, 361435.00);
+INSERT INTO `inventory_receipt_details` VALUES (1606, 76, 622, 3, 428582, 0, 300007.00);
+INSERT INTO `inventory_receipt_details` VALUES (1607, 77, 68, 2, 220072, 0, 154050.00);
+INSERT INTO `inventory_receipt_details` VALUES (1608, 78, 197, 2, 372122, 0, 260485.00);
+INSERT INTO `inventory_receipt_details` VALUES (1609, 79, 686, 1, 661179, 0, 462825.00);
+INSERT INTO `inventory_receipt_details` VALUES (1610, 80, 325, 3, 746139, 0, 522297.00);
+INSERT INTO `inventory_receipt_details` VALUES (1611, 81, 15, 3, 431541, 0, 302079.00);
+INSERT INTO `inventory_receipt_details` VALUES (1612, 82, 693, 2, 485575, 0, 339902.00);
+INSERT INTO `inventory_receipt_details` VALUES (1613, 83, 426, 3, 365003, 0, 255502.00);
+INSERT INTO `inventory_receipt_details` VALUES (1614, 84, 807, 2, 363362, 0, 254353.00);
+INSERT INTO `inventory_receipt_details` VALUES (1615, 85, 527, 1, 434594, 0, 304216.00);
+INSERT INTO `inventory_receipt_details` VALUES (1616, 86, 336, 3, 483823, 0, 338676.00);
+INSERT INTO `inventory_receipt_details` VALUES (1617, 87, 91, 1, 253291, 0, 177304.00);
+INSERT INTO `inventory_receipt_details` VALUES (1618, 88, 269, 1, 536470, 0, 375529.00);
+INSERT INTO `inventory_receipt_details` VALUES (1619, 89, 132, 1, 257920, 0, 180544.00);
+INSERT INTO `inventory_receipt_details` VALUES (1620, 90, 49, 1, 301661, 0, 211163.00);
+INSERT INTO `inventory_receipt_details` VALUES (1621, 91, 766, 3, 423436, 0, 296405.00);
+INSERT INTO `inventory_receipt_details` VALUES (1622, 92, 323, 1, 391081, 0, 273757.00);
+INSERT INTO `inventory_receipt_details` VALUES (1623, 93, 321, 1, 391081, 0, 273757.00);
+INSERT INTO `inventory_receipt_details` VALUES (1624, 94, 685, 2, 661179, 0, 462825.00);
+INSERT INTO `inventory_receipt_details` VALUES (1625, 95, 338, 3, 733463, 0, 513424.00);
+INSERT INTO `inventory_receipt_details` VALUES (1626, 96, 585, 3, 419475, 0, 293632.00);
+INSERT INTO `inventory_receipt_details` VALUES (1627, 97, 163, 2, 338510, 0, 236957.00);
+INSERT INTO `inventory_receipt_details` VALUES (1628, 98, 259, 1, 559560, 0, 391692.00);
+INSERT INTO `inventory_receipt_details` VALUES (1629, 99, 120, 1, 516336, 0, 361435.00);
+INSERT INTO `inventory_receipt_details` VALUES (1630, 100, 213, 1, 402939, 0, 282057.00);
+INSERT INTO `inventory_receipt_details` VALUES (1631, 101, 582, 1, 419475, 0, 293632.00);
+INSERT INTO `inventory_receipt_details` VALUES (1632, 102, 164, 3, 338510, 0, 236957.00);
+INSERT INTO `inventory_receipt_details` VALUES (1633, 103, 91, 1, 253291, 1, 177304.00);
+INSERT INTO `inventory_receipt_details` VALUES (1634, 104, 61, 3, 248305, 3, 173814.00);
+INSERT INTO `inventory_receipt_details` VALUES (1635, 105, 365, 3, 476463, 3, 333524.00);
+INSERT INTO `inventory_receipt_details` VALUES (1636, 106, 173, 2, 438531, 2, 306972.00);
+INSERT INTO `inventory_receipt_details` VALUES (1637, 107, 325, 3, 746139, 3, 522297.00);
+INSERT INTO `inventory_receipt_details` VALUES (1638, 108, 70, 1, 220072, 1, 154050.00);
+INSERT INTO `inventory_receipt_details` VALUES (1639, 109, 638, 1, 373959, 1, 261771.00);
+INSERT INTO `inventory_receipt_details` VALUES (1640, 110, 638, 2, 373959, 2, 261771.00);
+INSERT INTO `inventory_receipt_details` VALUES (1641, 111, 582, 1, 419475, 1, 293633.00);
+INSERT INTO `inventory_receipt_details` VALUES (1642, 112, 619, 1, 251652, 1, 176156.00);
+INSERT INTO `inventory_receipt_details` VALUES (1643, 113, 628, 1, 357991, 1, 250594.00);
+INSERT INTO `inventory_receipt_details` VALUES (1644, 114, 336, 3, 483823, 3, 338676.00);
+INSERT INTO `inventory_receipt_details` VALUES (1645, 115, 184, 1, 337296, 1, 236107.00);
+INSERT INTO `inventory_receipt_details` VALUES (1646, 116, 442, 3, 356347, 3, 249443.00);
+INSERT INTO `inventory_receipt_details` VALUES (1647, 117, 390, 2, 676800, 2, 473760.00);
+INSERT INTO `inventory_receipt_details` VALUES (1648, 118, 612, 2, 289368, 2, 202558.00);
+INSERT INTO `inventory_receipt_details` VALUES (1649, 119, 213, 1, 402939, 1, 282057.00);
+INSERT INTO `inventory_receipt_details` VALUES (1650, 120, 323, 1, 391081, 1, 273757.00);
+INSERT INTO `inventory_receipt_details` VALUES (1651, 121, 686, 1, 661179, 1, 462825.00);
+INSERT INTO `inventory_receipt_details` VALUES (1652, 122, 164, 3, 338510, 3, 236957.00);
+INSERT INTO `inventory_receipt_details` VALUES (1653, 123, 708, 2, 357716, 2, 250401.00);
+INSERT INTO `inventory_receipt_details` VALUES (1654, 124, 677, 1, 474829, 1, 332380.00);
+INSERT INTO `inventory_receipt_details` VALUES (1655, 125, 210, 2, 292700, 2, 204890.00);
+INSERT INTO `inventory_receipt_details` VALUES (1656, 126, 722, 3, 306573, 3, 214601.00);
+INSERT INTO `inventory_receipt_details` VALUES (1657, 127, 341, 3, 388074, 3, 271652.00);
+INSERT INTO `inventory_receipt_details` VALUES (1658, 128, 478, 3, 490276, 3, 343193.00);
+INSERT INTO `inventory_receipt_details` VALUES (1659, 129, 479, 3, 490276, 3, 343193.00);
+INSERT INTO `inventory_receipt_details` VALUES (1660, 130, 811, 1, 528435, 1, 369905.00);
+INSERT INTO `inventory_receipt_details` VALUES (1661, 131, 258, 3, 559560, 3, 391692.00);
+INSERT INTO `inventory_receipt_details` VALUES (1662, 132, 388, 2, 793135, 2, 555195.00);
 
 -- ----------------------------
 -- Table structure for inventory_receipts
 -- ----------------------------
 DROP TABLE IF EXISTS `inventory_receipts`;
 CREATE TABLE `inventory_receipts`  (
-                                       `id` int NOT NULL AUTO_INCREMENT,
-                                       `user_id` int NOT NULL,
-                                       `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-                                       `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
-                                       `supplier` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-                                       `total_amount` double NULL DEFAULT 0,
-                                       `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                       `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'PENDING',
-                                       `order_id` int NULL DEFAULT NULL,
-                                       PRIMARY KEY (`id`) USING BTREE,
-                                       INDEX `idx_inventory_receipts_order_id`(`order_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `supplier` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `total_amount` double NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp,
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'PENDING',
+  `order_id` int NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_inventory_receipts_order_id`(`order_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 133 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of inventory_receipts
 -- ----------------------------
-INSERT INTO `inventory_receipts` VALUES (8, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #9', NULL, 2242196, '2026-05-28 18:08:36', 'COMPLETED', 9);
-INSERT INTO `inventory_receipts` VALUES (9, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #10', NULL, 690504, '2026-05-28 18:17:51', 'COMPLETED', 10);
-INSERT INTO `inventory_receipts` VALUES (10, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #11', NULL, 641434, '2026-05-29 11:13:11', 'COMPLETED', 11);
-INSERT INTO `inventory_receipts` VALUES (11, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #12', NULL, 661434, '2026-05-29 11:14:55', 'COMPLETED', 12);
-INSERT INTO `inventory_receipts` VALUES (12, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #13', NULL, 646986, '2026-05-29 11:23:02', 'COMPLETED', 13);
-INSERT INTO `inventory_receipts` VALUES (13, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #14', NULL, 641434, '2026-05-29 15:44:02', 'COMPLETED', 14);
-INSERT INTO `inventory_receipts` VALUES (14, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #15', NULL, 641434, '2026-05-29 15:44:17', 'COMPLETED', 15);
-INSERT INTO `inventory_receipts` VALUES (15, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #16', NULL, 641434, '2026-05-29 15:44:20', 'COMPLETED', 16);
-INSERT INTO `inventory_receipts` VALUES (16, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #17', NULL, 641434, '2026-05-29 15:44:23', 'COMPLETED', 17);
-INSERT INTO `inventory_receipts` VALUES (17, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #18', NULL, 641434, '2026-05-29 15:44:30', 'COMPLETED', 18);
-INSERT INTO `inventory_receipts` VALUES (18, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #19', NULL, 651434, '2026-05-29 15:54:18', 'COMPLETED', 19);
-INSERT INTO `inventory_receipts` VALUES (19, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #20', NULL, 593298, '2026-05-29 16:44:45', 'COMPLETED', 20);
-INSERT INTO `inventory_receipts` VALUES (20, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #21', NULL, 550732, '2026-05-31 14:52:05', 'COMPLETED', 21);
-INSERT INTO `inventory_receipts` VALUES (21, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #22', NULL, 661434, '2026-05-31 15:05:35', 'COMPLETED', 22);
-INSERT INTO `inventory_receipts` VALUES (22, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #23', NULL, 710504, '2026-05-31 15:06:38', 'COMPLETED', 23);
-INSERT INTO `inventory_receipts` VALUES (23, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #24', NULL, 710504, '2026-05-31 17:35:49', 'COMPLETED', 24);
-INSERT INTO `inventory_receipts` VALUES (24, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #25', NULL, 661434, '2026-05-31 18:08:49', 'COMPLETED', 25);
-INSERT INTO `inventory_receipts` VALUES (25, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #26', NULL, 710504, '2026-05-31 18:32:31', 'COMPLETED', 26);
-INSERT INTO `inventory_receipts` VALUES (26, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #27', NULL, 710504, '2026-05-31 20:47:10', 'COMPLETED', 27);
-INSERT INTO `inventory_receipts` VALUES (27, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #28', NULL, 405057, '2026-05-31 21:25:09', 'COMPLETED', 28);
-INSERT INTO `inventory_receipts` VALUES (28, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #29', NULL, 405057, '2026-05-31 21:55:26', 'COMPLETED', 29);
-INSERT INTO `inventory_receipts` VALUES (29, 3, 'EXPORT', 'Xuất kho tự động theo đơn hàng #30', NULL, 661434, '2026-06-03 17:14:04', 'COMPLETED', 30);
-INSERT INTO `inventory_receipts` VALUES (30, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #31', NULL, 710504, '2026-06-08 14:19:42', 'COMPLETED', 31);
-INSERT INTO `inventory_receipts` VALUES (31, 3, 'EXPORT', 'Xuất kho tự động theo đơn hàng #32', NULL, 710504, '2026-06-08 14:22:15', 'COMPLETED', 32);
-INSERT INTO `inventory_receipts` VALUES (32, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #33', NULL, 661434, '2026-06-11 20:45:05', 'COMPLETED', 33);
-INSERT INTO `inventory_receipts` VALUES (33, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #34', NULL, 710504, '2026-06-13 17:33:26', 'COMPLETED', 34);
+INSERT INTO `inventory_receipts` VALUES (8, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #9', NULL, 1569536, '2026-05-28 18:08:36', 'COMPLETED', 9);
+INSERT INTO `inventory_receipts` VALUES (9, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #10', NULL, 483353, '2026-05-28 18:17:51', 'COMPLETED', 10);
+INSERT INTO `inventory_receipts` VALUES (10, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #11', NULL, 449004, '2026-05-29 11:13:11', 'COMPLETED', 11);
+INSERT INTO `inventory_receipts` VALUES (11, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #12', NULL, 463004, '2026-05-29 11:14:55', 'COMPLETED', 12);
+INSERT INTO `inventory_receipts` VALUES (12, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #13', NULL, 452890, '2026-05-29 11:23:02', 'COMPLETED', 13);
+INSERT INTO `inventory_receipts` VALUES (13, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #14', NULL, 449004, '2026-05-29 15:44:02', 'COMPLETED', 14);
+INSERT INTO `inventory_receipts` VALUES (14, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #15', NULL, 449004, '2026-05-29 15:44:17', 'COMPLETED', 15);
+INSERT INTO `inventory_receipts` VALUES (15, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #16', NULL, 449004, '2026-05-29 15:44:20', 'COMPLETED', 16);
+INSERT INTO `inventory_receipts` VALUES (16, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #17', NULL, 449004, '2026-05-29 15:44:23', 'COMPLETED', 17);
+INSERT INTO `inventory_receipts` VALUES (17, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #18', NULL, 449004, '2026-05-29 15:44:30', 'COMPLETED', 18);
+INSERT INTO `inventory_receipts` VALUES (18, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #19', NULL, 456004, '2026-05-29 15:54:18', 'COMPLETED', 19);
+INSERT INTO `inventory_receipts` VALUES (19, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #20', NULL, 415309, '2026-05-29 16:44:45', 'COMPLETED', 20);
+INSERT INTO `inventory_receipts` VALUES (20, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #21', NULL, 385512, '2026-05-31 14:52:05', 'COMPLETED', 21);
+INSERT INTO `inventory_receipts` VALUES (21, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #22', NULL, 463004, '2026-05-31 15:05:35', 'COMPLETED', 22);
+INSERT INTO `inventory_receipts` VALUES (22, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #23', NULL, 497353, '2026-05-31 15:06:38', 'COMPLETED', 23);
+INSERT INTO `inventory_receipts` VALUES (23, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #24', NULL, 497353, '2026-05-31 17:35:49', 'COMPLETED', 24);
+INSERT INTO `inventory_receipts` VALUES (24, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #25', NULL, 463004, '2026-05-31 18:08:49', 'COMPLETED', 25);
+INSERT INTO `inventory_receipts` VALUES (25, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #26', NULL, 497353, '2026-05-31 18:32:31', 'COMPLETED', 26);
+INSERT INTO `inventory_receipts` VALUES (26, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #27', NULL, 497353, '2026-05-31 20:47:10', 'COMPLETED', 27);
+INSERT INTO `inventory_receipts` VALUES (27, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #28', NULL, 283540, '2026-05-31 21:25:09', 'COMPLETED', 28);
+INSERT INTO `inventory_receipts` VALUES (28, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #29', NULL, 283540, '2026-05-31 21:55:26', 'COMPLETED', 29);
+INSERT INTO `inventory_receipts` VALUES (29, 3, 'EXPORT', 'Xuất kho tự động theo đơn hàng #30', NULL, 463004, '2026-06-03 17:14:04', 'COMPLETED', 30);
+INSERT INTO `inventory_receipts` VALUES (30, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #31', NULL, 497353, '2026-06-08 14:19:42', 'COMPLETED', 31);
+INSERT INTO `inventory_receipts` VALUES (31, 3, 'EXPORT', 'Xuất kho tự động theo đơn hàng #32', NULL, 497353, '2026-06-08 14:22:15', 'COMPLETED', 32);
+INSERT INTO `inventory_receipts` VALUES (32, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #33', NULL, 463004, '2026-06-11 20:45:05', 'COMPLETED', 33);
+INSERT INTO `inventory_receipts` VALUES (33, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #34', NULL, 497353, '2026-06-13 17:33:26', 'COMPLETED', 34);
 INSERT INTO `inventory_receipts` VALUES (34, 2, 'RETURN', 'Hoàn kho do huỷ đơn hàng #34', NULL, 710504, '2026-06-13 18:14:28', 'COMPLETED', 34);
-INSERT INTO `inventory_receipts` VALUES (35, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #35', NULL, 580732, '2026-06-13 18:15:27', 'COMPLETED', 35);
+INSERT INTO `inventory_receipts` VALUES (35, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #35', NULL, 406512, '2026-06-13 18:15:27', 'COMPLETED', 35);
 INSERT INTO `inventory_receipts` VALUES (36, 2, 'RETURN', 'Hoàn kho do huỷ đơn hàng #35', NULL, 580732, '2026-06-13 18:16:15', 'COMPLETED', 35);
-INSERT INTO `inventory_receipts` VALUES (37, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #36', NULL, 710504, '2026-06-13 18:19:14', 'COMPLETED', 36);
-INSERT INTO `inventory_receipts` VALUES (38, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #37', NULL, 560549, '2026-06-13 18:26:27', 'COMPLETED', 37);
-INSERT INTO `inventory_receipts` VALUES (39, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #38', NULL, 337296, '2026-06-15 09:34:59', 'COMPLETED', 38);
+INSERT INTO `inventory_receipts` VALUES (37, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #36', NULL, 497353, '2026-06-13 18:19:14', 'COMPLETED', 36);
+INSERT INTO `inventory_receipts` VALUES (38, 2, 'EXPORT', 'Xuất kho tự động theo đơn hàng #37', NULL, 392384, '2026-06-13 18:26:27', 'COMPLETED', 37);
+INSERT INTO `inventory_receipts` VALUES (39, 1, 'EXPORT', 'Xuất kho tự động theo đơn hàng #38', NULL, 236107, '2026-06-15 09:34:59', 'COMPLETED', 38);
+INSERT INTO `inventory_receipts` VALUES (40, 1, 'IMPORT', 'Lô nhập hàng T1/2026', 'Nhà cung cấp Thời Trang A', 11022207589, '2026-01-10 08:00:00', 'COMPLETED', NULL);
+INSERT INTO `inventory_receipts` VALUES (41, 1, 'IMPORT', 'Lô nhập hàng T3/2026', 'Xưởng May B', 11327828218, '2026-03-15 09:30:00', 'COMPLETED', NULL);
+INSERT INTO `inventory_receipts` VALUES (42, 1, 'IMPORT', 'Lô nhập hàng T5/2026', 'Nhà cung cấp C', 11134168392, '2026-05-01 10:15:00', 'COMPLETED', NULL);
+INSERT INTO `inventory_receipts` VALUES (43, 1, 'EXPORT', 'Xuất kho tự động cho đơn #39', NULL, 748329, '2026-05-16 08:30:00', 'COMPLETED', 39);
+INSERT INTO `inventory_receipts` VALUES (44, 1, 'EXPORT', 'Xuất kho tự động cho đơn #40', NULL, 391692, '2026-03-15 08:30:00', 'COMPLETED', 40);
+INSERT INTO `inventory_receipts` VALUES (45, 1, 'EXPORT', 'Xuất kho tự động cho đơn #41', NULL, 1000572, '2026-01-18 08:30:00', 'COMPLETED', 41);
+INSERT INTO `inventory_receipts` VALUES (46, 1, 'EXPORT', 'Xuất kho tự động cho đơn #42', NULL, 741246, '2026-02-17 08:30:00', 'COMPLETED', 42);
+INSERT INTO `inventory_receipts` VALUES (47, 1, 'EXPORT', 'Xuất kho tự động cho đơn #43', NULL, 925650, '2026-06-07 08:30:00', 'COMPLETED', 43);
+INSERT INTO `inventory_receipts` VALUES (48, 1, 'EXPORT', 'Xuất kho tự động cho đơn #44', NULL, 405116, '2026-03-08 08:30:00', 'COMPLETED', 44);
+INSERT INTO `inventory_receipts` VALUES (49, 1, 'EXPORT', 'Xuất kho tự động cho đơn #45', NULL, 273757, '2026-03-16 08:30:00', 'COMPLETED', 45);
+INSERT INTO `inventory_receipts` VALUES (50, 1, 'EXPORT', 'Xuất kho tự động cho đơn #46', NULL, 261771, '2026-04-05 08:30:00', 'COMPLETED', 46);
+INSERT INTO `inventory_receipts` VALUES (51, 1, 'EXPORT', 'Xuất kho tự động cho đơn #47', NULL, 282057, '2026-05-29 08:30:00', 'COMPLETED', 47);
+INSERT INTO `inventory_receipts` VALUES (52, 1, 'EXPORT', 'Xuất kho tự động cho đơn #48', NULL, 739808, '2026-02-20 08:30:00', 'COMPLETED', 48);
+INSERT INTO `inventory_receipts` VALUES (53, 1, 'EXPORT', 'Xuất kho tự động cho đơn #49', NULL, 234276, '2026-05-21 08:30:00', 'COMPLETED', 49);
+INSERT INTO `inventory_receipts` VALUES (54, 1, 'EXPORT', 'Xuất kho tự động cho đơn #50', NULL, 862257, '2026-05-05 08:30:00', 'COMPLETED', 50);
+INSERT INTO `inventory_receipts` VALUES (55, 1, 'EXPORT', 'Xuất kho tự động cho đơn #51', NULL, 551904, '2026-03-31 08:30:00', 'COMPLETED', 51);
+INSERT INTO `inventory_receipts` VALUES (56, 1, 'EXPORT', 'Xuất kho tự động cho đơn #52', NULL, 521442, '2026-04-20 08:30:00', 'COMPLETED', 52);
+INSERT INTO `inventory_receipts` VALUES (57, 1, 'EXPORT', 'Xuất kho tự động cho đơn #53', NULL, 425694, '2026-04-08 08:30:00', 'COMPLETED', 53);
+INSERT INTO `inventory_receipts` VALUES (58, 1, 'EXPORT', 'Xuất kho tự động cho đơn #54', NULL, 154050, '2026-01-23 08:30:00', 'COMPLETED', 54);
+INSERT INTO `inventory_receipts` VALUES (59, 1, 'EXPORT', 'Xuất kho tự động cho đơn #55', NULL, 250594, '2026-03-31 08:30:00', 'COMPLETED', 55);
+INSERT INTO `inventory_receipts` VALUES (60, 1, 'EXPORT', 'Xuất kho tự động cho đơn #56', NULL, 451172, '2026-05-04 08:30:00', 'COMPLETED', 56);
+INSERT INTO `inventory_receipts` VALUES (61, 1, 'EXPORT', 'Xuất kho tự động cho đơn #57', NULL, 718872, '2026-04-13 08:30:00', 'COMPLETED', 57);
+INSERT INTO `inventory_receipts` VALUES (62, 1, 'EXPORT', 'Xuất kho tự động cho đơn #58', NULL, 326955, '2026-06-06 08:30:00', 'COMPLETED', 58);
+INSERT INTO `inventory_receipts` VALUES (63, 1, 'EXPORT', 'Xuất kho tự động cho đơn #59', NULL, 592810, '2026-03-07 08:30:00', 'COMPLETED', 59);
+INSERT INTO `inventory_receipts` VALUES (64, 1, 'EXPORT', 'Xuất kho tự động cho đơn #60', NULL, 733560, '2026-01-26 08:30:00', 'COMPLETED', 60);
+INSERT INTO `inventory_receipts` VALUES (65, 1, 'EXPORT', 'Xuất kho tự động cho đơn #61', NULL, 486138, '2026-04-16 08:30:00', 'COMPLETED', 61);
+INSERT INTO `inventory_receipts` VALUES (66, 1, 'EXPORT', 'Xuất kho tự động cho đơn #62', NULL, 947520, '2026-02-17 08:30:00', 'COMPLETED', 62);
+INSERT INTO `inventory_receipts` VALUES (67, 1, 'EXPORT', 'Xuất kho tự động cho đơn #63', NULL, 613944, '2026-01-28 08:30:00', 'COMPLETED', 63);
+INSERT INTO `inventory_receipts` VALUES (68, 1, 'EXPORT', 'Xuất kho tự động cho đơn #64', NULL, 860184, '2026-04-27 08:30:00', 'COMPLETED', 64);
+INSERT INTO `inventory_receipts` VALUES (69, 1, 'EXPORT', 'Xuất kho tự động cho đơn #65', NULL, 523542, '2026-01-23 08:30:00', 'COMPLETED', 65);
+INSERT INTO `inventory_receipts` VALUES (70, 1, 'EXPORT', 'Xuất kho tự động cho đơn #66', NULL, 176156, '2026-05-25 08:30:00', 'COMPLETED', 66);
+INSERT INTO `inventory_receipts` VALUES (71, 1, 'EXPORT', 'Xuất kho tự động cho đơn #67', NULL, 326955, '2026-02-16 08:30:00', 'COMPLETED', 67);
+INSERT INTO `inventory_receipts` VALUES (72, 1, 'EXPORT', 'Xuất kho tự động cho đơn #68', NULL, 344948, '2026-05-20 08:30:00', 'COMPLETED', 68);
+INSERT INTO `inventory_receipts` VALUES (73, 1, 'EXPORT', 'Xuất kho tự động cho đơn #69', NULL, 748329, '2026-02-16 08:30:00', 'COMPLETED', 69);
+INSERT INTO `inventory_receipts` VALUES (74, 1, 'EXPORT', 'Xuất kho tự động cho đơn #70', NULL, 236107, '2026-01-04 08:30:00', 'COMPLETED', 70);
+INSERT INTO `inventory_receipts` VALUES (75, 1, 'EXPORT', 'Xuất kho tự động cho đơn #71', NULL, 1084305, '2026-05-04 08:30:00', 'COMPLETED', 71);
+INSERT INTO `inventory_receipts` VALUES (76, 1, 'EXPORT', 'Xuất kho tự động cho đơn #72', NULL, 900021, '2026-04-29 08:30:00', 'COMPLETED', 72);
+INSERT INTO `inventory_receipts` VALUES (77, 1, 'EXPORT', 'Xuất kho tự động cho đơn #73', NULL, 308100, '2026-05-09 08:30:00', 'COMPLETED', 73);
+INSERT INTO `inventory_receipts` VALUES (78, 1, 'EXPORT', 'Xuất kho tự động cho đơn #74', NULL, 520970, '2026-06-02 08:30:00', 'COMPLETED', 74);
+INSERT INTO `inventory_receipts` VALUES (79, 1, 'EXPORT', 'Xuất kho tự động cho đơn #75', NULL, 462825, '2026-01-11 08:30:00', 'COMPLETED', 75);
+INSERT INTO `inventory_receipts` VALUES (80, 1, 'EXPORT', 'Xuất kho tự động cho đơn #76', NULL, 1566891, '2026-02-18 08:30:00', 'COMPLETED', 76);
+INSERT INTO `inventory_receipts` VALUES (81, 1, 'EXPORT', 'Xuất kho tự động cho đơn #77', NULL, 906237, '2026-05-08 08:30:00', 'COMPLETED', 77);
+INSERT INTO `inventory_receipts` VALUES (82, 1, 'EXPORT', 'Xuất kho tự động cho đơn #78', NULL, 679804, '2026-04-26 08:30:00', 'COMPLETED', 78);
+INSERT INTO `inventory_receipts` VALUES (83, 1, 'EXPORT', 'Xuất kho tự động cho đơn #79', NULL, 766506, '2026-02-04 08:30:00', 'COMPLETED', 79);
+INSERT INTO `inventory_receipts` VALUES (84, 1, 'EXPORT', 'Xuất kho tự động cho đơn #80', NULL, 508706, '2026-06-09 08:30:00', 'COMPLETED', 80);
+INSERT INTO `inventory_receipts` VALUES (85, 1, 'EXPORT', 'Xuất kho tự động cho đơn #81', NULL, 304216, '2026-02-22 08:30:00', 'COMPLETED', 81);
+INSERT INTO `inventory_receipts` VALUES (86, 1, 'EXPORT', 'Xuất kho tự động cho đơn #82', NULL, 1016028, '2026-05-04 08:30:00', 'COMPLETED', 82);
+INSERT INTO `inventory_receipts` VALUES (87, 1, 'EXPORT', 'Xuất kho tự động cho đơn #83', NULL, 177304, '2026-03-29 08:30:00', 'COMPLETED', 83);
+INSERT INTO `inventory_receipts` VALUES (88, 1, 'EXPORT', 'Xuất kho tự động cho đơn #84', NULL, 375529, '2026-05-17 08:30:00', 'COMPLETED', 84);
+INSERT INTO `inventory_receipts` VALUES (89, 1, 'EXPORT', 'Xuất kho tự động cho đơn #85', NULL, 180544, '2026-02-21 08:30:00', 'COMPLETED', 85);
+INSERT INTO `inventory_receipts` VALUES (90, 1, 'EXPORT', 'Xuất kho tự động cho đơn #86', NULL, 211163, '2026-03-02 08:30:00', 'COMPLETED', 86);
+INSERT INTO `inventory_receipts` VALUES (91, 1, 'EXPORT', 'Xuất kho tự động cho đơn #87', NULL, 889215, '2026-04-26 08:30:00', 'COMPLETED', 87);
+INSERT INTO `inventory_receipts` VALUES (92, 1, 'EXPORT', 'Xuất kho tự động cho đơn #88', NULL, 273757, '2026-05-02 08:30:00', 'COMPLETED', 88);
+INSERT INTO `inventory_receipts` VALUES (93, 1, 'EXPORT', 'Xuất kho tự động cho đơn #89', NULL, 273757, '2026-01-17 08:30:00', 'COMPLETED', 89);
+INSERT INTO `inventory_receipts` VALUES (94, 1, 'EXPORT', 'Xuất kho tự động cho đơn #90', NULL, 925650, '2026-06-12 08:30:00', 'COMPLETED', 90);
+INSERT INTO `inventory_receipts` VALUES (95, 1, 'EXPORT', 'Xuất kho tự động cho đơn #91', NULL, 1540272, '2026-05-28 08:30:00', 'COMPLETED', 91);
+INSERT INTO `inventory_receipts` VALUES (96, 1, 'EXPORT', 'Xuất kho tự động cho đơn #92', NULL, 880896, '2026-03-19 08:30:00', 'COMPLETED', 92);
+INSERT INTO `inventory_receipts` VALUES (97, 1, 'EXPORT', 'Xuất kho tự động cho đơn #93', NULL, 473914, '2026-06-11 08:30:00', 'COMPLETED', 93);
+INSERT INTO `inventory_receipts` VALUES (98, 1, 'EXPORT', 'Xuất kho tự động cho đơn #94', NULL, 391692, '2026-02-15 08:30:00', 'COMPLETED', 94);
+INSERT INTO `inventory_receipts` VALUES (99, 1, 'EXPORT', 'Xuất kho tự động cho đơn #95', NULL, 361435, '2026-03-24 08:30:00', 'COMPLETED', 95);
+INSERT INTO `inventory_receipts` VALUES (100, 1, 'EXPORT', 'Xuất kho tự động cho đơn #96', NULL, 282057, '2026-04-12 08:30:00', 'COMPLETED', 96);
+INSERT INTO `inventory_receipts` VALUES (101, 1, 'EXPORT', 'Xuất kho tự động cho đơn #97', NULL, 293632, '2026-01-03 08:30:00', 'COMPLETED', 97);
+INSERT INTO `inventory_receipts` VALUES (102, 1, 'EXPORT', 'Xuất kho tự động cho đơn #98', NULL, 710871, '2026-05-19 08:30:00', 'COMPLETED', 98);
+INSERT INTO `inventory_receipts` VALUES (103, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #83', NULL, 283291, '2026-04-03 08:30:00', 'COMPLETED', 83);
+INSERT INTO `inventory_receipts` VALUES (104, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #52', NULL, 774915, '2026-04-25 08:30:00', 'COMPLETED', 52);
+INSERT INTO `inventory_receipts` VALUES (105, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #41', NULL, 1459389, '2026-01-23 08:30:00', 'COMPLETED', 41);
+INSERT INTO `inventory_receipts` VALUES (106, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #63', NULL, 907062, '2026-02-04 08:30:00', 'COMPLETED', 63);
+INSERT INTO `inventory_receipts` VALUES (107, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #76', NULL, 2268417, '2026-02-24 08:30:00', 'COMPLETED', 76);
+INSERT INTO `inventory_receipts` VALUES (108, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #54', NULL, 250072, '2026-01-29 08:30:00', 'COMPLETED', 54);
+INSERT INTO `inventory_receipts` VALUES (109, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #46', NULL, 403959, '2026-04-12 08:30:00', 'COMPLETED', 46);
+INSERT INTO `inventory_receipts` VALUES (110, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #65', NULL, 777918, '2026-01-28 08:30:00', 'COMPLETED', 65);
+INSERT INTO `inventory_receipts` VALUES (111, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #97', NULL, 449475, '2026-01-10 08:30:00', 'COMPLETED', 97);
+INSERT INTO `inventory_receipts` VALUES (112, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #66', NULL, 281652, '2026-05-29 08:30:00', 'COMPLETED', 66);
+INSERT INTO `inventory_receipts` VALUES (113, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #55', NULL, 387991, '2026-04-05 08:30:00', 'COMPLETED', 55);
+INSERT INTO `inventory_receipts` VALUES (114, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #82', NULL, 1481469, '2026-05-09 08:30:00', 'COMPLETED', 82);
+INSERT INTO `inventory_receipts` VALUES (115, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #70', NULL, 367296, '2026-01-08 08:30:00', 'COMPLETED', 70);
+INSERT INTO `inventory_receipts` VALUES (116, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #39', NULL, 1099041, '2026-05-20 08:30:00', 'COMPLETED', 39);
+INSERT INTO `inventory_receipts` VALUES (117, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #62', NULL, 1383600, '2026-02-23 08:30:00', 'COMPLETED', 62);
+INSERT INTO `inventory_receipts` VALUES (118, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #44', NULL, 608736, '2026-03-13 08:30:00', 'COMPLETED', 44);
+INSERT INTO `inventory_receipts` VALUES (119, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #47', NULL, 432939, '2026-06-02 08:30:00', 'COMPLETED', 47);
+INSERT INTO `inventory_receipts` VALUES (120, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #88', NULL, 421081, '2026-05-08 08:30:00', 'COMPLETED', 88);
+INSERT INTO `inventory_receipts` VALUES (121, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #75', NULL, 691179, '2026-01-15 08:30:00', 'COMPLETED', 75);
+INSERT INTO `inventory_receipts` VALUES (122, 1, 'RETURN', 'Hoàn kho do hoàn trả đơn hàng #98', NULL, 1045530, '2026-05-24 08:30:00', 'COMPLETED', 98);
+INSERT INTO `inventory_receipts` VALUES (123, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #99', NULL, 500802, '2026-03-16 08:30:00', 'COMPLETED', 99);
+INSERT INTO `inventory_receipts` VALUES (124, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #100', NULL, 332380, '2026-05-03 08:30:00', 'COMPLETED', 100);
+INSERT INTO `inventory_receipts` VALUES (125, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #101', NULL, 409780, '2026-03-04 08:30:00', 'COMPLETED', 101);
+INSERT INTO `inventory_receipts` VALUES (126, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #102', NULL, 643803, '2026-05-22 08:30:00', 'COMPLETED', 102);
+INSERT INTO `inventory_receipts` VALUES (127, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #103', NULL, 814955, '2026-03-09 08:30:00', 'COMPLETED', 103);
+INSERT INTO `inventory_receipts` VALUES (128, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #104', NULL, 1029580, '2026-03-22 08:30:00', 'COMPLETED', 104);
+INSERT INTO `inventory_receipts` VALUES (129, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #105', NULL, 1029580, '2026-05-10 08:30:00', 'COMPLETED', 105);
+INSERT INTO `inventory_receipts` VALUES (130, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #106', NULL, 369905, '2026-03-02 08:30:00', 'COMPLETED', 106);
+INSERT INTO `inventory_receipts` VALUES (131, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #107', NULL, 1175076, '2026-05-29 08:30:00', 'COMPLETED', 107);
+INSERT INTO `inventory_receipts` VALUES (132, 1, 'RETURN', 'Hoàn kho do huỷ đơn hàng #108', NULL, 1110389, '2026-04-08 08:30:00', 'COMPLETED', 108);
 
 -- ----------------------------
 -- Table structure for notifications
 -- ----------------------------
 DROP TABLE IF EXISTS `notifications`;
 CREATE TABLE `notifications`  (
-                                  `id` int NOT NULL AUTO_INCREMENT,
-                                  `user_id` int NULL DEFAULT NULL,
-                                  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                                  `url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                  `is_read` tinyint(1) NOT NULL DEFAULT 0,
-                                  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                  PRIMARY KEY (`id`) USING BTREE,
-                                  INDEX `idx_user_created`(`user_id` ASC, `created_at` ASC) USING BTREE
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NULL DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_user_created`(`user_id` ASC, `created_at` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -398,26 +1439,26 @@ INSERT INTO `notifications` VALUES (6, 1, 'Đặt hàng thành công #38', 'Đơ
 -- ----------------------------
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items`  (
-                                `id` int NOT NULL AUTO_INCREMENT,
-                                `order_id` int NULL DEFAULT NULL,
-                                `variant_id` int NULL DEFAULT NULL,
-                                `product_id` int NULL DEFAULT NULL,
-                                `product_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                `size` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                `color` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                `thumbnail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                `quantity` int NULL DEFAULT NULL,
-                                `price` decimal(10, 2) NULL DEFAULT NULL,
-                                `total` decimal(10, 2) NULL DEFAULT NULL,
-                                `reviewed` tinyint NULL DEFAULT NULL,
-                                PRIMARY KEY (`id`) USING BTREE,
-                                INDEX `order_id`(`order_id` ASC) USING BTREE,
-                                INDEX `variant_id`(`variant_id` ASC) USING BTREE,
-                                INDEX `product_id`(`product_id` ASC) USING BTREE,
-                                CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT,
-                                CONSTRAINT `order_items_ibfk_3` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NULL DEFAULT NULL,
+  `variant_id` int NULL DEFAULT NULL,
+  `product_id` int NULL DEFAULT NULL,
+  `product_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `size` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `color` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `thumbnail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `quantity` int NULL DEFAULT NULL,
+  `price` decimal(10, 2) NULL DEFAULT NULL,
+  `total` decimal(10, 2) NULL DEFAULT NULL,
+  `reviewed` tinyint NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `order_id`(`order_id` ASC) USING BTREE,
+  INDEX `variant_id`(`variant_id` ASC) USING BTREE,
+  INDEX `product_id`(`product_id` ASC) USING BTREE,
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `order_items_ibfk_3` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 109 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of order_items
@@ -459,22 +1500,92 @@ INSERT INTO `order_items` VALUES (35, 35, 204, 31, NULL, 'XL', 'Black', NULL, 1,
 INSERT INTO `order_items` VALUES (36, 36, 572, 87, NULL, 'XL', 'Beige', NULL, 1, 710504.00, 710504.00, NULL);
 INSERT INTO `order_items` VALUES (37, 37, 576, 88, NULL, 'XL', 'Blue', NULL, 1, 560549.00, 560549.00, NULL);
 INSERT INTO `order_items` VALUES (38, 38, 183, 27, NULL, 'L', 'Be', NULL, 1, 337296.00, 337296.00, NULL);
+INSERT INTO `order_items` VALUES (39, 39, 442, 70, NULL, NULL, NULL, NULL, 3, 356347.00, 1069041.00, NULL);
+INSERT INTO `order_items` VALUES (40, 40, 260, 39, NULL, NULL, NULL, NULL, 1, 559560.00, 559560.00, NULL);
+INSERT INTO `order_items` VALUES (41, 41, 365, 58, NULL, NULL, NULL, NULL, 3, 476463.00, 1429389.00, NULL);
+INSERT INTO `order_items` VALUES (42, 42, 788, 126, NULL, NULL, NULL, NULL, 2, 529462.00, 1058924.00, NULL);
+INSERT INTO `order_items` VALUES (43, 43, 682, 108, NULL, NULL, NULL, NULL, 2, 661179.00, 1322358.00, NULL);
+INSERT INTO `order_items` VALUES (44, 44, 612, 94, NULL, NULL, NULL, NULL, 2, 289368.00, 578736.00, NULL);
+INSERT INTO `order_items` VALUES (45, 45, 321, 50, NULL, NULL, NULL, NULL, 1, 391081.00, 391081.00, NULL);
+INSERT INTO `order_items` VALUES (46, 46, 638, 100, NULL, NULL, NULL, NULL, 1, 373959.00, 373959.00, NULL);
+INSERT INTO `order_items` VALUES (47, 47, 213, 31, NULL, NULL, NULL, NULL, 1, 402939.00, 402939.00, NULL);
+INSERT INTO `order_items` VALUES (48, 48, 812, 129, NULL, NULL, NULL, NULL, 2, 528435.00, 1056870.00, NULL);
+INSERT INTO `order_items` VALUES (49, 49, 753, 121, NULL, NULL, NULL, NULL, 1, 334680.00, 334680.00, NULL);
+INSERT INTO `order_items` VALUES (50, 50, 101, 17, NULL, NULL, NULL, NULL, 3, 410598.00, 1231794.00, NULL);
+INSERT INTO `order_items` VALUES (51, 51, 84, 14, NULL, NULL, NULL, NULL, 2, 394217.00, 788434.00, NULL);
+INSERT INTO `order_items` VALUES (52, 52, 61, 11, NULL, NULL, NULL, NULL, 3, 248305.00, 744915.00, NULL);
+INSERT INTO `order_items` VALUES (53, 53, 416, 65, NULL, NULL, NULL, NULL, 3, 202712.00, 608136.00, NULL);
+INSERT INTO `order_items` VALUES (54, 54, 70, 12, NULL, NULL, NULL, NULL, 1, 220072.00, 220072.00, NULL);
+INSERT INTO `order_items` VALUES (55, 55, 628, 97, NULL, NULL, NULL, NULL, 1, 357991.00, 357991.00, NULL);
+INSERT INTO `order_items` VALUES (56, 56, 375, 59, NULL, NULL, NULL, NULL, 2, 322266.00, 644532.00, NULL);
+INSERT INTO `order_items` VALUES (57, 57, 2, 1, NULL, NULL, NULL, NULL, 2, 513480.00, 1026960.00, NULL);
+INSERT INTO `order_items` VALUES (58, 58, 550, 85, NULL, NULL, NULL, NULL, 1, 467078.00, 467078.00, NULL);
+INSERT INTO `order_items` VALUES (59, 59, 768, 123, NULL, NULL, NULL, NULL, 2, 423436.00, 846872.00, NULL);
+INSERT INTO `order_items` VALUES (60, 60, 497, 78, NULL, NULL, NULL, NULL, 3, 349315.00, 1047945.00, NULL);
+INSERT INTO `order_items` VALUES (61, 61, 711, 112, NULL, NULL, NULL, NULL, 2, 347241.00, 694482.00, NULL);
+INSERT INTO `order_items` VALUES (62, 62, 390, 62, NULL, NULL, NULL, NULL, 2, 676800.00, 1353600.00, NULL);
+INSERT INTO `order_items` VALUES (63, 63, 173, 26, NULL, NULL, NULL, NULL, 2, 438531.00, 877062.00, NULL);
+INSERT INTO `order_items` VALUES (64, 64, 73, 13, NULL, NULL, NULL, NULL, 3, 409611.00, 1228833.00, NULL);
+INSERT INTO `order_items` VALUES (65, 65, 638, 100, NULL, NULL, NULL, NULL, 2, 373959.00, 747918.00, NULL);
+INSERT INTO `order_items` VALUES (66, 66, 619, 95, NULL, NULL, NULL, NULL, 1, 251652.00, 251652.00, NULL);
+INSERT INTO `order_items` VALUES (67, 67, 546, 85, NULL, NULL, NULL, NULL, 1, 467078.00, 467078.00, NULL);
+INSERT INTO `order_items` VALUES (68, 68, 153, 24, NULL, NULL, NULL, NULL, 2, 246392.00, 492784.00, NULL);
+INSERT INTO `order_items` VALUES (69, 69, 448, 70, NULL, NULL, NULL, NULL, 3, 356347.00, 1069041.00, NULL);
+INSERT INTO `order_items` VALUES (70, 70, 184, 27, NULL, NULL, NULL, NULL, 1, 337296.00, 337296.00, NULL);
+INSERT INTO `order_items` VALUES (71, 71, 120, 19, NULL, NULL, NULL, NULL, 3, 516336.00, 1549008.00, NULL);
+INSERT INTO `order_items` VALUES (72, 72, 622, 96, NULL, NULL, NULL, NULL, 3, 428582.00, 1285746.00, NULL);
+INSERT INTO `order_items` VALUES (73, 73, 68, 12, NULL, NULL, NULL, NULL, 2, 220072.00, 440144.00, NULL);
+INSERT INTO `order_items` VALUES (74, 74, 197, 29, NULL, NULL, NULL, NULL, 2, 372122.00, 744244.00, NULL);
+INSERT INTO `order_items` VALUES (75, 75, 686, 108, NULL, NULL, NULL, NULL, 1, 661179.00, 661179.00, NULL);
+INSERT INTO `order_items` VALUES (76, 76, 325, 51, NULL, NULL, NULL, NULL, 3, 746139.00, 2238417.00, NULL);
+INSERT INTO `order_items` VALUES (77, 77, 15, 2, NULL, NULL, NULL, NULL, 3, 431541.00, 1294623.00, NULL);
+INSERT INTO `order_items` VALUES (78, 78, 693, 109, NULL, NULL, NULL, NULL, 2, 485575.00, 971150.00, NULL);
+INSERT INTO `order_items` VALUES (79, 79, 426, 67, NULL, NULL, NULL, NULL, 3, 365003.00, 1095009.00, NULL);
+INSERT INTO `order_items` VALUES (80, 80, 807, 128, NULL, NULL, NULL, NULL, 2, 363362.00, 726724.00, NULL);
+INSERT INTO `order_items` VALUES (81, 81, 527, 81, NULL, NULL, NULL, NULL, 1, 434594.00, 434594.00, NULL);
+INSERT INTO `order_items` VALUES (82, 82, 336, 52, NULL, NULL, NULL, NULL, 3, 483823.00, 1451469.00, NULL);
+INSERT INTO `order_items` VALUES (83, 83, 91, 15, NULL, NULL, NULL, NULL, 1, 253291.00, 253291.00, NULL);
+INSERT INTO `order_items` VALUES (84, 84, 269, 42, NULL, NULL, NULL, NULL, 1, 536470.00, 536470.00, NULL);
+INSERT INTO `order_items` VALUES (85, 85, 132, 20, NULL, NULL, NULL, NULL, 1, 257920.00, 257920.00, NULL);
+INSERT INTO `order_items` VALUES (86, 86, 49, 9, NULL, NULL, NULL, NULL, 1, 301661.00, 301661.00, NULL);
+INSERT INTO `order_items` VALUES (87, 87, 766, 123, NULL, NULL, NULL, NULL, 3, 423436.00, 1270308.00, NULL);
+INSERT INTO `order_items` VALUES (88, 88, 323, 50, NULL, NULL, NULL, NULL, 1, 391081.00, 391081.00, NULL);
+INSERT INTO `order_items` VALUES (89, 89, 321, 50, NULL, NULL, NULL, NULL, 1, 391081.00, 391081.00, NULL);
+INSERT INTO `order_items` VALUES (90, 90, 685, 108, NULL, NULL, NULL, NULL, 2, 661179.00, 1322358.00, NULL);
+INSERT INTO `order_items` VALUES (91, 91, 338, 53, NULL, NULL, NULL, NULL, 3, 733463.00, 2200389.00, NULL);
+INSERT INTO `order_items` VALUES (92, 92, 585, 91, NULL, NULL, NULL, NULL, 3, 419475.00, 1258425.00, NULL);
+INSERT INTO `order_items` VALUES (93, 93, 163, 25, NULL, NULL, NULL, NULL, 2, 338510.00, 677020.00, NULL);
+INSERT INTO `order_items` VALUES (94, 94, 259, 39, NULL, NULL, NULL, NULL, 1, 559560.00, 559560.00, NULL);
+INSERT INTO `order_items` VALUES (95, 95, 120, 19, NULL, NULL, NULL, NULL, 1, 516336.00, 516336.00, NULL);
+INSERT INTO `order_items` VALUES (96, 96, 213, 31, NULL, NULL, NULL, NULL, 1, 402939.00, 402939.00, NULL);
+INSERT INTO `order_items` VALUES (97, 97, 582, 91, NULL, NULL, NULL, NULL, 1, 419475.00, 419475.00, NULL);
+INSERT INTO `order_items` VALUES (98, 98, 164, 25, NULL, NULL, NULL, NULL, 3, 338510.00, 1015530.00, NULL);
+INSERT INTO `order_items` VALUES (99, 99, 708, 111, NULL, NULL, NULL, NULL, 2, 357716.00, 715432.00, NULL);
+INSERT INTO `order_items` VALUES (100, 100, 677, 107, NULL, NULL, NULL, NULL, 1, 474829.00, 474829.00, NULL);
+INSERT INTO `order_items` VALUES (101, 101, 210, 30, NULL, NULL, NULL, NULL, 2, 292700.00, 585400.00, NULL);
+INSERT INTO `order_items` VALUES (102, 102, 722, 114, NULL, NULL, NULL, NULL, 3, 306573.00, 919719.00, NULL);
+INSERT INTO `order_items` VALUES (103, 103, 341, 54, NULL, NULL, NULL, NULL, 3, 388074.00, 1164222.00, NULL);
+INSERT INTO `order_items` VALUES (104, 104, 478, 74, NULL, NULL, NULL, NULL, 3, 490276.00, 1470828.00, NULL);
+INSERT INTO `order_items` VALUES (105, 105, 479, 74, NULL, NULL, NULL, NULL, 3, 490276.00, 1470828.00, NULL);
+INSERT INTO `order_items` VALUES (106, 106, 811, 129, NULL, NULL, NULL, NULL, 1, 528435.00, 528435.00, NULL);
+INSERT INTO `order_items` VALUES (107, 107, 258, 39, NULL, NULL, NULL, NULL, 3, 559560.00, 1678680.00, NULL);
+INSERT INTO `order_items` VALUES (108, 108, 388, 61, NULL, NULL, NULL, NULL, 2, 793135.00, 1586270.00, NULL);
 
 -- ----------------------------
 -- Table structure for order_return_media
 -- ----------------------------
 DROP TABLE IF EXISTS `order_return_media`;
 CREATE TABLE `order_return_media`  (
-                                       `id` int NOT NULL AUTO_INCREMENT,
-                                       `order_return_id` int NOT NULL,
-                                       `media_type` enum('IMAGE','VIDEO') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                       `media_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                       `original_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                       `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                       PRIMARY KEY (`id`) USING BTREE,
-                                       INDEX `idx_order_return_media_return_id`(`order_return_id` ASC) USING BTREE,
-                                       INDEX `idx_order_return_media_type`(`media_type` ASC) USING BTREE,
-                                       CONSTRAINT `fk_order_return_media_return` FOREIGN KEY (`order_return_id`) REFERENCES `order_returns` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_return_id` int NOT NULL,
+  `media_type` enum('IMAGE','VIDEO') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `media_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `original_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_order_return_media_return_id`(`order_return_id` ASC) USING BTREE,
+  INDEX `idx_order_return_media_type`(`media_type` ASC) USING BTREE,
+  CONSTRAINT `fk_order_return_media_return` FOREIGN KEY (`order_return_id`) REFERENCES `order_returns` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -493,33 +1604,33 @@ INSERT INTO `order_return_media` VALUES (7, 4, 'IMAGE', 'https://res.cloudinary.
 -- ----------------------------
 DROP TABLE IF EXISTS `order_returns`;
 CREATE TABLE `order_returns`  (
-                                  `id` int NOT NULL AUTO_INCREMENT,
-                                  `order_id` int NOT NULL,
-                                  `user_id` int NOT NULL,
-                                  `request_source` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CUSTOMER',
-                                  `reason_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                  `return_status` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'REQUESTED',
-                                  `refund_status` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'NOT_REQUIRED',
-                                  `admin_note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                                  `requested_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                  `processed_at` datetime NULL DEFAULT NULL,
-                                  `returning_at` datetime NULL DEFAULT NULL,
-                                  `returned_at` datetime NULL DEFAULT NULL,
-                                  `refunded_at` datetime NULL DEFAULT NULL,
-                                  `stock_restored` tinyint(1) NOT NULL DEFAULT 0,
-                                  PRIMARY KEY (`id`) USING BTREE,
-                                  UNIQUE INDEX `uq_order_returns_order_id`(`order_id` ASC) USING BTREE,
-                                  INDEX `idx_order_returns_user_id`(`user_id` ASC) USING BTREE,
-                                  INDEX `idx_order_returns_status`(`return_status` ASC) USING BTREE,
-                                  INDEX `idx_order_returns_refund_status`(`refund_status` ASC) USING BTREE,
-                                  CONSTRAINT `fk_order_returns_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                  CONSTRAINT `fk_order_returns_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                  CONSTRAINT `chk_order_returns_reason` CHECK (`reason_code` in (_utf8mb4'DEFECTIVE_PRODUCT',_utf8mb4'WRONG_PRODUCT',_utf8mb4'WRONG_SIZE_OR_COLOR',_utf8mb4'NOT_SUITABLE',_utf8mb4'DELIVERY_FAILED',_utf8mb4'OTHER')),
-                                  CONSTRAINT `chk_order_returns_refund_status` CHECK (`refund_status` in (_utf8mb4'NOT_REQUIRED',_utf8mb4'PENDING',_utf8mb4'REFUNDED')),
-                                  CONSTRAINT `chk_order_returns_source` CHECK (`request_source` in (_utf8mb4'CUSTOMER',_utf8mb4'DELIVERY_FAILED')),
-                                  CONSTRAINT `chk_order_returns_status` CHECK (`return_status` in (_utf8mb4'REQUESTED',_utf8mb4'APPROVED',_utf8mb4'REJECTED',_utf8mb4'RETURNING',_utf8mb4'RETURNED'))
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `request_source` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CUSTOMER',
+  `reason_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `return_status` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'REQUESTED',
+  `refund_status` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'NOT_REQUIRED',
+  `admin_note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `requested_at` datetime NOT NULL DEFAULT current_timestamp,
+  `processed_at` datetime NULL DEFAULT NULL,
+  `returning_at` datetime NULL DEFAULT NULL,
+  `returned_at` datetime NULL DEFAULT NULL,
+  `refunded_at` datetime NULL DEFAULT NULL,
+  `stock_restored` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uq_order_returns_order_id`(`order_id` ASC) USING BTREE,
+  INDEX `idx_order_returns_user_id`(`user_id` ASC) USING BTREE,
+  INDEX `idx_order_returns_status`(`return_status` ASC) USING BTREE,
+  INDEX `idx_order_returns_refund_status`(`refund_status` ASC) USING BTREE,
+  CONSTRAINT `fk_order_returns_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `fk_order_returns_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `chk_order_returns_reason` CHECK (`reason_code` in (_utf8mb4'DEFECTIVE_PRODUCT',_utf8mb4'WRONG_PRODUCT',_utf8mb4'WRONG_SIZE_OR_COLOR',_utf8mb4'NOT_SUITABLE',_utf8mb4'DELIVERY_FAILED',_utf8mb4'OTHER')),
+  CONSTRAINT `chk_order_returns_refund_status` CHECK (`refund_status` in (_utf8mb4'NOT_REQUIRED',_utf8mb4'PENDING',_utf8mb4'REFUNDED')),
+  CONSTRAINT `chk_order_returns_source` CHECK (`request_source` in (_utf8mb4'CUSTOMER',_utf8mb4'DELIVERY_FAILED')),
+  CONSTRAINT `chk_order_returns_status` CHECK (`return_status` in (_utf8mb4'REQUESTED',_utf8mb4'APPROVED',_utf8mb4'REJECTED',_utf8mb4'RETURNING',_utf8mb4'RETURNED'))
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of order_returns
@@ -528,22 +1639,42 @@ INSERT INTO `order_returns` VALUES (1, 31, 2, 'CUSTOMER', 'DEFECTIVE_PRODUCT', '
 INSERT INTO `order_returns` VALUES (2, 32, 3, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'trả lại hàng cho tôi', 'REJECTED', 'NOT_REQUIRED', 'không cho', '2026-06-08 14:23:24', '2026-06-11 20:22:29', NULL, NULL, NULL, 0);
 INSERT INTO `order_returns` VALUES (3, 33, 2, 'CUSTOMER', 'WRONG_PRODUCT', 'ảnh sản phẩm khác', 'RETURNED', 'REFUNDED', 'Đã trả tiền rồi', '2026-06-11 21:07:41', '2026-06-11 21:09:19', '2026-06-11 21:09:34', '2026-06-11 21:09:40', '2026-06-11 21:09:47', 1);
 INSERT INTO `order_returns` VALUES (4, 37, 2, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Tôi không thích', 'RETURNED', 'REFUNDED', 'ok', '2026-06-13 18:28:38', '2026-06-13 18:28:53', '2026-06-13 18:28:58', '2026-06-13 18:29:00', '2026-06-13 18:29:02', 1);
+INSERT INTO `order_returns` VALUES (5, 83, 23, 'CUSTOMER', 'WRONG_SIZE_OR_COLOR', 'Lý do hoàn hàng tự động: WRONG_SIZE_OR_COLOR', 'RETURNED', 'REFUNDED', NULL, '2026-04-01 08:30:00', '2026-04-02 08:30:00', NULL, '2026-04-03 08:30:00', '2026-04-03 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (6, 52, 5, 'CUSTOMER', 'NOT_SUITABLE', 'Lý do hoàn hàng tự động: NOT_SUITABLE', 'RETURNED', 'REFUNDED', NULL, '2026-04-23 08:30:00', '2026-04-24 08:30:00', NULL, '2026-04-25 08:30:00', '2026-04-25 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (7, 41, 13, 'DELIVERY_FAILED', 'DELIVERY_FAILED', 'Lý do hoàn hàng tự động: DELIVERY_FAILED', 'RETURNED', 'REFUNDED', NULL, '2026-01-21 08:30:00', '2026-01-22 08:30:00', NULL, '2026-01-23 08:30:00', '2026-01-23 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (8, 63, 4, 'CUSTOMER', 'NOT_SUITABLE', 'Lý do hoàn hàng tự động: NOT_SUITABLE', 'RETURNED', 'REFUNDED', NULL, '2026-02-02 08:30:00', '2026-02-03 08:30:00', NULL, '2026-02-04 08:30:00', '2026-02-04 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (9, 76, 4, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Lý do hoàn hàng tự động: DEFECTIVE_PRODUCT', 'RETURNED', 'REFUNDED', NULL, '2026-02-22 08:30:00', '2026-02-23 08:30:00', NULL, '2026-02-24 08:30:00', '2026-02-24 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (10, 54, 15, 'CUSTOMER', 'WRONG_SIZE_OR_COLOR', 'Lý do hoàn hàng tự động: WRONG_SIZE_OR_COLOR', 'RETURNED', 'REFUNDED', NULL, '2026-01-27 08:30:00', '2026-01-28 08:30:00', NULL, '2026-01-29 08:30:00', '2026-01-29 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (11, 46, 21, 'CUSTOMER', 'NOT_SUITABLE', 'Lý do hoàn hàng tự động: NOT_SUITABLE', 'RETURNED', 'REFUNDED', NULL, '2026-04-10 08:30:00', '2026-04-11 08:30:00', NULL, '2026-04-12 08:30:00', '2026-04-12 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (12, 65, 27, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Lý do hoàn hàng tự động: DEFECTIVE_PRODUCT', 'RETURNED', 'REFUNDED', NULL, '2026-01-26 08:30:00', '2026-01-27 08:30:00', NULL, '2026-01-28 08:30:00', '2026-01-28 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (13, 97, 21, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Lý do hoàn hàng tự động: DEFECTIVE_PRODUCT', 'RETURNED', 'REFUNDED', NULL, '2026-01-08 08:30:00', '2026-01-09 08:30:00', NULL, '2026-01-10 08:30:00', '2026-01-10 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (14, 66, 3, 'DELIVERY_FAILED', 'DELIVERY_FAILED', 'Lý do hoàn hàng tự động: DELIVERY_FAILED', 'RETURNED', 'REFUNDED', NULL, '2026-05-27 08:30:00', '2026-05-28 08:30:00', NULL, '2026-05-29 08:30:00', '2026-05-29 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (15, 55, 16, 'CUSTOMER', 'WRONG_SIZE_OR_COLOR', 'Lý do hoàn hàng tự động: WRONG_SIZE_OR_COLOR', 'RETURNED', 'REFUNDED', NULL, '2026-04-03 08:30:00', '2026-04-04 08:30:00', NULL, '2026-04-05 08:30:00', '2026-04-05 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (16, 82, 18, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Lý do hoàn hàng tự động: DEFECTIVE_PRODUCT', 'RETURNED', 'REFUNDED', NULL, '2026-05-07 08:30:00', '2026-05-08 08:30:00', NULL, '2026-05-09 08:30:00', '2026-05-09 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (17, 70, 19, 'CUSTOMER', 'NOT_SUITABLE', 'Lý do hoàn hàng tự động: NOT_SUITABLE', 'RETURNED', 'REFUNDED', NULL, '2026-01-06 08:30:00', '2026-01-07 08:30:00', NULL, '2026-01-08 08:30:00', '2026-01-08 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (18, 39, 15, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Lý do hoàn hàng tự động: DEFECTIVE_PRODUCT', 'RETURNED', 'REFUNDED', NULL, '2026-05-18 08:30:00', '2026-05-19 08:30:00', NULL, '2026-05-20 08:30:00', '2026-05-20 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (19, 62, 16, 'CUSTOMER', 'WRONG_SIZE_OR_COLOR', 'Lý do hoàn hàng tự động: WRONG_SIZE_OR_COLOR', 'RETURNED', 'REFUNDED', NULL, '2026-02-21 08:30:00', '2026-02-22 08:30:00', NULL, '2026-02-23 08:30:00', '2026-02-23 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (20, 44, 3, 'CUSTOMER', 'DEFECTIVE_PRODUCT', 'Lý do hoàn hàng tự động: DEFECTIVE_PRODUCT', 'RETURNED', 'REFUNDED', NULL, '2026-03-11 08:30:00', '2026-03-12 08:30:00', NULL, '2026-03-13 08:30:00', '2026-03-13 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (21, 47, 27, 'CUSTOMER', 'WRONG_SIZE_OR_COLOR', 'Lý do hoàn hàng tự động: WRONG_SIZE_OR_COLOR', 'RETURNED', 'REFUNDED', NULL, '2026-05-31 08:30:00', '2026-06-01 08:30:00', NULL, '2026-06-02 08:30:00', '2026-06-02 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (22, 88, 21, 'DELIVERY_FAILED', 'DELIVERY_FAILED', 'Lý do hoàn hàng tự động: DELIVERY_FAILED', 'RETURNED', 'REFUNDED', NULL, '2026-05-06 08:30:00', '2026-05-07 08:30:00', NULL, '2026-05-08 08:30:00', '2026-05-08 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (23, 75, 16, 'CUSTOMER', 'WRONG_SIZE_OR_COLOR', 'Lý do hoàn hàng tự động: WRONG_SIZE_OR_COLOR', 'RETURNED', 'REFUNDED', NULL, '2026-01-13 08:30:00', '2026-01-14 08:30:00', NULL, '2026-01-15 08:30:00', '2026-01-15 08:30:00', 1);
+INSERT INTO `order_returns` VALUES (24, 98, 8, 'DELIVERY_FAILED', 'DELIVERY_FAILED', 'Lý do hoàn hàng tự động: DELIVERY_FAILED', 'RETURNED', 'REFUNDED', NULL, '2026-05-22 08:30:00', '2026-05-23 08:30:00', NULL, '2026-05-24 08:30:00', '2026-05-24 08:30:00', 1);
 
 -- ----------------------------
 -- Table structure for order_tracking
 -- ----------------------------
 DROP TABLE IF EXISTS `order_tracking`;
 CREATE TABLE `order_tracking`  (
-                                   `id` int NOT NULL AUTO_INCREMENT,
-                                   `order_id` int NULL DEFAULT NULL,
-                                   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                   `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                                   `created_at` datetime NULL DEFAULT NULL,
-                                   PRIMARY KEY (`id`) USING BTREE,
-                                   INDEX `order_id`(`order_id` ASC) USING BTREE,
-                                   CONSTRAINT `order_tracking_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NULL DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `order_id`(`order_id` ASC) USING BTREE,
+  CONSTRAINT `order_tracking_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of order_tracking
@@ -554,19 +1685,19 @@ CREATE TABLE `order_tracking`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `order_tracking_logs`;
 CREATE TABLE `order_tracking_logs`  (
-                                        `id` int NOT NULL AUTO_INCREMENT,
-                                        `order_id` int NOT NULL,
-                                        `provider` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'GHN',
-                                        `tracking_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                        `status_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                        `status_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                        `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                        `event_time` datetime NULL DEFAULT NULL,
-                                        `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                        PRIMARY KEY (`id`) USING BTREE,
-                                        INDEX `idx_order_tracking_logs_order_id`(`order_id` ASC) USING BTREE,
-                                        INDEX `idx_order_tracking_logs_tracking_code`(`tracking_code` ASC) USING BTREE,
-                                        CONSTRAINT `fk_order_tracking_logs_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `provider` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'GHN',
+  `tracking_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `status_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `event_time` datetime NULL DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_order_tracking_logs_order_id`(`order_id` ASC) USING BTREE,
+  INDEX `idx_order_tracking_logs_tracking_code`(`tracking_code` ASC) USING BTREE,
+  CONSTRAINT `fk_order_tracking_logs_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -629,31 +1760,31 @@ INSERT INTO `order_tracking_logs` VALUES (51, 37, 'DEMO', 'DEMO-ORD-37-202606131
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders`  (
-                           `id` int NOT NULL AUTO_INCREMENT,
-                           `user_id` int NULL DEFAULT NULL,
-                           `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `shipping_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                           `total_price` decimal(10, 2) NULL DEFAULT NULL,
-                           `discount` decimal(10, 2) NULL DEFAULT NULL,
-                           `shipping_fee` decimal(10, 2) NULL DEFAULT NULL,
-                           `final_amount` decimal(10, 2) NULL DEFAULT NULL,
-                           `payment_methods` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `payment_statuses` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `order_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `ghn_order_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `ghn_status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `ghn_status_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `ghn_expected_delivery_time` datetime NULL DEFAULT NULL,
-                           `ghn_last_updated_at` datetime NULL DEFAULT NULL,
-                           `tracking_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `shipping_provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                           `created_at` datetime NULL DEFAULT NULL,
-                           PRIMARY KEY (`id`) USING BTREE,
-                           INDEX `user_id`(`user_id` ASC) USING BTREE,
-                           CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `shipping_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `total_price` decimal(10, 2) NULL DEFAULT NULL,
+  `discount` decimal(10, 2) NULL DEFAULT NULL,
+  `shipping_fee` decimal(10, 2) NULL DEFAULT NULL,
+  `final_amount` decimal(10, 2) NULL DEFAULT NULL,
+  `payment_methods` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `payment_statuses` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `order_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `ghn_order_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `ghn_status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `ghn_status_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `ghn_expected_delivery_time` datetime NULL DEFAULT NULL,
+  `ghn_last_updated_at` datetime NULL DEFAULT NULL,
+  `tracking_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `shipping_provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `user_id`(`user_id` ASC) USING BTREE,
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 109 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of orders
@@ -695,26 +1826,96 @@ INSERT INTO `orders` VALUES (35, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12
 INSERT INTO `orders` VALUES (36, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 710504.00, 0.00, 29000.00, 739504.00, 'VNPAY', 'PAID', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-13 18:19:14');
 INSERT INTO `orders` VALUES (37, 2, 'Nguyen Van Anh Han', '0365403194', 'số 12 đường bình lợi, Xã Thắng Hải, Huyện Hàm Tân, Bình Thuận', '', 560549.00, 0.00, 29000.00, 589549.00, 'VNPAY', 'PAID', 'RETURNED', 'DEMO-ORD-37-20260613182745', 'DELIVERED', 'Đã giao thành công', '2026-06-15 23:59:59', '2026-06-13 18:27:56', NULL, NULL, '2026-06-13 18:26:27');
 INSERT INTO `orders` VALUES (38, 1, 'Đức Phát Nguyễn', '0982832647', 'a, Phường Long Thạnh Mỹ, Quận 9, Hồ Chí Minh', '', 337296.00, 0.00, 16500.00, 353796.00, 'COD', 'UNPAID', 'PENDING', NULL, NULL, NULL, '2026-06-16 23:59:59', NULL, NULL, NULL, '2026-06-15 09:34:59');
+INSERT INTO `orders` VALUES (39, 15, 'Khách hàng tự động 15', '0901234567', 'Hồ Chí Minh', NULL, 1069041.00, 0.00, 30000.00, 1099041.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-16 08:30:00');
+INSERT INTO `orders` VALUES (40, 14, 'Khách hàng tự động 14', '0901234567', 'Hồ Chí Minh', NULL, 559560.00, 0.00, 30000.00, 589560.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-15 08:30:00');
+INSERT INTO `orders` VALUES (41, 13, 'Khách hàng tự động 13', '0901234567', 'Hồ Chí Minh', NULL, 1429389.00, 0.00, 30000.00, 1459389.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-18 08:30:00');
+INSERT INTO `orders` VALUES (42, 2, 'Khách hàng tự động 2', '0901234567', 'Hồ Chí Minh', NULL, 1058924.00, 0.00, 30000.00, 1088924.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-17 08:30:00');
+INSERT INTO `orders` VALUES (43, 27, 'Khách hàng tự động 27', '0901234567', 'Hồ Chí Minh', NULL, 1322358.00, 0.00, 30000.00, 1352358.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-07 08:30:00');
+INSERT INTO `orders` VALUES (44, 3, 'Khách hàng tự động 3', '0901234567', 'Hồ Chí Minh', NULL, 578736.00, 0.00, 30000.00, 608736.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-08 08:30:00');
+INSERT INTO `orders` VALUES (45, 23, 'Khách hàng tự động 23', '0901234567', 'Hồ Chí Minh', NULL, 391081.00, 0.00, 30000.00, 421081.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-16 08:30:00');
+INSERT INTO `orders` VALUES (46, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 373959.00, 0.00, 30000.00, 403959.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-05 08:30:00');
+INSERT INTO `orders` VALUES (47, 27, 'Khách hàng tự động 27', '0901234567', 'Hồ Chí Minh', NULL, 402939.00, 0.00, 30000.00, 432939.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-29 08:30:00');
+INSERT INTO `orders` VALUES (48, 11, 'Khách hàng tự động 11', '0901234567', 'Hồ Chí Minh', NULL, 1056870.00, 0.00, 30000.00, 1086870.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-20 08:30:00');
+INSERT INTO `orders` VALUES (49, 19, 'Khách hàng tự động 19', '0901234567', 'Hồ Chí Minh', NULL, 334680.00, 0.00, 30000.00, 364680.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-21 08:30:00');
+INSERT INTO `orders` VALUES (50, 6, 'Khách hàng tự động 6', '0901234567', 'Hồ Chí Minh', NULL, 1231794.00, 0.00, 30000.00, 1261794.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-05 08:30:00');
+INSERT INTO `orders` VALUES (51, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 788434.00, 0.00, 30000.00, 818434.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-31 08:30:00');
+INSERT INTO `orders` VALUES (52, 5, 'Khách hàng tự động 5', '0901234567', 'Hồ Chí Minh', NULL, 744915.00, 0.00, 30000.00, 774915.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-20 08:30:00');
+INSERT INTO `orders` VALUES (53, 7, 'Khách hàng tự động 7', '0901234567', 'Hồ Chí Minh', NULL, 608136.00, 0.00, 30000.00, 638136.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-08 08:30:00');
+INSERT INTO `orders` VALUES (54, 15, 'Khách hàng tự động 15', '0901234567', 'Hồ Chí Minh', NULL, 220072.00, 0.00, 30000.00, 250072.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-23 08:30:00');
+INSERT INTO `orders` VALUES (55, 16, 'Khách hàng tự động 16', '0901234567', 'Hồ Chí Minh', NULL, 357991.00, 0.00, 30000.00, 387991.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-31 08:30:00');
+INSERT INTO `orders` VALUES (56, 5, 'Khách hàng tự động 5', '0901234567', 'Hồ Chí Minh', NULL, 644532.00, 0.00, 30000.00, 674532.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-04 08:30:00');
+INSERT INTO `orders` VALUES (57, 11, 'Khách hàng tự động 11', '0901234567', 'Hồ Chí Minh', NULL, 1026960.00, 0.00, 30000.00, 1056960.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-13 08:30:00');
+INSERT INTO `orders` VALUES (58, 29, 'Khách hàng tự động 29', '0901234567', 'Hồ Chí Minh', NULL, 467078.00, 0.00, 30000.00, 497078.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-06 08:30:00');
+INSERT INTO `orders` VALUES (59, 12, 'Khách hàng tự động 12', '0901234567', 'Hồ Chí Minh', NULL, 846872.00, 0.00, 30000.00, 876872.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-07 08:30:00');
+INSERT INTO `orders` VALUES (60, 12, 'Khách hàng tự động 12', '0901234567', 'Hồ Chí Minh', NULL, 1047945.00, 0.00, 30000.00, 1077945.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-26 08:30:00');
+INSERT INTO `orders` VALUES (61, 28, 'Khách hàng tự động 28', '0901234567', 'Hồ Chí Minh', NULL, 694482.00, 0.00, 30000.00, 724482.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-16 08:30:00');
+INSERT INTO `orders` VALUES (62, 16, 'Khách hàng tự động 16', '0901234567', 'Hồ Chí Minh', NULL, 1353600.00, 0.00, 30000.00, 1383600.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-17 08:30:00');
+INSERT INTO `orders` VALUES (63, 4, 'Khách hàng tự động 4', '0901234567', 'Hồ Chí Minh', NULL, 877062.00, 0.00, 30000.00, 907062.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-28 08:30:00');
+INSERT INTO `orders` VALUES (64, 27, 'Khách hàng tự động 27', '0901234567', 'Hồ Chí Minh', NULL, 1228833.00, 0.00, 30000.00, 1258833.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-27 08:30:00');
+INSERT INTO `orders` VALUES (65, 27, 'Khách hàng tự động 27', '0901234567', 'Hồ Chí Minh', NULL, 747918.00, 0.00, 30000.00, 777918.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-23 08:30:00');
+INSERT INTO `orders` VALUES (66, 3, 'Khách hàng tự động 3', '0901234567', 'Hồ Chí Minh', NULL, 251652.00, 0.00, 30000.00, 281652.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-25 08:30:00');
+INSERT INTO `orders` VALUES (67, 19, 'Khách hàng tự động 19', '0901234567', 'Hồ Chí Minh', NULL, 467078.00, 0.00, 30000.00, 497078.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-16 08:30:00');
+INSERT INTO `orders` VALUES (68, 25, 'Khách hàng tự động 25', '0901234567', 'Hồ Chí Minh', NULL, 492784.00, 0.00, 30000.00, 522784.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-20 08:30:00');
+INSERT INTO `orders` VALUES (69, 25, 'Khách hàng tự động 25', '0901234567', 'Hồ Chí Minh', NULL, 1069041.00, 0.00, 30000.00, 1099041.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-16 08:30:00');
+INSERT INTO `orders` VALUES (70, 19, 'Khách hàng tự động 19', '0901234567', 'Hồ Chí Minh', NULL, 337296.00, 0.00, 30000.00, 367296.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-04 08:30:00');
+INSERT INTO `orders` VALUES (71, 9, 'Khách hàng tự động 9', '0901234567', 'Hồ Chí Minh', NULL, 1549008.00, 0.00, 30000.00, 1579008.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-04 08:30:00');
+INSERT INTO `orders` VALUES (72, 17, 'Khách hàng tự động 17', '0901234567', 'Hồ Chí Minh', NULL, 1285746.00, 0.00, 30000.00, 1315746.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-29 08:30:00');
+INSERT INTO `orders` VALUES (73, 29, 'Khách hàng tự động 29', '0901234567', 'Hồ Chí Minh', NULL, 440144.00, 0.00, 30000.00, 470144.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-09 08:30:00');
+INSERT INTO `orders` VALUES (74, 9, 'Khách hàng tự động 9', '0901234567', 'Hồ Chí Minh', NULL, 744244.00, 0.00, 30000.00, 774244.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-02 08:30:00');
+INSERT INTO `orders` VALUES (75, 16, 'Khách hàng tự động 16', '0901234567', 'Hồ Chí Minh', NULL, 661179.00, 0.00, 30000.00, 691179.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-11 08:30:00');
+INSERT INTO `orders` VALUES (76, 4, 'Khách hàng tự động 4', '0901234567', 'Hồ Chí Minh', NULL, 2238417.00, 0.00, 30000.00, 2268417.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-18 08:30:00');
+INSERT INTO `orders` VALUES (77, 2, 'Khách hàng tự động 2', '0901234567', 'Hồ Chí Minh', NULL, 1294623.00, 0.00, 30000.00, 1324623.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-08 08:30:00');
+INSERT INTO `orders` VALUES (78, 5, 'Khách hàng tự động 5', '0901234567', 'Hồ Chí Minh', NULL, 971150.00, 0.00, 30000.00, 1001150.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-26 08:30:00');
+INSERT INTO `orders` VALUES (79, 9, 'Khách hàng tự động 9', '0901234567', 'Hồ Chí Minh', NULL, 1095009.00, 0.00, 30000.00, 1125009.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 08:30:00');
+INSERT INTO `orders` VALUES (80, 25, 'Khách hàng tự động 25', '0901234567', 'Hồ Chí Minh', NULL, 726724.00, 0.00, 30000.00, 756724.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-09 08:30:00');
+INSERT INTO `orders` VALUES (81, 25, 'Khách hàng tự động 25', '0901234567', 'Hồ Chí Minh', NULL, 434594.00, 0.00, 30000.00, 464594.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-22 08:30:00');
+INSERT INTO `orders` VALUES (82, 18, 'Khách hàng tự động 18', '0901234567', 'Hồ Chí Minh', NULL, 1451469.00, 0.00, 30000.00, 1481469.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-04 08:30:00');
+INSERT INTO `orders` VALUES (83, 23, 'Khách hàng tự động 23', '0901234567', 'Hồ Chí Minh', NULL, 253291.00, 0.00, 30000.00, 283291.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-29 08:30:00');
+INSERT INTO `orders` VALUES (84, 10, 'Khách hàng tự động 10', '0901234567', 'Hồ Chí Minh', NULL, 536470.00, 0.00, 30000.00, 566470.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-17 08:30:00');
+INSERT INTO `orders` VALUES (85, 28, 'Khách hàng tự động 28', '0901234567', 'Hồ Chí Minh', NULL, 257920.00, 0.00, 30000.00, 287920.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-21 08:30:00');
+INSERT INTO `orders` VALUES (86, 28, 'Khách hàng tự động 28', '0901234567', 'Hồ Chí Minh', NULL, 301661.00, 0.00, 30000.00, 331661.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-02 08:30:00');
+INSERT INTO `orders` VALUES (87, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 1270308.00, 0.00, 30000.00, 1300308.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-26 08:30:00');
+INSERT INTO `orders` VALUES (88, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 391081.00, 0.00, 30000.00, 421081.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-02 08:30:00');
+INSERT INTO `orders` VALUES (89, 26, 'Khách hàng tự động 26', '0901234567', 'Hồ Chí Minh', NULL, 391081.00, 0.00, 30000.00, 421081.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-17 08:30:00');
+INSERT INTO `orders` VALUES (90, 25, 'Khách hàng tự động 25', '0901234567', 'Hồ Chí Minh', NULL, 1322358.00, 0.00, 30000.00, 1352358.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-12 08:30:00');
+INSERT INTO `orders` VALUES (91, 12, 'Khách hàng tự động 12', '0901234567', 'Hồ Chí Minh', NULL, 2200389.00, 0.00, 30000.00, 2230389.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-28 08:30:00');
+INSERT INTO `orders` VALUES (92, 8, 'Khách hàng tự động 8', '0901234567', 'Hồ Chí Minh', NULL, 1258425.00, 0.00, 30000.00, 1288425.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-19 08:30:00');
+INSERT INTO `orders` VALUES (93, 24, 'Khách hàng tự động 24', '0901234567', 'Hồ Chí Minh', NULL, 677020.00, 0.00, 30000.00, 707020.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-11 08:30:00');
+INSERT INTO `orders` VALUES (94, 11, 'Khách hàng tự động 11', '0901234567', 'Hồ Chí Minh', NULL, 559560.00, 0.00, 30000.00, 589560.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-15 08:30:00');
+INSERT INTO `orders` VALUES (95, 16, 'Khách hàng tự động 16', '0901234567', 'Hồ Chí Minh', NULL, 516336.00, 0.00, 30000.00, 546336.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-24 08:30:00');
+INSERT INTO `orders` VALUES (96, 22, 'Khách hàng tự động 22', '0901234567', 'Hồ Chí Minh', NULL, 402939.00, 0.00, 30000.00, 432939.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-12 08:30:00');
+INSERT INTO `orders` VALUES (97, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 419475.00, 0.00, 30000.00, 449475.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-03 08:30:00');
+INSERT INTO `orders` VALUES (98, 8, 'Khách hàng tự động 8', '0901234567', 'Hồ Chí Minh', NULL, 1015530.00, 0.00, 30000.00, 1045530.00, 'COD', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-19 08:30:00');
+INSERT INTO `orders` VALUES (99, 18, 'Khách hàng tự động 18', '0901234567', 'Hồ Chí Minh', NULL, 715432.00, 0.00, 30000.00, 745432.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-15 08:30:00');
+INSERT INTO `orders` VALUES (100, 5, 'Khách hàng tự động 5', '0901234567', 'Hồ Chí Minh', NULL, 474829.00, 0.00, 30000.00, 504829.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-02 08:30:00');
+INSERT INTO `orders` VALUES (101, 5, 'Khách hàng tự động 5', '0901234567', 'Hồ Chí Minh', NULL, 585400.00, 0.00, 30000.00, 615400.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-03 08:30:00');
+INSERT INTO `orders` VALUES (102, 18, 'Khách hàng tự động 18', '0901234567', 'Hồ Chí Minh', NULL, 919719.00, 0.00, 30000.00, 949719.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-21 08:30:00');
+INSERT INTO `orders` VALUES (103, 13, 'Khách hàng tự động 13', '0901234567', 'Hồ Chí Minh', NULL, 1164222.00, 0.00, 30000.00, 1194222.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-08 08:30:00');
+INSERT INTO `orders` VALUES (104, 24, 'Khách hàng tự động 24', '0901234567', 'Hồ Chí Minh', NULL, 1470828.00, 0.00, 30000.00, 1500828.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-21 08:30:00');
+INSERT INTO `orders` VALUES (105, 14, 'Khách hàng tự động 14', '0901234567', 'Hồ Chí Minh', NULL, 1470828.00, 0.00, 30000.00, 1500828.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-09 08:30:00');
+INSERT INTO `orders` VALUES (106, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 528435.00, 0.00, 30000.00, 558435.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-01 08:30:00');
+INSERT INTO `orders` VALUES (107, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 1678680.00, 0.00, 30000.00, 1708680.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-28 08:30:00');
+INSERT INTO `orders` VALUES (108, 7, 'Khách hàng tự động 7', '0901234567', 'Hồ Chí Minh', NULL, 1586270.00, 0.00, 30000.00, 1616270.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-07 08:30:00');
 
 -- ----------------------------
 -- Table structure for payment_transactions
 -- ----------------------------
 DROP TABLE IF EXISTS `payment_transactions`;
 CREATE TABLE `payment_transactions`  (
-                                         `id` int NOT NULL AUTO_INCREMENT,
-                                         `order_id` int NOT NULL,
-                                         `provider` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'VNPAY',
-                                         `txn_ref` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                         `transaction_no` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                         `amount` decimal(15, 2) NOT NULL,
-                                         `bank_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                         `response_code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                         `transaction_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'INITIATED',
-                                         `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                         PRIMARY KEY (`id`) USING BTREE,
-                                         UNIQUE INDEX `uq_payment_transactions_txn_ref`(`txn_ref` ASC) USING BTREE,
-                                         INDEX `idx_payment_transactions_order_id`(`order_id` ASC) USING BTREE,
-                                         CONSTRAINT `fk_payment_transactions_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `provider` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'VNPAY',
+  `txn_ref` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `transaction_no` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `amount` decimal(15, 2) NOT NULL,
+  `bank_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `response_code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `transaction_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'INITIATED',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uq_payment_transactions_txn_ref`(`txn_ref` ASC) USING BTREE,
+  INDEX `idx_payment_transactions_order_id`(`order_id` ASC) USING BTREE,
+  CONSTRAINT `fk_payment_transactions_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -747,14 +1948,14 @@ INSERT INTO `payment_transactions` VALUES (21, 37, 'VNPAY', 'ORD37_2026061318262
 -- ----------------------------
 DROP TABLE IF EXISTS `product_colors`;
 CREATE TABLE `product_colors`  (
-                                   `id` int NOT NULL AUTO_INCREMENT,
-                                   `product_id` int NULL DEFAULT NULL,
-                                   `color_id` int NULL DEFAULT NULL,
-                                   PRIMARY KEY (`id`) USING BTREE,
-                                   UNIQUE INDEX `product_id`(`product_id` ASC, `color_id` ASC) USING BTREE,
-                                   INDEX `color_id`(`color_id` ASC) USING BTREE,
-                                   CONSTRAINT `product_colors_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                   CONSTRAINT `product_colors_ibfk_2` FOREIGN KEY (`color_id`) REFERENCES `colors` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NULL DEFAULT NULL,
+  `color_id` int NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `product_id`(`product_id` ASC, `color_id` ASC) USING BTREE,
+  INDEX `color_id`(`color_id` ASC) USING BTREE,
+  CONSTRAINT `product_colors_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `product_colors_ibfk_2` FOREIGN KEY (`color_id`) REFERENCES `colors` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 221 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -986,17 +2187,17 @@ INSERT INTO `product_colors` VALUES (220, 140, 5);
 -- ----------------------------
 DROP TABLE IF EXISTS `product_images`;
 CREATE TABLE `product_images`  (
-                                   `id` int NOT NULL AUTO_INCREMENT,
-                                   `product_id` int NULL DEFAULT NULL,
-                                   `color_id` int NULL DEFAULT NULL,
-                                   `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                   `sort_order` int NULL DEFAULT NULL,
-                                   `is_main` tinyint NULL DEFAULT NULL,
-                                   PRIMARY KEY (`id`) USING BTREE,
-                                   INDEX `product_id`(`product_id` ASC) USING BTREE,
-                                   INDEX `color_id`(`color_id` ASC) USING BTREE,
-                                   CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                   CONSTRAINT `product_images_ibfk_2` FOREIGN KEY (`color_id`) REFERENCES `colors` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NULL DEFAULT NULL,
+  `color_id` int NULL DEFAULT NULL,
+  `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `sort_order` int NULL DEFAULT NULL,
+  `is_main` tinyint NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `product_id`(`product_id` ASC) USING BTREE,
+  INDEX `color_id`(`color_id` ASC) USING BTREE,
+  CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `product_images_ibfk_2` FOREIGN KEY (`color_id`) REFERENCES `colors` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 722 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -1729,12 +2930,12 @@ INSERT INTO `product_images` VALUES (721, 140, 5, '/img/products/phukien/tui-bal
 -- ----------------------------
 DROP TABLE IF EXISTS `product_tag_map`;
 CREATE TABLE `product_tag_map`  (
-                                    `product_id` int NOT NULL,
-                                    `tag_id` int NOT NULL,
-                                    PRIMARY KEY (`product_id`, `tag_id`) USING BTREE,
-                                    INDEX `tag_id`(`tag_id` ASC) USING BTREE,
-                                    CONSTRAINT `product_tag_map_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                    CONSTRAINT `product_tag_map_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `product_id` int NOT NULL,
+  `tag_id` int NOT NULL,
+  PRIMARY KEY (`product_id`, `tag_id`) USING BTREE,
+  INDEX `tag_id`(`tag_id` ASC) USING BTREE,
+  CONSTRAINT `product_tag_map_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `product_tag_map_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -1746,22 +2947,22 @@ CREATE TABLE `product_tag_map`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `product_variants`;
 CREATE TABLE `product_variants`  (
-                                     `id` int NOT NULL AUTO_INCREMENT,
-                                     `product_id` int NULL DEFAULT NULL,
-                                     `size_id` int NULL DEFAULT NULL,
-                                     `color_id` int NULL DEFAULT NULL,
-                                     `sku` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                     `stock` int NULL DEFAULT NULL,
-                                     `price` decimal(10, 2) NULL DEFAULT NULL,
-                                     `sale_price` decimal(10, 2) NULL DEFAULT NULL,
-                                     PRIMARY KEY (`id`) USING BTREE,
-                                     UNIQUE INDEX `sku`(`sku` ASC) USING BTREE,
-                                     INDEX `product_id`(`product_id` ASC) USING BTREE,
-                                     INDEX `size_id`(`size_id` ASC) USING BTREE,
-                                     INDEX `color_id`(`color_id` ASC) USING BTREE,
-                                     CONSTRAINT `product_variants_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                                     CONSTRAINT `product_variants_ibfk_2` FOREIGN KEY (`size_id`) REFERENCES `sizes` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT,
-                                     CONSTRAINT `product_variants_ibfk_3` FOREIGN KEY (`color_id`) REFERENCES `colors` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NULL DEFAULT NULL,
+  `size_id` int NULL DEFAULT NULL,
+  `color_id` int NULL DEFAULT NULL,
+  `sku` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `stock` int NULL DEFAULT NULL,
+  `price` decimal(10, 2) NULL DEFAULT NULL,
+  `sale_price` decimal(10, 2) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `sku`(`sku` ASC) USING BTREE,
+  INDEX `product_id`(`product_id` ASC) USING BTREE,
+  INDEX `size_id`(`size_id` ASC) USING BTREE,
+  INDEX `color_id`(`color_id` ASC) USING BTREE,
+  CONSTRAINT `product_variants_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `product_variants_ibfk_2` FOREIGN KEY (`size_id`) REFERENCES `sizes` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `product_variants_ibfk_3` FOREIGN KEY (`color_id`) REFERENCES `colors` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 833 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -1827,7 +3028,7 @@ INSERT INTO `product_variants` VALUES (57, 11, 1, 10, 'SKU-11-SAPPHIRE-S', 73, 3
 INSERT INTO `product_variants` VALUES (58, 11, 2, 10, 'SKU-11-SAPPHIRE-M', 64, 316608.00, 248305.00);
 INSERT INTO `product_variants` VALUES (59, 11, 3, 10, 'SKU-11-SAPPHIRE-L', 27, 316608.00, 248305.00);
 INSERT INTO `product_variants` VALUES (60, 11, 4, 10, 'SKU-11-SAPPHIRE-XL', 21, 316608.00, 248305.00);
-INSERT INTO `product_variants` VALUES (61, 11, 1, 7, 'SKU-11-WHITE-S', 89, 316608.00, 248305.00);
+INSERT INTO `product_variants` VALUES (61, 11, 1, 7, 'SKU-11-WHITE-S', 92, 316608.00, 248305.00);
 INSERT INTO `product_variants` VALUES (62, 11, 2, 7, 'SKU-11-WHITE-M', 56, 316608.00, 248305.00);
 INSERT INTO `product_variants` VALUES (63, 11, 3, 7, 'SKU-11-WHITE-L', 56, 316608.00, 248305.00);
 INSERT INTO `product_variants` VALUES (64, 11, 4, 7, 'SKU-11-WHITE-XL', 71, 316608.00, 248305.00);
@@ -1836,7 +3037,7 @@ INSERT INTO `product_variants` VALUES (66, 12, 2, 11, 'SKU-12-NAVY-M', 61, 26233
 INSERT INTO `product_variants` VALUES (67, 12, 3, 11, 'SKU-12-NAVY-L', 54, 262333.00, 220072.00);
 INSERT INTO `product_variants` VALUES (68, 12, 4, 11, 'SKU-12-NAVY-XL', 95, 262333.00, 220072.00);
 INSERT INTO `product_variants` VALUES (69, 12, 1, 7, 'SKU-12-WHITE-S', 27, 262333.00, 220072.00);
-INSERT INTO `product_variants` VALUES (70, 12, 2, 7, 'SKU-12-WHITE-M', 50, 262333.00, 220072.00);
+INSERT INTO `product_variants` VALUES (70, 12, 2, 7, 'SKU-12-WHITE-M', 51, 262333.00, 220072.00);
 INSERT INTO `product_variants` VALUES (71, 12, 3, 7, 'SKU-12-WHITE-L', 70, 262333.00, 220072.00);
 INSERT INTO `product_variants` VALUES (72, 12, 4, 7, 'SKU-12-WHITE-XL', 22, 262333.00, 220072.00);
 INSERT INTO `product_variants` VALUES (73, 13, 1, 8, 'SKU-13-GREEN-S', 28, 468413.00, 409611.00);
@@ -1857,7 +3058,7 @@ INSERT INTO `product_variants` VALUES (87, 15, 3, 3, 'SKU-15-RED-L', 75, 298624.
 INSERT INTO `product_variants` VALUES (88, 15, 4, 3, 'SKU-15-RED-XL', 35, 298624.00, 253291.00);
 INSERT INTO `product_variants` VALUES (89, 15, 1, 7, 'SKU-15-WHITE-S', 78, 298624.00, 253291.00);
 INSERT INTO `product_variants` VALUES (90, 15, 2, 7, 'SKU-15-WHITE-M', 27, 298624.00, 253291.00);
-INSERT INTO `product_variants` VALUES (91, 15, 3, 7, 'SKU-15-WHITE-L', 24, 298624.00, 253291.00);
+INSERT INTO `product_variants` VALUES (91, 15, 3, 7, 'SKU-15-WHITE-L', 25, 298624.00, 253291.00);
 INSERT INTO `product_variants` VALUES (92, 15, 4, 7, 'SKU-15-WHITE-XL', 98, 298624.00, 253291.00);
 INSERT INTO `product_variants` VALUES (93, 16, 1, 11, 'SKU-16-NAVY-S', 32, 451077.00, 391625.00);
 INSERT INTO `product_variants` VALUES (94, 16, 2, 11, 'SKU-16-NAVY-M', 84, 451077.00, 391625.00);
@@ -1930,7 +3131,7 @@ INSERT INTO `product_variants` VALUES (160, 24, 4, 7, 'SKU-24-WHITE-XL', 40, 278
 INSERT INTO `product_variants` VALUES (161, 25, 1, 1, 'SKU-25-BLACK-S', 86, 396703.00, 338510.00);
 INSERT INTO `product_variants` VALUES (162, 25, 2, 1, 'SKU-25-BLACK-M', 75, 396703.00, 338510.00);
 INSERT INTO `product_variants` VALUES (163, 25, 3, 1, 'SKU-25-BLACK-L', 56, 396703.00, 338510.00);
-INSERT INTO `product_variants` VALUES (164, 25, 4, 1, 'SKU-25-BLACK-XL', 64, 396703.00, 338510.00);
+INSERT INTO `product_variants` VALUES (164, 25, 4, 1, 'SKU-25-BLACK-XL', 67, 396703.00, 338510.00);
 INSERT INTO `product_variants` VALUES (165, 25, 1, 8, 'SKU-25-GREEN-S', 22, 396703.00, 338510.00);
 INSERT INTO `product_variants` VALUES (166, 25, 2, 8, 'SKU-25-GREEN-M', 64, 396703.00, 338510.00);
 INSERT INTO `product_variants` VALUES (167, 25, 3, 8, 'SKU-25-GREEN-L', 92, 396703.00, 338510.00);
@@ -1939,7 +3140,7 @@ INSERT INTO `product_variants` VALUES (169, 25, 1, 9, 'SKU-25-PINK-S', 67, 39670
 INSERT INTO `product_variants` VALUES (170, 25, 2, 9, 'SKU-25-PINK-M', 49, 396703.00, 338510.00);
 INSERT INTO `product_variants` VALUES (171, 25, 3, 9, 'SKU-25-PINK-L', 31, 396703.00, 338510.00);
 INSERT INTO `product_variants` VALUES (172, 25, 4, 9, 'SKU-25-PINK-XL', 78, 396703.00, 338510.00);
-INSERT INTO `product_variants` VALUES (173, 26, 1, 1, 'SKU-26-BLACK-S', 81, 485591.00, 438531.00);
+INSERT INTO `product_variants` VALUES (173, 26, 1, 1, 'SKU-26-BLACK-S', 83, 485591.00, 438531.00);
 INSERT INTO `product_variants` VALUES (174, 26, 2, 1, 'SKU-26-BLACK-M', 99, 485591.00, 438531.00);
 INSERT INTO `product_variants` VALUES (175, 26, 3, 1, 'SKU-26-BLACK-L', 97, 485591.00, 438531.00);
 INSERT INTO `product_variants` VALUES (176, 26, 4, 1, 'SKU-26-BLACK-XL', 44, 485591.00, 438531.00);
@@ -1950,7 +3151,7 @@ INSERT INTO `product_variants` VALUES (180, 26, 4, 7, 'SKU-26-WHITE-XL', 76, 485
 INSERT INTO `product_variants` VALUES (181, 27, 1, 5, 'SKU-27-BEIGE-S', 75, 400949.00, 337296.00);
 INSERT INTO `product_variants` VALUES (182, 27, 2, 5, 'SKU-27-BEIGE-M', 55, 400949.00, 337296.00);
 INSERT INTO `product_variants` VALUES (183, 27, 3, 5, 'SKU-27-BEIGE-L', 98, 400949.00, 337296.00);
-INSERT INTO `product_variants` VALUES (184, 27, 4, 5, 'SKU-27-BEIGE-XL', 38, 400949.00, 337296.00);
+INSERT INTO `product_variants` VALUES (184, 27, 4, 5, 'SKU-27-BEIGE-XL', 39, 400949.00, 337296.00);
 INSERT INTO `product_variants` VALUES (185, 27, 1, 1, 'SKU-27-BLACK-S', 40, 400949.00, 337296.00);
 INSERT INTO `product_variants` VALUES (186, 27, 2, 1, 'SKU-27-BLACK-M', 44, 400949.00, 337296.00);
 INSERT INTO `product_variants` VALUES (187, 27, 3, 1, 'SKU-27-BLACK-L', 88, 400949.00, 337296.00);
@@ -1976,10 +3177,10 @@ INSERT INTO `product_variants` VALUES (206, 30, 2, 3, 'SKU-30-RED-M', 75, 336598
 INSERT INTO `product_variants` VALUES (207, 30, 3, 3, 'SKU-30-RED-L', 86, 336598.00, 292700.00);
 INSERT INTO `product_variants` VALUES (208, 30, 4, 3, 'SKU-30-RED-XL', 55, 336598.00, 292700.00);
 INSERT INTO `product_variants` VALUES (209, 30, 1, 10, 'SKU-30-SAPPHIRE-S', 63, 336598.00, 292700.00);
-INSERT INTO `product_variants` VALUES (210, 30, 2, 10, 'SKU-30-SAPPHIRE-M', 74, 336598.00, 292700.00);
+INSERT INTO `product_variants` VALUES (210, 30, 2, 10, 'SKU-30-SAPPHIRE-M', 76, 336598.00, 292700.00);
 INSERT INTO `product_variants` VALUES (211, 30, 3, 10, 'SKU-30-SAPPHIRE-L', 20, 336598.00, 292700.00);
 INSERT INTO `product_variants` VALUES (212, 30, 4, 10, 'SKU-30-SAPPHIRE-XL', 40, 336598.00, 292700.00);
-INSERT INTO `product_variants` VALUES (213, 31, 1, 3, 'SKU-31-RED-S', 53, 442892.00, 402939.00);
+INSERT INTO `product_variants` VALUES (213, 31, 1, 3, 'SKU-31-RED-S', 54, 442892.00, 402939.00);
 INSERT INTO `product_variants` VALUES (214, 31, 2, 3, 'SKU-31-RED-M', 88, 442892.00, 402939.00);
 INSERT INTO `product_variants` VALUES (215, 31, 3, 3, 'SKU-31-RED-L', 89, 442892.00, 402939.00);
 INSERT INTO `product_variants` VALUES (216, 31, 4, 3, 'SKU-31-RED-XL', 77, 442892.00, 402939.00);
@@ -2024,7 +3225,7 @@ INSERT INTO `product_variants` VALUES (254, 39, 2, 11, 'SKU-39-NAVY-M', 67, 6244
 INSERT INTO `product_variants` VALUES (255, 39, 3, 11, 'SKU-39-NAVY-L', 61, 624485.00, 559560.00);
 INSERT INTO `product_variants` VALUES (256, 39, 4, 11, 'SKU-39-NAVY-XL', 65, 624485.00, 559560.00);
 INSERT INTO `product_variants` VALUES (257, 39, 1, 7, 'SKU-39-WHITE-S', 62, 624485.00, 559560.00);
-INSERT INTO `product_variants` VALUES (258, 39, 2, 7, 'SKU-39-WHITE-M', 69, 624485.00, 559560.00);
+INSERT INTO `product_variants` VALUES (258, 39, 2, 7, 'SKU-39-WHITE-M', 72, 624485.00, 559560.00);
 INSERT INTO `product_variants` VALUES (259, 39, 3, 7, 'SKU-39-WHITE-L', 87, 624485.00, 559560.00);
 INSERT INTO `product_variants` VALUES (260, 39, 4, 7, 'SKU-39-WHITE-XL', 55, 624485.00, 559560.00);
 INSERT INTO `product_variants` VALUES (261, 40, 1, 11, 'SKU-40-NAVY-S', 100, 502242.00, 461771.00);
@@ -2089,9 +3290,9 @@ INSERT INTO `product_variants` VALUES (319, 49, 3, 2, 'SKU-49-GREY-L', 34, 46784
 INSERT INTO `product_variants` VALUES (320, 49, 4, 2, 'SKU-49-GREY-XL', 84, 467848.00, 404199.00);
 INSERT INTO `product_variants` VALUES (321, 50, 1, 12, 'SKU-50-BLUE-S', 86, 424424.00, 391081.00);
 INSERT INTO `product_variants` VALUES (322, 50, 2, 12, 'SKU-50-BLUE-M', 38, 424424.00, 391081.00);
-INSERT INTO `product_variants` VALUES (323, 50, 3, 12, 'SKU-50-BLUE-L', 69, 424424.00, 391081.00);
+INSERT INTO `product_variants` VALUES (323, 50, 3, 12, 'SKU-50-BLUE-L', 70, 424424.00, 391081.00);
 INSERT INTO `product_variants` VALUES (324, 50, 4, 12, 'SKU-50-BLUE-XL', 95, 424424.00, 391081.00);
-INSERT INTO `product_variants` VALUES (325, 51, 1, 5, 'SKU-51-BEIGE-S', 64, 802225.00, 746139.00);
+INSERT INTO `product_variants` VALUES (325, 51, 1, 5, 'SKU-51-BEIGE-S', 67, 802225.00, 746139.00);
 INSERT INTO `product_variants` VALUES (326, 51, 2, 5, 'SKU-51-BEIGE-M', 91, 802225.00, 746139.00);
 INSERT INTO `product_variants` VALUES (327, 51, 3, 5, 'SKU-51-BEIGE-L', 48, 802225.00, 746139.00);
 INSERT INTO `product_variants` VALUES (328, 51, 4, 5, 'SKU-51-BEIGE-XL', 31, 802225.00, 746139.00);
@@ -2102,12 +3303,12 @@ INSERT INTO `product_variants` VALUES (332, 51, 4, 1, 'SKU-51-BLACK-XL', 44, 802
 INSERT INTO `product_variants` VALUES (333, 52, 1, 5, 'SKU-52-BEIGE-S', 79, 540737.00, 483823.00);
 INSERT INTO `product_variants` VALUES (334, 52, 2, 5, 'SKU-52-BEIGE-M', 52, 540737.00, 483823.00);
 INSERT INTO `product_variants` VALUES (335, 52, 3, 5, 'SKU-52-BEIGE-L', 51, 540737.00, 483823.00);
-INSERT INTO `product_variants` VALUES (336, 52, 4, 5, 'SKU-52-BEIGE-XL', 24, 540737.00, 483823.00);
+INSERT INTO `product_variants` VALUES (336, 52, 4, 5, 'SKU-52-BEIGE-XL', 27, 540737.00, 483823.00);
 INSERT INTO `product_variants` VALUES (337, 53, 1, 18, 'SKU-53-BROWN-S', 55, 773167.00, 733463.00);
 INSERT INTO `product_variants` VALUES (338, 53, 2, 18, 'SKU-53-BROWN-M', 39, 773167.00, 733463.00);
 INSERT INTO `product_variants` VALUES (339, 53, 3, 18, 'SKU-53-BROWN-L', 36, 773167.00, 733463.00);
 INSERT INTO `product_variants` VALUES (340, 53, 4, 18, 'SKU-53-BROWN-XL', 25, 773167.00, 733463.00);
-INSERT INTO `product_variants` VALUES (341, 54, 1, 19, 'SKU-54-PUMICE-S', 84, 423366.00, 388074.00);
+INSERT INTO `product_variants` VALUES (341, 54, 1, 19, 'SKU-54-PUMICE-S', 87, 423366.00, 388074.00);
 INSERT INTO `product_variants` VALUES (342, 54, 2, 19, 'SKU-54-PUMICE-M', 41, 423366.00, 388074.00);
 INSERT INTO `product_variants` VALUES (343, 54, 3, 19, 'SKU-54-PUMICE-L', 39, 423366.00, 388074.00);
 INSERT INTO `product_variants` VALUES (344, 54, 4, 19, 'SKU-54-PUMICE-XL', 84, 423366.00, 388074.00);
@@ -2131,7 +3332,7 @@ INSERT INTO `product_variants` VALUES (361, 57, 1, 1, 'SKU-57-BLACK-S', 91, 5474
 INSERT INTO `product_variants` VALUES (362, 57, 2, 1, 'SKU-57-BLACK-M', 28, 547485.00, 486017.00);
 INSERT INTO `product_variants` VALUES (363, 57, 3, 1, 'SKU-57-BLACK-L', 98, 547485.00, 486017.00);
 INSERT INTO `product_variants` VALUES (364, 57, 4, 1, 'SKU-57-BLACK-XL', 69, 547485.00, 486017.00);
-INSERT INTO `product_variants` VALUES (365, 58, 1, 5, 'SKU-58-BEIGE-S', 72, 542693.00, 476463.00);
+INSERT INTO `product_variants` VALUES (365, 58, 1, 5, 'SKU-58-BEIGE-S', 75, 542693.00, 476463.00);
 INSERT INTO `product_variants` VALUES (366, 58, 2, 5, 'SKU-58-BEIGE-M', 73, 542693.00, 476463.00);
 INSERT INTO `product_variants` VALUES (367, 58, 3, 5, 'SKU-58-BEIGE-L', 72, 542693.00, 476463.00);
 INSERT INTO `product_variants` VALUES (368, 58, 4, 5, 'SKU-58-BEIGE-XL', 77, 542693.00, 476463.00);
@@ -2154,9 +3355,9 @@ INSERT INTO `product_variants` VALUES (384, 60, 4, 1, 'SKU-60-BLACK-XL', 33, 719
 INSERT INTO `product_variants` VALUES (385, 61, 1, 1, 'SKU-61-BLACK-S', 67, 833679.00, 793135.00);
 INSERT INTO `product_variants` VALUES (386, 61, 2, 1, 'SKU-61-BLACK-M', 45, 833679.00, 793135.00);
 INSERT INTO `product_variants` VALUES (387, 61, 3, 1, 'SKU-61-BLACK-L', 58, 833679.00, 793135.00);
-INSERT INTO `product_variants` VALUES (388, 61, 4, 1, 'SKU-61-BLACK-XL', 22, 833679.00, 793135.00);
+INSERT INTO `product_variants` VALUES (388, 61, 4, 1, 'SKU-61-BLACK-XL', 24, 833679.00, 793135.00);
 INSERT INTO `product_variants` VALUES (389, 62, 1, 11, 'SKU-62-NAVY-S', 94, 738891.00, 676800.00);
-INSERT INTO `product_variants` VALUES (390, 62, 2, 11, 'SKU-62-NAVY-M', 45, 738891.00, 676800.00);
+INSERT INTO `product_variants` VALUES (390, 62, 2, 11, 'SKU-62-NAVY-M', 47, 738891.00, 676800.00);
 INSERT INTO `product_variants` VALUES (391, 62, 3, 11, 'SKU-62-NAVY-L', 42, 738891.00, 676800.00);
 INSERT INTO `product_variants` VALUES (392, 62, 4, 11, 'SKU-62-NAVY-XL', 44, 738891.00, 676800.00);
 INSERT INTO `product_variants` VALUES (393, 63, 1, 14, 'SKU-63-DARKGREY-S', 41, 584032.00, 535264.00);
@@ -2208,7 +3409,7 @@ INSERT INTO `product_variants` VALUES (438, 69, 2, 18, 'SKU-69-BROWN-M', 64, 524
 INSERT INTO `product_variants` VALUES (439, 69, 3, 18, 'SKU-69-BROWN-L', 95, 524547.00, 454722.00);
 INSERT INTO `product_variants` VALUES (440, 69, 4, 18, 'SKU-69-BROWN-XL', 96, 524547.00, 454722.00);
 INSERT INTO `product_variants` VALUES (441, 70, 1, 5, 'SKU-70-BEIGE-S', 66, 404069.00, 356347.00);
-INSERT INTO `product_variants` VALUES (442, 70, 2, 5, 'SKU-70-BEIGE-M', 56, 404069.00, 356347.00);
+INSERT INTO `product_variants` VALUES (442, 70, 2, 5, 'SKU-70-BEIGE-M', 59, 404069.00, 356347.00);
 INSERT INTO `product_variants` VALUES (443, 70, 3, 5, 'SKU-70-BEIGE-L', 40, 404069.00, 356347.00);
 INSERT INTO `product_variants` VALUES (444, 70, 4, 5, 'SKU-70-BEIGE-XL', 87, 404069.00, 356347.00);
 INSERT INTO `product_variants` VALUES (445, 70, 1, 1, 'SKU-70-BLACK-S', 44, 404069.00, 356347.00);
@@ -2244,8 +3445,8 @@ INSERT INTO `product_variants` VALUES (474, 74, 2, 9, 'SKU-74-PINK-M', 85, 52765
 INSERT INTO `product_variants` VALUES (475, 74, 3, 9, 'SKU-74-PINK-L', 52, 527653.00, 490276.00);
 INSERT INTO `product_variants` VALUES (476, 74, 4, 9, 'SKU-74-PINK-XL', 24, 527653.00, 490276.00);
 INSERT INTO `product_variants` VALUES (477, 74, 1, 7, 'SKU-74-WHITE-S', 36, 527653.00, 490276.00);
-INSERT INTO `product_variants` VALUES (478, 74, 2, 7, 'SKU-74-WHITE-M', 33, 527653.00, 490276.00);
-INSERT INTO `product_variants` VALUES (479, 74, 3, 7, 'SKU-74-WHITE-L', 48, 527653.00, 490276.00);
+INSERT INTO `product_variants` VALUES (478, 74, 2, 7, 'SKU-74-WHITE-M', 36, 527653.00, 490276.00);
+INSERT INTO `product_variants` VALUES (479, 74, 3, 7, 'SKU-74-WHITE-L', 51, 527653.00, 490276.00);
 INSERT INTO `product_variants` VALUES (480, 74, 4, 7, 'SKU-74-WHITE-XL', 66, 527653.00, 490276.00);
 INSERT INTO `product_variants` VALUES (481, 75, 1, 7, 'SKU-75-WHITE-S', 85, 374114.00, 305540.00);
 INSERT INTO `product_variants` VALUES (482, 75, 2, 7, 'SKU-75-WHITE-M', 86, 374114.00, 305540.00);
@@ -2348,7 +3549,7 @@ INSERT INTO `product_variants` VALUES (578, 90, 2, 9, 'SKU-90-PINK-M', 81, 50142
 INSERT INTO `product_variants` VALUES (579, 90, 3, 9, 'SKU-90-PINK-L', 80, 501425.00, 434933.00);
 INSERT INTO `product_variants` VALUES (580, 90, 4, 9, 'SKU-90-PINK-XL', 20, 501425.00, 434933.00);
 INSERT INTO `product_variants` VALUES (581, 91, 1, 18, 'SKU-91-BROWN-S', 68, 452266.00, 419475.00);
-INSERT INTO `product_variants` VALUES (582, 91, 2, 18, 'SKU-91-BROWN-M', 49, 452266.00, 419475.00);
+INSERT INTO `product_variants` VALUES (582, 91, 2, 18, 'SKU-91-BROWN-M', 50, 452266.00, 419475.00);
 INSERT INTO `product_variants` VALUES (583, 91, 3, 18, 'SKU-91-BROWN-L', 87, 452266.00, 419475.00);
 INSERT INTO `product_variants` VALUES (584, 91, 4, 18, 'SKU-91-BROWN-XL', 61, 452266.00, 419475.00);
 INSERT INTO `product_variants` VALUES (585, 91, 1, 9, 'SKU-91-PINK-S', 76, 452266.00, 419475.00);
@@ -2378,14 +3579,14 @@ INSERT INTO `product_variants` VALUES (608, 94, 4, 3, 'SKU-94-RED-XL', 44, 34005
 INSERT INTO `product_variants` VALUES (609, 94, 1, 13, 'SKU-94-YELLOW-S', 26, 340051.00, 289368.00);
 INSERT INTO `product_variants` VALUES (610, 94, 2, 13, 'SKU-94-YELLOW-M', 99, 340051.00, 289368.00);
 INSERT INTO `product_variants` VALUES (611, 94, 3, 13, 'SKU-94-YELLOW-L', 81, 340051.00, 289368.00);
-INSERT INTO `product_variants` VALUES (612, 94, 4, 13, 'SKU-94-YELLOW-XL', 85, 340051.00, 289368.00);
+INSERT INTO `product_variants` VALUES (612, 94, 4, 13, 'SKU-94-YELLOW-XL', 87, 340051.00, 289368.00);
 INSERT INTO `product_variants` VALUES (613, 95, 1, 8, 'SKU-95-GREEN-S', 91, 291178.00, 251652.00);
 INSERT INTO `product_variants` VALUES (614, 95, 2, 8, 'SKU-95-GREEN-M', 81, 291178.00, 251652.00);
 INSERT INTO `product_variants` VALUES (615, 95, 3, 8, 'SKU-95-GREEN-L', 49, 291178.00, 251652.00);
 INSERT INTO `product_variants` VALUES (616, 95, 4, 8, 'SKU-95-GREEN-XL', 46, 291178.00, 251652.00);
 INSERT INTO `product_variants` VALUES (617, 95, 1, 13, 'SKU-95-YELLOW-S', 40, 291178.00, 251652.00);
 INSERT INTO `product_variants` VALUES (618, 95, 2, 13, 'SKU-95-YELLOW-M', 47, 291178.00, 251652.00);
-INSERT INTO `product_variants` VALUES (619, 95, 3, 13, 'SKU-95-YELLOW-L', 76, 291178.00, 251652.00);
+INSERT INTO `product_variants` VALUES (619, 95, 3, 13, 'SKU-95-YELLOW-L', 77, 291178.00, 251652.00);
 INSERT INTO `product_variants` VALUES (620, 95, 4, 13, 'SKU-95-YELLOW-XL', 78, 291178.00, 251652.00);
 INSERT INTO `product_variants` VALUES (621, 96, 1, 9, 'SKU-96-PINK-S', 83, 495646.00, 428582.00);
 INSERT INTO `product_variants` VALUES (622, 96, 2, 9, 'SKU-96-PINK-M', 21, 495646.00, 428582.00);
@@ -2394,7 +3595,7 @@ INSERT INTO `product_variants` VALUES (624, 96, 4, 9, 'SKU-96-PINK-XL', 71, 4956
 INSERT INTO `product_variants` VALUES (625, 97, 1, 18, 'SKU-97-BROWN-S', 83, 411271.00, 357991.00);
 INSERT INTO `product_variants` VALUES (626, 97, 2, 18, 'SKU-97-BROWN-M', 80, 411271.00, 357991.00);
 INSERT INTO `product_variants` VALUES (627, 97, 3, 18, 'SKU-97-BROWN-L', 77, 411271.00, 357991.00);
-INSERT INTO `product_variants` VALUES (628, 97, 4, 18, 'SKU-97-BROWN-XL', 36, 411271.00, 357991.00);
+INSERT INTO `product_variants` VALUES (628, 97, 4, 18, 'SKU-97-BROWN-XL', 37, 411271.00, 357991.00);
 INSERT INTO `product_variants` VALUES (629, 98, 1, 7, 'SKU-98-WHITE-S', 87, 352076.00, 300797.00);
 INSERT INTO `product_variants` VALUES (630, 98, 2, 7, 'SKU-98-WHITE-M', 94, 352076.00, 300797.00);
 INSERT INTO `product_variants` VALUES (631, 98, 3, 7, 'SKU-98-WHITE-L', 28, 352076.00, 300797.00);
@@ -2404,7 +3605,7 @@ INSERT INTO `product_variants` VALUES (634, 99, 2, 2, 'SKU-99-GREY-M', 97, 41272
 INSERT INTO `product_variants` VALUES (635, 99, 3, 2, 'SKU-99-GREY-L', 29, 412721.00, 380418.00);
 INSERT INTO `product_variants` VALUES (636, 99, 4, 2, 'SKU-99-GREY-XL', 28, 412721.00, 380418.00);
 INSERT INTO `product_variants` VALUES (637, 100, 1, 5, 'SKU-100-BEIGE-S', 85, 421889.00, 373959.00);
-INSERT INTO `product_variants` VALUES (638, 100, 2, 5, 'SKU-100-BEIGE-M', 27, 421889.00, 373959.00);
+INSERT INTO `product_variants` VALUES (638, 100, 2, 5, 'SKU-100-BEIGE-M', 30, 421889.00, 373959.00);
 INSERT INTO `product_variants` VALUES (639, 100, 3, 5, 'SKU-100-BEIGE-L', 87, 421889.00, 373959.00);
 INSERT INTO `product_variants` VALUES (640, 100, 4, 5, 'SKU-100-BEIGE-XL', 94, 421889.00, 373959.00);
 INSERT INTO `product_variants` VALUES (641, 100, 1, 29, 'SKU-100-BURGUNDY-S', 20, 421889.00, 373959.00);
@@ -2443,7 +3644,7 @@ INSERT INTO `product_variants` VALUES (673, 107, 1, 1, 'SKU-107-BLACK-S', 61, 53
 INSERT INTO `product_variants` VALUES (674, 107, 2, 1, 'SKU-107-BLACK-M', 70, 538426.00, 474829.00);
 INSERT INTO `product_variants` VALUES (675, 107, 3, 1, 'SKU-107-BLACK-L', 22, 538426.00, 474829.00);
 INSERT INTO `product_variants` VALUES (676, 107, 4, 1, 'SKU-107-BLACK-XL', 26, 538426.00, 474829.00);
-INSERT INTO `product_variants` VALUES (677, 107, 1, 8, 'SKU-107-GREEN-S', 34, 538426.00, 474829.00);
+INSERT INTO `product_variants` VALUES (677, 107, 1, 8, 'SKU-107-GREEN-S', 35, 538426.00, 474829.00);
 INSERT INTO `product_variants` VALUES (678, 107, 2, 8, 'SKU-107-GREEN-M', 73, 538426.00, 474829.00);
 INSERT INTO `product_variants` VALUES (679, 107, 3, 8, 'SKU-107-GREEN-L', 54, 538426.00, 474829.00);
 INSERT INTO `product_variants` VALUES (680, 107, 4, 8, 'SKU-107-GREEN-XL', 43, 538426.00, 474829.00);
@@ -2452,7 +3653,7 @@ INSERT INTO `product_variants` VALUES (682, 108, 2, 1, 'SKU-108-BLACK-M', 74, 71
 INSERT INTO `product_variants` VALUES (683, 108, 3, 1, 'SKU-108-BLACK-L', 67, 719350.00, 661179.00);
 INSERT INTO `product_variants` VALUES (684, 108, 4, 1, 'SKU-108-BLACK-XL', 58, 719350.00, 661179.00);
 INSERT INTO `product_variants` VALUES (685, 108, 1, 7, 'SKU-108-WHITE-S', 56, 719350.00, 661179.00);
-INSERT INTO `product_variants` VALUES (686, 108, 2, 7, 'SKU-108-WHITE-M', 45, 719350.00, 661179.00);
+INSERT INTO `product_variants` VALUES (686, 108, 2, 7, 'SKU-108-WHITE-M', 46, 719350.00, 661179.00);
 INSERT INTO `product_variants` VALUES (687, 108, 3, 7, 'SKU-108-WHITE-L', 87, 719350.00, 661179.00);
 INSERT INTO `product_variants` VALUES (688, 108, 4, 7, 'SKU-108-WHITE-XL', 34, 719350.00, 661179.00);
 INSERT INTO `product_variants` VALUES (689, 109, 1, 12, 'SKU-109-BLUE-S', 56, 526753.00, 485575.00);
@@ -2474,7 +3675,7 @@ INSERT INTO `product_variants` VALUES (704, 111, 4, 1, 'SKU-111-BLACK-XL', 66, 4
 INSERT INTO `product_variants` VALUES (705, 111, 1, 3, 'SKU-111-RED-S', 90, 417501.00, 357716.00);
 INSERT INTO `product_variants` VALUES (706, 111, 2, 3, 'SKU-111-RED-M', 29, 417501.00, 357716.00);
 INSERT INTO `product_variants` VALUES (707, 111, 3, 3, 'SKU-111-RED-L', 51, 417501.00, 357716.00);
-INSERT INTO `product_variants` VALUES (708, 111, 4, 3, 'SKU-111-RED-XL', 37, 417501.00, 357716.00);
+INSERT INTO `product_variants` VALUES (708, 111, 4, 3, 'SKU-111-RED-XL', 39, 417501.00, 357716.00);
 INSERT INTO `product_variants` VALUES (709, 112, 1, 5, 'SKU-112-BEIGE-S', 62, 400896.00, 347241.00);
 INSERT INTO `product_variants` VALUES (710, 112, 2, 5, 'SKU-112-BEIGE-M', 72, 400896.00, 347241.00);
 INSERT INTO `product_variants` VALUES (711, 112, 3, 5, 'SKU-112-BEIGE-L', 92, 400896.00, 347241.00);
@@ -2488,7 +3689,7 @@ INSERT INTO `product_variants` VALUES (718, 113, 2, 1, 'SKU-113-BLACK-M', 68, 63
 INSERT INTO `product_variants` VALUES (719, 113, 3, 1, 'SKU-113-BLACK-L', 37, 638557.00, 586160.00);
 INSERT INTO `product_variants` VALUES (720, 113, 4, 1, 'SKU-113-BLACK-XL', 25, 638557.00, 586160.00);
 INSERT INTO `product_variants` VALUES (721, 114, 1, 12, 'SKU-114-BLUE-S', 31, 350679.00, 306573.00);
-INSERT INTO `product_variants` VALUES (722, 114, 2, 12, 'SKU-114-BLUE-M', 52, 350679.00, 306573.00);
+INSERT INTO `product_variants` VALUES (722, 114, 2, 12, 'SKU-114-BLUE-M', 55, 350679.00, 306573.00);
 INSERT INTO `product_variants` VALUES (723, 114, 3, 12, 'SKU-114-BLUE-L', 70, 350679.00, 306573.00);
 INSERT INTO `product_variants` VALUES (724, 114, 4, 12, 'SKU-114-BLUE-XL', 26, 350679.00, 306573.00);
 INSERT INTO `product_variants` VALUES (725, 115, 1, 4, 'SKU-115-INDIGO-S', 56, 434910.00, 381417.00);
@@ -2577,7 +3778,7 @@ INSERT INTO `product_variants` VALUES (807, 128, 3, 7, 'SKU-128-WHITE-L', 21, 40
 INSERT INTO `product_variants` VALUES (808, 128, 4, 7, 'SKU-128-WHITE-XL', 95, 404201.00, 363362.00);
 INSERT INTO `product_variants` VALUES (809, 129, 1, 8, 'SKU-129-GREEN-S', 23, 581520.00, 528435.00);
 INSERT INTO `product_variants` VALUES (810, 129, 2, 8, 'SKU-129-GREEN-M', 40, 581520.00, 528435.00);
-INSERT INTO `product_variants` VALUES (811, 129, 3, 8, 'SKU-129-GREEN-L', 87, 581520.00, 528435.00);
+INSERT INTO `product_variants` VALUES (811, 129, 3, 8, 'SKU-129-GREEN-L', 88, 581520.00, 528435.00);
 INSERT INTO `product_variants` VALUES (812, 129, 4, 8, 'SKU-129-GREEN-XL', 67, 581520.00, 528435.00);
 INSERT INTO `product_variants` VALUES (813, 129, 1, 9, 'SKU-129-PINK-S', 91, 581520.00, 528435.00);
 INSERT INTO `product_variants` VALUES (814, 129, 2, 9, 'SKU-129-PINK-M', 51, 581520.00, 528435.00);
@@ -2605,27 +3806,27 @@ INSERT INTO `product_variants` VALUES (832, 140, 5, 5, 'SKU-140-BEIGE-FreeSize',
 -- ----------------------------
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products`  (
-                             `id` int NOT NULL AUTO_INCREMENT,
-                             `category_id` int NULL DEFAULT NULL,
-                             `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                             `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                             `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                             `price` decimal(10, 2) NULL DEFAULT NULL,
-                             `sale_price` decimal(10, 2) NULL DEFAULT NULL,
-                             `thumbnail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                             `min_price` decimal(10, 2) NULL DEFAULT NULL,
-                             `max_price` decimal(10, 2) NULL DEFAULT NULL,
-                             `views` int NULL DEFAULT NULL,
-                             `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                             `created_at` datetime NULL DEFAULT NULL,
-                             `weight` int NULL DEFAULT 200,
-                             `length` int NULL DEFAULT 10,
-                             `width` int NULL DEFAULT 10,
-                             `height` int NULL DEFAULT 5,
-                             PRIMARY KEY (`id`) USING BTREE,
-                             UNIQUE INDEX `slug`(`slug` ASC) USING BTREE,
-                             INDEX `category_id`(`category_id` ASC) USING BTREE,
-                             CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `category_id` int NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `price` decimal(10, 2) NULL DEFAULT NULL,
+  `sale_price` decimal(10, 2) NULL DEFAULT NULL,
+  `thumbnail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `min_price` decimal(10, 2) NULL DEFAULT NULL,
+  `max_price` decimal(10, 2) NULL DEFAULT NULL,
+  `views` int NULL DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  `weight` int NULL DEFAULT 200,
+  `length` int NULL DEFAULT 10,
+  `width` int NULL DEFAULT 10,
+  `height` int NULL DEFAULT 5,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `slug`(`slug` ASC) USING BTREE,
+  INDEX `category_id`(`category_id` ASC) USING BTREE,
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 141 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -2777,12 +3978,12 @@ INSERT INTO `products` VALUES (140, 22, 'Túi Tote Hình In', 'tui-tote-hinh-in-
 -- ----------------------------
 DROP TABLE IF EXISTS `review_images`;
 CREATE TABLE `review_images`  (
-                                  `id` int NOT NULL AUTO_INCREMENT,
-                                  `review_id` int NULL DEFAULT NULL,
-                                  `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                                  PRIMARY KEY (`id`) USING BTREE,
-                                  INDEX `review_id`(`review_id` ASC) USING BTREE,
-                                  CONSTRAINT `review_images_ibfk_1` FOREIGN KEY (`review_id`) REFERENCES `reviews` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `review_id` int NULL DEFAULT NULL,
+  `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `review_id`(`review_id` ASC) USING BTREE,
+  CONSTRAINT `review_images_ibfk_1` FOREIGN KEY (`review_id`) REFERENCES `reviews` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -2796,18 +3997,18 @@ INSERT INTO `review_images` VALUES (2, 3, 'https://res.cloudinary.com/dp8ttx3jh/
 -- ----------------------------
 DROP TABLE IF EXISTS `reviews`;
 CREATE TABLE `reviews`  (
-                            `id` int NOT NULL AUTO_INCREMENT,
-                            `product_id` int NULL DEFAULT NULL,
-                            `user_id` int NULL DEFAULT NULL,
-                            `rating` int NULL DEFAULT NULL,
-                            `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                            `created_at` datetime NULL DEFAULT NULL,
-                            PRIMARY KEY (`id`) USING BTREE,
-                            INDEX `product_id`(`product_id` ASC) USING BTREE,
-                            INDEX `user_id`(`user_id` ASC) USING BTREE,
-                            CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                            CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NULL DEFAULT NULL,
+  `user_id` int NULL DEFAULT NULL,
+  `rating` int NULL DEFAULT NULL,
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `product_id`(`product_id` ASC) USING BTREE,
+  INDEX `user_id`(`user_id` ASC) USING BTREE,
+  CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 97 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of reviews
@@ -2815,21 +4016,101 @@ CREATE TABLE `reviews`  (
 INSERT INTO `reviews` VALUES (1, 86, 1, 2, 'ook nhat', '2026-05-29 11:14:01');
 INSERT INTO `reviews` VALUES (2, 86, 1, 3, 'ok nhattatatattat', '2026-05-29 11:16:26');
 INSERT INTO `reviews` VALUES (3, 89, 1, 3, 'fafaf', '2026-05-29 11:23:31');
+INSERT INTO `reviews` VALUES (4, 1, 2, 5, 'Áo dệt kim đẹp quá, chất vải mềm, mặc rất thoải mái. Sẽ ủng hộ shop thêm.', '2026-06-14 22:40:18');
+INSERT INTO `reviews` VALUES (5, 1, 3, 4, 'Thiết kế đẹp nhưng hơi dài so với mình một chút, nhưng tổng thể vẫn rất ưng ý.', '2026-06-14 22:40:18');
+INSERT INTO `reviews` VALUES (6, 2, 4, 5, 'Giao hàng nhanh, shop đóng gói cẩn thận. Sản phẩm y hình!', '2026-06-09 22:40:18');
+INSERT INTO `reviews` VALUES (7, 2, 5, 5, 'Vải mặc mát, form chuẩn đúng size mình chọn.', '2026-05-19 22:40:18');
+INSERT INTO `reviews` VALUES (8, 3, 6, 4, 'Chất lượng ổn trong tầm giá. Nhân viên hỗ trợ tư vấn nhiệt tình.', '2026-06-15 22:40:18');
+INSERT INTO `reviews` VALUES (9, 3, 7, 5, 'Rất hài lòng, mua lần thứ 2 rồi mà shop vẫn giữ vững phong độ.', '2026-06-07 22:40:18');
+INSERT INTO `reviews` VALUES (10, 4, 8, 5, 'Áo lên form đẹp, màu y như ảnh minh họa, không bị lệch màu.', '2026-06-04 22:40:18');
+INSERT INTO `reviews` VALUES (11, 4, 9, 4, 'Mọi thứ đều ổn, chỉ là hộp đựng bị móp nhẹ lúc nhận hàng, nhưng sản phẩm bên trong không sao.', '2026-06-10 22:40:18');
+INSERT INTO `reviews` VALUES (12, 5, 10, 5, 'Đóng gói cực kỳ chuyên nghiệp, nhìn là thấy shop đầu tư rồi.', '2026-05-21 22:40:18');
+INSERT INTO `reviews` VALUES (13, 5, 11, 5, 'Mặc đi chơi hay đi làm đều hợp, bạn mình ai cũng khen.', '2026-05-27 22:40:18');
+INSERT INTO `reviews` VALUES (14, 6, 12, 4, 'Sản phẩm tốt, giao hơi chậm một xíu do trúng đợt sale.', '2026-05-26 22:40:18');
+INSERT INTO `reviews` VALUES (15, 6, 13, 5, 'Form áo mặc lên người trông gọn gàng, mình rất thích.', '2026-05-29 22:40:18');
+INSERT INTO `reviews` VALUES (16, 7, 14, 5, 'Chất liệu vải xịn, giặt máy mấy lần mà không bị xù lông.', '2026-05-20 22:40:18');
+INSERT INTO `reviews` VALUES (17, 7, 15, 5, 'Shop trả lời tin nhắn nhanh, hỗ trợ đổi size rất nhiệt tình.', '2026-05-26 22:40:18');
+INSERT INTO `reviews` VALUES (18, 8, 16, 4, 'Tạm được, tuy nhiên màu hơi đậm hơn so với ảnh web một xíu.', '2026-05-23 22:40:18');
+INSERT INTO `reviews` VALUES (19, 8, 17, 5, 'Sản phẩm đúng như mô tả, không có gì để chê.', '2026-05-18 22:40:18');
+INSERT INTO `reviews` VALUES (20, 9, 18, 5, 'Đã nhận được hàng, rất ưng ý. Sẽ quay lại ủng hộ lần sau.', '2026-06-04 22:40:18');
+INSERT INTO `reviews` VALUES (21, 9, 19, 5, 'Thiết kế tối giản đúng gu mình thích. Cảm ơn shop.', '2026-06-12 22:40:18');
+INSERT INTO `reviews` VALUES (22, 10, 20, 4, 'Giá hơi cao một xíu nhưng chất lượng tương xứng.', '2026-06-02 22:40:18');
+INSERT INTO `reviews` VALUES (23, 10, 21, 5, 'Sản phẩm quá đỉnh, không có điểm nào để chê cả.', '2026-05-19 22:40:18');
+INSERT INTO `reviews` VALUES (24, 11, 22, 5, 'Món quà tuyệt vời cho bạn trai mình, bạn ấy rất thích.', '2026-06-06 22:40:18');
+INSERT INTO `reviews` VALUES (25, 11, 23, 4, 'Chất vải ổn, đường may chắc chắn. Rất hài lòng.', '2026-05-20 22:40:18');
+INSERT INTO `reviews` VALUES (26, 12, 24, 5, 'Giao hàng hỏa tốc, nhận được hàng sau 2 tiếng đặt.', '2026-06-02 22:40:18');
+INSERT INTO `reviews` VALUES (27, 12, 25, 5, 'Shop làm việc rất chuyên nghiệp, sẽ giới thiệu bạn bè.', '2026-05-28 22:40:18');
+INSERT INTO `reviews` VALUES (28, 13, 26, 4, 'Áo khá đẹp nhưng cổ hơi rộng so với mình.', '2026-05-21 22:40:18');
+INSERT INTO `reviews` VALUES (29, 13, 27, 5, 'Mọi thứ đều hoàn hảo, shop tặng thêm cả mã giảm giá nữa.', '2026-06-03 22:40:18');
+INSERT INTO `reviews` VALUES (30, 14, 28, 5, 'Màu pastel dễ thương quá đi, mình rất ưng.', '2026-05-30 22:40:18');
+INSERT INTO `reviews` VALUES (31, 14, 29, 5, 'Chất vải co giãn tốt, mặc rất dễ chịu.', '2026-05-31 22:40:18');
+INSERT INTO `reviews` VALUES (32, 15, 30, 5, 'Hàng y hệt hình, shop uy tín 10 điểm nha.', '2026-05-19 22:40:18');
+INSERT INTO `reviews` VALUES (33, 15, 1, 4, 'Sản phẩm tốt, đóng gói chắc chắn. Sẽ mua lại.', '2026-06-12 22:40:18');
+INSERT INTO `reviews` VALUES (34, 80, 26, 4, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-06-06 22:40:57');
+INSERT INTO `reviews` VALUES (35, 19, 5, 4, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-04-20 22:40:57');
+INSERT INTO `reviews` VALUES (36, 70, 4, 4, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-05-03 22:40:57');
+INSERT INTO `reviews` VALUES (37, 96, 26, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-04-25 22:40:57');
+INSERT INTO `reviews` VALUES (38, 56, 14, 4, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-06-07 22:40:57');
+INSERT INTO `reviews` VALUES (39, 77, 20, 5, 'Sản phẩm quá tuyệt vời, chất vải vượt mong đợi!', '2026-04-27 22:40:57');
+INSERT INTO `reviews` VALUES (40, 3, 28, 4, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-05-03 22:40:57');
+INSERT INTO `reviews` VALUES (41, 33, 22, 4, 'Size vừa vặn, màu sắc đúng như hình minh họa.', '2026-05-07 22:40:57');
+INSERT INTO `reviews` VALUES (42, 50, 4, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-05-25 22:40:57');
+INSERT INTO `reviews` VALUES (43, 45, 22, 4, 'Sản phẩm quá tuyệt vời, chất vải vượt mong đợi!', '2026-05-12 22:40:57');
+INSERT INTO `reviews` VALUES (44, 36, 13, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-05-23 22:40:57');
+INSERT INTO `reviews` VALUES (45, 27, 27, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-05-01 22:40:57');
+INSERT INTO `reviews` VALUES (46, 2, 26, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-06-04 22:40:57');
+INSERT INTO `reviews` VALUES (47, 59, 2, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-06-09 22:40:57');
+INSERT INTO `reviews` VALUES (48, 95, 20, 5, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-06-04 22:40:57');
+INSERT INTO `reviews` VALUES (49, 18, 11, 5, 'Size vừa vặn, màu sắc đúng như hình minh họa.', '2026-04-26 22:40:57');
+INSERT INTO `reviews` VALUES (50, 28, 30, 4, 'Size vừa vặn, màu sắc đúng như hình minh họa.', '2026-06-06 22:40:57');
+INSERT INTO `reviews` VALUES (51, 100, 10, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-05-12 22:40:57');
+INSERT INTO `reviews` VALUES (52, 55, 26, 4, 'Sản phẩm quá tuyệt vời, chất vải vượt mong đợi!', '2026-04-30 22:40:57');
+INSERT INTO `reviews` VALUES (53, 90, 26, 5, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-05-30 22:40:57');
+INSERT INTO `reviews` VALUES (54, 36, 2, 5, 'Sản phẩm quá tuyệt vời, chất vải vượt mong đợi!', '2026-05-07 22:40:57');
+INSERT INTO `reviews` VALUES (55, 97, 30, 5, 'Size vừa vặn, màu sắc đúng như hình minh họa.', '2026-05-22 22:40:57');
+INSERT INTO `reviews` VALUES (56, 22, 27, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-05-16 22:40:57');
+INSERT INTO `reviews` VALUES (57, 50, 19, 5, 'Size vừa vặn, màu sắc đúng như hình minh họa.', '2026-04-19 22:40:57');
+INSERT INTO `reviews` VALUES (58, 19, 7, 4, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-05-07 22:40:57');
+INSERT INTO `reviews` VALUES (59, 59, 10, 5, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-06-13 22:40:57');
+INSERT INTO `reviews` VALUES (60, 67, 12, 4, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-05-25 22:40:57');
+INSERT INTO `reviews` VALUES (61, 23, 26, 5, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-05-27 22:40:57');
+INSERT INTO `reviews` VALUES (62, 79, 23, 5, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-06-15 22:40:57');
+INSERT INTO `reviews` VALUES (63, 77, 23, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-04-22 22:40:57');
+INSERT INTO `reviews` VALUES (64, 1, 23, 5, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-05-21 22:40:57');
+INSERT INTO `reviews` VALUES (65, 70, 1, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-04-18 22:40:57');
+INSERT INTO `reviews` VALUES (66, 52, 3, 4, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-05-07 22:40:57');
+INSERT INTO `reviews` VALUES (67, 13, 19, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-06-05 22:40:57');
+INSERT INTO `reviews` VALUES (68, 9, 4, 4, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-06-10 22:40:57');
+INSERT INTO `reviews` VALUES (69, 91, 2, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-06-09 22:40:57');
+INSERT INTO `reviews` VALUES (70, 82, 26, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-06-11 22:40:57');
+INSERT INTO `reviews` VALUES (71, 86, 13, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-05-01 22:40:57');
+INSERT INTO `reviews` VALUES (72, 86, 26, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-04-25 22:40:57');
+INSERT INTO `reviews` VALUES (73, 73, 20, 5, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-05-19 22:40:57');
+INSERT INTO `reviews` VALUES (74, 52, 24, 4, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-05-23 22:40:57');
+INSERT INTO `reviews` VALUES (75, 68, 6, 5, 'Sản phẩm quá tuyệt vời, chất vải vượt mong đợi!', '2026-04-19 22:40:57');
+INSERT INTO `reviews` VALUES (76, 11, 19, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-04-19 22:40:57');
+INSERT INTO `reviews` VALUES (77, 27, 8, 5, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-06-02 22:40:57');
+INSERT INTO `reviews` VALUES (78, 18, 18, 4, 'Giao hàng nhanh, shop đóng gói rất kỹ.', '2026-05-12 22:40:57');
+INSERT INTO `reviews` VALUES (79, 80, 10, 4, 'Giá cả hợp lý, chất lượng đỉnh cao!', '2026-06-12 22:40:57');
+INSERT INTO `reviews` VALUES (80, 2, 26, 5, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-05-09 22:40:57');
+INSERT INTO `reviews` VALUES (81, 29, 8, 5, 'Sẽ tiếp tục ủng hộ shop trong các đơn hàng tới.', '2026-06-01 22:40:57');
+INSERT INTO `reviews` VALUES (82, 47, 8, 5, 'Size vừa vặn, màu sắc đúng như hình minh họa.', '2026-04-23 22:40:57');
+INSERT INTO `reviews` VALUES (83, 96, 29, 5, 'Sản phẩm quá tuyệt vời, chất vải vượt mong đợi!', '2026-06-04 22:40:57');
 
 -- ----------------------------
 -- Table structure for role_permissions
 -- ----------------------------
 DROP TABLE IF EXISTS `role_permissions`;
 CREATE TABLE `role_permissions`  (
-                                     `id` int NOT NULL AUTO_INCREMENT,
-                                     `role_id` int NOT NULL,
-                                     `module` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'user, category, product, order, return, banner, blog, contact, warehouse, role',
-                                     `action` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'view_list, view_detail, add, edit, delete, lock',
-                                     `allowed` tinyint(1) NULL DEFAULT 0,
-                                     PRIMARY KEY (`id`) USING BTREE,
-                                     UNIQUE INDEX `uq_role_module_action`(`role_id` ASC, `module` ASC, `action` ASC) USING BTREE,
-                                     CONSTRAINT `fk_rp_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int NOT NULL,
+  `module` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'user, category, product, order, return, banner, blog, contact, warehouse, role',
+  `action` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'view_list, view_detail, add, edit, delete, lock',
+  `allowed` tinyint(1) NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uq_role_module_action`(`role_id` ASC, `module` ASC, `action` ASC) USING BTREE,
+  CONSTRAINT `fk_rp_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 466 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of role_permissions
@@ -2879,35 +4160,248 @@ INSERT INTO `role_permissions` VALUES (42, 1, 'role', 'view_detail', 1);
 INSERT INTO `role_permissions` VALUES (43, 1, 'role', 'add', 1);
 INSERT INTO `role_permissions` VALUES (44, 1, 'role', 'edit', 1);
 INSERT INTO `role_permissions` VALUES (45, 1, 'role', 'delete', 1);
+INSERT INTO `role_permissions` VALUES (116, 2, 'user', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (117, 2, 'user', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (118, 2, 'user', 'add', 0);
+INSERT INTO `role_permissions` VALUES (119, 2, 'user', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (120, 2, 'user', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (121, 2, 'user', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (122, 2, 'user', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (123, 2, 'category', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (124, 2, 'category', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (125, 2, 'category', 'add', 0);
+INSERT INTO `role_permissions` VALUES (126, 2, 'category', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (127, 2, 'category', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (128, 2, 'category', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (129, 2, 'category', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (130, 2, 'product', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (131, 2, 'product', 'view_detail', 1);
+INSERT INTO `role_permissions` VALUES (132, 2, 'product', 'add', 1);
+INSERT INTO `role_permissions` VALUES (133, 2, 'product', 'edit', 1);
+INSERT INTO `role_permissions` VALUES (134, 2, 'product', 'delete', 1);
+INSERT INTO `role_permissions` VALUES (135, 2, 'product', 'lock', 1);
+INSERT INTO `role_permissions` VALUES (136, 2, 'product', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (137, 2, 'order', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (138, 2, 'order', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (139, 2, 'order', 'add', 0);
+INSERT INTO `role_permissions` VALUES (140, 2, 'order', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (141, 2, 'order', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (142, 2, 'order', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (143, 2, 'order', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (144, 2, 'return', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (145, 2, 'return', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (146, 2, 'return', 'add', 0);
+INSERT INTO `role_permissions` VALUES (147, 2, 'return', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (148, 2, 'return', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (149, 2, 'return', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (150, 2, 'return', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (151, 2, 'banner', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (152, 2, 'banner', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (153, 2, 'banner', 'add', 0);
+INSERT INTO `role_permissions` VALUES (154, 2, 'banner', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (155, 2, 'banner', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (156, 2, 'banner', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (157, 2, 'banner', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (158, 2, 'blog', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (159, 2, 'blog', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (160, 2, 'blog', 'add', 0);
+INSERT INTO `role_permissions` VALUES (161, 2, 'blog', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (162, 2, 'blog', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (163, 2, 'blog', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (164, 2, 'blog', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (165, 2, 'contact', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (166, 2, 'contact', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (167, 2, 'contact', 'add', 0);
+INSERT INTO `role_permissions` VALUES (168, 2, 'contact', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (169, 2, 'contact', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (170, 2, 'contact', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (171, 2, 'contact', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (172, 2, 'warehouse', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (173, 2, 'warehouse', 'view_detail', 1);
+INSERT INTO `role_permissions` VALUES (174, 2, 'warehouse', 'add', 1);
+INSERT INTO `role_permissions` VALUES (175, 2, 'warehouse', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (176, 2, 'warehouse', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (177, 2, 'warehouse', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (178, 2, 'warehouse', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (179, 2, 'role', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (180, 2, 'role', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (181, 2, 'role', 'add', 0);
+INSERT INTO `role_permissions` VALUES (182, 2, 'role', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (183, 2, 'role', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (184, 2, 'role', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (185, 2, 'role', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (256, 3, 'user', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (257, 3, 'user', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (258, 3, 'user', 'add', 0);
+INSERT INTO `role_permissions` VALUES (259, 3, 'user', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (260, 3, 'user', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (261, 3, 'user', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (262, 3, 'user', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (263, 3, 'category', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (264, 3, 'category', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (265, 3, 'category', 'add', 0);
+INSERT INTO `role_permissions` VALUES (266, 3, 'category', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (267, 3, 'category', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (268, 3, 'category', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (269, 3, 'category', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (270, 3, 'product', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (271, 3, 'product', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (272, 3, 'product', 'add', 0);
+INSERT INTO `role_permissions` VALUES (273, 3, 'product', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (274, 3, 'product', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (275, 3, 'product', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (276, 3, 'product', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (277, 3, 'order', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (278, 3, 'order', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (279, 3, 'order', 'add', 0);
+INSERT INTO `role_permissions` VALUES (280, 3, 'order', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (281, 3, 'order', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (282, 3, 'order', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (283, 3, 'order', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (284, 3, 'return', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (285, 3, 'return', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (286, 3, 'return', 'add', 0);
+INSERT INTO `role_permissions` VALUES (287, 3, 'return', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (288, 3, 'return', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (289, 3, 'return', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (290, 3, 'return', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (291, 3, 'banner', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (292, 3, 'banner', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (293, 3, 'banner', 'add', 0);
+INSERT INTO `role_permissions` VALUES (294, 3, 'banner', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (295, 3, 'banner', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (296, 3, 'banner', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (297, 3, 'banner', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (298, 3, 'blog', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (299, 3, 'blog', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (300, 3, 'blog', 'add', 0);
+INSERT INTO `role_permissions` VALUES (301, 3, 'blog', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (302, 3, 'blog', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (303, 3, 'blog', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (304, 3, 'blog', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (305, 3, 'contact', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (306, 3, 'contact', 'view_detail', 1);
+INSERT INTO `role_permissions` VALUES (307, 3, 'contact', 'add', 0);
+INSERT INTO `role_permissions` VALUES (308, 3, 'contact', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (309, 3, 'contact', 'delete', 1);
+INSERT INTO `role_permissions` VALUES (310, 3, 'contact', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (311, 3, 'contact', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (312, 3, 'warehouse', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (313, 3, 'warehouse', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (314, 3, 'warehouse', 'add', 0);
+INSERT INTO `role_permissions` VALUES (315, 3, 'warehouse', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (316, 3, 'warehouse', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (317, 3, 'warehouse', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (318, 3, 'warehouse', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (319, 3, 'role', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (320, 3, 'role', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (321, 3, 'role', 'add', 0);
+INSERT INTO `role_permissions` VALUES (322, 3, 'role', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (323, 3, 'role', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (324, 3, 'role', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (325, 3, 'role', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (396, 4, 'user', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (397, 4, 'user', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (398, 4, 'user', 'add', 0);
+INSERT INTO `role_permissions` VALUES (399, 4, 'user', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (400, 4, 'user', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (401, 4, 'user', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (402, 4, 'user', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (403, 4, 'category', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (404, 4, 'category', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (405, 4, 'category', 'add', 0);
+INSERT INTO `role_permissions` VALUES (406, 4, 'category', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (407, 4, 'category', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (408, 4, 'category', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (409, 4, 'category', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (410, 4, 'product', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (411, 4, 'product', 'view_detail', 1);
+INSERT INTO `role_permissions` VALUES (412, 4, 'product', 'add', 1);
+INSERT INTO `role_permissions` VALUES (413, 4, 'product', 'edit', 1);
+INSERT INTO `role_permissions` VALUES (414, 4, 'product', 'delete', 1);
+INSERT INTO `role_permissions` VALUES (415, 4, 'product', 'lock', 1);
+INSERT INTO `role_permissions` VALUES (416, 4, 'product', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (417, 4, 'order', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (418, 4, 'order', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (419, 4, 'order', 'add', 0);
+INSERT INTO `role_permissions` VALUES (420, 4, 'order', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (421, 4, 'order', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (422, 4, 'order', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (423, 4, 'order', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (424, 4, 'return', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (425, 4, 'return', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (426, 4, 'return', 'add', 0);
+INSERT INTO `role_permissions` VALUES (427, 4, 'return', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (428, 4, 'return', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (429, 4, 'return', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (430, 4, 'return', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (431, 4, 'banner', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (432, 4, 'banner', 'view_detail', 1);
+INSERT INTO `role_permissions` VALUES (433, 4, 'banner', 'add', 1);
+INSERT INTO `role_permissions` VALUES (434, 4, 'banner', 'edit', 1);
+INSERT INTO `role_permissions` VALUES (435, 4, 'banner', 'delete', 1);
+INSERT INTO `role_permissions` VALUES (436, 4, 'banner', 'lock', 1);
+INSERT INTO `role_permissions` VALUES (437, 4, 'banner', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (438, 4, 'blog', 'view_list', 1);
+INSERT INTO `role_permissions` VALUES (439, 4, 'blog', 'view_detail', 1);
+INSERT INTO `role_permissions` VALUES (440, 4, 'blog', 'add', 1);
+INSERT INTO `role_permissions` VALUES (441, 4, 'blog', 'edit', 1);
+INSERT INTO `role_permissions` VALUES (442, 4, 'blog', 'delete', 1);
+INSERT INTO `role_permissions` VALUES (443, 4, 'blog', 'lock', 1);
+INSERT INTO `role_permissions` VALUES (444, 4, 'blog', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (445, 4, 'contact', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (446, 4, 'contact', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (447, 4, 'contact', 'add', 0);
+INSERT INTO `role_permissions` VALUES (448, 4, 'contact', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (449, 4, 'contact', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (450, 4, 'contact', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (451, 4, 'contact', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (452, 4, 'warehouse', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (453, 4, 'warehouse', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (454, 4, 'warehouse', 'add', 0);
+INSERT INTO `role_permissions` VALUES (455, 4, 'warehouse', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (456, 4, 'warehouse', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (457, 4, 'warehouse', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (458, 4, 'warehouse', 'change_pass', 0);
+INSERT INTO `role_permissions` VALUES (459, 4, 'role', 'view_list', 0);
+INSERT INTO `role_permissions` VALUES (460, 4, 'role', 'view_detail', 0);
+INSERT INTO `role_permissions` VALUES (461, 4, 'role', 'add', 0);
+INSERT INTO `role_permissions` VALUES (462, 4, 'role', 'edit', 0);
+INSERT INTO `role_permissions` VALUES (463, 4, 'role', 'delete', 0);
+INSERT INTO `role_permissions` VALUES (464, 4, 'role', 'lock', 0);
+INSERT INTO `role_permissions` VALUES (465, 4, 'role', 'change_pass', 0);
 
 -- ----------------------------
 -- Table structure for roles
 -- ----------------------------
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles`  (
-                          `id` int NOT NULL AUTO_INCREMENT,
-                          `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                          `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
-                          `is_system` tinyint(1) NULL DEFAULT 0 COMMENT '1 = role hệ thống (Admin), không được sửa/xoá',
-                          `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
-                          PRIMARY KEY (`id`) USING BTREE,
-                          UNIQUE INDEX `uq_roles_name`(`name` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `is_system` tinyint(1) NULL DEFAULT 0 COMMENT '1 = role hệ thống (Admin), không được sửa/xoá',
+  `created_at` datetime NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uq_roles_name`(`name` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of roles
 -- ----------------------------
 INSERT INTO `roles` VALUES (1, 'Admin', 'Quản trị viên - Toàn quyền hệ thống', 1, '2026-05-31 14:47:18');
+INSERT INTO `roles` VALUES (2, 'Nhân viên kho', '', 0, '2026-06-16 22:43:46');
+INSERT INTO `roles` VALUES (3, 'Nhân viên chăm sóc khách hàng', '', 0, '2026-06-16 22:44:19');
+INSERT INTO `roles` VALUES (4, 'Nhân viên sale', '', 0, '2026-06-16 22:44:40');
 
 -- ----------------------------
 -- Table structure for sizes
 -- ----------------------------
 DROP TABLE IF EXISTS `sizes`;
 CREATE TABLE `sizes`  (
-                          `id` int NOT NULL AUTO_INCREMENT,
-                          `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `sort_order` int NULL DEFAULT NULL,
-                          PRIMARY KEY (`id`) USING BTREE
+  `id` int NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `sort_order` int NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -2924,10 +4418,10 @@ INSERT INTO `sizes` VALUES (5, 'FreeSize', 5);
 -- ----------------------------
 DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags`  (
-                         `id` int NOT NULL AUTO_INCREMENT,
-                         `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                         PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tags
@@ -2938,13 +4432,13 @@ CREATE TABLE `tags`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `user_search_history`;
 CREATE TABLE `user_search_history`  (
-                                        `id` int NOT NULL AUTO_INCREMENT,
-                                        `user_id` int NOT NULL,
-                                        `keyword` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                                        `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
-                                        PRIMARY KEY (`id`) USING BTREE,
-                                        INDEX `user_id`(`user_id` ASC) USING BTREE,
-                                        CONSTRAINT `user_search_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `keyword` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `user_id`(`user_id` ASC) USING BTREE,
+  CONSTRAINT `user_search_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -2960,34 +4454,34 @@ INSERT INTO `user_search_history` VALUES (26, 1, 'áo', '2026-06-15 11:30:58');
 -- ----------------------------
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`  (
-                          `id` int NOT NULL AUTO_INCREMENT,
-                          `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                          `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `google_sub` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `auth_provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `full_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `birthday` date NULL DEFAULT NULL,
-                          `gender` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `is_active` tinyint NULL DEFAULT NULL,
-                          `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `created_at` datetime NULL DEFAULT NULL,
-                          `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `otp_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-                          `otp_expired_at` datetime NULL DEFAULT NULL,
-                          `role_id` int NULL DEFAULT NULL,
-                          `failed_login_attempts` int NOT NULL DEFAULT 0,
-                          `locked_at` datetime NULL DEFAULT NULL,
-                          PRIMARY KEY (`id`) USING BTREE,
-                          UNIQUE INDEX `username`(`username` ASC) USING BTREE,
-                          UNIQUE INDEX `email`(`email` ASC) USING BTREE,
-                          UNIQUE INDEX `google_sub`(`google_sub` ASC) USING BTREE,
-                          INDEX `fk_users_role`(`role_id` ASC) USING BTREE,
-                          CONSTRAINT `fk_users_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `google_sub` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `auth_provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `full_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `birthday` date NULL DEFAULT NULL,
+  `gender` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `is_active` tinyint NULL DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `otp_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `otp_expired_at` datetime NULL DEFAULT NULL,
+  `role_id` int NULL DEFAULT NULL,
+  `failed_login_attempts` int NOT NULL DEFAULT 0,
+  `locked_at` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `username`(`username` ASC) USING BTREE,
+  UNIQUE INDEX `email`(`email` ASC) USING BTREE,
+  UNIQUE INDEX `google_sub`(`google_sub` ASC) USING BTREE,
+  INDEX `fk_users_role`(`role_id` ASC) USING BTREE,
+  CONSTRAINT `fk_users_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of users
@@ -2995,20 +4489,51 @@ CREATE TABLE `users`  (
 INSERT INTO `users` VALUES (1, 'fb_2034905854124248', NULL, 'ducphat0311@gmail.com', '109760483312715635930', 'GOOGLE', 'ADMIN', 'Nguyễn Phát', 'media/avatar/avatar_user_1_1779627163032.webp', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-24 17:48:38', NULL, NULL, NULL, NULL, 0, NULL);
 INSERT INTO `users` VALUES (2, 'handeptrai', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'nguyenhan.be.dev@gmail.com', NULL, NULL, 'ADMIN', 'Nguyễn Hàn', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780223572/shopquanao/avatars/n6bpfhx8iauwzly7c6b2.png', '2026-04-30', 'male', '', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, NULL);
 INSERT INTO `users` VALUES (3, 'nguyenvananhhan555', '$2a$12$drPLaRU6SBQ.BGIxrcEyOOtLaIEnEbpmf2tWD3YESPy.DrSjwcMMi', 'nguyenvananhhan555@gmail.com', '110404817350622964648', 'GOOGLE', 'ADMIN', 'Hàn Nguyễn Văn Anh', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780479053/shopquanao/avatars/ahyykblipcsvlafyrllv.png', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-31 14:48:29', NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `users` VALUES (4, 'thutran311', '$2a$12$XBcGFw24b266TuTLduzrbOObDqVpVghuJuYj4YnDhMbcrfWrRHSa2', '23130318@st.hcmuaf.edu.vn', NULL, NULL, 'ADMIN', 'Thư Trần', 'https://res.cloudinary.com/do3y0ygcj/image/upload/v1781608872/shopquanao/avatars/czipap8avbdq918wngcw.jpg', '2026-04-30', 'male', '', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `users` VALUES (5, 'tungphan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'tung.phan@gmail.com', '0901111111', NULL, 'ADMIN', 'Phan Thanh Tùng', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (6, 'tuankiet', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'kiet.vo@gmail.com', '0903333333', NULL, 'USER', 'Võ Tuấn Kiệt', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (7, 'caodoan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'doan.truong@gmail.com', '0904444444', NULL, 'USER', 'Trương Cao Đoàn', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (8, 'huuthuc', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'thuc.huynh@gmail.com', '0905555555', NULL, 'USER', 'Huỳnh Hữu Thức', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (9, 'vanquyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quyen.nguyen@gmail.com', '0906666666', NULL, 'USER', 'Nguyễn Văn Quyền', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (10, 'vanan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'an.nguyen@gmail.com', '0911222333', NULL, 'USER', 'Nguyễn Văn An', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (11, 'tranbinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'binh.tran@gmail.com', '0922333444', NULL, 'USER', 'Trần Bình', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (12, 'lecuong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'cuong.le@gmail.com', '0933444555', NULL, 'USER', 'Lê Cường', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (13, 'phamdung', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'dung.pham@gmail.com', '0944555666', NULL, 'USER', 'Phạm Dung', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (14, 'hoangem', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'em.hoang@gmail.com', '0955666777', NULL, 'USER', 'Hoàng Em', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (15, 'dohung', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'hung.do@gmail.com', '0966777888', NULL, 'USER', 'Đỗ Hùng', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (16, 'vugiang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'giang.vu@gmail.com', '0977888999', NULL, 'USER', 'Vũ Giang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (17, 'danghoa', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'hoa.dang@gmail.com', '0988999000', NULL, 'USER', 'Đặng Hoa', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (18, 'buikhang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'khang.bui@gmail.com', '0999000111', NULL, 'USER', 'Bùi Khang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (19, 'truonglinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'linh.truong@gmail.com', '0800111222', NULL, 'USER', 'Trương Linh', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (20, 'ngominh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'minh.ngo@gmail.com', '0811222333', NULL, 'USER', 'Ngô Minh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (21, 'duongnam', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'nam.duong@gmail.com', '0822333444', NULL, 'USER', 'Dương Nam', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (22, 'lyoanh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'oanh.ly@gmail.com', '0833444555', NULL, 'USER', 'Lý Oanh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (23, 'chauphong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'phong.chau@gmail.com', '0844555666', NULL, 'USER', 'Châu Phong', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (24, 'hoquan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quan.ho@gmail.com', '0855666777', NULL, 'USER', 'Hồ Quân', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (25, 'thaisuong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'suong.thai@gmail.com', '0866777888', NULL, 'USER', 'Thái Sương', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (26, 'dinhtrang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'trang.dinh@gmail.com', '0877888999', NULL, 'USER', 'Đinh Trang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (27, 'maiuyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'uyen.mai@gmail.com', '0888999000', NULL, 'USER', 'Mai Uyên', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (28, 'caovinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'vinh.cao@gmail.com', '0899000111', NULL, 'USER', 'Cao Vinh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (29, 'phanxuan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'xuan.phan@gmail.com', '0700111222', NULL, 'USER', 'Phan Xuân', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (30, 'daoyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'yen.dao@gmail.com', '0711222333', NULL, 'USER', 'Đào Yến', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (31, 'kieucanh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'canh.kieu@gmail.com', '0722333444', NULL, 'USER', 'Kiều Cảnh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (32, 'luongphu', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'phu.luong@gmail.com', '0733444555', NULL, 'USER', 'Lương Phú', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (33, 'kimquy', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quy.kim@gmail.com', '0744555666', NULL, 'USER', 'Kim Quý', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (34, 'tontoan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'toan.ton@gmail.com', '0755666777', NULL, 'USER', 'Tôn Toàn', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
 
 -- ----------------------------
 -- Table structure for wishlists
 -- ----------------------------
 DROP TABLE IF EXISTS `wishlists`;
 CREATE TABLE `wishlists`  (
-                              `id` int NOT NULL AUTO_INCREMENT,
-                              `user_id` int NULL DEFAULT NULL,
-                              `product_id` int NULL DEFAULT NULL,
-                              PRIMARY KEY (`id`) USING BTREE,
-                              INDEX `user_id`(`user_id` ASC) USING BTREE,
-                              INDEX `product_id`(`product_id` ASC) USING BTREE,
-                              CONSTRAINT `wishlists_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-                              CONSTRAINT `wishlists_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NULL DEFAULT NULL,
+  `product_id` int NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `user_id`(`user_id` ASC) USING BTREE,
+  INDEX `product_id`(`product_id` ASC) USING BTREE,
+  CONSTRAINT `wishlists_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `wishlists_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -3022,5 +4547,231 @@ INSERT INTO `wishlists` VALUES (27, 1, 30);
 INSERT INTO `wishlists` VALUES (31, 1, 86);
 INSERT INTO `wishlists` VALUES (32, 2, 84);
 INSERT INTO `wishlists` VALUES (35, 1, 137);
+
+-- ----------------------------
+-- Procedure structure for sp_generate_canceled_orders
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_generate_canceled_orders`;
+delimiter ;;
+CREATE PROCEDURE `sp_generate_canceled_orders`()
+BEGIN
+    DECLARE v_i INT DEFAULT 1;
+    DECLARE v_order_id INT;
+    DECLARE v_user_id INT;
+    DECLARE v_order_date DATETIME;
+    DECLARE v_receipt_id INT;
+    DECLARE v_variant_id INT;
+    DECLARE v_product_id INT;
+    DECLARE v_price DECIMAL(10,2);
+    DECLARE v_quantity INT;
+    
+    WHILE v_i <= 10 DO
+        -- Random user và 1 sản phẩm
+        SET v_user_id = FLOOR(2 + RAND() * 28);
+        SELECT id, product_id, CASE WHEN sale_price > 0 THEN sale_price ELSE price END 
+        INTO v_variant_id, v_product_id, v_price
+        FROM product_variants WHERE price > 0 ORDER BY RAND() LIMIT 1;
+        
+        SET v_quantity = FLOOR(1 + RAND() * 3);
+        
+        -- Random ngày hủy nằm rải rác
+        SET v_order_date = DATE_ADD('2026-03-01 08:30:00', INTERVAL FLOOR(RAND() * 90) DAY);
+        
+        -- 1. Tạo đơn hàng với trạng thái bị hủy (CANCELLED)
+        INSERT INTO `orders` (`user_id`, `name`, `phone`, `shipping_address`, `total_price`, `discount`, `shipping_fee`, `final_amount`, `payment_methods`, `payment_statuses`, `order_status`, `created_at`)
+        VALUES (v_user_id, CONCAT('Khách hàng tự động ', v_user_id), '0901234567', 'Hồ Chí Minh', (v_price * v_quantity), 0, 30000, (v_price * v_quantity) + 30000, 'COD', 'UNPAID', 'CANCELLED', v_order_date);
+        
+        SET v_order_id = LAST_INSERT_ID();
+        
+        -- 2. Tạo chi tiết đơn hàng
+        INSERT INTO `order_items` (`order_id`, `variant_id`, `product_id`, `quantity`, `price`, `total`)
+        VALUES (v_order_id, v_variant_id, v_product_id, v_quantity, v_price, (v_price * v_quantity));
+        
+        -- 3. Tạo phiếu HOÀN KHO DO HỦY ĐƠN (type = RETURN)
+        INSERT INTO `inventory_receipts` (`user_id`, `type`, `note`, `total_amount`, `created_at`, `status`, `order_id`)
+        VALUES (1, 'RETURN', CONCAT('Hoàn kho do huỷ đơn hàng #', v_order_id), ROUND(v_price * v_quantity * 0.70, 0), DATE_ADD(v_order_date, INTERVAL 1 DAY), 'COMPLETED', v_order_id);
+        
+        SET v_receipt_id = LAST_INSERT_ID();
+        
+        -- 4. Tạo chi tiết phiếu hoàn kho (cộng lại tồn kho)
+        INSERT INTO `inventory_receipt_details` (`receipt_id`, `product_variant_id`, `quantity`, `price`, `cost_price`, `remaining_quantity`)
+        VALUES (v_receipt_id, v_variant_id, v_quantity, v_price, ROUND(v_price * 0.70, 0), v_quantity);
+        
+        -- 5. Cập nhật trả lại số lượng tồn vào kho
+        UPDATE `product_variants` SET stock = stock + v_quantity WHERE id = v_variant_id;
+        
+        SET v_i = v_i + 1;
+    END WHILE;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_generate_fake_orders
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_generate_fake_orders`;
+delimiter ;;
+CREATE PROCEDURE `sp_generate_fake_orders`()
+BEGIN
+    DECLARE v_i INT DEFAULT 1;
+    DECLARE v_rand_days INT;
+    DECLARE v_order_date DATETIME;
+    DECLARE v_user_id INT;
+    DECLARE v_variant_id INT;
+    DECLARE v_product_id INT;
+    DECLARE v_price DECIMAL(15,2);
+    DECLARE v_quantity INT;
+    DECLARE v_order_id INT;
+    DECLARE v_receipt_id INT;
+
+    WHILE v_i <= 60 DO
+        SET v_rand_days = FLOOR(RAND() * 165);
+        SET v_order_date = DATE_ADD('2026-01-01 08:30:00', INTERVAL v_rand_days DAY);
+        
+        SET v_user_id = FLOOR(2 + RAND() * 28);
+        
+        SELECT id, product_id, CASE WHEN sale_price > 0 THEN sale_price ELSE price END 
+        INTO v_variant_id, v_product_id, v_price
+        FROM product_variants 
+        WHERE price > 0
+        ORDER BY RAND() LIMIT 1;
+        
+        SET v_quantity = FLOOR(1 + RAND() * 3);
+        
+        INSERT INTO `orders` (`user_id`, `name`, `phone`, `shipping_address`, `total_price`, `discount`, `shipping_fee`, `final_amount`, `payment_methods`, `payment_statuses`, `order_status`, `created_at`)
+        VALUES (v_user_id, CONCAT('Khách hàng tự động ', v_user_id), '0901234567', 'Hồ Chí Minh', (v_price * v_quantity), 0, 30000, (v_price * v_quantity) + 30000, 'COD', 'PAID', 'COMPLETED', v_order_date);
+        
+        SET v_order_id = LAST_INSERT_ID();
+        
+        INSERT INTO `order_items` (`order_id`, `variant_id`, `product_id`, `quantity`, `price`, `total`)
+        VALUES (v_order_id, v_variant_id, v_product_id, v_quantity, v_price, (v_price * v_quantity));
+        
+        -- Tính tổng tiền xuất kho dựa trên giá vốn 70% (Nhân với 0.70)
+        INSERT INTO `inventory_receipts` (`user_id`, `type`, `note`, `total_amount`, `created_at`, `status`, `order_id`)
+        VALUES (1, 'EXPORT', CONCAT('Xuất kho tự động cho đơn #', v_order_id), ROUND(v_price * v_quantity * 0.70, 0), v_order_date, 'COMPLETED', v_order_id);
+        
+        SET v_receipt_id = LAST_INSERT_ID();
+        
+        -- Lưu giá vốn của từng sản phẩm là 70% giá bán
+        INSERT INTO `inventory_receipt_details` (`receipt_id`, `product_variant_id`, `quantity`, `price`, `cost_price`, `remaining_quantity`)
+        VALUES (v_receipt_id, v_variant_id, v_quantity, v_price, ROUND(v_price * 0.70, 0), 0);
+        
+        SET v_i = v_i + 1;
+    END WHILE;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_generate_fake_returns
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_generate_fake_returns`;
+delimiter ;;
+CREATE PROCEDURE `sp_generate_fake_returns`()
+BEGIN
+    DECLARE v_i INT DEFAULT 1;
+    DECLARE v_order_id INT;
+    DECLARE v_user_id INT;
+    DECLARE v_order_date DATETIME;
+    DECLARE v_reason VARCHAR(50);
+    DECLARE v_request_source VARCHAR(30);
+    DECLARE v_return_id INT;
+    DECLARE v_receipt_id INT;
+    DECLARE v_total_amount DECIMAL(15,2);
+    
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE v_variant_id INT;
+    DECLARE v_quantity INT;
+    DECLARE v_price DECIMAL(10,2);
+
+    -- Lấy 15 đơn hàng đã giao thành công để giả lập hoàn hàng
+    DECLARE order_cursor CURSOR FOR 
+        SELECT id, user_id, created_at, final_amount
+        FROM orders 
+        WHERE order_status = 'COMPLETED' 
+        ORDER BY RAND() LIMIT 15;
+        
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN order_cursor;
+
+    read_loop: LOOP
+        FETCH order_cursor INTO v_order_id, v_user_id, v_order_date, v_total_amount;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- 1. Giả lập lý do hoàn hàng và nguồn yêu cầu
+        -- Tỉ lệ 30% do giao thất bại (hủy đơn khi giao), 70% do khách trả lại
+        IF RAND() < 0.3 THEN
+            SET v_request_source = 'DELIVERY_FAILED';
+            SET v_reason = 'DELIVERY_FAILED';
+        ELSE
+            SET v_request_source = 'CUSTOMER';
+            -- Random lý do khách trả (Hàng lỗi, sai màu/size, không hợp)
+            SET v_reason = ELT(FLOOR(1 + RAND() * 3), 'DEFECTIVE_PRODUCT', 'WRONG_SIZE_OR_COLOR', 'NOT_SUITABLE');
+        END IF;
+
+        -- Ngày xử lý hoàn hàng (sau khi giao 2-5 ngày)
+        SET v_order_date = DATE_ADD(v_order_date, INTERVAL FLOOR(2 + RAND() * 4) DAY);
+
+        -- 2. TẠO YÊU CẦU HOÀN HÀNG VÀO BẢNG order_returns
+        INSERT INTO `order_returns` (
+            `order_id`, `user_id`, `request_source`, `reason_code`, `description`, 
+            `return_status`, `refund_status`, `requested_at`, `processed_at`, 
+            `returned_at`, `refunded_at`, `stock_restored`
+        ) VALUES (
+            v_order_id, v_user_id, v_request_source, v_reason, 
+            CONCAT('Lý do hoàn hàng tự động: ', v_reason), 
+            'RETURNED', -- Trạng thái đã nhận lại hàng
+            'REFUNDED', -- Đã hoàn tiền
+            v_order_date, DATE_ADD(v_order_date, INTERVAL 1 DAY), 
+            DATE_ADD(v_order_date, INTERVAL 2 DAY), DATE_ADD(v_order_date, INTERVAL 2 DAY), 1
+        );
+        
+        SET v_return_id = LAST_INSERT_ID();
+
+        -- 3. TẠO PHIẾU NHẬP LẠI KHO (RETURN_RESTOCK) CHO ĐƠN HOÀN
+        INSERT INTO `inventory_receipts` (`user_id`, `type`, `note`, `total_amount`, `created_at`, `status`, `order_id`)
+        VALUES (1, 'RETURN_RESTOCK', CONCAT('Nhập kho do hoàn trả đơn hàng #', v_order_id), v_total_amount, DATE_ADD(v_order_date, INTERVAL 2 DAY), 'COMPLETED', v_order_id);
+        
+        SET v_receipt_id = LAST_INSERT_ID();
+
+        -- 4. TRẢ LẠI SỐ LƯỢNG VÀO BẢNG CHI TIẾT PHIẾU NHẬP
+        -- Dùng Block (BEGIN...END) để chạy cursor con quét qua từng món đồ trong đơn hàng bị hoàn
+        BEGIN
+            DECLARE v_item_variant INT;
+            DECLARE v_item_qty INT;
+            DECLARE v_item_price DECIMAL(10,2);
+            DECLARE done_items INT DEFAULT FALSE;
+            
+            DECLARE item_cursor CURSOR FOR 
+                SELECT variant_id, quantity, price FROM order_items WHERE order_id = v_order_id;
+            DECLARE CONTINUE HANDLER FOR NOT FOUND SET done_items = TRUE;
+            
+            OPEN item_cursor;
+            item_loop: LOOP
+                FETCH item_cursor INTO v_item_variant, v_item_qty, v_item_price;
+                IF done_items THEN
+                    LEAVE item_loop;
+                END IF;
+                
+                -- Ghi vào chi tiết phiếu nhập (cost_price lúc này tính lại theo 70% giá bán để khớp hệ thống)
+                INSERT INTO `inventory_receipt_details` (`receipt_id`, `product_variant_id`, `quantity`, `price`, `cost_price`, `remaining_quantity`)
+                VALUES (v_receipt_id, v_item_variant, v_item_qty, v_item_price, ROUND(v_item_price * 0.70, 0), v_item_qty);
+                
+                -- Khôi phục số lượng tồn kho trong bảng product_variants
+                UPDATE `product_variants` SET stock = stock + v_item_qty WHERE id = v_item_variant;
+                
+            END LOOP item_loop;
+            CLOSE item_cursor;
+        END;
+
+    END LOOP read_loop;
+
+    CLOSE order_cursor;
+END
+;;
+delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;
