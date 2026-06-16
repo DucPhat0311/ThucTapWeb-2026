@@ -139,9 +139,34 @@
                         <div class="stat-table-card stat-table-card--hot">
                             <div class="stat-table-header">
                                 <h3><i class="fa-solid fa-fire"></i> Thống kê sản phẩm bán chạy</h3>
+                                <form class="inline-filter-form" method="GET" action="${pageContext.request.contextPath}/dashboardAdmin">
+                                    <div class="inline-filter-group">
+                                        <label>Tháng</label>
+                                        <select name="hotMonth">
+                                            <option value="" ${empty hotMonth ? 'selected' : ''}>Tất cả</option>
+                                            <c:forEach var="m" begin="1" end="12">
+                                                <option value="${m}" ${hotMonth==m ? 'selected' : ''}>${m}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <div class="inline-filter-group">
+                                        <label>Từ</label>
+                                        <input type="date" name="hotStartDate" value="${hotStartDate}">
+                                    </div>
+                                    <div class="inline-filter-group">
+                                        <label>Đến</label>
+                                        <input type="date" name="hotEndDate" value="${hotEndDate}">
+                                    </div>
+                                    <input type="hidden" name="coldMonth" value="${coldMonth}">
+                                    <input type="hidden" name="coldStartDate" value="${coldStartDate}">
+                                    <input type="hidden" name="coldEndDate" value="${coldEndDate}">
+                                    <button type="submit" class="btn-inline-filter">Lọc</button>
+                                    <a href="${pageContext.request.contextPath}/dashboardAdmin?coldMonth=${coldMonth}&coldStartDate=${coldStartDate}&coldEndDate=${coldEndDate}" class="btn-inline-reset">Đặt lại</a>
+                                </form>
                             </div>
                             <div class="stat-search-bar">
                                 <input type="text" id="hotSearchInput"
+                                       onkeyup="filterTable('hotTable','hotSearchInput')"
                                        placeholder="Tìm kiếm sản phẩm...">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
@@ -186,12 +211,36 @@
 
                             <%-- bảng sp ko baán đc --%>
                             <div class="stat-table-card stat-table-card--cold">
-                                <div class="stat-table-header">
+                                <div class="stat-table-header"  >
                                     <h3><i class="fa-solid fa-box-open"></i> Thống kê sản phẩm không bán được</h3>
+                                    <form class="inline-filter-form" method="GET" action="${pageContext.request.contextPath}/dashboardAdmin">
+                                        <input type="hidden" name="hotMonth" value="${hotMonth}">
+                                        <input type="hidden" name="hotStartDate" value="${hotStartDate}">
+                                        <input type="hidden" name="hotEndDate" value="${hotEndDate}">
+                                        <div class="inline-filter-group">
+                                            <label>Tháng</label>
+                                            <select name="coldMonth">
+                                                <option value="" ${empty coldMonth ? 'selected' : ''}>Tất cả</option>
+                                                <c:forEach var="m" begin="1" end="12">
+                                                    <option value="${m}" ${coldMonth==m ? 'selected' : ''}>${m}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <div class="inline-filter-group">
+                                            <label>Từ</label>
+                                            <input type="date" name="coldStartDate" value="${coldStartDate}">
+                                        </div>
+                                        <div class="inline-filter-group">
+                                            <label>Đến</label>
+                                            <input type="date" name="coldEndDate" value="${coldEndDate}">
+                                        </div>
+                                        <button type="submit" class="btn-inline-filter">Lọc</button>
+                                        <a href="${pageContext.request.contextPath}/dashboardAdmin?hotMonth=${hotMonth}&hotStartDate=${hotStartDate}&hotEndDate=${hotEndDate}" class="btn-inline-reset">Đặt lại</a>
+                                    </form>
                                 </div>
                                 <div class="stat-search-bar">
                                     <input type="text" id="coldSearchInput"
-
+                                           onkeyup="filterTable('coldTable','coldSearchInput')"
                                            placeholder="Tìm kiếm sản phẩm...">
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                 </div>
@@ -326,8 +375,30 @@
         myChart.data.datasets[0].data = isRevenue ? revData : profData;
         myChart.data.datasets[0].backgroundColor = isRevenue ? revGradient : profGradient;
         myChart.data.datasets[0].hoverBackgroundColor = isRevenue ? '#8F6641' : '#16a34a';
-        myChart.update();}
-</script>
+        myChart.update();
+    }
+                        document.getElementById('statMonthSelect').addEventListener('change', function () {
+                            if (this.value) {
+                                document.getElementById('statStartDate').value = '';
+                                document.getElementById('statEndDate').value = '';
+                            }
+                        });
+                        document.getElementById('statStartDate').addEventListener('change', function () {
+                            if (this.value) document.getElementById('statMonthSelect').value = '';
+                        });
+                        document.getElementById('statEndDate').addEventListener('change', function () {
+                            if (this.value) document.getElementById('statMonthSelect').value = '';
+                        });
+
+                        function filterTable(tableId, inputId) {
+                            const filter = document.getElementById(inputId).value.toLowerCase();
+                            const rows = document.getElementById(tableId).getElementsByTagName('tr');
+                            for (let i = 1; i < rows.length; i++) {
+                                const text = rows[i].textContent || rows[i].innerText;
+                                rows[i].style.display = text.toLowerCase().includes(filter) ? '' : 'none';
+                            }
+                        }
+                    </script>
 </body>
 
 </html>

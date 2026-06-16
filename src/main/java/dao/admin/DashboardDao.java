@@ -422,7 +422,7 @@ public class DashboardDao extends BaseDao {
 
         String sql = """
                 SELECT p.id AS productId,
-                       CONCAT('SP', p.id) AS productCode,
+                       CONCAT('AUR-', p.id) AS productCode,
                        p.name AS productName,
                        c.name AS categoryName,
                        p.price AS price,
