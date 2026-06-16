@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.OrderReturn;
+import model.User;
 import model.constant.OrderReturnStatus;
 import model.constant.PaymentMethod;
 import model.constant.PaymentStatus;
@@ -44,7 +45,7 @@ public class OrderReturnAdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!isAdminLoggedIn(request)) {
+        if (getLoggedInAdmin(request) == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -60,7 +61,8 @@ public class OrderReturnAdminController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        if (!isAdminLoggedIn(request)) {
+        User adminUser = getLoggedInAdmin(request);
+        if (adminUser == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -79,8 +81,7 @@ public class OrderReturnAdminController extends HttpServlet {
         boolean updated;
         String result;
 
-        model.User adminUser = (model.User) request.getSession(false).getAttribute("admin");
-        int adminUserId = (adminUser != null) ? adminUser.getId() : 1;
+        int adminUserId = adminUser.getId();
 
         if ("approve".equals(action)) {
             updated = orderReturnDao.approve(id, adminNote);
@@ -187,9 +188,17 @@ public class OrderReturnAdminController extends HttpServlet {
         return requests.stream().filter(item -> status.equals(item.getReturnStatus())).count();
     }
 
-    private boolean isAdminLoggedIn(HttpServletRequest request) {
-        return request.getSession(false) != null
-                && request.getSession(false).getAttribute("admin") != null;
+    private User getLoggedInAdmin(HttpServletRequest request) {
+        if (request.getSession(false) == null) {
+            return null;
+        }
+
+        Object currentUser = request.getSession(false).getAttribute("userlogin");
+        if (!(currentUser instanceof User user)) {
+            return null;
+        }
+
+        return "admin".equalsIgnoreCase(user.getRole()) ? user : null;
     }
 
     private int parsePositiveInt(String value, int fallback) {
