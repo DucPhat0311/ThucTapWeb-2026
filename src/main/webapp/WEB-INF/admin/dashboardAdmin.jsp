@@ -101,23 +101,28 @@
                                         <%-- Biểu đồ --%>
                                         <div class="chart-card" id="revenueChartSection">
                                             <div class="chart-card-header">
-                                                <c:choose>
-                                                    <c:when test="${filterType == 'range'}">
-                                                        <h2 id="chartTitle">Doanh thu từ ${startDate} đến ${endDate}
-                                                        </h2>
-                                                        <span class="year-badge">Lọc khoảng ngày</span>
-                                                    </c:when>
-                                                    <c:when test="${filterType == 'month'}">
-                                                        <h2 id="chartTitle">Doanh thu theo ngày (Tháng
-                                                                ${selectedMonth}/${selectedYear})</h2>
-                                                        <span class="year-badge">Tháng
-                                                                                        ${selectedMonth}/${selectedYear}</span>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <h2 id="chartTitle">Doanh thu theo tháng</h2>
-                                                        <span class="year-badge">Năm ${selectedYear}</span>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <div class="chart-title-left" style="display: flex; align-items: center; gap: 12px;">
+                                                    <c:choose>
+                                                        <c:when test="${filterType == 'range'}">
+                                                            <h2 id="chartTitle">Doanh thu từ ${startDate} đến ${endDate}
+                                                            </h2>
+                                                            <span class="year-badge">Lọc khoảng ngày</span>
+                                                        </c:when>
+                                                        <c:when test="${filterType == 'month'}">
+                                                            <h2 id="chartTitle">Doanh thu theo ngày (Tháng
+                                                                    ${selectedMonth}/${selectedYear})</h2>
+                                                            <span class="year-badge">Tháng
+                                                                                            ${selectedMonth}/${selectedYear}</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <h2 id="chartTitle">Doanh thu theo tháng</h2>
+                                                            <span class="year-badge">Năm ${selectedYear}</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                                <div class="chart-total-right" style="font-size: 1.05rem; font-weight: 600; color: #4a3728; background: #fdf5ef; padding: 6px 14px; border-radius: 8px; border: 1px solid #e8d5c0; display: flex; align-items: center; gap: 8px;">
+                                                    Tổng cộng: <span id="chartTotalValue" style="color: #A37952; font-size: 1.15rem;">0</span>
+                                                </div>
                                             </div>
                                             <div class="chart-tabs">
                                                 <button class="chart-tab active" id="tabRevenue" onclick="switchTab('revenue')">
@@ -453,7 +458,21 @@
         }
 
         myChart.update();
+
+        let totalValue = dataArr.reduce((a, b) => a + b, 0);
+        let totalStr = '';
+        if (tab === 'orders') {
+            totalStr = new Intl.NumberFormat('vi-VN').format(totalValue);
+        } else {
+            totalStr = fmtVND(totalValue);
+        }
+        const totalEl = document.getElementById('chartTotalValue');
+        if (totalEl) totalEl.textContent = totalStr;
     }
+
+    // Khởi tạo tổng cho tab doanh thu mặc định
+    switchTab('revenue');
+
                         document.getElementById('statMonthSelect').addEventListener('change', function () {
                             if (this.value) {
                                 document.getElementById('statStartDate').value = '';
