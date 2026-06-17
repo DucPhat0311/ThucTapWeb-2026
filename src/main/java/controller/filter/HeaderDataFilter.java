@@ -6,8 +6,10 @@ import model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @WebFilter("/*")
 public class HeaderDataFilter implements Filter {
@@ -23,6 +25,26 @@ public class HeaderDataFilter implements Filter {
 
         if (session != null && session.getAttribute("userlogin") != null) {
             User userLog = (User) session.getAttribute("userlogin");
+
+            dao.user.UserDao userDao = new dao.user.UserDao();
+            User authInfo = userDao.getAuthInfo(userLog.getId());
+            
+            if (authInfo == null || "BLOCKED".equalsIgnoreCase(authInfo.getStatus()) || "LOCKED_BY_SYSTEM".equalsIgnoreCase(authInfo.getStatus())) {
+                session.invalidate();
+                HttpServletResponse resp = (HttpServletResponse) response;
+                resp.sendRedirect(req.getContextPath() + "/login?error=account_locked");
+                return;
+            }
+
+            LocalDateTime loginTime = (LocalDateTime) session.getAttribute("loginTime");
+            if (loginTime != null && authInfo.getTokenUpdatedAt() != null) {
+                if (authInfo.getTokenUpdatedAt().isAfter(loginTime)) {
+                    session.invalidate();
+                    HttpServletResponse resp = (HttpServletResponse) response;
+                    resp.sendRedirect(req.getContextPath() + "/login?error=session_expired");
+                    return;
+                }
+            }
 
             if (req.getAttribute("notes") == null) {
                 req.setAttribute("notes", notificationDao.findLatestForUser(userLog.getId()));

@@ -25,6 +25,7 @@ public class User {
     private Integer roleId;
     private int failedLoginAttempts;
     private LocalDateTime lockedAt;
+    private LocalDateTime tokenUpdatedAt;
 
     public User(int id, String username, String email, String password, String role, int isActive, LocalDateTime createdAt, String otpCode, String fullName, LocalDate birthday, String gender, String phone, String address, String status) {
         this.id = id;
@@ -234,6 +235,14 @@ public class User {
 
     public void setLockedAt(LocalDateTime lockedAt) {
         this.lockedAt = lockedAt;
+    }
+
+    public LocalDateTime getTokenUpdatedAt() {
+        return tokenUpdatedAt;
+    }
+
+    public void setTokenUpdatedAt(LocalDateTime tokenUpdatedAt) {
+        this.tokenUpdatedAt = tokenUpdatedAt;
     }
 
     @Override

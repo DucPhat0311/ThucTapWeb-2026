@@ -297,8 +297,16 @@ public class UserDao extends BaseDao {
 
     public void lockAccount(int userId) {
         getJdbi().useHandle(
-                h -> h.createUpdate("UPDATE users SET status = 'LOCKED_BY_SYSTEM', locked_at = NOW() WHERE id = :id")
+                h -> h.createUpdate("UPDATE users SET status = 'LOCKED_BY_SYSTEM', locked_at = NOW(), token_updated_at = NOW() WHERE id = :id")
                         .bind("id", userId)
                         .execute());
+    }
+
+    public User getAuthInfo(int userId) {
+        return getJdbi().withHandle(handle -> handle.createQuery("SELECT id, status, token_updated_at FROM users WHERE id = :id")
+                .bind("id", userId)
+                .mapToBean(User.class)
+                .findFirst()
+                .orElse(null));
     }
 }

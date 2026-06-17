@@ -76,7 +76,8 @@ public class UserDaoAdmin extends BaseDao {
                     birthday = :birthday,
                     gender = :gender,
                     address = :address,
-                    role_id = :roleId
+                    role_id = :roleId,
+                    token_updated_at = NOW()
                 WHERE id = :id
             """)
                         .bindBean(user)
@@ -88,7 +89,8 @@ public class UserDaoAdmin extends BaseDao {
         getJdbi().withHandle(handle ->
                 handle.createUpdate("""
                 UPDATE users
-                SET status = :status
+                SET status = :status,
+                    token_updated_at = NOW()
                 WHERE id = :id
             """)
                         .bind("status", status)

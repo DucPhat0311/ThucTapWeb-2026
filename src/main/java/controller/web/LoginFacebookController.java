@@ -92,6 +92,7 @@ public class LoginFacebookController extends HttpServlet {
 
         // luuw user vao session
         session.setAttribute("userlogin", userSystem);
+        session.setAttribute("loginTime", LocalDateTime.now());
 
         // debug
         System.out.println("Đăng nhập thành công! User ID hệ thống: " + userSystem.getId());

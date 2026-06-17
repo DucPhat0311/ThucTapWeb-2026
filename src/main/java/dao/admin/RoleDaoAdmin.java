@@ -48,6 +48,13 @@ public class RoleDaoAdmin extends BaseDao {
                 """)
                 .bindBean(role)
                 .execute());
+        updateTokenForUsersByRole(role.getId());
+    }
+
+    public void updateTokenForUsersByRole(int roleId) {
+        getJdbi().withHandle(handle -> handle.createUpdate("UPDATE users SET token_updated_at = NOW() WHERE role_id = :roleId")
+                .bind("roleId", roleId)
+                .execute());
     }
 
     public void deleteRole(int id) {
@@ -99,6 +106,9 @@ public class RoleDaoAdmin extends BaseDao {
                         .bind("allowed", perm.getAllowed())
                         .execute();
             }
+            handle.createUpdate("UPDATE users SET token_updated_at = NOW() WHERE role_id = :roleId")
+                    .bind("roleId", roleId)
+                    .execute();
         });
     }
 
@@ -117,7 +127,7 @@ public class RoleDaoAdmin extends BaseDao {
 
     public void resetUsersRole(int roleId) {
         getJdbi().withHandle(handle ->
-                handle.createUpdate("UPDATE users SET role = 'USER', role_id = NULL WHERE role_id = :roleId")
+                handle.createUpdate("UPDATE users SET role = 'USER', role_id = NULL, token_updated_at = NOW() WHERE role_id = :roleId")
                         .bind("roleId", roleId)
                         .execute()
         );
