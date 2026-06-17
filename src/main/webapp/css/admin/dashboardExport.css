@@ -2,11 +2,17 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-right: 12px;
+}
+
+.stat-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .btn-export-excel {
-    height: 38px;
+    height: 28px;
     padding: 0 18px;
     border: 1px solid #1f7a3b;
     border-radius: 8px;
