@@ -1,0 +1,39 @@
+.dashboard-export-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 12px;
+}
+
+.btn-export-excel {
+    height: 38px;
+    padding: 0 18px;
+    border: 1px solid #1f7a3b;
+    border-radius: 8px;
+    background:  #2ecc71;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(36, 167, 90, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-export-excel i {
+    font-size: 15px;
+}
+
+.btn-export-excel:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow: 0 6px 14px rgba(36, 167, 90, 0.3);
+}
+
+.btn-export-excel:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(36, 167, 90, 0.2);
+}
