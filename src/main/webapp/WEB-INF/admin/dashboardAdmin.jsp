@@ -23,22 +23,6 @@
                             <section class="content">
                                 <header class="topbar">
                                     <h1 id="pageTitle">Thống Kê</h1>
-                                    <form method="GET" action="${pageContext.request.contextPath}/dashboardAdmin" class="dashboard-export-form">
-                                        <input type="hidden" name="action" value="exportExcel">
-                                        <input type="hidden" name="year" value="${param.year}">
-                                        <input type="hidden" name="month" value="${param.month}">
-                                        <input type="hidden" name="startDate" value="${param.startDate}">
-                                        <input type="hidden" name="endDate" value="${param.endDate}">
-                                        <input type="hidden" name="hotMonth" value="${param.hotMonth}">
-                                        <input type="hidden" name="hotStartDate" value="${param.hotStartDate}">
-                                        <input type="hidden" name="hotEndDate" value="${param.hotEndDate}">
-                                        <input type="hidden" name="coldMonth" value="${param.coldMonth}">
-                                        <input type="hidden" name="coldStartDate" value="${param.coldStartDate}">
-                                        <input type="hidden" name="coldEndDate" value="${param.coldEndDate}">
-                                        <button type="submit" class="btn-export-excel">
-                                            <i class="fa-solid fa-file-excel"></i> Export Excel
-                                        </button>
-                                    </form>
                                     <div class="actions">
                                         <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
                                     </div>
@@ -156,6 +140,7 @@
                             <div class="stat-table-card stat-table-card--hot">
                                 <div class="stat-table-header">
                                     <h3><i class="fa-solid fa-fire"></i> Thống kê sản phẩm bán chạy</h3>
+                                    <div class="stat-header-actions">
                                     <form class="inline-filter-form" method="GET" action="${pageContext.request.contextPath}/dashboardAdmin">
                                         <div class="inline-filter-group">
                                             <label>Tháng</label>
@@ -180,6 +165,21 @@
                                         <button type="submit" class="btn-inline-filter">Lọc</button>
                                         <a href="${pageContext.request.contextPath}/dashboardAdmin?coldMonth=${coldMonth}&coldStartDate=${coldStartDate}&coldEndDate=${coldEndDate}" class="btn-inline-reset">Đặt lại</a>
                                     </form>
+                                        <form method="GET" action="${pageContext.request.contextPath}/dashboardAdmin" class="dashboard-export-form">
+                                            <input type="hidden" name="action" value="exportExcel">
+                                            <input type="hidden" name="exportTarget" value="sold">
+                                            <input type="hidden" name="year" value="${selectedYear}">
+                                            <input type="hidden" name="month" value="${param.month}">
+                                            <input type="hidden" name="startDate" value="${startDate}">
+                                            <input type="hidden" name="endDate" value="${endDate}">
+                                            <input type="hidden" name="hotMonth" value="${hotMonth}">
+                                            <input type="hidden" name="hotStartDate" value="${hotStartDate}">
+                                            <input type="hidden" name="hotEndDate" value="${hotEndDate}">
+                                            <button type="submit" class="btn-export-excel">
+                                                <i class="fa-solid fa-file-excel"></i> Excel
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                                 <div class="stat-search-bar">
                                     <input type="text" id="hotSearchInput"
@@ -228,6 +228,7 @@
                             <div class="stat-table-card stat-table-card--cold">
                                 <div class="stat-table-header">
                                     <h3><i class="fa-solid fa-box-open"></i> Thống kê sản phẩm không bán được</h3>
+                                    <div class="stat-header-actions">
                                     <form class="inline-filter-form" method="GET" action="${pageContext.request.contextPath}/dashboardAdmin">
                                         <input type="hidden" name="hotMonth" value="${hotMonth}">
                                         <input type="hidden" name="hotStartDate" value="${hotStartDate}">
@@ -252,6 +253,21 @@
                                         <button type="submit" class="btn-inline-filter">Lọc</button>
                                         <a href="${pageContext.request.contextPath}/dashboardAdmin?hotMonth=${hotMonth}&hotStartDate=${hotStartDate}&hotEndDate=${hotEndDate}" class="btn-inline-reset">Đặt lại</a>
                                     </form>
+                                        <form method="GET" action="${pageContext.request.contextPath}/dashboardAdmin" class="dashboard-export-form">
+                                            <input type="hidden" name="action" value="exportExcel">
+                                            <input type="hidden" name="exportTarget" value="unsold">
+                                            <input type="hidden" name="year" value="${selectedYear}">
+                                            <input type="hidden" name="month" value="${param.month}">
+                                            <input type="hidden" name="startDate" value="${startDate}">
+                                            <input type="hidden" name="endDate" value="${endDate}">
+                                            <input type="hidden" name="coldMonth" value="${coldMonth}">
+                                            <input type="hidden" name="coldStartDate" value="${coldStartDate}">
+                                            <input type="hidden" name="coldEndDate" value="${coldEndDate}">
+                                            <button type="submit" class="btn-export-excel">
+                                                <i class="fa-solid fa-file-excel"></i> Excel
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                                 <div class="stat-search-bar">
                                     <input type="text" id="coldSearchInput"

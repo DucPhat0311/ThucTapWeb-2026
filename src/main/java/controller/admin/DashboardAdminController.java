@@ -169,6 +169,7 @@ public class DashboardAdminController extends HttpServlet {
     }
 
     private void exportDashboardExcel(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String exportTarget = trimToNull(request.getParameter("exportTarget"));
         Integer selectedYear = parseInteger(request.getParameter("year"), LocalDate.now().getYear());
         String monthParam = request.getParameter("month");
         Integer selectedMonth = (monthParam != null && !"all".equalsIgnoreCase(monthParam))
@@ -192,13 +193,16 @@ public class DashboardAdminController extends HttpServlet {
         List<ProductSaleStatDto> unsold = service.getUnsoldProducts(
                 selectedYear, coldMonth, coldStartDate, coldEndDate);
 
-        String fileName = buildDashboardExportFileName(selectedYear, selectedMonth, startDate, endDate);
+        String fileName = buildDashboardExportFileName(exportTarget, selectedYear, selectedMonth, startDate, endDate);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
         try (Workbook workbook = new XSSFWorkbook()) {
-            createSoldSheet(workbook, topSelling, selectedYear, selectedMonth, startDate, endDate, hotMonth, hotStartDate, hotEndDate);
-            createUnsoldSheet(workbook, unsold, selectedYear, selectedMonth, startDate, endDate, coldMonth, coldStartDate, coldEndDate);
+            if ("unsold".equalsIgnoreCase(exportTarget)) {
+                createUnsoldSheet(workbook, unsold, selectedYear, selectedMonth, startDate, endDate, coldMonth, coldStartDate, coldEndDate);
+            } else {
+                createSoldSheet(workbook, topSelling, selectedYear, selectedMonth, startDate, endDate, hotMonth, hotStartDate, hotEndDate);
+            }
             try (OutputStream out = response.getOutputStream()) {
                 workbook.write(out);
                 out.flush();
@@ -305,7 +309,7 @@ public class DashboardAdminController extends HttpServlet {
         return style;
     }
 
-    private String buildDashboardExportFileName(Integer year, Integer month, String startDate, String endDate) {
+    private String buildDashboardExportFileName(String exportTarget, Integer year, Integer month, String startDate, String endDate) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
         String suffix;
         if (startDate != null && endDate != null) {
@@ -315,7 +319,8 @@ public class DashboardAdminController extends HttpServlet {
         } else {
             suffix = "year_" + year;
         }
-        return ("bangthongke_banduoc_kobandc_" + suffix + "_" + timestamp + ".xlsx").replaceAll("[^a-zA-Z0-9._-]", "_");
+        String prefix = "unsold".equalsIgnoreCase(exportTarget) ? "bangthongke_khongbandc" : "bangthongke_banduoc";
+        return (prefix + "_" + suffix + "_" + timestamp + ".xlsx").replaceAll("[^a-zA-Z0-9._-]", "_");
     }
 
     private String buildFilterSummary(Integer selectedYear,
