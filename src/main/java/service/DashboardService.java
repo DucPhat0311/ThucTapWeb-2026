@@ -63,6 +63,30 @@ public class DashboardService {
         return dao.totalImportCost();
     }
 
+    public double[] importCostByMonth(int year) {
+        return dao.importCostByMonth(year);
+    }
+
+    public double[] importCostByDaysInMonth(int year, int month) {
+        return dao.importCostByDaysInMonth(year, month);
+    }
+
+    public java.util.Map<String, Double> importCostByDateRange(String startDateStr, String endDateStr) {
+        return dao.importCostByDateRange(startDateStr, endDateStr);
+    }
+
+    public double[] ordersByMonth(int year) {
+        return dao.ordersByMonth(year);
+    }
+
+    public double[] ordersByDaysInMonth(int year, int month) {
+        return dao.ordersByDaysInMonth(year, month);
+    }
+
+    public java.util.Map<String, Double> ordersByDateRange(String startDateStr, String endDateStr) {
+        return dao.ordersByDateRange(startDateStr, endDateStr);
+    }
+
     public List<ProductSaleStatDto> getTopSellingProducts(
             Integer year, Integer month, String startDate, String endDate, int limit) {
         return dao.getTopSellingProducts(year, month, startDate, endDate, limit);

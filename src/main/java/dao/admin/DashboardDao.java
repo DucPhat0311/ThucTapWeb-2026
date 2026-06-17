@@ -343,6 +343,196 @@ public class DashboardDao extends BaseDao {
                 .one());
     }
 
+    public double[] importCostByMonth(int year) {
+        double[] result = new double[12];
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                        SELECT MONTH(created_at) AS month,
+                               COALESCE(SUM(total_amount), 0) AS cost
+                        FROM inventory_receipts
+                        WHERE type = 'IMPORT'
+                          AND status = 'COMPLETED'
+                          AND YEAR(created_at) = :year
+                        GROUP BY MONTH(created_at)
+                        ORDER BY month
+                    """)
+                    .bind("year", year)
+                    .mapToMap()
+                    .forEach(row -> {
+                        int month = ((Number) row.get("month")).intValue();
+                        double cost = ((Number) row.get("cost")).doubleValue();
+                        result[month - 1] = cost;
+                    });
+            return null;
+        });
+        return result;
+    }
+
+    public double[] importCostByDaysInMonth(int year, int month) {
+        int daysInMonth = java.time.YearMonth.of(year, month).lengthOfMonth();
+        double[] result = new double[daysInMonth];
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                        SELECT DAY(created_at) AS day,
+                               COALESCE(SUM(total_amount), 0) AS cost
+                        FROM inventory_receipts
+                        WHERE type = 'IMPORT'
+                          AND status = 'COMPLETED'
+                          AND YEAR(created_at) = :year
+                          AND MONTH(created_at) = :month
+                        GROUP BY DAY(created_at)
+                        ORDER BY day
+                    """)
+                    .bind("year", year)
+                    .bind("month", month)
+                    .mapToMap()
+                    .forEach(row -> {
+                        int day = ((Number) row.get("day")).intValue();
+                        double cost = ((Number) row.get("cost")).doubleValue();
+                        result[day - 1] = cost;
+                    });
+            return null;
+        });
+        return result;
+    }
+
+    public Map<String, Double> importCostByDateRange(String startDateStr, String endDateStr) {
+        LocalDate start = LocalDate.parse(startDateStr);
+        LocalDate end = LocalDate.parse(endDateStr);
+
+        Map<String, Double> result = new LinkedHashMap<>();
+        LocalDate current = start;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        while (!current.isAfter(end)) {
+            result.put(current.format(formatter), 0.0);
+            current = current.plusDays(1);
+        }
+
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                        SELECT DATE(created_at) AS order_date,
+                               COALESCE(SUM(total_amount), 0) AS cost
+                        FROM inventory_receipts
+                        WHERE type = 'IMPORT'
+                          AND status = 'COMPLETED'
+                          AND DATE(created_at) >= :startDate
+                          AND DATE(created_at) <= :endDate
+                        GROUP BY DATE(created_at)
+                        ORDER BY order_date
+                    """)
+                    .bind("startDate", startDateStr)
+                    .bind("endDate", endDateStr)
+                    .mapToMap()
+                    .forEach(row -> {
+                        Object dateObj = row.get("order_date");
+                        LocalDate date;
+                        if (dateObj instanceof java.sql.Date) {
+                            date = ((java.sql.Date) dateObj).toLocalDate();
+                        } else if (dateObj instanceof java.time.LocalDate) {
+                            date = (LocalDate) dateObj;
+                        } else {
+                            date = LocalDate.parse(dateObj.toString());
+                        }
+                        double cost = ((Number) row.get("cost")).doubleValue();
+                        result.put(date.format(formatter), cost);
+                    });
+            return null;
+        });
+        return result;
+    }
+
+    public double[] ordersByMonth(int year) {
+        double[] result = new double[12];
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                        SELECT MONTH(created_at) AS month,
+                               COUNT(*) AS total_orders
+                        FROM orders
+                        WHERE YEAR(created_at) = :year
+                        GROUP BY MONTH(created_at)
+                        ORDER BY month
+                    """)
+                    .bind("year", year)
+                    .mapToMap()
+                    .forEach(row -> {
+                        int month = ((Number) row.get("month")).intValue();
+                        double count = ((Number) row.get("total_orders")).doubleValue();
+                        result[month - 1] = count;
+                    });
+            return null;
+        });
+        return result;
+    }
+
+    public double[] ordersByDaysInMonth(int year, int month) {
+        int daysInMonth = java.time.YearMonth.of(year, month).lengthOfMonth();
+        double[] result = new double[daysInMonth];
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                        SELECT DAY(created_at) AS day,
+                               COUNT(*) AS total_orders
+                        FROM orders
+                        WHERE YEAR(created_at) = :year
+                          AND MONTH(created_at) = :month
+                        GROUP BY DAY(created_at)
+                        ORDER BY day
+                    """)
+                    .bind("year", year)
+                    .bind("month", month)
+                    .mapToMap()
+                    .forEach(row -> {
+                        int day = ((Number) row.get("day")).intValue();
+                        double count = ((Number) row.get("total_orders")).doubleValue();
+                        result[day - 1] = count;
+                    });
+            return null;
+        });
+        return result;
+    }
+
+    public Map<String, Double> ordersByDateRange(String startDateStr, String endDateStr) {
+        LocalDate start = LocalDate.parse(startDateStr);
+        LocalDate end = LocalDate.parse(endDateStr);
+
+        Map<String, Double> result = new LinkedHashMap<>();
+        LocalDate current = start;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        while (!current.isAfter(end)) {
+            result.put(current.format(formatter), 0.0);
+            current = current.plusDays(1);
+        }
+
+        getJdbi().withHandle(h -> {
+            h.createQuery("""
+                        SELECT DATE(created_at) AS order_date,
+                               COUNT(*) AS total_orders
+                        FROM orders
+                        WHERE DATE(created_at) >= :startDate
+                          AND DATE(created_at) <= :endDate
+                        GROUP BY DATE(created_at)
+                        ORDER BY order_date
+                    """)
+                    .bind("startDate", startDateStr)
+                    .bind("endDate", endDateStr)
+                    .mapToMap()
+                    .forEach(row -> {
+                        Object dateObj = row.get("order_date");
+                        LocalDate date;
+                        if (dateObj instanceof java.sql.Date) {
+                            date = ((java.sql.Date) dateObj).toLocalDate();
+                        } else if (dateObj instanceof java.time.LocalDate) {
+                            date = (LocalDate) dateObj;
+                        } else {
+                            date = LocalDate.parse(dateObj.toString());
+                        }
+                        double count = ((Number) row.get("total_orders")).doubleValue();
+                        result.put(date.format(formatter), count);
+                    });
+            return null;
+        });
+        return result;
+    }
+
     public List<ProductSaleStatDto> getTopSellingProducts(
             Integer year, Integer month, String startDate, String endDate, int limit) {
         StringBuilder sql = new StringBuilder("""

@@ -126,6 +126,12 @@
                                                 <button class="chart-tab" id="tabProfit" onclick="switchTab('profit')">
                                                     <i class="fa-solid fa-chart-line"></i> Lợi nhuận
                                                 </button>
+                                                <button class="chart-tab" id="tabImportCost" onclick="switchTab('importCost')">
+                                                    <i class="fa-solid fa-box"></i> Chi phí nhập hàng
+                                                </button>
+                                                <button class="chart-tab" id="tabOrders" onclick="switchTab('orders')">
+                                                    <i class="fa-solid fa-shopping-cart"></i> Đơn hàng
+                                                </button>
                                             </div>
                                             <div class="chart-wrapper" id="wrapChart">
                                                 <canvas id="mainChart"></canvas>
@@ -343,6 +349,8 @@
                         const chartLabels = ${ chartLabelsJson != null ? chartLabelsJson : "[]" };
                         const revData = ${ chartDataJson   != null ? chartDataJson : "[]" };
                         const profData = ${ profitDataJson  != null ? profitDataJson : "[]" };
+                        const importCostData = ${ importCostDataJson != null ? importCostDataJson : "[]" };
+                        const ordersData = ${ ordersDataJson != null ? ordersDataJson : "[]" };
 
                         const fmtVND = v => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v);
                         const fmtCompact = v => new Intl.NumberFormat('vi-VN', { notation: 'compact', compactDisplay: 'short' }).format(v) + '₫';
@@ -355,6 +363,8 @@
                         }
                         const revGradient = makeGradient(163, 121, 82);
                         const profGradient = makeGradient(34, 197, 94);
+                        const importGradient = makeGradient(239, 68, 68);
+                        const ordersGradient = makeGradient(59, 130, 246);
                         let myChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
@@ -387,7 +397,10 @@
                                         titleColor: '#f5e6d3',
                                         bodyColor: '#e8d5c0',
                                         padding: 14,
-                                        callbacks: { label: c => ' ' + c.dataset.label + ': ' + fmtVND(c.parsed.y) }
+                                        callbacks: { label: c => {
+                                            if (c.dataset.label === 'Đơn hàng') return ' ' + c.dataset.label + ': ' + c.parsed.y;
+                                            return ' ' + c.dataset.label + ': ' + fmtVND(c.parsed.y);
+                                        } }
                                     }
                                 }
                             }
@@ -397,14 +410,48 @@
     const baseTitle = titleEl ? titleEl.textContent : '';
 
     function switchTab(tab) {
-        const isRevenue = tab === 'revenue';
-        document.getElementById('tabRevenue').classList.toggle('active', isRevenue);
-        document.getElementById('tabProfit').classList.toggle('active', !isRevenue);
-        if (titleEl) titleEl.textContent = baseTitle.replace(/^(Doanh thu|Lợi nhuận)/, isRevenue ? 'Doanh thu' : 'Lợi nhuận');
-        myChart.data.datasets[0].label = isRevenue ? 'Doanh thu' : 'Lợi nhuận';
-        myChart.data.datasets[0].data = isRevenue ? revData : profData;
-        myChart.data.datasets[0].backgroundColor = isRevenue ? revGradient : profGradient;
-        myChart.data.datasets[0].hoverBackgroundColor = isRevenue ? '#8F6641' : '#16a34a';
+        document.getElementById('tabRevenue').classList.toggle('active', tab === 'revenue');
+        document.getElementById('tabProfit').classList.toggle('active', tab === 'profit');
+        document.getElementById('tabImportCost').classList.toggle('active', tab === 'importCost');
+        document.getElementById('tabOrders').classList.toggle('active', tab === 'orders');
+
+        let labelStr = 'Doanh thu';
+        let dataArr = revData;
+        let bgGradient = revGradient;
+        let hoverBg = '#8F6641';
+
+        if (tab === 'profit') {
+            labelStr = 'Lợi nhuận';
+            dataArr = profData;
+            bgGradient = profGradient;
+            hoverBg = '#16a34a';
+        } else if (tab === 'importCost') {
+            labelStr = 'Chi phí nhập hàng';
+            dataArr = importCostData;
+            bgGradient = importGradient;
+            hoverBg = '#dc2626';
+        } else if (tab === 'orders') {
+            labelStr = 'Đơn hàng';
+            dataArr = ordersData;
+            bgGradient = ordersGradient;
+            hoverBg = '#2563eb';
+        }
+
+        if (titleEl) {
+            titleEl.textContent = baseTitle.replace(/^(Doanh thu|Lợi nhuận|Chi phí nhập hàng|Đơn hàng)/, labelStr);
+        }
+
+        myChart.data.datasets[0].label = labelStr;
+        myChart.data.datasets[0].data = dataArr;
+        myChart.data.datasets[0].backgroundColor = bgGradient;
+        myChart.data.datasets[0].hoverBackgroundColor = hoverBg;
+
+        if (tab === 'orders') {
+            myChart.options.scales.y.ticks.callback = function(value) { return value; };
+        } else {
+            myChart.options.scales.y.ticks.callback = fmtCompact;
+        }
+
         myChart.update();
     }
                         document.getElementById('statMonthSelect').addEventListener('change', function () {
