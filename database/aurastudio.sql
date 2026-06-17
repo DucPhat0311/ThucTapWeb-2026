@@ -11,7 +11,7 @@
  Target Server Version : 100432 (10.4.32-MariaDB)
  File Encoding         : 65001
 
- Date: 16/06/2026 22:45:59
+ Date: 17/06/2026 15:12:11
 */
 
 SET NAMES utf8mb4;
@@ -141,7 +141,7 @@ CREATE TABLE `carts`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of carts
@@ -150,6 +150,7 @@ INSERT INTO `carts` VALUES (1, 1, '2026-05-24 18:03:22');
 INSERT INTO `carts` VALUES (2, 2, '2026-05-31 14:46:15');
 INSERT INTO `carts` VALUES (3, 3, '2026-05-31 14:48:29');
 INSERT INTO `carts` VALUES (4, 4, '2026-06-16 18:08:41');
+INSERT INTO `carts` VALUES (5, 35, '2026-06-17 13:31:51');
 
 -- ----------------------------
 -- Table structure for categories
@@ -1784,7 +1785,7 @@ CREATE TABLE `orders`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 109 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 124 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of orders
@@ -1896,6 +1897,16 @@ INSERT INTO `orders` VALUES (105, 14, 'Khách hàng tự động 14', '090123456
 INSERT INTO `orders` VALUES (106, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 528435.00, 0.00, 30000.00, 558435.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-03-01 08:30:00');
 INSERT INTO `orders` VALUES (107, 21, 'Khách hàng tự động 21', '0901234567', 'Hồ Chí Minh', NULL, 1678680.00, 0.00, 30000.00, 1708680.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-28 08:30:00');
 INSERT INTO `orders` VALUES (108, 7, 'Khách hàng tự động 7', '0901234567', 'Hồ Chí Minh', NULL, 1586270.00, 0.00, 30000.00, 1616270.00, 'COD', 'UNPAID', 'CANCELLED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-04-07 08:30:00');
+INSERT INTO `orders` VALUES (109, 20, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-08 00:04:11');
+INSERT INTO `orders` VALUES (110, 19, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-11 00:04:11');
+INSERT INTO `orders` VALUES (111, 5, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-19 00:04:11');
+INSERT INTO `orders` VALUES (112, 15, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-01 00:04:11');
+INSERT INTO `orders` VALUES (113, 11, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-20 00:04:11');
+INSERT INTO `orders` VALUES (114, 25, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-10 00:04:11');
+INSERT INTO `orders` VALUES (115, 23, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-16 00:04:11');
+INSERT INTO `orders` VALUES (116, 28, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-06-02 00:04:11');
+INSERT INTO `orders` VALUES (117, 25, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-30 00:04:11');
+INSERT INTO `orders` VALUES (118, 16, 'Khách hàng VIP', '0909999999', 'Q1, TP.HCM', NULL, 5000000.00, 0.00, 0.00, 5000000.00, 'BANKING', 'PAID', 'COMPLETED', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-26 00:04:11');
 
 -- ----------------------------
 -- Table structure for payment_transactions
@@ -4110,7 +4121,7 @@ CREATE TABLE `role_permissions`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uq_role_module_action`(`role_id` ASC, `module` ASC, `action` ASC) USING BTREE,
   CONSTRAINT `fk_rp_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 466 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 536 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of role_permissions
@@ -4160,76 +4171,6 @@ INSERT INTO `role_permissions` VALUES (42, 1, 'role', 'view_detail', 1);
 INSERT INTO `role_permissions` VALUES (43, 1, 'role', 'add', 1);
 INSERT INTO `role_permissions` VALUES (44, 1, 'role', 'edit', 1);
 INSERT INTO `role_permissions` VALUES (45, 1, 'role', 'delete', 1);
-INSERT INTO `role_permissions` VALUES (116, 2, 'user', 'view_list', 0);
-INSERT INTO `role_permissions` VALUES (117, 2, 'user', 'view_detail', 0);
-INSERT INTO `role_permissions` VALUES (118, 2, 'user', 'add', 0);
-INSERT INTO `role_permissions` VALUES (119, 2, 'user', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (120, 2, 'user', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (121, 2, 'user', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (122, 2, 'user', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (123, 2, 'category', 'view_list', 1);
-INSERT INTO `role_permissions` VALUES (124, 2, 'category', 'view_detail', 0);
-INSERT INTO `role_permissions` VALUES (125, 2, 'category', 'add', 0);
-INSERT INTO `role_permissions` VALUES (126, 2, 'category', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (127, 2, 'category', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (128, 2, 'category', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (129, 2, 'category', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (130, 2, 'product', 'view_list', 1);
-INSERT INTO `role_permissions` VALUES (131, 2, 'product', 'view_detail', 1);
-INSERT INTO `role_permissions` VALUES (132, 2, 'product', 'add', 1);
-INSERT INTO `role_permissions` VALUES (133, 2, 'product', 'edit', 1);
-INSERT INTO `role_permissions` VALUES (134, 2, 'product', 'delete', 1);
-INSERT INTO `role_permissions` VALUES (135, 2, 'product', 'lock', 1);
-INSERT INTO `role_permissions` VALUES (136, 2, 'product', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (137, 2, 'order', 'view_list', 1);
-INSERT INTO `role_permissions` VALUES (138, 2, 'order', 'view_detail', 0);
-INSERT INTO `role_permissions` VALUES (139, 2, 'order', 'add', 0);
-INSERT INTO `role_permissions` VALUES (140, 2, 'order', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (141, 2, 'order', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (142, 2, 'order', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (143, 2, 'order', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (144, 2, 'return', 'view_list', 1);
-INSERT INTO `role_permissions` VALUES (145, 2, 'return', 'view_detail', 0);
-INSERT INTO `role_permissions` VALUES (146, 2, 'return', 'add', 0);
-INSERT INTO `role_permissions` VALUES (147, 2, 'return', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (148, 2, 'return', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (149, 2, 'return', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (150, 2, 'return', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (151, 2, 'banner', 'view_list', 0);
-INSERT INTO `role_permissions` VALUES (152, 2, 'banner', 'view_detail', 0);
-INSERT INTO `role_permissions` VALUES (153, 2, 'banner', 'add', 0);
-INSERT INTO `role_permissions` VALUES (154, 2, 'banner', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (155, 2, 'banner', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (156, 2, 'banner', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (157, 2, 'banner', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (158, 2, 'blog', 'view_list', 0);
-INSERT INTO `role_permissions` VALUES (159, 2, 'blog', 'view_detail', 0);
-INSERT INTO `role_permissions` VALUES (160, 2, 'blog', 'add', 0);
-INSERT INTO `role_permissions` VALUES (161, 2, 'blog', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (162, 2, 'blog', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (163, 2, 'blog', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (164, 2, 'blog', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (165, 2, 'contact', 'view_list', 0);
-INSERT INTO `role_permissions` VALUES (166, 2, 'contact', 'view_detail', 0);
-INSERT INTO `role_permissions` VALUES (167, 2, 'contact', 'add', 0);
-INSERT INTO `role_permissions` VALUES (168, 2, 'contact', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (169, 2, 'contact', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (170, 2, 'contact', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (171, 2, 'contact', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (172, 2, 'warehouse', 'view_list', 1);
-INSERT INTO `role_permissions` VALUES (173, 2, 'warehouse', 'view_detail', 1);
-INSERT INTO `role_permissions` VALUES (174, 2, 'warehouse', 'add', 1);
-INSERT INTO `role_permissions` VALUES (175, 2, 'warehouse', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (176, 2, 'warehouse', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (177, 2, 'warehouse', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (178, 2, 'warehouse', 'change_pass', 0);
-INSERT INTO `role_permissions` VALUES (179, 2, 'role', 'view_list', 0);
-INSERT INTO `role_permissions` VALUES (180, 2, 'role', 'view_detail', 0);
-INSERT INTO `role_permissions` VALUES (181, 2, 'role', 'add', 0);
-INSERT INTO `role_permissions` VALUES (182, 2, 'role', 'edit', 0);
-INSERT INTO `role_permissions` VALUES (183, 2, 'role', 'delete', 0);
-INSERT INTO `role_permissions` VALUES (184, 2, 'role', 'lock', 0);
-INSERT INTO `role_permissions` VALUES (185, 2, 'role', 'change_pass', 0);
 INSERT INTO `role_permissions` VALUES (256, 3, 'user', 'view_list', 0);
 INSERT INTO `role_permissions` VALUES (257, 3, 'user', 'view_detail', 0);
 INSERT INTO `role_permissions` VALUES (258, 3, 'user', 'add', 0);
@@ -4389,7 +4330,6 @@ CREATE TABLE `roles`  (
 -- Records of roles
 -- ----------------------------
 INSERT INTO `roles` VALUES (1, 'Admin', 'Quản trị viên - Toàn quyền hệ thống', 1, '2026-05-31 14:47:18');
-INSERT INTO `roles` VALUES (2, 'Nhân viên kho', '', 0, '2026-06-16 22:43:46');
 INSERT INTO `roles` VALUES (3, 'Nhân viên chăm sóc khách hàng', '', 0, '2026-06-16 22:44:19');
 INSERT INTO `roles` VALUES (4, 'Nhân viên sale', '', 0, '2026-06-16 22:44:40');
 
@@ -4482,45 +4422,46 @@ CREATE TABLE `users`  (
   UNIQUE INDEX `google_sub`(`google_sub` ASC) USING BTREE,
   INDEX `fk_users_role`(`role_id` ASC) USING BTREE,
   CONSTRAINT `fk_users_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, 'fb_2034905854124248', NULL, 'ducphat0311@gmail.com', '109760483312715635930', 'GOOGLE', 'ADMIN', 'Nguyễn Phát', 'media/avatar/avatar_user_1_1779627163032.webp', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-24 17:48:38', NULL, NULL, NULL, NULL, 0, NULL);
-INSERT INTO `users` VALUES (2, 'handeptrai', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'nguyenhan.be.dev@gmail.com', NULL, NULL, 'ADMIN', 'Nguyễn Hàn', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780223572/shopquanao/avatars/n6bpfhx8iauwzly7c6b2.png', '2026-04-30', 'male', '', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, NULL);
-INSERT INTO `users` VALUES (3, 'nguyenvananhhan555', '$2a$12$drPLaRU6SBQ.BGIxrcEyOOtLaIEnEbpmf2tWD3YESPy.DrSjwcMMi', 'nguyenvananhhan555@gmail.com', '110404817350622964648', 'GOOGLE', 'ADMIN', 'Hàn Nguyễn Văn Anh', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780479053/shopquanao/avatars/ahyykblipcsvlafyrllv.png', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-31 14:48:29', NULL, NULL, NULL, NULL, 0, NULL);
-INSERT INTO `users` VALUES (4, 'thutran311', '$2a$12$XBcGFw24b266TuTLduzrbOObDqVpVghuJuYj4YnDhMbcrfWrRHSa2', '23130318@st.hcmuaf.edu.vn', NULL, NULL, 'ADMIN', 'Thư Trần', 'https://res.cloudinary.com/do3y0ygcj/image/upload/v1781608872/shopquanao/avatars/czipap8avbdq918wngcw.jpg', '2026-04-30', 'male', '', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, NULL);
-INSERT INTO `users` VALUES (5, 'tungphan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'tung.phan@gmail.com', '0901111111', NULL, 'ADMIN', 'Phan Thanh Tùng', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (6, 'tuankiet', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'kiet.vo@gmail.com', '0903333333', NULL, 'USER', 'Võ Tuấn Kiệt', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (7, 'caodoan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'doan.truong@gmail.com', '0904444444', NULL, 'USER', 'Trương Cao Đoàn', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (8, 'huuthuc', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'thuc.huynh@gmail.com', '0905555555', NULL, 'USER', 'Huỳnh Hữu Thức', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (9, 'vanquyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quyen.nguyen@gmail.com', '0906666666', NULL, 'USER', 'Nguyễn Văn Quyền', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (10, 'vanan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'an.nguyen@gmail.com', '0911222333', NULL, 'USER', 'Nguyễn Văn An', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (11, 'tranbinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'binh.tran@gmail.com', '0922333444', NULL, 'USER', 'Trần Bình', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (12, 'lecuong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'cuong.le@gmail.com', '0933444555', NULL, 'USER', 'Lê Cường', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (13, 'phamdung', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'dung.pham@gmail.com', '0944555666', NULL, 'USER', 'Phạm Dung', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (14, 'hoangem', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'em.hoang@gmail.com', '0955666777', NULL, 'USER', 'Hoàng Em', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (15, 'dohung', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'hung.do@gmail.com', '0966777888', NULL, 'USER', 'Đỗ Hùng', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (16, 'vugiang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'giang.vu@gmail.com', '0977888999', NULL, 'USER', 'Vũ Giang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (17, 'danghoa', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'hoa.dang@gmail.com', '0988999000', NULL, 'USER', 'Đặng Hoa', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (18, 'buikhang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'khang.bui@gmail.com', '0999000111', NULL, 'USER', 'Bùi Khang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (19, 'truonglinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'linh.truong@gmail.com', '0800111222', NULL, 'USER', 'Trương Linh', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (20, 'ngominh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'minh.ngo@gmail.com', '0811222333', NULL, 'USER', 'Ngô Minh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (21, 'duongnam', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'nam.duong@gmail.com', '0822333444', NULL, 'USER', 'Dương Nam', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (22, 'lyoanh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'oanh.ly@gmail.com', '0833444555', NULL, 'USER', 'Lý Oanh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (23, 'chauphong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'phong.chau@gmail.com', '0844555666', NULL, 'USER', 'Châu Phong', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (24, 'hoquan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quan.ho@gmail.com', '0855666777', NULL, 'USER', 'Hồ Quân', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (25, 'thaisuong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'suong.thai@gmail.com', '0866777888', NULL, 'USER', 'Thái Sương', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (26, 'dinhtrang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'trang.dinh@gmail.com', '0877888999', NULL, 'USER', 'Đinh Trang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (27, 'maiuyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'uyen.mai@gmail.com', '0888999000', NULL, 'USER', 'Mai Uyên', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (28, 'caovinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'vinh.cao@gmail.com', '0899000111', NULL, 'USER', 'Cao Vinh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (29, 'phanxuan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'xuan.phan@gmail.com', '0700111222', NULL, 'USER', 'Phan Xuân', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (30, 'daoyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'yen.dao@gmail.com', '0711222333', NULL, 'USER', 'Đào Yến', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (31, 'kieucanh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'canh.kieu@gmail.com', '0722333444', NULL, 'USER', 'Kiều Cảnh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (32, 'luongphu', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'phu.luong@gmail.com', '0733444555', NULL, 'USER', 'Lương Phú', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (33, 'kimquy', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quy.kim@gmail.com', '0744555666', NULL, 'USER', 'Kim Quý', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
-INSERT INTO `users` VALUES (34, 'tontoan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'toan.ton@gmail.com', '0755666777', NULL, 'USER', 'Tôn Toàn', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54');
+INSERT INTO `users` VALUES (1, 'fb_2034905854124248', NULL, 'ducphat0311@gmail.com', '109760483312715635930', 'GOOGLE', 'ADMIN', 'Nguyễn Phát', 'media/avatar/avatar_user_1_1779627163032.webp', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-24 17:48:38', NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `users` VALUES (2, 'handeptrai', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'nguyenhan.be.dev@gmail.com', NULL, NULL, 'ADMIN', 'Nguyễn Hàn', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780223572/shopquanao/avatars/n6bpfhx8iauwzly7c6b2.png', '2026-04-30', 'male', '', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `users` VALUES (3, 'nguyenvananhhan555', '$2a$12$drPLaRU6SBQ.BGIxrcEyOOtLaIEnEbpmf2tWD3YESPy.DrSjwcMMi', 'nguyenvananhhan555@gmail.com', '110404817350622964648', 'GOOGLE', 'ADMIN', 'Hàn Nguyễn Văn Anh', 'https://res.cloudinary.com/dp8ttx3jh/image/upload/v1780479053/shopquanao/avatars/ahyykblipcsvlafyrllv.png', NULL, NULL, NULL, 1, 'ACTIVE', '2026-05-31 14:48:29', NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `users` VALUES (4, 'thutran311', '$2a$12$XBcGFw24b266TuTLduzrbOObDqVpVghuJuYj4YnDhMbcrfWrRHSa2', '23130318@st.hcmuaf.edu.vn', NULL, NULL, 'ADMIN', 'Thư Trần', 'https://res.cloudinary.com/do3y0ygcj/image/upload/v1781608872/shopquanao/avatars/czipap8avbdq918wngcw.jpg', '2026-04-30', 'male', '', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `users` VALUES (5, 'tungphan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'tung.phan@gmail.com', '0901111111', NULL, 'ADMIN', 'Phan Thanh Tùng', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (6, 'tuankiet', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'kiet.vo@gmail.com', '0903333333', NULL, 'USER', 'Võ Tuấn Kiệt', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (7, 'caodoan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'doan.truong@gmail.com', '0904444444', NULL, 'USER', 'Trương Cao Đoàn', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (8, 'huuthuc', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'thuc.huynh@gmail.com', '0905555555', NULL, 'USER', 'Huỳnh Hữu Thức', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (9, 'vanquyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quyen.nguyen@gmail.com', '0906666666', NULL, 'USER', 'Nguyễn Văn Quyền', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (10, 'vanan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'an.nguyen@gmail.com', '0911222333', NULL, 'USER', 'Nguyễn Văn An', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (11, 'tranbinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'binh.tran@gmail.com', '0922333444', NULL, 'USER', 'Trần Bình', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (12, 'lecuong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'cuong.le@gmail.com', '0933444555', NULL, 'USER', 'Lê Cường', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (13, 'phamdung', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'dung.pham@gmail.com', '0944555666', NULL, 'USER', 'Phạm Dung', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (14, 'hoangem', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'em.hoang@gmail.com', '0955666777', NULL, 'USER', 'Hoàng Em', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (15, 'dohung', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'hung.do@gmail.com', '0966777888', NULL, 'USER', 'Đỗ Hùng', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (16, 'vugiang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'giang.vu@gmail.com', '0977888999', NULL, 'USER', 'Vũ Giang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (17, 'danghoa', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'hoa.dang@gmail.com', '0988999000', NULL, 'USER', 'Đặng Hoa', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (18, 'buikhang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'khang.bui@gmail.com', '0999000111', NULL, 'USER', 'Bùi Khang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (19, 'truonglinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'linh.truong@gmail.com', '0800111222', NULL, 'USER', 'Trương Linh', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (20, 'ngominh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'minh.ngo@gmail.com', '0811222333', NULL, 'USER', 'Ngô Minh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (21, 'duongnam', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'nam.duong@gmail.com', '0822333444', NULL, 'USER', 'Dương Nam', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (22, 'lyoanh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'oanh.ly@gmail.com', '0833444555', NULL, 'USER', 'Lý Oanh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (23, 'chauphong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'phong.chau@gmail.com', '0844555666', NULL, 'USER', 'Châu Phong', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (24, 'hoquan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quan.ho@gmail.com', '0855666777', NULL, 'USER', 'Hồ Quân', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (25, 'thaisuong', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'suong.thai@gmail.com', '0866777888', NULL, 'USER', 'Thái Sương', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (26, 'dinhtrang', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'trang.dinh@gmail.com', '0877888999', NULL, 'USER', 'Đinh Trang', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (27, 'maiuyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'uyen.mai@gmail.com', '0888999000', NULL, 'USER', 'Mai Uyên', NULL, NULL, NULL, 'LOCAL', 0, 'INACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (28, 'caovinh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'vinh.cao@gmail.com', '0899000111', NULL, 'USER', 'Cao Vinh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (29, 'phanxuan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'xuan.phan@gmail.com', '0700111222', NULL, 'USER', 'Phan Xuân', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (30, 'daoyen', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'yen.dao@gmail.com', '0711222333', NULL, 'USER', 'Đào Yến', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (31, 'kieucanh', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'canh.kieu@gmail.com', '0722333444', NULL, 'USER', 'Kiều Cảnh', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (32, 'luongphu', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'phu.luong@gmail.com', '0733444555', NULL, 'USER', 'Lương Phú', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (33, 'kimquy', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'quy.kim@gmail.com', '0744555666', NULL, 'USER', 'Kim Quý', NULL, NULL, NULL, 'LOCAL', 1, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (34, 'tontoan', '$2a$12$vjYrytPWRfYFLyZ0GsH2Q.Af02f/JtxjL5ThduzUS/0ixHr6a7.nq', 'toan.ton@gmail.com', '0755666777', NULL, 'USER', 'Tôn Toàn', NULL, NULL, NULL, 'LOCAL', 1, 'BLOCKED', NULL, NULL, NULL, NULL, NULL, 0, '2026-06-16 21:38:54', NULL);
+INSERT INTO `users` VALUES (35, 'user1', '$2a$12$zsMamHMHJgH/ZvG573CiS..Fr1G/oDNZ7.lW9YQ2GpgznV6suC/5a', 'tttm@gmail.com', NULL, NULL, 'USER', 'Thư Thư là mặt trời nhỏ', NULL, '2026-06-09', '', '', 1, 'ACTIVE', '2026-06-17 13:31:39', '', NULL, NULL, NULL, 0, NULL, '2026-06-17 13:47:19');
 
 -- ----------------------------
 -- Table structure for wishlists
