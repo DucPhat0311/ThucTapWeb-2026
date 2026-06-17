@@ -14,6 +14,7 @@ import service.GoogleOAuthService;
 import service.UserService;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @WebServlet(name = "GoogleCallbackController", value = "/auth/google/callback")
 public class GoogleCallbackController extends HttpServlet {
@@ -93,6 +94,7 @@ public class GoogleCallbackController extends HttpServlet {
         HttpSession session = request.getSession(true);
         session.setAttribute("userId", user.getId());
         session.setAttribute("userlogin", user);
+        session.setAttribute("loginTime", LocalDateTime.now());
 
         Integer cartId = cartDao.findCartIdByUser(user.getId());
         if (cartId == null) {

@@ -1,6 +1,7 @@
 package controller.web;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -113,6 +114,7 @@ public class LoginController extends HttpServlet {
         HttpSession session = request.getSession(true);
         session.setAttribute("userId", user.getId());
         session.setAttribute("userlogin", user);
+        session.setAttribute("loginTime", LocalDateTime.now());
 
         if ("ADMIN".equals(user.getRole())) {
             session.setAttribute("admin", user);

@@ -4475,6 +4475,7 @@ CREATE TABLE `users`  (
   `role_id` int NULL DEFAULT NULL,
   `failed_login_attempts` int NOT NULL DEFAULT 0,
   `locked_at` datetime NULL DEFAULT NULL,
+  `token_updated_at` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE,
   UNIQUE INDEX `email`(`email` ASC) USING BTREE,
