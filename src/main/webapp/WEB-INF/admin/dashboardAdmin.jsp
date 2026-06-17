@@ -12,6 +12,7 @@
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebarAdmin.css?v=<%= System.currentTimeMillis() %>">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/dashboard.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/dashboardExport.css">
                 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
             </head>
 
@@ -22,6 +23,22 @@
                             <section class="content">
                                 <header class="topbar">
                                     <h1 id="pageTitle">Thống Kê</h1>
+                                    <form method="GET" action="${pageContext.request.contextPath}/dashboardAdmin" class="dashboard-export-form">
+                                        <input type="hidden" name="action" value="exportExcel">
+                                        <input type="hidden" name="year" value="${param.year}">
+                                        <input type="hidden" name="month" value="${param.month}">
+                                        <input type="hidden" name="startDate" value="${param.startDate}">
+                                        <input type="hidden" name="endDate" value="${param.endDate}">
+                                        <input type="hidden" name="hotMonth" value="${param.hotMonth}">
+                                        <input type="hidden" name="hotStartDate" value="${param.hotStartDate}">
+                                        <input type="hidden" name="hotEndDate" value="${param.hotEndDate}">
+                                        <input type="hidden" name="coldMonth" value="${param.coldMonth}">
+                                        <input type="hidden" name="coldStartDate" value="${param.coldStartDate}">
+                                        <input type="hidden" name="coldEndDate" value="${param.coldEndDate}">
+                                        <button type="submit" class="btn-export-excel">
+                                            <i class="fa-solid fa-file-excel"></i> Export Excel
+                                        </button>
+                                    </form>
                                     <div class="actions">
                                         <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
                                     </div>
