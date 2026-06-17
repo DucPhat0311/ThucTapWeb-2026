@@ -87,6 +87,8 @@ public class DashboardAdminController extends HttpServlet {
         Object chartData = null;
         Object chartLabels = null;
         Object profitData = null;
+        Object importCostData = null;
+        Object ordersData = null;
         String filterType = "year"; // "year", "month", "range"
 
         int currentYear = LocalDate.now().getYear();
@@ -111,6 +113,12 @@ public class DashboardAdminController extends HttpServlet {
             java.util.Map<String, Double> rangeProfitData = service.profitByDateRange(startDateParam, endDateParam);
             profitData = new java.util.ArrayList<>(rangeProfitData.values());
 
+            java.util.Map<String, Double> rangeImportCostData = service.importCostByDateRange(startDateParam, endDateParam);
+            importCostData = new java.util.ArrayList<>(rangeImportCostData.values());
+
+            java.util.Map<String, Double> rangeOrdersData = service.ordersByDateRange(startDateParam, endDateParam);
+            ordersData = new java.util.ArrayList<>(rangeOrdersData.values());
+
         } else if (monthParam != null && !monthParam.trim().isEmpty() && !monthParam.equals("all")) {
             // Filter by specific month in year
             try {
@@ -118,19 +126,27 @@ public class DashboardAdminController extends HttpServlet {
                 filterType = "month";
                 double[] dailyRev = service.revenueByDaysInMonth(selectedYear, selectedMonth);
                 double[] dailyProfit = service.profitByDaysInMonth(selectedYear, selectedMonth);
+                double[] dailyImportCost = service.importCostByDaysInMonth(selectedYear, selectedMonth);
+                double[] dailyOrders = service.ordersByDaysInMonth(selectedYear, selectedMonth);
 
                 // Labels from "Ngày 1" to "Ngày N"
                 java.util.List<String> labels = new java.util.ArrayList<>();
                 java.util.List<Double> dataList = new java.util.ArrayList<>();
                 java.util.List<Double> profitList = new java.util.ArrayList<>();
+                java.util.List<Double> importCostList = new java.util.ArrayList<>();
+                java.util.List<Double> ordersList = new java.util.ArrayList<>();
                 for (int i = 0; i < dailyRev.length; i++) {
                     labels.add("Ngày " + (i + 1));
                     dataList.add(dailyRev[i]);
                     profitList.add(dailyProfit[i]);
+                    importCostList.add(dailyImportCost[i]);
+                    ordersList.add(dailyOrders[i]);
                 }
                 chartLabels = labels;
                 chartData = dataList;
                 profitData = profitList;
+                importCostData = importCostList;
+                ordersData = ordersList;
                 request.setAttribute("selectedMonth", selectedMonth);
             } catch (NumberFormatException e) {
                 // fallback to year
@@ -142,23 +158,33 @@ public class DashboardAdminController extends HttpServlet {
         if (filterType.equals("year")) {
             double[] monthlyRevenue = service.revenueByMonth(selectedYear);
             double[] monthlyProfit = service.profitByMonth(selectedYear);
+            double[] monthlyImportCost = service.importCostByMonth(selectedYear);
+            double[] monthlyOrders = service.ordersByMonth(selectedYear);
             java.util.List<String> labels = java.util.Arrays.asList(
                     "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
                     "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12");
             java.util.List<Double> dataList = new java.util.ArrayList<>();
             java.util.List<Double> profitList = new java.util.ArrayList<>();
+            java.util.List<Double> importCostList = new java.util.ArrayList<>();
+            java.util.List<Double> ordersList = new java.util.ArrayList<>();
             for (int i = 0; i < monthlyRevenue.length; i++) {
                 dataList.add(monthlyRevenue[i]);
                 profitList.add(monthlyProfit[i]);
+                importCostList.add(monthlyImportCost[i]);
+                ordersList.add(monthlyOrders[i]);
             }
             chartLabels = labels;
             chartData = dataList;
             profitData = profitList;
+            importCostData = importCostList;
+            ordersData = ordersList;
         }
 
         request.setAttribute("chartLabelsJson", mapper.writeValueAsString(chartLabels));
         request.setAttribute("chartDataJson", mapper.writeValueAsString(chartData));
         request.setAttribute("profitDataJson", mapper.writeValueAsString(profitData));
+        request.setAttribute("importCostDataJson", mapper.writeValueAsString(importCostData));
+        request.setAttribute("ordersDataJson", mapper.writeValueAsString(ordersData));
         request.setAttribute("selectedYear", selectedYear);
         request.setAttribute("startDate", startDateParam);
         request.setAttribute("endDate", endDateParam);
